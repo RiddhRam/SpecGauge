@@ -1,7 +1,9 @@
+// Boostrap design
 import "bootstrap/dist/css/bootstrap.css";
 import { SGStyles } from "../styles/styles";
 
 export default function WebApp() {
+  // Call SGStyles as styles
   const styles = SGStyles();
   return (
     <div style={styles.containerStyles.container}>
