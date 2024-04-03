@@ -1,4 +1,10 @@
-import { Pressable, Text, TextInput, View } from "react-native-web";
+import {
+  Pressable,
+  Text,
+  TextInput,
+  View,
+  ActivityIndicator,
+} from "react-native-web";
 import { useNavigate } from "react-router-dom";
 import { SGStyles } from "../../styles/styles";
 import { useState } from "react";
@@ -143,31 +149,39 @@ export default function WebAccountHandler({ screenType }) {
             <></>
           )}
 
-          <Pressable
-            onPress={() => {
-              SignUpFunc();
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-              { marginTop: 10 },
-            ]}
-          >
-            <p>Sign Up</p>
-          </Pressable>
+          {loading ? (
+            <>
+              <ActivityIndicator size="large"></ActivityIndicator>
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={() => {
+                  SignUpFunc();
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginTop: 10 },
+                ]}
+              >
+                <p>Sign Up</p>
+              </Pressable>
 
-          <Pressable
-            onPress={() => {
-              setSignUp(false);
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-            ]}
-          >
-            <p>I already have an account</p>
-          </Pressable>
-          {/*If user wants to switch to log in */}
+              <Pressable
+                onPress={() => {
+                  setSignUp(false);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+              >
+                <p>I already have an account</p>
+              </Pressable>
+              {/*If user wants to switch to log in */}
+            </>
+          )}
         </>
       ) : (
         // Log in page
@@ -187,30 +201,39 @@ export default function WebAccountHandler({ screenType }) {
             id="password"
             onChange={(text) => setPassword(text.target.value)}
           ></TextInput>
-          <Pressable
-            onPress={() => {
-              LogInFunc();
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-            ]}
-          >
-            <p>Log In</p>
-          </Pressable>
 
-          <Pressable
-            onPress={() => {
-              setSignUp(true);
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-            ]}
-          >
-            <p>I don't have an account</p>
-          </Pressable>
-          {/*If user wants to switch to sign up */}
+          {loading ? (
+            <>
+              <ActivityIndicator size="large"></ActivityIndicator>
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={() => {
+                  LogInFunc();
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+              >
+                <p>Log In</p>
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
+                  setSignUp(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+              >
+                <p>I don't have an account</p>
+              </Pressable>
+              {/*If user wants to switch to sign up */}
+            </>
+          )}
         </>
       )}
     </View>
