@@ -13,7 +13,6 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signInWithPopup,
 } from "firebase/auth";
 
 export default function WebAccountHandler({ screenType }) {
