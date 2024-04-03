@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { StyleSheet, useColorScheme } from "react-native";
-import { Dimensions } from "react-native-web";
-
-var { width, height } = Dimensions.get("window");
 
 export const SGStyles = () => {
   // Get user's color scheme
@@ -15,9 +12,8 @@ export const SGStyles = () => {
     largeContainer: {
       flex: 1,
       backgroundColor: theme === "dark" ? "#191b2a" : "#fff",
-      justifyContent: "center",
       alignItems: "center",
-      alignContent: "center",
+      justifyContent: "center",
     },
   });
 
@@ -38,18 +34,27 @@ export const SGStyles = () => {
       color: theme === "dark" ? "#fff" : "#000",
       borderRadius: 8,
       fontSize: 20,
-      marginLeft: width / 2 - width * 0.2,
-      marginBottom: 10,
+      margin: 10,
       padding: 10,
       height: 50,
-      width: "40%",
       textAlign: "center",
-      display: "block",
       userSelect: "none",
     },
     // when the button is clicked
     buttonClicked: {
       backgroundColor: theme === "dark" ? "#5d5d74" : "#e6e6e6",
+    },
+    buttonNoBackground: {
+      color: theme === "dark" ? "#fff" : "#000",
+      fontSize: 15,
+      margin: 10,
+      padding: 10,
+      height: 50,
+      textAlign: "center",
+      userSelect: "none",
+    },
+    buttonNoBackgroundClicked: {
+      color: theme === "dark" ? "#5d5d74" : "#e6e6e6",
     },
     // for text inputs
     textInput: {
@@ -58,11 +63,9 @@ export const SGStyles = () => {
       borderRadius: 8,
       color: "#999",
       fontSize: 24,
-      marginLeft: width / 2 - width * 0.2,
-      marginBottom: 10,
+      margin: 10,
       padding: 10,
-      width: "40%",
-      display: "block",
+
       userSelect: "none",
       outlineStyle: "none",
     },
