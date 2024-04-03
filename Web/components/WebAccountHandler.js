@@ -32,15 +32,22 @@ export default function WebAccountHandler({ screenType }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  /* get auth that was initalized in WebApp.js, this may timeout after a while, 
+  if it does then move this inside the log in and sign up func */
   const auth = getAuth();
 
+  // this is executed when user clicks sign up
   const SignUpFunc = async () => {
+    // make sure passwords match
     if (confirmPassword !== password) {
+      // info invalid
       setInvalidReason("Passwords don't match");
       setInvalidInfo(true);
       return;
     }
+    // info is currently valid
     setInvalidInfo(false);
+    // start loading animation
     setLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(
@@ -48,6 +55,7 @@ export default function WebAccountHandler({ screenType }) {
         email,
         password
       );
+      // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
         navigate("/home");
       }
@@ -71,29 +79,35 @@ export default function WebAccountHandler({ screenType }) {
           "There was a problem connecting to our server, please try again later or contact us for help."
         );
       }
+      // info is invalid
       setInvalidInfo(true);
     } finally {
+      // done loading
       setLoading(false);
     }
   };
 
+  // this is executed when user clicks log in
   const LogInFunc = async () => {
+    // info is currently valid
     setInvalidInfo(false);
+    // start loading animation
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
 
+      // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
         navigate("/home");
       }
     } catch (error) {
-      console.log(error.code);
-
       if (error.code == "auth/invalid-password") {
         // Same reason, different code
         setInvalidReason("Try a stronger password (at least 6 characters)");
       } else if (error.code == "auth/invalid-email") {
         setInvalidReason("Please enter a valid email.");
+      } else if (error.code == "auth/invalid-credential") {
+        setInvalidReason("Incorrect email or password");
       } else if (error.code == "auth/too-many-requests") {
         setInvalidReason(
           "You have sent too many requests, please try again later."
@@ -104,8 +118,10 @@ export default function WebAccountHandler({ screenType }) {
           "There was a problem connecting to our server, please try again later or contact us for help."
         );
       }
+      // info is invalid
       setInvalidInfo(true);
     } finally {
+      // done loading
       setLoading(false);
     }
   };
@@ -143,12 +159,14 @@ export default function WebAccountHandler({ screenType }) {
             onChange={(text) => setConfirmPassword(text.target.value)}
           ></TextInput>
 
+          {/* display errors that occur */}
           {invalidInfo ? (
             <Text style={styles.textStyles.errorText}>{invalidReason}</Text>
           ) : (
             <></>
           )}
 
+          {/* show buttons or loading animation */}
           {loading ? (
             <>
               <ActivityIndicator size="large"></ActivityIndicator>
@@ -202,6 +220,14 @@ export default function WebAccountHandler({ screenType }) {
             onChange={(text) => setPassword(text.target.value)}
           ></TextInput>
 
+          {/* display errors that occur */}
+          {invalidInfo ? (
+            <Text style={styles.textStyles.errorText}>{invalidReason}</Text>
+          ) : (
+            <></>
+          )}
+
+          {/* show buttons or loading animation */}
           {loading ? (
             <>
               <ActivityIndicator size="large"></ActivityIndicator>

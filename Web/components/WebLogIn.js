@@ -15,6 +15,7 @@ export default function WebLogIn() {
 
   return (
     <View style={styles.containerStyles.largeContainer}>
+      {/* This is in a seperate component so it can be reused in a mini window too */}
       <WebAccountHandler screenType={"tab"}></WebAccountHandler>
       <Pressable
         onPress={() => {

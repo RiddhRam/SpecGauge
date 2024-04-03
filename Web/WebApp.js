@@ -3,10 +3,12 @@ import "bootstrap/dist/css/bootstrap.css";
 import WebHome from "./components/WebHome";
 import WebLogIn from "./components/WebLogIn";
 import WebDefaultPage from "./components/WebDefaultPage";
+import NoPage from "./components/NoPage";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+// Firebase
 import { initializeApp } from "firebase/app";
 import {
   initializeAuth,
@@ -32,10 +34,13 @@ const auth = initializeAuth(app, {
 });
 
 export default function WebApp() {
+  // userVal of firebase
   const [userVal, setUserVal] = useState(false);
 
   useEffect(() => {
+    // listen for changes (sign in, sign out)
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      // update userVal upon any change
       setUserVal(user);
     });
 
@@ -48,7 +53,7 @@ export default function WebApp() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<WebDefaultPage></WebDefaultPage>}></Route>
-        {/* in case user goes to specgauge.com, instead of specgauge.com/home*/}
+        {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
         <Route
           index
           path="/home"
@@ -57,6 +62,8 @@ export default function WebApp() {
         {/* the home page */}
         <Route path="/login" element={<WebLogIn></WebLogIn>}></Route>
         {/* the sign up/log in page */}
+        <Route path="*" element={<NoPage></NoPage>}></Route>
+        {/* any other page, error 404 */}
       </Routes>
     </BrowserRouter>
   );
