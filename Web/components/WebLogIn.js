@@ -1,15 +1,21 @@
 import { Pressable, View } from "react-native-web";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SGStyles } from "../../styles/styles";
 import WebAccountHandler from "./WebAccountHandler";
 
 export default function WebLogIn() {
+  // Initialize useLocation as location
+  const location = useLocation();
+
+  // Initialize useNavigate as navigate
   const navigate = useNavigate();
+
+  // Call SGStyles as styles
   const styles = SGStyles();
 
   return (
     <View style={styles.containerStyles.largeContainer}>
-      <WebAccountHandler></WebAccountHandler>
+      <WebAccountHandler screenType={"tab"}></WebAccountHandler>
       <Pressable
         onPress={() => {
           navigate("/home");

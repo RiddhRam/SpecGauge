@@ -25,6 +25,12 @@ export const SGStyles = () => {
       padding: 10,
       textAlign: "center",
     },
+    errorText: {
+      color: "#f00",
+      fontSize: 15,
+      padding: 10,
+      textAlign: "center",
+    },
   });
 
   const inputStyles = StyleSheet.create({
@@ -65,7 +71,6 @@ export const SGStyles = () => {
       fontSize: 24,
       margin: 10,
       padding: 10,
-
       userSelect: "none",
       outlineStyle: "none",
     },
