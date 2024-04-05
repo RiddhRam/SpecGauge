@@ -1,8 +1,10 @@
 // Boostrap design
 import "bootstrap/dist/css/bootstrap.css";
-import WebHome from "./components/WebHome";
-import WebLogIn from "./components/accounts/WebLogIn";
 import WebDefaultPage from "./components/WebDefaultPage";
+import WebHome from "./components/WebHome";
+import WebSearch from "./components/WebSearch";
+import WebLogIn from "./components/accounts/WebLogIn";
+import WebUserAccount from "./components/accounts/WebUserAccount";
 import NoPage from "./components/NoPage";
 
 import { useState, useEffect } from "react";
@@ -13,7 +15,7 @@ import { initializeApp } from "firebase/app";
 import {
   initializeAuth,
   onAuthStateChanged,
-  browserSessionPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -30,7 +32,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = initializeAuth(app, {
-  persistence: browserSessionPersistence,
+  persistence: browserLocalPersistence,
 });
 
 export default function WebApp() {
@@ -50,7 +52,7 @@ export default function WebApp() {
   });
 
   return (
-    <BrowserRouter>
+    <BrowserRouter style={{ display: "block" }}>
       <Routes>
         <Route path="/" element={<WebDefaultPage></WebDefaultPage>}></Route>
         {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
@@ -60,8 +62,17 @@ export default function WebApp() {
           element={<WebHome userVal={userVal}></WebHome>}
         ></Route>
         {/* the home page */}
+        <Route
+          path="/search"
+          element={<WebSearch userVal={userVal}></WebSearch>}
+        ></Route>
         <Route path="/login" element={<WebLogIn></WebLogIn>}></Route>
         {/* the sign up/log in page */}
+        <Route
+          path="/account"
+          element={<WebUserAccount userVal={userVal}></WebUserAccount>}
+        ></Route>
+        {/* the user account page */}
         <Route path="*" element={<NoPage></NoPage>}></Route>
         {/* any other page, error 404 */}
       </Routes>

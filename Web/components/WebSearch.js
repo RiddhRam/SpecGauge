@@ -1,18 +1,12 @@
-import { Pressable, View } from "react-native-web";
-import { useNavigate } from "react-router-dom";
-import { SGStyles } from "../../styles/styles";
+import { View, Pressable } from "react-native-web";
 import { Navbar } from "../Navbar";
+import { SGStyles } from "../../styles/styles";
 
-export default function WebHome({ userVal }) {
-  // Initialize useNavigate as navigate
-  const navigate = useNavigate();
-
-  // Call SGStyles as styles
+export default function WebSearch({ userVal }) {
   const styles = SGStyles();
-
   return (
     <View style={styles.containerStyles.webContainer}>
-      <Navbar page={"home"} userVal={userVal}></Navbar>
+      <Navbar page={"search"} userVal={userVal}></Navbar>
       <View style={styles.containerStyles.largeContainer}>
         <Pressable
           style={({ pressed }) => [
@@ -20,7 +14,7 @@ export default function WebHome({ userVal }) {
             pressed && styles.inputStyles.buttonClicked,
           ]}
         >
-          <p>Compare</p>
+          <p>Search</p>
         </Pressable>
       </View>
     </View>
