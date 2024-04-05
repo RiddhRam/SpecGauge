@@ -1,7 +1,7 @@
 // Boostrap design
 import "bootstrap/dist/css/bootstrap.css";
 import WebHome from "./components/WebHome";
-import WebLogIn from "./components/WebLogIn";
+import WebLogIn from "./components/accounts/WebLogIn";
 import WebDefaultPage from "./components/WebDefaultPage";
 import NoPage from "./components/NoPage";
 

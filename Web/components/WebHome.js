@@ -2,6 +2,7 @@ import { Pressable, View, Text } from "react-native-web";
 import { useNavigate } from "react-router-dom";
 import { SGStyles } from "../../styles/styles";
 import { getAuth, signOut } from "firebase/auth";
+import { Navbar } from "./Navbar";
 
 export default function WebHome({ userVal }) {
   // Initialize useNavigate as navigate
@@ -25,43 +26,46 @@ export default function WebHome({ userVal }) {
   };
 
   return (
-    <View style={styles.containerStyles.largeContainer}>
-      {/* if logged in display email and sign out button, 
+    <>
+      <Navbar></Navbar>
+      <View style={styles.containerStyles.largeContainer}>
+        {/* if logged in display email and sign out button, 
       if logged out display Not Logged In and Sign Up or Log In button */}
-      {userVal ? (
-        <>
-          <Text style={{ color: "#fff" }}>{userVal.email}</Text>
-          <Pressable
-            onPress={() => {
-              SignOutFunc();
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-            ]}
-          >
-            <p>Log Out</p>
-          </Pressable>
-        </>
-      ) : (
-        <>
-          <Text style={{ color: "#fff" }}>Not signed in </Text>
-          <Pressable
-            onPress={() => {
-              navigate("/login");
-              {
-                /* Send user to the sign up/log in page*/
-              }
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-            ]}
-          >
-            <p>Sign Up or Log In</p>
-          </Pressable>
-        </>
-      )}
-    </View>
+        {userVal ? (
+          <>
+            <Text style={{ color: "#fff" }}>{userVal.email}</Text>
+            <Pressable
+              onPress={() => {
+                SignOutFunc();
+              }}
+              style={({ pressed }) => [
+                styles.inputStyles.button,
+                pressed && styles.inputStyles.buttonClicked,
+              ]}
+            >
+              <p>Log Out</p>
+            </Pressable>
+          </>
+        ) : (
+          <>
+            <Text style={styles.textStyles.simpleText}>Not signed in </Text>
+            <Pressable
+              onPress={() => {
+                navigate("/login");
+                {
+                  /* Send user to the sign up/log in page*/
+                }
+              }}
+              style={({ pressed }) => [
+                styles.inputStyles.button,
+                pressed && styles.inputStyles.buttonClicked,
+              ]}
+            >
+              <p>Sign Up or Log In</p>
+            </Pressable>
+          </>
+        )}
+      </View>
+    </>
   );
 }

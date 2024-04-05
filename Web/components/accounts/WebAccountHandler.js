@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
 } from "react-native-web";
 import { useNavigate } from "react-router-dom";
-import { SGStyles } from "../../styles/styles";
+import { SGStyles } from "../../../styles/styles";
 import { useState } from "react";
 
 import {

@@ -9,7 +9,6 @@ import {
   initializeAuth,
   getReactNativePersistence,
   onAuthStateChanged,
-  browserSessionPersistence,
 } from "firebase/auth";
 import { ReactNativeAsyncStorage } from "firebase/auth"; // might need to be from @react-native-async-storage/async-storage
 import * as firebaseFunctions from "firebase/functions";
