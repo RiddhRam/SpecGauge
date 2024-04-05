@@ -1,12 +1,14 @@
+import { SGStyles } from "../../../styles/styles";
+
 import {
+  ActivityIndicator,
   Pressable,
   Text,
   TextInput,
   View,
-  ActivityIndicator,
 } from "react-native-web";
 import { useNavigate } from "react-router-dom";
-import { SGStyles } from "../../../styles/styles";
+
 import { useState } from "react";
 
 import {
@@ -49,11 +51,7 @@ export default function WebAccountHandler({ screenType }) {
     // start loading animation
     setLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      await createUserWithEmailAndPassword(auth, email, password); // returns a response
       // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
         navigate("/home");
@@ -65,6 +63,9 @@ export default function WebAccountHandler({ screenType }) {
         // Same reason, different code
         setInvalidReason("Try a stronger password (at least 6 characters)");
       } else if (error.code == "auth/email-already-exists") {
+        setInvalidReason("This email already exists. Please log in instead.");
+      } else if (error.code == "auth/email-already-in-use") {
+        // Same reason, different code
         setInvalidReason("This email already exists. Please log in instead.");
       } else if (error.code == "auth/invalid-email") {
         setInvalidReason("Please enter a valid email.");
@@ -80,6 +81,7 @@ export default function WebAccountHandler({ screenType }) {
       }
       // info is invalid
       setInvalidInfo(true);
+      console.log(error.message);
     } finally {
       // done loading
       setLoading(false);
@@ -93,7 +95,7 @@ export default function WebAccountHandler({ screenType }) {
     // start loading animation
     setLoading(true);
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password); // returns a response
 
       // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {

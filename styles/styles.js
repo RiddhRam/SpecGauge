@@ -8,19 +8,22 @@ export const SGStyles = () => {
   const [theme, setTheme] = useState(scheme);
 
   const containerStyles = StyleSheet.create({
-    // For Views and divs that take up the entire screen
+    // For the whole web screen
+    webContainer: {
+      width: "100%",
+    },
+    // For the web navbar
+    navbarContainer: {
+      backgroundColor: theme === "dark" ? "#030612" : "#ccc",
+      fontWeight: "bold",
+      padding: 15,
+    },
+    // For Views and divs that take up the main part of the screen
     largeContainer: {
       flex: 1,
       backgroundColor: theme === "dark" ? "#171827" : "#fff",
       alignItems: "center",
       justifyContent: "center",
-    },
-    navbarContainer: {
-      paddingTop: 10,
-      paddingBottom: 10,
-      paddingRight: 10,
-      backgroundColor: theme === "dark" ? "#030612" : "#ccc",
-      fontWeight: "bold",
     },
   });
 
@@ -43,15 +46,16 @@ export const SGStyles = () => {
       textAlign: "center",
     },
     navbarText: {
-      display: "block",
       textDecorationLine: "none",
       color: theme === "dark" ? "#fff" : "#000",
-      paddingTop: 5,
-      paddingBottom: 5,
-      paddingRight: 20,
-      margin: 15,
-      justifyContent: "center",
-      alignItems: "center",
+      padding: 15,
+    },
+    navbarTextSelected: {
+      textDecorationLine: "none",
+      color: theme === "dark" ? "#fff" : "#000",
+      padding: 15,
+      backgroundColor: theme === "dark" ? "grey" : "#aaa",
+      borderRadius: 10,
     },
   });
 

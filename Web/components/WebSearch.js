@@ -1,16 +1,14 @@
 import { Navbar } from "../Navbar";
 import { SGStyles } from "../../styles/styles";
 
-import { Pressable, View } from "react-native-web";
+import { View, Pressable } from "react-native-web";
 
-export default function WebHome({ userVal }) {
-  // Call SGStyles as styles
+export default function WebSearch({ userVal }) {
   const styles = SGStyles();
-
   return (
     <View style={styles.containerStyles.webContainer}>
       {/* navbar */}
-      <Navbar page={"home"} userVal={userVal} />
+      <Navbar page={"search"} userVal={userVal} />
 
       {/* main body */}
       <View style={styles.containerStyles.largeContainer}>
@@ -20,7 +18,7 @@ export default function WebHome({ userVal }) {
             pressed && styles.inputStyles.buttonClicked,
           ]}
         >
-          <p>Compare</p>
+          <p>Search</p>
         </Pressable>
       </View>
     </View>
