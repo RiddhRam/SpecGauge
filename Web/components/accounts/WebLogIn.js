@@ -1,13 +1,11 @@
-import { Pressable, View } from "react-native-web";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Navbar } from "../../Navbar";
 import { SGStyles } from "../../../styles/styles";
 import WebAccountHandler from "./WebAccountHandler";
-import { Navbar } from "../../Navbar";
+
+import { Pressable, View } from "react-native-web";
+import { useNavigate } from "react-router-dom";
 
 export default function WebLogIn() {
-  // Initialize useLocation as location
-  const location = useLocation();
-
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
 
@@ -16,7 +14,10 @@ export default function WebLogIn() {
 
   return (
     <View style={styles.containerStyles.webContainer}>
-      <Navbar page={"login"}></Navbar>
+      {/* navbar */}
+      <Navbar page={"login"} />
+
+      {/* main body */}
       <View style={styles.containerStyles.largeContainer}>
         {/* This is in a seperate component so it can be reused in a mini window too */}
         <WebAccountHandler screenType={"tab"}></WebAccountHandler>

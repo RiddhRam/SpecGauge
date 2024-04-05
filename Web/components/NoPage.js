@@ -1,7 +1,7 @@
-import { View, Text, Pressable } from "react-native-web";
-import { useNavigate } from "react-router-dom";
 import { SGStyles } from "../../styles/styles";
-import { Navbar } from "../Navbar";
+
+import { Pressable, Text, View } from "react-native-web";
+import { useNavigate } from "react-router-dom";
 
 export default function NoPage() {
   // Initialize useNavigate as navigate

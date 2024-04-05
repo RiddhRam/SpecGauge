@@ -1,8 +1,10 @@
+import { SGStyles } from "../../../styles/styles";
+import { Navbar } from "../../Navbar";
+
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { View, Pressable, Text } from "react-native-web";
-import { SGStyles } from "../../../styles/styles";
-import { Navbar } from "../../Navbar";
+
 import { getAuth, signOut } from "firebase/auth";
 
 export default function WebUserAccount({ userVal }) {
@@ -38,7 +40,10 @@ export default function WebUserAccount({ userVal }) {
     /* if logged in display email and sign out button, 
       if logged out display send user to /login */
     <View style={styles.containerStyles.webContainer}>
-      <Navbar page="account" userVal={userVal}></Navbar>
+      {/* navbar */}
+      <Navbar page="account" userVal={userVal} />
+
+      {/* main body */}
       <View style={styles.containerStyles.largeContainer}>
         <Text style={styles.textStyles.simpleText}>{userVal.email}</Text>
         <Pressable

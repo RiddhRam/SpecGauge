@@ -1,6 +1,7 @@
+import { SGStyles } from "../styles/styles";
+
 import { Link } from "react-router-dom";
 import { Text, View } from "react-native-web";
-import { SGStyles } from "../styles/styles";
 
 export const Navbar = ({ page, userVal }) => {
   // initialize SGStyles as styles
@@ -8,9 +9,12 @@ export const Navbar = ({ page, userVal }) => {
 
   return (
     <View style={styles.containerStyles.navbarContainer}>
+      {/* The title and logo */}
       <Text style={[styles.textStyles.text, { display: "block" }]}>
         SpecGuage
       </Text>
+      {/* The links */}
+      {/* If currently on the page of one of the links, that link is highlighted */}
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         {page === "home" ? (
           <Link to="/home" style={styles.textStyles.navbarTextSelected}>
@@ -32,6 +36,7 @@ export const Navbar = ({ page, userVal }) => {
           </Link>
         )}
 
+        {/* If logged in show "My Account" link. If logged out show "Sign Up/Log In" link. */}
         {userVal ? (
           <>
             {page === "account" ? (

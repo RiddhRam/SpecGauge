@@ -1,18 +1,18 @@
-import { Pressable, View } from "react-native-web";
-import { useNavigate } from "react-router-dom";
-import { SGStyles } from "../../styles/styles";
 import { Navbar } from "../Navbar";
+import { SGStyles } from "../../styles/styles";
+
+import { Pressable, View } from "react-native-web";
 
 export default function WebHome({ userVal }) {
-  // Initialize useNavigate as navigate
-  const navigate = useNavigate();
-
   // Call SGStyles as styles
   const styles = SGStyles();
 
   return (
     <View style={styles.containerStyles.webContainer}>
-      <Navbar page={"home"} userVal={userVal}></Navbar>
+      {/* navbar */}
+      <Navbar page={"home"} userVal={userVal} />
+
+      {/* main body */}
       <View style={styles.containerStyles.largeContainer}>
         <Pressable
           style={({ pressed }) => [

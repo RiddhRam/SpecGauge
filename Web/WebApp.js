@@ -13,9 +13,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 // Firebase
 import { initializeApp } from "firebase/app";
 import {
+  browserLocalPersistence,
   initializeAuth,
   onAuthStateChanged,
-  browserLocalPersistence,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -52,7 +52,7 @@ export default function WebApp() {
   });
 
   return (
-    <BrowserRouter style={{ display: "block" }}>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<WebDefaultPage></WebDefaultPage>}></Route>
         {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
@@ -66,6 +66,7 @@ export default function WebApp() {
           path="/search"
           element={<WebSearch userVal={userVal}></WebSearch>}
         ></Route>
+        {/* the search page */}
         <Route path="/login" element={<WebLogIn></WebLogIn>}></Route>
         {/* the sign up/log in page */}
         <Route
