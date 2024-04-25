@@ -39,14 +39,17 @@ export const SGStyles = () => {
     comparisonScreenContainer: {
       flex: 1,
       backgroundColor: theme === "dark" ? "#171827" : "#fff",
-      alignItems: "center",
+      padding: 20,
+    },
+    comparisonColumns: {
+      flexDirection: "column",
     },
   });
 
   const textStyles = StyleSheet.create({
     // For regular text
     text: {
-      color: theme === "dark" ? "#4ca0d7" : "#136aa7",
+      color: "#4ca0d7",
       fontSize: 40,
       padding: 10,
       textAlign: "center",
@@ -79,6 +82,19 @@ export const SGStyles = () => {
     },
     plainText: {
       color: theme === "dark" ? "#fff" : "#000",
+    },
+    comparisonText: {
+      color: theme === "dark" ? "#fff" : "#000",
+      textAlign: "center",
+      padding: 10,
+      borderWidth: 1,
+    },
+    specCategoryText: {
+      backgroundColor: "#4ca0d7",
+      color: theme === "dark" ? "#fff" : "#000",
+      textAlign: "center",
+      padding: 10,
+      borderWidth: 1,
     },
   });
 

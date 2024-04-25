@@ -13,6 +13,8 @@ import { useState } from "react";
 
 import { httpsCallable } from "firebase/functions";
 
+import { v4 as uuidv4 } from "uuid";
+
 const categories = [
   "Automobiles",
   "Phones",
@@ -63,9 +65,116 @@ const brands = [
   ["AMD", "Intel"],
 ];
 
-let products = ["Add"];
-
-const droneSpecs = ["Brand", "Drone", "Spec1", "Spec2", "Spec3", "Spec4"];
+const ridiculous = [
+  "supercalifragilisticexpialidocious",
+  "antidisestablishmentarianism",
+  "pseudopseudohypoparathyroidism",
+  "floccinaucinihilipilification",
+  "pneumonoultramicroscopicsilicovolcanoconiosis",
+  "hippopotomonstrosesquippedaliophobia",
+  "electroencephalographically",
+  "immunoelectrophoretically",
+  "hepatolenticular degeneration",
+  "hypercholesterolemia",
+  "supernaturalism",
+  "institutionalization",
+  "microspectrophotometrically",
+  "revascularization",
+  "anthropomorphologically",
+  "parthenogenetically",
+  "psychopharmacological",
+  "immunosuppressiveness",
+  "incomprehensibilities",
+  "uncharacteristically",
+  "incomprehensibleness",
+  "pharmacodynamically",
+  "representationalism",
+  "uncontrollableness",
+  "uncompromisingness",
+  "constitutionalization",
+  "photodisintegrations",
+  "irreconcilabilities",
+  "overrepresentations",
+  "nonprofessionally",
+  "undeniableness",
+  "inconsiderableness",
+  "incontrovertibility",
+  "unconventionality",
+  "transistorizations",
+  "interrelationships",
+  "counterinfluences",
+  "interconvertibility",
+  "unpretentiousnesses",
+  "irreplaceabilities",
+  "noncontroversially",
+  "counterreformations",
+  "indiscriminateness",
+  "transubstantiations",
+  "irresponsibilities",
+  "counteradaptations",
+  "incontrovertibility",
+  "unconventionality",
+  "transistorizations",
+  "interrelationships",
+  "counterinfluences",
+  "interconvertibility",
+  "unpretentiousnesses",
+  "irreplaceabilities",
+  "noncontroversially",
+  "counterreformations",
+  "indiscriminateness",
+  "transubstantiations",
+  "irresponsibilities",
+  "counteradaptations",
+  "electroencephalogram",
+  "antiestablishmentarian",
+  "unconstitutionality",
+  "counterdemonstration",
+  "microencapsulations",
+  "indiscriminately",
+  "hyperconsciousnesses",
+  "counterproliferation",
+  "representativenesses",
+  "counterconspiratorial",
+  "electrocardiographic",
+  "uncharacteristically",
+  "immunoprecipitations",
+  "incomprehensibility",
+  "uncontrollabilities",
+  "pharmacologically",
+  "immunohistochemical",
+  "interchangeabilities",
+  "uncontrollabilities",
+  "disenfranchisements",
+  "neurotransmissions",
+  "antiestablishmentarianism",
+  "interchangeabilities",
+  "disproportionateness",
+  "antiestablishmentarian",
+  "hyperconsciousness",
+  "counterproliferation",
+  "representativeness",
+  "counterconspiratorial",
+  "electrocardiographic",
+  "uncharacteristically",
+  "immunoprecipitation",
+  "incomprehensibility",
+  "uncontrollability",
+  "pharmacological",
+  "immunohistochemical",
+  "interchangeability",
+  "uncontrollability",
+  "disenfranchisement",
+  "neurotransmission",
+  "antiestablishment",
+  "disproportionateness",
+  "antiestablishment",
+  "disproportionate",
+  "antiestablishment",
+  "disproportionate",
+  "antiestablishment",
+  "disproportionate",
+];
 
 export default function WebHome({ userVal, functions }) {
   {
@@ -81,6 +190,10 @@ export default function WebHome({ userVal, functions }) {
     /* Determines which part of product selection the modal is on */
   }
   const [modalScreen, setModalScreen] = useState(0);
+
+  const [droneSpecs, setDroneSpecs] = useState([
+    ["Brand", "Name", "Specs1", "Specs2", "Specs3", "Specs4", "Specs5"],
+  ]);
 
   // Call SGStyles as styles
   const styles = SGStyles();
@@ -104,93 +217,140 @@ export default function WebHome({ userVal, functions }) {
 
       {/* main body */}
 
-      {/* Selection comparison type, default screen */}
-      {category == 0 && (
-        <View style={styles.containerStyles.largeContainer}>
-          <View>
-            <Pressable
-              onPress={() => {
-                setCompareModalVisible(true);
-              }}
-              style={({ pressed }) => [
-                styles.inputStyles.button,
-                pressed && styles.inputStyles.buttonClicked,
-              ]}
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        {/* Selection comparison type, default screen */}
+        {category == 0 && (
+          <View style={styles.containerStyles.largeContainer}>
+            <View>
+              <Pressable
+                onPress={() => {
+                  setCompareModalVisible(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+              >
+                <p>Compare</p>
+              </Pressable>
+
+              <Modal
+                visible={compareModalVisible}
+                animationType="slide"
+                transparent="true"
+              >
+                <View style={styles.containerStyles.modalContainer}>
+                  <Text style={styles.textStyles.text}>Select a category</Text>
+
+                  <ScrollView style={styles.textStyles.modalText}>
+                    {categories.map((item, index) => (
+                      <Pressable
+                        style={({ pressed }) => [
+                          { padding: 10, paddingRight: 50, fontSize: 20 },
+                          pressed &&
+                            styles.inputStyles.buttonNoBackgroundClicked,
+                        ]}
+                        key={item}
+                        onPress={() => {
+                          {
+                            /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
+                          }
+                          setCategory(index + 1);
+                          setCompareModalVisible(false);
+                        }}
+                      >
+                        <p>{item}</p>
+                      </Pressable>
+                    ))}
+                  </ScrollView>
+
+                  <Pressable
+                    onPress={() => {
+                      setCompareModalVisible(false);
+                      setModalScreen(0);
+                    }}
+                    style={({ pressed }) => [
+                      styles.inputStyles.button,
+                      pressed && styles.inputStyles.buttonClicked,
+                    ]}
+                  >
+                    <p>Cancel</p>
+                  </Pressable>
+                </View>
+              </Modal>
+            </View>
+          </View>
+        )}
+
+        {/* Compare Drones screen */}
+        {category == 4 && (
+          <View style={styles.containerStyles.comparisonScreenContainer}>
+            <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
+              Drones Comparison
+            </Text>
+
+            <View style={{ marginRight: "auto", flexDirection: "row" }}>
+              <Pressable
+                onPress={() => {
+                  setCategory(0);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+              >
+                <p>{"< Go Back"}</p>
+              </Pressable>
+
+              <Pressable
+                onPress={async () => {
+                  const newArray = [];
+                  const length = droneSpecs[0].length;
+                  for (let i = 0; i < length; i++) {
+                    const randInt = Math.floor(Math.random() * 100);
+                    const randomElement = ridiculous[randInt];
+                    console.log(randomElement);
+                    newArray.push(randomElement);
+                  }
+                  await setDroneSpecs((prevSpecs) => [...prevSpecs, newArray]);
+                  console.log(droneSpecs);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+              >
+                <p>Add</p>
+              </Pressable>
+            </View>
+
+            <ScrollView
+              horizontal={true}
+              style={styles.containerStyles.comparisonScreenContainer}
             >
-              <p>Compare</p>
-            </Pressable>
-
-            <Modal
-              visible={compareModalVisible}
-              animationType="slide"
-              transparent="true"
-            >
-              <View style={styles.containerStyles.modalContainer}>
-                <Text style={styles.textStyles.text}>Select a category</Text>
-
-                <ScrollView style={styles.textStyles.modalText}>
-                  {categories.map((item, index) => (
-                    <Pressable
-                      style={({ pressed }) => [
-                        { padding: 10, paddingRight: 50, fontSize: 20 },
-                        pressed && styles.inputStyles.buttonNoBackgroundClicked,
-                      ]}
-                      key={item}
-                      onPress={() => {
-                        {
-                          /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
-                        }
-                        setCategory(index + 1);
-                        setCompareModalVisible(false);
-                      }}
-                    >
-                      <p>{item}</p>
-                    </Pressable>
-                  ))}
-                </ScrollView>
-
-                <Pressable
-                  onPress={() => {
-                    setCompareModalVisible(false);
-                    setModalScreen(0);
-                  }}
-                  style={({ pressed }) => [
-                    styles.inputStyles.button,
-                    pressed && styles.inputStyles.buttonClicked,
-                  ]}
+              {droneSpecs.map((item, index1) => (
+                <View
+                  key={uuidv4() + item}
+                  style={[styles.containerStyles.comparisonColumns]}
                 >
-                  <p>Cancel</p>
-                </Pressable>
-              </View>
-            </Modal>
+                  {item.map((spec, index2) => (
+                    <Text
+                      key={uuidv4() + spec}
+                      style={
+                        index1 == 0
+                          ? styles.textStyles.specCategoryText
+                          : styles.textStyles.comparisonText
+                      }
+                    >
+                      {spec}
+                    </Text>
+                  ))}
+                </View>
+              ))}
+            </ScrollView>
           </View>
-        </View>
-      )}
-
-      {/* Compare Drones screen */}
-      {category == 4 && (
-        <View style={styles.containerStyles.comparisonScreenContainer}>
-          <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
-            Drones Comparison
-          </Text>
-
-          <View style={{ marginRight: "auto" }}>
-            <Pressable
-              onPress={() => {
-                setCategory(0);
-              }}
-              style={({ pressed }) => [
-                styles.inputStyles.button,
-                pressed && styles.inputStyles.buttonClicked,
-              ]}
-            >
-              <p>{"< Go Back"}</p>
-            </Pressable>
-          </View>
-
-          <ScrollView></ScrollView>
-        </View>
-      )}
+        )}
+      </ScrollView>
     </View>
   );
 }
