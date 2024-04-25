@@ -11,7 +11,7 @@ export const Navbar = ({ page, userVal }) => {
     <View style={styles.containerStyles.navbarContainer}>
       {/* The title and logo */}
       <Text style={[styles.textStyles.text, { display: "block" }]}>
-        SpecGuage
+        SpecGauge
       </Text>
       {/* The links */}
       {/* If currently on the page of one of the links, that link is highlighted */}

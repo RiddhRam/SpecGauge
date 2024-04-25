@@ -17,6 +17,7 @@ import {
   initializeAuth,
   onAuthStateChanged,
 } from "firebase/auth";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -30,6 +31,7 @@ const firebaseConfig = {
 
 // Initialize firebase
 const app = initializeApp(firebaseConfig);
+const functions = getFunctions();
 
 const auth = initializeAuth(app, {
   persistence: browserLocalPersistence,
@@ -59,7 +61,7 @@ export default function WebApp() {
         <Route
           index
           path="/home"
-          element={<WebHome userVal={userVal}></WebHome>}
+          element={<WebHome userVal={userVal} functions={functions}></WebHome>}
         ></Route>
         {/* the home page */}
         <Route

@@ -25,6 +25,22 @@ export const SGStyles = () => {
       alignItems: "center",
       justifyContent: "center",
     },
+    modalContainer: {
+      flex: 0.75,
+      backgroundColor: theme === "dark" ? "#030612" : "#fff",
+      borderColor: "#000",
+      borderWidth: 2,
+      borderRadius: 8,
+      marginTop: 200,
+      marginHorizontal: 50,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    comparisonScreenContainer: {
+      flex: 1,
+      backgroundColor: theme === "dark" ? "#171827" : "#fff",
+      alignItems: "center",
+    },
   });
 
   const textStyles = StyleSheet.create({
@@ -57,6 +73,13 @@ export const SGStyles = () => {
       backgroundColor: theme === "dark" ? "grey" : "#aaa",
       borderRadius: 10,
     },
+    modalText: {
+      color: theme === "dark" ? "#fff" : "#000",
+      textAlign: "left",
+    },
+    plainText: {
+      color: theme === "dark" ? "#fff" : "#000",
+    },
   });
 
   const inputStyles = StyleSheet.create({
@@ -75,6 +98,7 @@ export const SGStyles = () => {
     // when the button is clicked
     buttonClicked: {
       backgroundColor: theme === "dark" ? "#5d5d74" : "#e6e6e6",
+      userSelect: "none",
     },
     buttonNoBackground: {
       color: theme === "dark" ? "#fff" : "#000",
@@ -87,6 +111,7 @@ export const SGStyles = () => {
     },
     buttonNoBackgroundClicked: {
       color: theme === "dark" ? "#5d5d74" : "#e6e6e6",
+      userSelect: "none",
     },
     // for text inputs
     textInput: {
