@@ -69,6 +69,7 @@ export default function SelectionModal({
                       await setRequestedSpecs(tempSpecArray);
                     }
                     setModalScreen(1);
+                    console.log(defaultArray);
                   }
                 }}
               >
@@ -107,9 +108,16 @@ export default function SelectionModal({
                 onPress={async () => {
                   // If user doesn't have to select generations
                   if (process.length == 2) {
-                    //await setSpecs((prevSpecs) => [...prevSpecs, requestedSpecs]);
+                    tempDefault = [];
+                    for (spec in defaultArray) {
+                      newJSON = {};
 
-                    tempDefault = defaultArray;
+                      newJSON["Value"] = defaultArray[spec].Value;
+                      newJSON["Display"] = defaultArray[spec].Display;
+                      newJSON["Category"] = defaultArray[spec].Category;
+                      tempDefault.push(newJSON);
+                    }
+
                     for (key in requestedSpecs[index]) {
                       for (let i = 0; i < matchingArray.length; i++) {
                         if (key == matchingArray[i]) {
@@ -119,11 +127,12 @@ export default function SelectionModal({
                             value != "False" &&
                             value != "--"
                           ) {
-                            defaultArray[i].Value = defaultArray[
-                              i
-                            ].Value.replace("--", requestedSpecs[index][key]);
+                            tempDefault[i].Value = tempDefault[i].Value.replace(
+                              "--",
+                              requestedSpecs[index][key]
+                            );
                           } else if (value == "True") {
-                            defaultArray[i].Display = true;
+                            tempDefault[i].Display = true;
                           }
 
                           break;
@@ -136,11 +145,11 @@ export default function SelectionModal({
                       tempArray.push("");
                     }
 
-                    for (key in defaultArray) {
-                      if (defaultArray[key].Display) {
+                    for (key in tempDefault) {
+                      if (tempDefault[key].Display) {
                         for (let j = 0; j < categories[0].length; j++) {
-                          if (defaultArray[key].Category == categories[0][j]) {
-                            tempArray[j] += defaultArray[key].Value + "\n";
+                          if (tempDefault[key].Category == categories[0][j]) {
+                            tempArray[j] += tempDefault[key].Value + "\n";
                             break;
                           }
                         }
@@ -153,7 +162,8 @@ export default function SelectionModal({
                       }
                     }
                     await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
-                    defaultArray = tempDefault;
+                    await setRequestedStep1([]);
+                    await setRequestedSpecs([]);
                     setProductModalVisible(false);
                     setModalScreen(0);
                   }
