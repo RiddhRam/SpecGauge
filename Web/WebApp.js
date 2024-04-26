@@ -5,7 +5,6 @@ import WebHome from "./components/WebHome";
 import WebSearch from "./components/WebSearch";
 import WebLogIn from "./components/accounts/WebLogIn";
 import WebUserAccount from "./components/accounts/WebUserAccount";
-import NoPage from "./components/NoPage";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -76,8 +75,11 @@ export default function WebApp() {
           element={<WebUserAccount userVal={userVal}></WebUserAccount>}
         ></Route>
         {/* the user account page */}
-        <Route path="*" element={<NoPage></NoPage>}></Route>
-        {/* any other page, error 404 */}
+        <Route
+          path="*"
+          element={<WebHome userVal={userVal} functions={functions}></WebHome>}
+        ></Route>
+        {/* any other page, go to home */}
       </Routes>
     </BrowserRouter>
   );

@@ -1,19 +1,13 @@
 import { Navbar } from "../Navbar";
 import { SGStyles } from "../../styles/styles";
 
-import {
-  Modal,
-  Pressable,
-  View,
-  Text,
-  ScrollView,
-  useWindowDimensions,
-} from "react-native-web";
+import { Modal, Pressable, View, Text, ScrollView } from "react-native-web";
 import { useState } from "react";
 
 import { httpsCallable } from "firebase/functions";
 
 import { v4 as uuidv4 } from "uuid";
+import SelectionModal from "./SelectionModal";
 
 const categories = [
   "Automobiles",
@@ -28,7 +22,6 @@ const processes = [
   ["a brand", "a model", "a trim", "a year"],
   ["a brand", "a phone"],
   ["a brand", "a console"],
-  ["a brand", "a drone"],
   ["a brand", "a generation", "a graphics card"],
   ["a brand", "a generation", "a processor"],
 ];
@@ -60,120 +53,208 @@ const brands = [
     "Terrans",
     "Valve",
   ],
-  ["Autel", "DJI", "Holy Stone", "Parrot", "Potensic", "Ryze", "Snaptain"],
   ["AMD", "Intel", "NVIDIA"],
   ["AMD", "Intel"],
 ];
 
-const ridiculous = [
-  "supercalifragilisticexpialidocious",
-  "antidisestablishmentarianism",
-  "pseudopseudohypoparathyroidism",
-  "floccinaucinihilipilification",
-  "pneumonoultramicroscopicsilicovolcanoconiosis",
-  "hippopotomonstrosesquippedaliophobia",
-  "electroencephalographically",
-  "immunoelectrophoretically",
-  "hepatolenticular degeneration",
-  "hypercholesterolemia",
-  "supernaturalism",
-  "institutionalization",
-  "microspectrophotometrically",
-  "revascularization",
-  "anthropomorphologically",
-  "parthenogenetically",
-  "psychopharmacological",
-  "immunosuppressiveness",
-  "incomprehensibilities",
-  "uncharacteristically",
-  "incomprehensibleness",
-  "pharmacodynamically",
-  "representationalism",
-  "uncontrollableness",
-  "uncompromisingness",
-  "constitutionalization",
-  "photodisintegrations",
-  "irreconcilabilities",
-  "overrepresentations",
-  "nonprofessionally",
-  "undeniableness",
-  "inconsiderableness",
-  "incontrovertibility",
-  "unconventionality",
-  "transistorizations",
-  "interrelationships",
-  "counterinfluences",
-  "interconvertibility",
-  "unpretentiousnesses",
-  "irreplaceabilities",
-  "noncontroversially",
-  "counterreformations",
-  "indiscriminateness",
-  "transubstantiations",
-  "irresponsibilities",
-  "counteradaptations",
-  "incontrovertibility",
-  "unconventionality",
-  "transistorizations",
-  "interrelationships",
-  "counterinfluences",
-  "interconvertibility",
-  "unpretentiousnesses",
-  "irreplaceabilities",
-  "noncontroversially",
-  "counterreformations",
-  "indiscriminateness",
-  "transubstantiations",
-  "irresponsibilities",
-  "counteradaptations",
-  "electroencephalogram",
-  "antiestablishmentarian",
-  "unconstitutionality",
-  "counterdemonstration",
-  "microencapsulations",
-  "indiscriminately",
-  "hyperconsciousnesses",
-  "counterproliferation",
-  "representativenesses",
-  "counterconspiratorial",
-  "electrocardiographic",
-  "uncharacteristically",
-  "immunoprecipitations",
-  "incomprehensibility",
-  "uncontrollabilities",
-  "pharmacologically",
-  "immunohistochemical",
-  "interchangeabilities",
-  "uncontrollabilities",
-  "disenfranchisements",
-  "neurotransmissions",
-  "antiestablishmentarianism",
-  "interchangeabilities",
-  "disproportionateness",
-  "antiestablishmentarian",
-  "hyperconsciousness",
-  "counterproliferation",
-  "representativeness",
-  "counterconspiratorial",
-  "electrocardiographic",
-  "uncharacteristically",
-  "immunoprecipitation",
-  "incomprehensibility",
-  "uncontrollability",
-  "pharmacological",
-  "immunohistochemical",
-  "interchangeability",
-  "uncontrollability",
-  "disenfranchisement",
-  "neurotransmission",
-  "antiestablishment",
-  "disproportionateness",
-  "antiestablishment",
-  "disproportionate",
-  "antiestablishment",
-  "disproportionate",
-  "antiestablishment",
-  "disproportionate",
+const droneBrands = [
+  "Autel",
+  "DJI",
+  "Holy Stone",
+  "Parrot",
+  "Potensic",
+  "Ryze",
+  "Snaptain",
+];
+
+const droneProcess = ["a brand", "a drone"];
+
+const droneMatchingArray = [
+  "Brand",
+  "Name",
+  "is weather-sealed (splashproof)",
+  "is dustproof and water-resistant",
+  "volume",
+  "weight",
+  "lowest potential operating temperature",
+  "maximum operating temperature",
+  "height",
+  "thickness",
+  "width",
+  "maximum flight time",
+  "maximum flight distance",
+  "maximum flight speed",
+  "obstacle detection",
+  "intelligent flight modes",
+  "return to home (rth)",
+  "megapixels (main camera)",
+  "maximum iso",
+  "shoots raw",
+  "movie bitrate",
+  "video recording (main camera)",
+  "field of view",
+  "has a built-in hdr mode",
+  "has a serial shot mode",
+  "has a cmos sensor",
+  "can create panoramas in-camera",
+  "has a 24p cinema mode",
+  "continuous shooting at high resolution",
+  "fpv camera",
+  "sensor size",
+  "battery power",
+  "charge time",
+  "has a removable battery",
+  "has an external memory slot",
+  "has gps",
+  "has a gyroscope",
+  "internal storage",
+  "supports a remote smartphone",
+  "has a compass",
+  "has an accelerometer",
+  "maximum amount of external memory supported",
+  "has a remote control",
+  "has a display",
+];
+
+const droneDefaultArray = [
+  { Value: "--", Display: true, Category: "Brand" }, // Brand
+  { Value: "--", Display: true, Category: "Name" }, // Name
+  { Value: "Weather-Sealed", Display: false, Category: "Structural Features" },
+  {
+    Value: "Dustproof and Water-Resistant",
+    Display: false,
+    Category: "Structural Features",
+  },
+  { Value: "--", Display: true, Category: "Size" }, // Volume
+  { Value: "--", Display: true, Category: "Weight" }, // Weight
+  {
+    Value: "Minimum operating temperature: --",
+    Display: true,
+    Category: "Operating Temperature",
+  },
+  {
+    Value: "Maximum operating temperature: --",
+    Display: true,
+    Category: "Operating Temperature",
+  },
+  { Value: "--", Display: true, Category: "Height" }, // Height
+  { Value: "--", Display: true, Category: "Width" }, // Width (thickness)
+  { Value: "--", Display: true, Category: "Length" }, // Length (width)
+  { Value: "--", Display: true, Category: "Flight Time (1 battery)" }, // Flight Time (1 battery)
+  { Value: "--", Display: true, Category: "Maximum Flight Distance" }, // Maximum Flight Distance
+  { Value: "--", Display: true, Category: "Top Speed" }, // Top Speed
+  { Value: "Obstacle Detection", Display: false, Category: "Controls" },
+  { Value: "Intelligent Flight Modes", Display: false, Category: "Controls" },
+  { Value: "Return-to-Home", Display: false, Category: "Controls" },
+  { Value: "Megapixels: --", Display: true, Category: "Camera" },
+  { Value: "Maximum ISO: --", Display: true, Category: "Camera" },
+  { Value: "RAW Photos", Display: false, Category: "Camera Features" },
+  { Value: "Video Bitrate: --", Display: true, Category: "Camera" },
+  { Value: "Video Quality: --", Display: true, Category: "Camera" },
+  { Value: "Field of View: --", Display: true, Category: "Camera" },
+  { Value: "HDR mode", Display: false, Category: "Camera Features" },
+  { Value: "Serial Shot mode", Display: false, Category: "Camera Features" },
+  { Value: "CMOS Sensor", Display: false, Category: "Camera" },
+  { Value: "Panoramic mode", Display: false, Category: "Camera Features" },
+  { Value: "24p Cinema mode", Display: false, Category: "Camera Features" },
+  { Value: "Burst Shot mode", Display: true, Category: "Camera Features" },
+  { Value: "FPV Camera", Display: false, Category: "Camera" },
+  { Value: "Sensor Size: --", Display: true, Category: "Camera" },
+  {
+    Value: "Battery Capacity (1 battery): --",
+    Display: true,
+    Category: "Battery",
+  },
+  { Value: "Charge Time (1 battery): --", Display: true, Category: "Battery" },
+  { Value: "Removable", Display: false, Category: "Battery" },
+  {
+    Value: "External Memory Slot",
+    Display: false,
+    Category: "Memory and Storage",
+  },
+  { Value: "GPS", Display: false, Category: "Controls" },
+  { Value: "Gyroscope", Display: false, Category: "Controls" },
+  {
+    Value: "Internal Storage: --",
+    Display: true,
+    Category: "Memory and Storage",
+  },
+  { Value: "Remote Smartphone Control", Display: false, Category: "Controls" },
+  { Value: "Compass", Display: false, Category: "Controls" },
+  { Value: "Accelerometer", Display: false, Category: "Controls" },
+  {
+    Value: "Maximum external memory: --",
+    Display: true,
+    Category: "Memory and Storage",
+  },
+  { Value: "Remote Control", Display: false, Category: "Controls" },
+  { Value: "Built-in Display", Display: false, Category: "Controls" },
+];
+
+const droneCategories = [
+  [
+    "Brand",
+    "Name",
+    "Weight",
+    "Operating Temperature",
+    "Size",
+    "Height",
+    "Width",
+    "Length",
+    "Flight Time (1 battery)",
+    "Maximum Flight Distance",
+    "Top Speed",
+    "Structural Features",
+    "Camera",
+    "Camera Features",
+    "Battery",
+    "Memory and Storage",
+    "Controls",
+  ],
+];
+
+const droneCategorySpecs = [
+  ["Brand"],
+  ["Name"],
+  ["Weight"],
+  ["Minimum operating temperature", "Maximum operating temperature"],
+  ["Size"],
+  ["Height"],
+  ["Width"],
+  ["Length"],
+  ["Flight Time (1 battery)"],
+  ["Maximum Flight Distance"],
+  ["Top Speed"],
+  ["Weather-Sealed", "Dustproof and Water-Resistant"],
+  [
+    "FPV Camera",
+    "Sensor Size",
+    "CMOS Sensor",
+    "Megapixels",
+    "Maximum ISO",
+    "Video Bitrate",
+    "Video Quality",
+    "Field of View",
+  ],
+  [
+    "Serial Shot mode",
+    "Panoramic mode",
+    "Burst Shot mode",
+    "24p Cinema mode",
+    "HDR mode",
+    "RAW Photos",
+  ],
+  ["Battery Capacity (1 battery)", "Charge Time (1 battery)", "Removable"],
+  ["External Memory Slot", "Maximum external memory", "Internal storage"],
+  [
+    "GPS",
+    "Gyroscope",
+    "Remote Smartphone Controls",
+    "Compass",
+    "Accelerometer",
+    "Remote Control",
+    "Built-in Display",
+  ],
 ];
 
 export default function WebHome({ userVal, functions }) {
@@ -189,26 +270,24 @@ export default function WebHome({ userVal, functions }) {
   {
     /* Determines which part of product selection the modal is on */
   }
-  const [modalScreen, setModalScreen] = useState(0);
 
-  const [droneSpecs, setDroneSpecs] = useState([
-    ["Brand", "Name", "Specs1", "Specs2", "Specs3", "Specs4", "Specs5"],
-  ]);
-
-  // Call SGStyles as styles
-  const styles = SGStyles();
-
-  const { height, width } = useWindowDimensions();
+  const [productModalVisible, setProductModalVisible] = useState(false);
 
   const callDroneCloudFunction = async (product) => {
     try {
       const GetDrones = httpsCallable(functions, "GetDrones");
       const result = await GetDrones(product);
-      console.log(result);
+      return result.data;
     } catch (error) {
       console.log(error);
+      return error;
     }
   };
+
+  const [droneSpecs, setDroneSpecs] = useState(droneCategories);
+
+  // Call SGStyles as styles
+  const styles = SGStyles();
 
   return (
     <View style={styles.containerStyles.webContainer}>
@@ -304,16 +383,9 @@ export default function WebHome({ userVal, functions }) {
 
               <Pressable
                 onPress={async () => {
-                  const newArray = [];
-                  const length = droneSpecs[0].length;
-                  for (let i = 0; i < length; i++) {
-                    const randInt = Math.floor(Math.random() * 100);
-                    const randomElement = ridiculous[randInt];
-                    console.log(randomElement);
-                    newArray.push(randomElement);
-                  }
-                  await setDroneSpecs((prevSpecs) => [...prevSpecs, newArray]);
-                  console.log(droneSpecs);
+                  //const newArray = [];
+                  //await setDroneSpecs((prevSpecs) => [...prevSpecs, newArray]);
+                  setProductModalVisible(true);
                 }}
                 style={({ pressed }) => [
                   styles.inputStyles.button,
@@ -348,6 +420,18 @@ export default function WebHome({ userVal, functions }) {
                 </View>
               ))}
             </ScrollView>
+
+            <SelectionModal
+              productModalVisible={productModalVisible}
+              setProductModalVisible={setProductModalVisible}
+              brands={droneBrands}
+              cloudFunction={callDroneCloudFunction}
+              process={droneProcess}
+              setSpecs={setDroneSpecs}
+              matchingArray={droneMatchingArray}
+              defaultArray={droneDefaultArray}
+              categories={droneCategories}
+            ></SelectionModal>
           </View>
         )}
       </ScrollView>
