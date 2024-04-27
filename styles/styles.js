@@ -25,12 +25,31 @@ export const SGStyles = () => {
       alignItems: "center",
       justifyContent: "center",
     },
+    modalContainer: {
+      flex: 0.75,
+      backgroundColor: theme === "dark" ? "#030612" : "#fff",
+      borderColor: "#000",
+      borderWidth: 2,
+      borderRadius: 8,
+      marginTop: 200,
+      marginHorizontal: 50,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    comparisonScreenContainer: {
+      flex: 1,
+      backgroundColor: theme === "dark" ? "#171827" : "#fff",
+      padding: 20,
+    },
+    comparisonColumns: {
+      flexDirection: "column",
+    },
   });
 
   const textStyles = StyleSheet.create({
     // For regular text
     text: {
-      color: theme === "dark" ? "#4ca0d7" : "#136aa7",
+      color: "#4ca0d7",
       fontSize: 40,
       padding: 10,
       textAlign: "center",
@@ -57,6 +76,26 @@ export const SGStyles = () => {
       backgroundColor: theme === "dark" ? "grey" : "#aaa",
       borderRadius: 10,
     },
+    modalText: {
+      color: theme === "dark" ? "#fff" : "#000",
+      textAlign: "left",
+    },
+    plainText: {
+      color: theme === "dark" ? "#fff" : "#000",
+    },
+    comparisonText: {
+      color: theme === "dark" ? "#fff" : "#000",
+      textAlign: "center",
+      padding: 10,
+      borderWidth: 1,
+    },
+    specCategoryText: {
+      backgroundColor: "#4ca0d7",
+      color: theme === "dark" ? "#fff" : "#000",
+      textAlign: "center",
+      padding: 10,
+      borderWidth: 1,
+    },
   });
 
   const inputStyles = StyleSheet.create({
@@ -75,6 +114,7 @@ export const SGStyles = () => {
     // when the button is clicked
     buttonClicked: {
       backgroundColor: theme === "dark" ? "#5d5d74" : "#e6e6e6",
+      userSelect: "none",
     },
     buttonNoBackground: {
       color: theme === "dark" ? "#fff" : "#000",
@@ -87,6 +127,7 @@ export const SGStyles = () => {
     },
     buttonNoBackgroundClicked: {
       color: theme === "dark" ? "#5d5d74" : "#e6e6e6",
+      userSelect: "none",
     },
     // for text inputs
     textInput: {
