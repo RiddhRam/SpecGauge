@@ -6,8 +6,7 @@ import { useState } from "react";
 
 import { httpsCallable } from "firebase/functions";
 
-import { v4 as uuidv4 } from "uuid";
-import SelectionModal from "./SelectionModal";
+import Compare from "./compare/Compare";
 
 const categories = [
   "Automobiles",
@@ -213,50 +212,6 @@ const droneCategories = [
   ],
 ];
 
-const droneCategorySpecs = [
-  ["Brand"],
-  ["Name"],
-  ["Weight"],
-  ["Minimum operating temperature", "Maximum operating temperature"],
-  ["Size"],
-  ["Height"],
-  ["Width"],
-  ["Length"],
-  ["Flight Time (1 battery)"],
-  ["Maximum Flight Distance"],
-  ["Top Speed"],
-  ["Weather-Sealed", "Dustproof and Water-Resistant"],
-  [
-    "FPV Camera",
-    "Sensor Size",
-    "CMOS Sensor",
-    "Megapixels",
-    "Maximum ISO",
-    "Video Bitrate",
-    "Video Quality",
-    "Field of View",
-  ],
-  [
-    "Serial Shot mode",
-    "Panoramic mode",
-    "Burst Shot mode",
-    "24p Cinema mode",
-    "HDR mode",
-    "RAW Photos",
-  ],
-  ["Battery Capacity (1 battery)", "Charge Time (1 battery)", "Removable"],
-  ["External Memory Slot", "Maximum external memory", "Internal storage"],
-  [
-    "GPS",
-    "Gyroscope",
-    "Remote Smartphone Controls",
-    "Compass",
-    "Accelerometer",
-    "Remote Control",
-    "Built-in Display",
-  ],
-];
-
 export default function WebHome({ userVal, functions }) {
   {
     /* This is for the modal that determines the comparison type */
@@ -270,10 +225,6 @@ export default function WebHome({ userVal, functions }) {
   {
     /* Determines which part of product selection the modal is on */
   }
-
-  const [productModalVisible, setProductModalVisible] = useState(false);
-
-  const [count, setCount] = useState(1);
 
   let dronesHeight = [];
   let dronesSetHeight = [];
@@ -374,93 +325,20 @@ export default function WebHome({ userVal, functions }) {
 
         {/* Compare Drones screen */}
         {category == 4 && (
-          <View style={styles.containerStyles.comparisonScreenContainer}>
-            <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
-              Drones Comparison
-            </Text>
-
-            <View style={{ marginRight: "auto", flexDirection: "row" }}>
-              <Pressable
-                onPress={() => {
-                  setCategory(0);
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                ]}
-              >
-                <p>{"< Go Back"}</p>
-              </Pressable>
-
-              <Pressable
-                onPress={async () => {
-                  setProductModalVisible(true);
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                ]}
-              >
-                <p>Add</p>
-              </Pressable>
-            </View>
-
-            <ScrollView
-              horizontal={true}
-              style={styles.containerStyles.comparisonScreenContainer}
-            >
-              {droneSpecs.map((item, index1) => (
-                <View
-                  key={uuidv4() + item}
-                  style={[styles.containerStyles.comparisonColumns]}
-                >
-                  {item.map((spec, index2) => (
-                    <Text
-                      key={uuidv4() + spec}
-                      style={[
-                        { height: dronesHeight[index2] },
-                        index1 == 0
-                          ? styles.textStyles.specCategoryText
-                          : styles.textStyles.comparisonText,
-                      ]}
-                      onLayout={async () => {
-                        let counter = 0;
-                        let position = 0;
-
-                        while (true) {
-                          position = spec.indexOf("\n", position);
-                          if (position == -1) {
-                            break;
-                          }
-                          counter++;
-                          position += 1;
-                        }
-                        newHeight = (counter - 1) * 17 + 39;
-                        if (dronesHeight[index2] < newHeight) {
-                          dronesSetHeight[index2](newHeight);
-                        }
-                      }}
-                    >
-                      {spec}
-                    </Text>
-                  ))}
-                </View>
-              ))}
-            </ScrollView>
-
-            <SelectionModal
-              productModalVisible={productModalVisible}
-              setProductModalVisible={setProductModalVisible}
-              brands={droneBrands}
-              cloudFunction={callDroneCloudFunction}
-              process={droneProcess}
-              setSpecs={setDroneSpecs}
-              matchingArray={droneMatchingArray}
-              defaultArray={droneDefaultArray}
-              categories={droneCategories}
-              setCount={setCount}
-            ></SelectionModal>
-          </View>
+          <Compare
+            type={"Drones"}
+            setCategory={setCategory}
+            Brands={droneBrands}
+            Process={droneProcess}
+            MatchingArray={droneMatchingArray}
+            DefaultArray={droneDefaultArray}
+            Categories={droneCategories}
+            Specs={droneSpecs}
+            setSpecs={setDroneSpecs}
+            Height={dronesHeight}
+            SetHeight={dronesSetHeight}
+            CloudFunction={callDroneCloudFunction}
+          ></Compare>
         )}
       </ScrollView>
     </View>

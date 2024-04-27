@@ -20,7 +20,6 @@ export default function SelectionModal({
   matchingArray,
   defaultArray,
   categories,
-  setCount,
 }) {
   const [modalScreen, setModalScreen] = useState(0);
   const [requestedStep1, setRequestedStep1] = useState([]);
@@ -163,8 +162,6 @@ export default function SelectionModal({
                       }
                     }
                     await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
-
-                    setCount(1);
 
                     setRequestedStep1([]);
                     setRequestedSpecs([]);
