@@ -62,36 +62,57 @@ export default function Compare({
             key={uuidv4() + item}
             style={[styles.containerStyles.comparisonColumns]}
           >
-            {item.map((spec, index2) => (
-              <Text
-                key={uuidv4() + spec}
-                style={[
-                  { height: Height[index2] },
-                  index1 == 0
-                    ? styles.textStyles.specCategoryText
-                    : styles.textStyles.comparisonText,
+            {index1 != 0 && (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.inputStyles.removeButton,
+                  pressed && styles.inputStyles.removeButtonClicked,
                 ]}
-                onLayout={async () => {
-                  let counter = 0;
-                  let position = 0;
-
-                  while (true) {
-                    position = spec.indexOf("\n", position);
-                    if (position == -1) {
-                      break;
-                    }
-                    counter++;
-                    position += 1;
-                  }
-                  const newHeight = (counter - 1) * 17 + 39;
-                  if (Height[index2] < newHeight) {
-                    SetHeight[index2](newHeight);
-                  }
+                onPress={() => {
+                  newArray = Specs.filter(
+                    (subArray) => Specs[index1] !== subArray
+                  );
+                  setSpecs(newArray);
                 }}
               >
-                {spec}
-              </Text>
-            ))}
+                <p>Remove</p>
+              </Pressable>
+            )}
+
+            <View
+              style={index1 == 0 ? { marginTop: 100 } : { marginTop: 26.5 }}
+            >
+              {item.map((spec, index2) => (
+                <Text
+                  key={uuidv4() + spec}
+                  style={[
+                    { height: Height[index2] },
+                    index1 == 0
+                      ? styles.textStyles.specCategoryText
+                      : styles.textStyles.comparisonText,
+                  ]}
+                  onLayout={async () => {
+                    let counter = 0;
+                    let position = 0;
+
+                    while (true) {
+                      position = spec.indexOf("\n", position);
+                      if (position == -1) {
+                        break;
+                      }
+                      counter++;
+                      position += 1;
+                    }
+                    const newHeight = (counter - 1) * 17 + 39;
+                    if (Height[index2] < newHeight) {
+                      SetHeight[index2](newHeight);
+                    }
+                  }}
+                >
+                  {spec}
+                </Text>
+              ))}
+            </View>
           </View>
         ))}
       </ScrollView>

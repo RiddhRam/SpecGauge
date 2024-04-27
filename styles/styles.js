@@ -141,6 +141,21 @@ export const SGStyles = () => {
       userSelect: "none",
       outlineStyle: "none",
     },
+    removeButton: {
+      backgroundColor: theme === "dark" ? "#8c0a0a" : "#cf413a",
+      color: theme === "dark" ? "#fff" : "#000",
+      borderRadius: 8,
+      fontSize: 15,
+      margin: 10,
+      paddingTop: 15,
+      textAlign: "center",
+      userSelect: "none",
+    },
+    // when the button is clicked
+    removeButtonClicked: {
+      backgroundColor: theme === "dark" ? "#690505" : "#b53731",
+      userSelect: "none",
+    },
   });
 
   return {
