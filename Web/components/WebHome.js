@@ -273,6 +273,17 @@ export default function WebHome({ userVal, functions }) {
 
   const [productModalVisible, setProductModalVisible] = useState(false);
 
+  const [count, setCount] = useState(1);
+
+  let dronesHeight = [];
+  let dronesSetHeight = [];
+
+  for (i = 0; i < droneCategories[0].length; i++) {
+    const [height, setHeight] = useState(39);
+    dronesHeight.push(height);
+    dronesSetHeight.push(setHeight);
+  }
+
   const callDroneCloudFunction = async (product) => {
     try {
       const GetDrones = httpsCallable(functions, "GetDrones");
@@ -383,8 +394,6 @@ export default function WebHome({ userVal, functions }) {
 
               <Pressable
                 onPress={async () => {
-                  //const newArray = [];
-                  //await setDroneSpecs((prevSpecs) => [...prevSpecs, newArray]);
                   setProductModalVisible(true);
                 }}
                 style={({ pressed }) => [
@@ -408,11 +417,29 @@ export default function WebHome({ userVal, functions }) {
                   {item.map((spec, index2) => (
                     <Text
                       key={uuidv4() + spec}
-                      style={
+                      style={[
+                        { height: dronesHeight[index2] },
                         index1 == 0
                           ? styles.textStyles.specCategoryText
-                          : styles.textStyles.comparisonText
-                      }
+                          : styles.textStyles.comparisonText,
+                      ]}
+                      onLayout={async () => {
+                        let counter = 0;
+                        let position = 0;
+
+                        while (true) {
+                          position = spec.indexOf("\n", position);
+                          if (position == -1) {
+                            break;
+                          }
+                          counter++;
+                          position += 1;
+                        }
+                        newHeight = (counter - 1) * 17 + 39;
+                        if (dronesHeight[index2] < newHeight) {
+                          dronesSetHeight[index2](newHeight);
+                        }
+                      }}
                     >
                       {spec}
                     </Text>
@@ -431,6 +458,7 @@ export default function WebHome({ userVal, functions }) {
               matchingArray={droneMatchingArray}
               defaultArray={droneDefaultArray}
               categories={droneCategories}
+              setCount={setCount}
             ></SelectionModal>
           </View>
         )}

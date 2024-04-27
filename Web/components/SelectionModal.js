@@ -20,6 +20,7 @@ export default function SelectionModal({
   matchingArray,
   defaultArray,
   categories,
+  setCount,
 }) {
   const [modalScreen, setModalScreen] = useState(0);
   const [requestedStep1, setRequestedStep1] = useState([]);
@@ -69,7 +70,6 @@ export default function SelectionModal({
                       await setRequestedSpecs(tempSpecArray);
                     }
                     setModalScreen(1);
-                    console.log(defaultArray);
                   }
                 }}
               >
@@ -115,6 +115,7 @@ export default function SelectionModal({
                       newJSON["Value"] = defaultArray[spec].Value;
                       newJSON["Display"] = defaultArray[spec].Display;
                       newJSON["Category"] = defaultArray[spec].Category;
+
                       tempDefault.push(newJSON);
                     }
 
@@ -162,8 +163,11 @@ export default function SelectionModal({
                       }
                     }
                     await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
-                    await setRequestedStep1([]);
-                    await setRequestedSpecs([]);
+
+                    setCount(1);
+
+                    setRequestedStep1([]);
+                    setRequestedSpecs([]);
                     setProductModalVisible(false);
                     setModalScreen(0);
                   }
