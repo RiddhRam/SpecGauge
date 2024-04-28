@@ -82,6 +82,27 @@ export default function Compare({
                     for (let i = 0; i < SetHeight.length; i++) {
                       SetHeight[i](39);
                     }
+                  } else {
+                    for (let i = 1; i < Specs.length; i++) {
+                      for (let j = 0; j < Specs[i].length; j++) {
+                        let counter = 0;
+                        let position = 0;
+                        while (true) {
+                          position = Specs[i][j].indexOf("\n", position);
+                          if (position == -1) {
+                            break;
+                          }
+                          counter++;
+                          position += 1;
+                        }
+                        for (let k = 0; k < Height.length; k++) {
+                          const newHeight = (counter - 1) * 17 + 39;
+                          if (Height[k] > newHeight) {
+                            SetHeight[k](newHeight);
+                          }
+                        }
+                      }
+                    }
                   }
                   console.log(Specs.length);
                 }}
@@ -106,8 +127,6 @@ export default function Compare({
                     let counter = 0;
                     let position = 0;
 
-                    newHeights = 39;
-
                     while (true) {
                       position = spec.indexOf("\n", position);
                       if (position == -1) {
@@ -117,8 +136,7 @@ export default function Compare({
                       position += 1;
                     }
                     const newHeight = (counter - 1) * 17 + 39;
-                    if (newHeights < newHeight) {
-                      //newHeights[index2] = newHeight;
+                    if (Height[index2] < newHeight) {
                       SetHeight[index2](newHeight);
                     }
                   }}
