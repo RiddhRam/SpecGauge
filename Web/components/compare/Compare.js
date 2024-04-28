@@ -31,6 +31,11 @@ export default function Compare({
         <Pressable
           onPress={() => {
             setCategory(0);
+
+            for (let i = 0; i < SetHeight.length; i++) {
+              SetHeight[i](39);
+            }
+            setSpecs(Categories);
           }}
           style={({ pressed }) => [
             styles.inputStyles.button,
@@ -68,11 +73,17 @@ export default function Compare({
                   styles.inputStyles.removeButton,
                   pressed && styles.inputStyles.removeButtonClicked,
                 ]}
-                onPress={() => {
+                onPress={async () => {
                   newArray = Specs.filter(
                     (subArray) => Specs[index1] !== subArray
                   );
-                  setSpecs(newArray);
+                  await setSpecs(newArray);
+                  if (Specs.length == 2) {
+                    for (let i = 0; i < SetHeight.length; i++) {
+                      SetHeight[i](39);
+                    }
+                  }
+                  console.log(Specs.length);
                 }}
               >
                 <p>Remove</p>
@@ -95,6 +106,8 @@ export default function Compare({
                     let counter = 0;
                     let position = 0;
 
+                    newHeights = 39;
+
                     while (true) {
                       position = spec.indexOf("\n", position);
                       if (position == -1) {
@@ -104,7 +117,8 @@ export default function Compare({
                       position += 1;
                     }
                     const newHeight = (counter - 1) * 17 + 39;
-                    if (Height[index2] < newHeight) {
+                    if (newHeights < newHeight) {
+                      //newHeights[index2] = newHeight;
                       SetHeight[index2](newHeight);
                     }
                   }}

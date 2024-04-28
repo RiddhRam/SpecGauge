@@ -31,6 +31,7 @@ const firebaseConfig = {
 // Initialize firebase
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions();
+//connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 
 const auth = initializeAuth(app, {
   persistence: browserLocalPersistence,
