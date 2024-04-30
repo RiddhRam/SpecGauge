@@ -104,7 +104,6 @@ export default function Compare({
                       }
                     }
                   }
-                  console.log(Specs.length);
                 }}
               >
                 <p>Remove</p>

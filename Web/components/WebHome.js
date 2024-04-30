@@ -20,15 +20,11 @@ const categories = [
 const processes = [
   ["a brand", "a model", "a trim", "a year"],
   ["a brand", "a phone"],
-  ["a brand", "a generation", "a graphics card"],
-  ["a brand", "a generation", "a processor"],
 ];
 
 const brands = [
   ["Audi", "Dodge", "Ford"],
   ["Apple", "Samsung"],
-  ["AMD", "Intel", "NVIDIA"],
-  ["AMD", "Intel"],
 ];
 
 const droneBrands = [
@@ -416,6 +412,255 @@ const consoleCategories = [
   ],
 ];
 
+const graphicsCardsProcess = ["a brand", "a generation", "a graphics card"];
+
+const graphicsCardsBrands = ["AMD", "Intel", "NVIDIA"];
+
+const graphicsCardsMatchingArray = [
+  "Brand",
+  "Generation",
+  "Card",
+  "GPU",
+  "Transistor size",
+  "Transistors",
+  "Transistor Density",
+  "Die Size",
+  "Release Date (Availability)",
+  "MSRP at launch",
+  "PCI Slot",
+  "Shading units",
+  "TMUs",
+  "ROPs",
+  "Compute Units",
+  "Tensor Cores",
+  "RT Cores",
+  "L0 Cache",
+  "L1 Cache",
+  "L2 Cache",
+  "L3 Cache",
+  "Base clock",
+  "Boost clock",
+  "Memory Clock",
+  "Memory Size and Type",
+  "Memory Bus",
+  "Memory Bandwidth",
+  "Outputs",
+  "Length",
+  "Width",
+  "Height",
+  "TDP",
+  "Pixel Rate",
+  "Texture Rate",
+  "FP32 TeraFlops",
+];
+
+const graphicsCardsDefaultArray = [
+  { Value: "--", Display: true, Category: "Brand" }, // Brand
+  { Value: "--", Display: true, Category: "Generation" }, // Generation
+  { Value: "--", Display: true, Category: "Card" }, // Card
+  { Value: "GPU: --", Display: true, Category: "GPU" },
+  { Value: "Transistor size: --", Display: true, Category: "GPU" },
+  { Value: "Transistors: --", Display: true, Category: "GPU" },
+  { Value: "Transistor Density: --", Display: true, Category: "GPU" },
+  { Value: "Die Size: --", Display: true, Category: "GPU" },
+  { Value: "Release Date: --", Display: true, Category: "Release Info" },
+  { Value: "MSRP at launch: --", Display: true, Category: "Release Info" },
+  { Value: "PCI Slot: --", Display: true, Category: "Board" },
+  { Value: "Shading units: --", Display: true, Category: "Rendering" },
+  { Value: "TMUs: --", Display: true, Category: "Rendering" },
+  { Value: "ROPs: --", Display: true, Category: "Rendering" },
+  { Value: "Compute Units: --", Display: true, Category: "GPU" },
+  { Value: "Tensor Cores: --", Display: true, Category: "Rendering" },
+  { Value: "RT Cores: --", Display: true, Category: "Rendering" },
+  { Value: "L0 Cache: --", Display: true, Category: "Cache" },
+  { Value: "L1 Cache: --", Display: true, Category: "Cache" },
+  { Value: "L2 Cache: --", Display: true, Category: "Cache" },
+  { Value: "L3 Cache: --", Display: true, Category: "Cache" },
+  { Value: "Base Clock: --", Display: true, Category: "GPU" },
+  { Value: "Boost Clock: --", Display: true, Category: "GPU" },
+  { Value: "Memory Clock: --", Display: true, Category: "Memory" },
+  { Value: "Memory Size and Type: --", Display: true, Category: "Memory" },
+  { Value: "Memory Bus: --", Display: true, Category: "Memory" },
+  { Value: "Memory Bandwidth: --", Display: true, Category: "Memory" },
+  { Value: "Outputs: --", Display: true, Category: "Board" },
+  { Value: "Length: --", Display: true, Category: "Board" },
+  { Value: "Width: --", Display: true, Category: "Board" },
+  { Value: "Height: --", Display: true, Category: "Board" },
+  { Value: "TDP: --", Display: true, Category: "Board" },
+  { Value: "Pixel Rate: --", Display: true, Category: "Performance" },
+  { Value: "Texture Rate: --", Display: true, Category: "Performance" },
+  { Value: "FP32 TeraFlops: --", Display: true, Category: "Performance" },
+];
+
+const graphicsCardsCategories = [
+  [
+    "Brand",
+    "Generation",
+    "Card",
+    "GPU",
+    "Memory",
+    "Cache",
+    "Release Info",
+    "Board",
+    "Rendering",
+    "Performance",
+  ],
+];
+
+const CPUsProcess = ["a brand", "a generation", "a processor"];
+
+const CPUsBrands = ["AMD", "Intel"];
+
+const CPUsMatchingArray = [
+  "Brand",
+  "Generation",
+  "CPU",
+  "Socket",
+  "Process Size",
+  "Transistors",
+  "Die Size",
+  "I/O Process Size",
+  "I/O Transistors",
+  "I/O Die Size",
+  "tCaseMax",
+  "tJMax",
+  "Market",
+  "Release Date",
+  "# of Cores",
+  "# of Threads",
+  "Hybrid Cores",
+  "LP E-Cores",
+  "SMP # CPUs",
+  "Integrated Graphics",
+  "Frequency",
+  "Turbo Clock",
+  "Base Clock",
+  "E-Core Frequency",
+  "LP E-Core Boost",
+  "Multiplier",
+  "Multiplier Unlocked",
+  "AI Boost NPU",
+  "TDP",
+  "Maximum Power",
+  "Memory Support",
+  "Rated Speed",
+  "DDR1 Speed",
+  "DDR2 Speed",
+  "DDR3 Speed",
+  "DDR4 Speed",
+  "DDR5 Speed",
+  "LPDDR1 Speed",
+  "LPDDR2 Speed",
+  "LPDDR3 Speed",
+  "LPDDR4 Speed",
+  "LPDDR4X Speed",
+  "LPDDR5 Speed",
+  "LPDDR5x Speed",
+  "Max. Memory",
+  "Memory Bus",
+  "ECC Memory",
+  "PCI-Express",
+  "Secondary PCIe",
+  "Tertiary PCIe",
+  "Cache L1",
+  "Cache L2",
+  "Cache L3",
+  "E-Core L1",
+  "E-Core L2",
+  "Launch Price",
+  "Chipsets",
+  "PL1",
+  "PL2",
+  "FP32",
+  "Bundled Cooler",
+];
+
+const CPUsDefaultArray = [
+  { Value: "--", Display: true, Category: "Brand" }, // Brand
+  { Value: "--", Display: true, Category: "Generation" }, // Generation
+  { Value: "CPU: --", Display: true, Category: "CPU" },
+  { Value: "Socket: --", Display: true, Category: "Platform" },
+  { Value: "Process Size: --", Display: true, Category: "Architecture" },
+  { Value: "Transistors: --", Display: true, Category: "Architecture" },
+  { Value: "Die Size: --", Display: true, Category: "Architecture" },
+  { Value: "I/O Process Size: --", Display: true, Category: "Architecture" },
+  { Value: "I/O Transistors: --", Display: true, Category: "Architecture" },
+  { Value: "I/O Die Size: --", Display: true, Category: "Architecture" },
+  { Value: "tCaseMax: --", Display: true, Category: "Thermal" },
+  { Value: "tJMax: --", Display: true, Category: "Thermal" },
+  { Value: "Market: --", Display: true, Category: "Platform" },
+  { Value: "Release Date: --", Display: true, Category: "Platform" },
+  { Value: "# of Cores: --", Display: true, Category: "CPU" },
+  { Value: "# of Threads: --", Display: true, Category: "CPU" },
+  { Value: "Hybrid Cores: --", Display: true, Category: "CPU" },
+  { Value: "LP E-Cores: --", Display: true, Category: "CPU" },
+  { Value: "SMP # CPUs: --", Display: true, Category: "CPU" },
+  {
+    Value: "Integrated Graphics: --",
+    Display: true,
+    Category: "Sub-Processors",
+  },
+  { Value: "Frequency: --", Display: true, Category: "Clock" },
+  { Value: "Turbo Clock: --", Display: true, Category: "Clock" },
+  { Value: "Base Clock: --", Display: true, Category: "Clock" },
+  { Value: "E-Core Frequency: --", Display: true, Category: "CPU" },
+  { Value: "LP E-Core Boost: --", Display: true, Category: "CPU" },
+  { Value: "Multiplier: --", Display: true, Category: "Clock" },
+  { Value: "Overclockable", Display: false, Category: "Clock" },
+  { Value: "NPU: --", Display: true, Category: "Sub-Processors" },
+  { Value: "TDP: --", Display: true, Category: "Thermal" },
+  { Value: "Maximum Power: --", Display: true, Category: "Power" },
+  { Value: "Memory Support: --", Display: true, Category: "Memory" },
+  { Value: "Rated Speed: --", Display: false, Category: "Memory" },
+  { Value: "DDR1 Speed: --", Display: false, Category: "Memory" },
+  { Value: "DDR2 Speed: --", Display: false, Category: "Memory" },
+  { Value: "DDR3 Speed: --", Display: false, Category: "Memory" },
+  { Value: "DDR4 Speed: --", Display: false, Category: "Memory" },
+  { Value: "DDR5 Speed: --", Display: false, Category: "Memory" },
+  { Value: "LPDDR1 Speed: --", Display: false, Category: "Memory" },
+  { Value: "LPDDR2 Speed: --", Display: false, Category: "Memory" },
+  { Value: "LPDDR3 Speed: --", Display: false, Category: "Memory" },
+  { Value: "LPDDR4 Speed: --", Display: false, Category: "Memory" },
+  { Value: "LPDDR4X Speed: --", Display: false, Category: "Memory" },
+  { Value: "LPDDR5 Speed: --", Display: false, Category: "Memory" },
+  { Value: "LPDDR5X Speed: --", Display: false, Category: "Memory" },
+  { Value: "Max Memory: --", Display: true, Category: "Memory" },
+  { Value: "Memory Bus: --", Display: true, Category: "Memory" },
+  { Value: "ECC Memory", Display: false, Category: "Memory" },
+  { Value: "PCI-Express: --", Display: true, Category: "PCI" },
+  { Value: "Secondary PCIe: --", Display: true, Category: "PCI" },
+  { Value: "Tertiary PCIe: --", Display: true, Category: "PCI" },
+  { Value: "Cache L1: --", Display: true, Category: "Cache" },
+  { Value: "Cache L2: --", Display: true, Category: "Cache" },
+  { Value: "Cache L3: --", Display: true, Category: "Cache" },
+  { Value: "E-Core L1: --", Display: true, Category: "Cache" },
+  { Value: "E-Core L2: --", Display: true, Category: "Cache" },
+  { Value: "MSRP: --", Display: true, Category: "Platform" },
+  { Value: "Motherboards: --", Display: true, Category: "Platform" },
+  { Value: "PL1: --", Display: true, Category: "Power" },
+  { Value: "PL2: --", Display: true, Category: "Power" },
+  { Value: "FP32: --", Display: true, Category: "Performance" },
+  { Value: "Bundled Cooler: --", Display: true, Category: "Thermal" },
+];
+
+const CPUsCategories = [
+  [
+    "Brand",
+    "Generation",
+    "CPU",
+    "Clock",
+    "Architecture",
+    "Thermal",
+    "Platform",
+    "Sub-Processors",
+    "Power",
+    "Memory",
+    "PCI",
+    "Cache",
+    "Performance",
+  ],
+];
+
 export default function WebHome({ userVal, functions }) {
   {
     /* This is for the modal that determines the comparison type */
@@ -424,7 +669,7 @@ export default function WebHome({ userVal, functions }) {
   {
     /* Determines what comparison screen to show */
   }
-  const [category, setCategory] = useState(3);
+  const [category, setCategory] = useState(0);
 
   {
     /* Determines which part of product selection the modal is on */
@@ -446,6 +691,24 @@ export default function WebHome({ userVal, functions }) {
     const [height, setHeight] = useState(39);
     consolesHeight.push(height);
     consolesSetHeight.push(setHeight);
+  }
+
+  let graphicsCardsHeight = [];
+  let graphicsCardsSetHeight = [];
+
+  for (i = 0; i < graphicsCardsCategories[0].length; i++) {
+    const [height, setHeight] = useState(39);
+    graphicsCardsHeight.push(height);
+    graphicsCardsSetHeight.push(setHeight);
+  }
+
+  let CPUsHeight = [];
+  let CPUsSetHeight = [];
+
+  for (i = 0; i < CPUsCategories[0].length; i++) {
+    const [height, setHeight] = useState(39);
+    CPUsHeight.push(height);
+    CPUsSetHeight.push(setHeight);
   }
 
   const callDroneCloudFunction = async (product) => {
@@ -470,8 +733,34 @@ export default function WebHome({ userVal, functions }) {
     }
   };
 
+  const callGraphicsCardsCloudFunction = async (product) => {
+    try {
+      const GetGraphicsCards = httpsCallable(functions, "GetGraphicsCards");
+      const result = await GetGraphicsCards(product);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
+  const callCPUsCloudFunction = async (product) => {
+    try {
+      const GetCPUs = httpsCallable(functions, "GetCPUs");
+      const result = await GetCPUs(product);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   const [droneSpecs, setDroneSpecs] = useState(droneCategories);
   const [consoleSpecs, setConsoleSpecs] = useState(consoleCategories);
+  const [graphicsCardsSpecs, setGraphicsCardsSpecs] = useState(
+    graphicsCardsCategories
+  );
+  const [CPUsSpecs, setCPUsSpecs] = useState(CPUsCategories);
 
   // Call SGStyles as styles
   const styles = SGStyles();
@@ -581,6 +870,40 @@ export default function WebHome({ userVal, functions }) {
             Height={dronesHeight}
             SetHeight={dronesSetHeight}
             CloudFunction={callDroneCloudFunction}
+          ></Compare>
+        )}
+
+        {category == 5 && (
+          <Compare
+            type={"Graphics Cards"}
+            setCategory={setCategory}
+            Brands={graphicsCardsBrands}
+            Process={graphicsCardsProcess}
+            MatchingArray={graphicsCardsMatchingArray}
+            DefaultArray={graphicsCardsDefaultArray}
+            Categories={graphicsCardsCategories}
+            Specs={graphicsCardsSpecs}
+            setSpecs={setGraphicsCardsSpecs}
+            Height={graphicsCardsHeight}
+            SetHeight={graphicsCardsSetHeight}
+            CloudFunction={callGraphicsCardsCloudFunction}
+          ></Compare>
+        )}
+
+        {category == 6 && (
+          <Compare
+            type={"CPUs"}
+            setCategory={setCategory}
+            Brands={CPUsBrands}
+            Process={CPUsProcess}
+            MatchingArray={CPUsMatchingArray}
+            DefaultArray={CPUsDefaultArray}
+            Categories={CPUsCategories}
+            Specs={CPUsSpecs}
+            setSpecs={setCPUsSpecs}
+            Height={CPUsHeight}
+            SetHeight={CPUsSetHeight}
+            CloudFunction={callCPUsCloudFunction}
           ></Compare>
         )}
       </ScrollView>

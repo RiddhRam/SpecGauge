@@ -1,7 +1,7 @@
 import { SGStyles } from "../styles/styles";
 
 import { Link } from "react-router-dom";
-import { Text, View } from "react-native-web";
+import { Image, Text, View } from "react-native-web";
 
 export const Navbar = ({ page, userVal }) => {
   // initialize SGStyles as styles
@@ -10,9 +10,21 @@ export const Navbar = ({ page, userVal }) => {
   return (
     <View style={styles.containerStyles.navbarContainer}>
       {/* The title and logo */}
-      <Text style={[styles.textStyles.text, { display: "block" }]}>
-        SpecGauge
-      </Text>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
+        }}
+      >
+        <Image
+          source={require("../assets/SpecGauge Logo.svg")}
+          style={{ width: 35, height: 35 }}
+        ></Image>
+        <Text style={[styles.textStyles.text, { display: "block" }]}>
+          SpecGauge
+        </Text>
+      </View>
       {/* The links */}
       {/* If currently on the page of one of the links, that link is highlighted */}
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
