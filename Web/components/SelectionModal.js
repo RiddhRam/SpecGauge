@@ -247,12 +247,9 @@ export default function SelectionModal({
                           value != "False" &&
                           value.indexOf("--") == -1
                         ) {
-                          hotfixIndex = value.indexOf("Depends on");
-                          console.log(hotfixIndex);
+                          value = value.replace(/Depends/, " Depends");
 
-                          if (hotfixIndex != -1) {
-                            value = value.replace(/Depends/, " Depends");
-                          }
+                          value = value.replace(/;/g, " ");
 
                           tempDefault[i].Value = tempDefault[i].Value.replace(
                             "--",
