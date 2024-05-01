@@ -6,7 +6,10 @@ import { useState } from "react";
 
 import { httpsCallable } from "firebase/functions";
 
+import axios from "axios";
+
 import Compare from "./compare/Compare";
+import CompareCars from "./compare/CompareCars";
 
 const categories = [
   "Automobiles",
@@ -17,10 +20,7 @@ const categories = [
   "Processors",
 ];
 
-const processes = [
-  ["a brand", "a model", "a trim", "a year"],
-  ["a brand", "a phone"],
-];
+const processes = [["a brand", "a phone"]];
 
 const brands = [
   ["Audi", "Dodge", "Ford"],
@@ -661,6 +661,220 @@ const CPUsCategories = [
   ],
 ];
 
+const carsProcesses = ["a brand", "a model", "a year", "a trim"];
+
+const carsBrands = [
+  "AM General",
+  "Acura",
+  "Alfa Romeo",
+  "Aston Martin",
+  "Audi",
+  "BMW",
+  "Bentley",
+  "Bugatti",
+  "Buick",
+  "Cadillac",
+  "Chevrolet",
+  "Chrysler",
+  "Daewoo",
+  "Dodge",
+  "Eagle",
+  "FIAT",
+  "Ferrari",
+  "Fisker",
+  "Ford",
+  "GMC",
+  "Genesis",
+  "Geo",
+  "HUMMER",
+  "Honda",
+  "Hyundai",
+  "INFINITI",
+  "Isuzu",
+  "Jaguar",
+  "Jeep",
+  "Karma",
+  "Kia",
+  "Lamborghini",
+  "Land Rover",
+  "Lexus",
+  "Lincoln",
+  "Lotus",
+  "Lucid",
+  "MINI",
+  "Maserati",
+  "Maybach",
+  "Mazda",
+  "McLaren",
+  "Mercedes-Benz",
+  "Mercury",
+  "Mitsubishi",
+  "Nissan",
+  "Oldsmobile",
+  "Panoz",
+  "Plymouth",
+  "Polestar",
+  "Pontiac",
+  "Porsche",
+  "Ram",
+  "Rivian",
+  "Rolls-Royce",
+  "Saab",
+  "Saturn",
+  "Scion",
+  "smart",
+  "Spyker",
+  "Subaru",
+  "Suzuki",
+  "Tesla",
+  "Toyota",
+  "VinFast",
+  "Volkswagen",
+  "Volvo",
+];
+
+const carsMatchingArray = [
+  "engine_type",
+  "cylinders",
+  "size",
+  "horsepower_hp",
+  "horsepower_rpm",
+  "torque_ft_lbs",
+  "torque_rpm",
+  "valves",
+  "valve_timing",
+  "cam_type",
+  "drive_type",
+  "transmission",
+  "make_model_trim_interior_colors",
+  "make_model_trim_exterior_colors",
+  "fuel_type",
+  "fuel_tank_capacity",
+  "epa_city_mpg",
+  "epa_highway_mpg",
+  "combined_mpg",
+  "range_city",
+  "range_highway",
+  "battery_capacity_electric",
+  "epa_time_to_charge_hr_240v_electric",
+  "epa_kwh_100_mi_electric",
+  "range_electric",
+  "epa_city_mpg_electric",
+  "epa_highway_mpg_electric",
+  "epa_combined_mpg_electric",
+  "type",
+  "doors",
+  "seats",
+  "length",
+  "width",
+  "height",
+  "wheel_base",
+  "front_track",
+  "rear_track",
+  "ground_clearance",
+  "cargo_capacity",
+  "max_cargo_capacity",
+  "curb_weight",
+  "gross_weight",
+  "max_payload",
+  "max_towing_capacity",
+];
+
+const carsDefaultArray = [
+  { Value: "--", Display: true, Category: "Brand" }, // Brand
+  { Value: "--", Display: true, Category: "Model" }, // Model
+  { Value: "--", Display: true, Category: "Year" }, // Year
+  { Value: "--", Display: true, Category: "Trim" }, // Trim
+  { Value: "--", Display: true, Category: "MSRP" }, // MSRP
+  { Value: "Motor Type: --", Display: true, Category: "Motor" },
+  { Value: "Cylinders: --", Display: false, Category: "Motor" },
+  { Value: "Displacement: --L", Display: false, Category: "Motor" },
+  { Value: "Horsepower: -- hp", Display: true, Category: "Motor" },
+  { Value: "Horsepower Optimal RPM: -- RPM", Display: true, Category: "Motor" },
+  { Value: "Torque: -- ft-lbs", Display: true, Category: "Motor" },
+  { Value: "Torque Optimal RPM: -- RPM", Display: true, Category: "Motor" },
+  { Value: "Valves: --", Display: false, Category: "Motor" },
+  { Value: "Valves Timing: --", Display: false, Category: "Motor" },
+  { Value: "Camshaft: --", Display: false, Category: "Motor" },
+  { Value: "Drivetrain: --", Display: true, Category: "Motor" },
+  { Value: "Transmission: --", Display: true, Category: "Motor" },
+  { Value: "Interior Colors: --", Display: true, Category: "Design" },
+  { Value: "Exterior Colors: --", Display: true, Category: "Design" },
+  { Value: "Fuel Type: --", Display: false, Category: "Fuel/Battery" },
+  {
+    Value: "Fuel Tank Capacity: -- gal",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  { Value: "City MPG: --", Display: false, Category: "Fuel/Battery" },
+  { Value: "Highway MPG: --", Display: false, Category: "Fuel/Battery" },
+  { Value: "Combined MPG: --", Display: false, Category: "Fuel/Battery" },
+  { Value: "City Range (miles): --", Display: false, Category: "Fuel/Battery" },
+  {
+    Value: "Highway Range (miles): --",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  { Value: "Battery Capacity: --", Display: false, Category: "Fuel/Battery" },
+  {
+    Value: "Time to Charge with 240V: -- hours",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  { Value: "kWh/100mi: --", Display: false, Category: "Fuel/Battery" },
+  {
+    Value: "Electric Range (miles): --",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  {
+    Value: "City MPG (Equivalent): --",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  {
+    Value: "Highway MPG (Equivalent): --",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  {
+    Value: "Combined MPG (Equivalent): --",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  { Value: "Type: --", Display: true, Category: "Body" },
+  { Value: "Doors: --", Display: true, Category: "Body" },
+  { Value: "Seats: --", Display: true, Category: "Body" },
+  { Value: "Length: -- in", Display: true, Category: "Body" },
+  { Value: "Width: -- in", Display: true, Category: "Body" },
+  { Value: "Height: -- in", Display: true, Category: "Body" },
+  { Value: "Wheelbase: -- in", Display: true, Category: "Body" },
+  { Value: "Front Track: -- in", Display: true, Category: "Body" },
+  { Value: "Rear Track: -- in", Display: true, Category: "Body" },
+  { Value: "Ground Clearance: -- in", Display: true, Category: "Utility" },
+  { Value: "Cargo Capacity: -- cu.ft.", Display: true, Category: "Utility" },
+  { Value: "Cargo Capacity: -- cu. ft.", Display: false, Category: "Utility" },
+  { Value: "Curb Weight: -- lbs", Display: true, Category: "Utility" },
+  { Value: "Gross Weight: -- lbs", Display: true, Category: "Utility" },
+  { Value: "Payload Capacity: -- lbs", Display: true, Category: "Utility" },
+  { Value: "Tow Capacity: -- lbs", Display: true, Category: "Utility" },
+];
+
+const carsCategories = [
+  [
+    "Brand",
+    "Model",
+    "Year",
+    "Trim",
+    "MSRP",
+    "Motor",
+    "Design",
+    "Fuel/Battery",
+    "Body",
+    "Utility",
+  ],
+];
+
 export default function WebHome({ userVal, functions }) {
   {
     /* This is for the modal that determines the comparison type */
@@ -669,7 +883,7 @@ export default function WebHome({ userVal, functions }) {
   {
     /* Determines what comparison screen to show */
   }
-  const [category, setCategory] = useState(0);
+  const [category, setCategory] = useState(1);
 
   {
     /* Determines which part of product selection the modal is on */
@@ -709,6 +923,15 @@ export default function WebHome({ userVal, functions }) {
     const [height, setHeight] = useState(39);
     CPUsHeight.push(height);
     CPUsSetHeight.push(setHeight);
+  }
+
+  let carsHeight = [];
+  let carsSetHeight = [];
+
+  for (i = 0; i < CPUsCategories[0].length; i++) {
+    const [height, setHeight] = useState(39);
+    carsHeight.push(height);
+    carsSetHeight.push(setHeight);
   }
 
   const callDroneCloudFunction = async (product) => {
@@ -755,12 +978,57 @@ export default function WebHome({ userVal, functions }) {
     }
   };
 
+  const callCarModelsCloudFunction = async (product) => {
+    try {
+      const GetCarModels = httpsCallable(functions, "GetCarModels");
+      const result = await GetCarModels(product);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
+  const callGetCarYearsCloudFunction = async (product) => {
+    try {
+      const GetCarYears = httpsCallable(functions, "GetCarYears");
+      const result = await GetCarYears(product);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
+  const callGetCarTrimsCloudFunction = async (product) => {
+    try {
+      const GetCarTrims = httpsCallable(functions, "GetCarTrims");
+      const result = await GetCarTrims(product);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
+  const callGetCarTrimViewCloudFunction = async (product) => {
+    try {
+      const GetCarTrimView = httpsCallable(functions, "GetCarTrimView");
+      const result = await GetCarTrimView(product);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   const [droneSpecs, setDroneSpecs] = useState(droneCategories);
   const [consoleSpecs, setConsoleSpecs] = useState(consoleCategories);
   const [graphicsCardsSpecs, setGraphicsCardsSpecs] = useState(
     graphicsCardsCategories
   );
   const [CPUsSpecs, setCPUsSpecs] = useState(CPUsCategories);
+  const [carsSpecs, setCarsSpecs] = useState(carsCategories);
 
   // Call SGStyles as styles
   const styles = SGStyles();
@@ -822,7 +1090,6 @@ export default function WebHome({ userVal, functions }) {
                   <Pressable
                     onPress={() => {
                       setCompareModalVisible(false);
-                      setModalScreen(0);
                     }}
                     style={({ pressed }) => [
                       styles.inputStyles.button,
@@ -835,6 +1102,27 @@ export default function WebHome({ userVal, functions }) {
               </Modal>
             </View>
           </View>
+        )}
+
+        {/* Compare Consoles screen */}
+        {category == 1 && (
+          <CompareCars
+            type={"Automobiles"}
+            setCategory={setCategory}
+            Brands={carsBrands}
+            Process={carsProcesses}
+            MatchingArray={carsMatchingArray}
+            DefaultArray={carsDefaultArray}
+            Categories={carsCategories}
+            Specs={carsSpecs}
+            setSpecs={setCarsSpecs}
+            Height={carsHeight}
+            SetHeight={carsSetHeight}
+            CloudFunctionModels={callCarModelsCloudFunction}
+            CloudFunctionYears={callGetCarYearsCloudFunction}
+            CloudFunctionTrims={callGetCarTrimsCloudFunction}
+            CloudFunctionTrimView={callGetCarTrimViewCloudFunction}
+          ></CompareCars>
         )}
 
         {/* Compare Consoles screen */}
