@@ -37,7 +37,7 @@ export const Navbar = ({ page, userVal }) => {
             Home
           </Link>
         )}
-
+        {/* 
         {page === "search" ? (
           <Link to="/search" style={styles.textStyles.navbarTextSelected}>
             Search
@@ -49,6 +49,7 @@ export const Navbar = ({ page, userVal }) => {
         )}
 
         {/* If logged in show "My Account" link. If logged out show "Sign Up/Log In" link. */}
+        {/* 
         {userVal ? (
           <>
             {page === "account" ? (
@@ -74,6 +75,7 @@ export const Navbar = ({ page, userVal }) => {
             )}
           </>
         )}
+      */}
       </View>
     </View>
   );

@@ -21,6 +21,7 @@ export default function CompareCars({
   CloudFunctionYears,
   CloudFunctionTrims,
   CloudFunctionTrimView,
+  amplitude,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
   const styles = SGStyles();
@@ -50,6 +51,7 @@ export default function CompareCars({
 
         <Pressable
           onPress={async () => {
+            amplitude.track("Add Item");
             setProductModalVisible(true);
           }}
           style={({ pressed }) => [
@@ -152,6 +154,7 @@ export default function CompareCars({
       </ScrollView>
 
       <SelectionModalCars
+        type={type}
         productModalVisible={productModalVisible}
         setProductModalVisible={setProductModalVisible}
         brands={Brands}
@@ -164,6 +167,7 @@ export default function CompareCars({
         matchingArray={MatchingArray}
         defaultArray={DefaultArray}
         categories={Categories}
+        amplitude={amplitude}
       ></SelectionModalCars>
     </View>
   );

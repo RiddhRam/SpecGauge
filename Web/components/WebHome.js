@@ -2,18 +2,15 @@ import { Navbar } from "../Navbar";
 import { SGStyles } from "../../styles/styles";
 
 import { Modal, Pressable, View, Text, ScrollView } from "react-native-web";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { httpsCallable } from "firebase/functions";
-
-import axios from "axios";
 
 import Compare from "./compare/Compare";
 import CompareCars from "./compare/CompareCars";
 
 const categories = [
   "Automobiles",
-  "Phones",
   "Consoles",
   "Drones",
   "Graphics Cards",
@@ -22,10 +19,7 @@ const categories = [
 
 const processes = [["a brand", "a phone"]];
 
-const brands = [
-  ["Audi", "Dodge", "Ford"],
-  ["Apple", "Samsung"],
-];
+const brands = [["Apple", "Samsung"]];
 
 const droneBrands = [
   "Autel",
@@ -875,7 +869,7 @@ const carsCategories = [
   ],
 ];
 
-export default function WebHome({ userVal, functions }) {
+export default function WebHome({ userVal, functions, amplitude }) {
   {
     /* This is for the modal that determines the comparison type */
   }
@@ -883,11 +877,15 @@ export default function WebHome({ userVal, functions }) {
   {
     /* Determines what comparison screen to show */
   }
-  const [category, setCategory] = useState(1);
+  const [category, setCategory] = useState(0);
 
   {
     /* Determines which part of product selection the modal is on */
   }
+
+  useEffect(() => {
+    amplitude.track("Screen", { Screen: "Home" });
+  }, []);
 
   let dronesHeight = [];
   let dronesSetHeight = [];
@@ -1044,6 +1042,29 @@ export default function WebHome({ userVal, functions }) {
         {/* Selection comparison type, default screen */}
         {category == 0 && (
           <View style={styles.containerStyles.largeContainer}>
+            <View
+              style={[
+                styles.containerStyles.comingSoonContainer,
+                { marginBottom: 30 },
+              ]}
+            >
+              <Text
+                style={[
+                  {
+                    fontSize: 30,
+                  },
+                  styles.textStyles.simpleText,
+                ]}
+              >
+                Coming Soon
+              </Text>
+              <Text style={styles.textStyles.simpleText}>Pros and Cons</Text>
+              <Text style={styles.textStyles.simpleText}>
+                Saved Comparisons
+              </Text>
+              <Text style={styles.textStyles.simpleText}>Accounts</Text>
+            </View>
+
             <View>
               <Pressable
                 onPress={() => {
@@ -1075,6 +1096,7 @@ export default function WebHome({ userVal, functions }) {
                         ]}
                         key={item}
                         onPress={() => {
+                          amplitude.track("Screen", { Screen: item });
                           {
                             /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
                           }
@@ -1104,7 +1126,7 @@ export default function WebHome({ userVal, functions }) {
           </View>
         )}
 
-        {/* Compare Consoles screen */}
+        {/* Compare Automobiles screen */}
         {category == 1 && (
           <CompareCars
             type={"Automobiles"}
@@ -1122,11 +1144,12 @@ export default function WebHome({ userVal, functions }) {
             CloudFunctionYears={callGetCarYearsCloudFunction}
             CloudFunctionTrims={callGetCarTrimsCloudFunction}
             CloudFunctionTrimView={callGetCarTrimViewCloudFunction}
+            amplitude={amplitude}
           ></CompareCars>
         )}
 
         {/* Compare Consoles screen */}
-        {category == 3 && (
+        {category == 2 && (
           <Compare
             type={"Consoles"}
             setCategory={setCategory}
@@ -1140,11 +1163,12 @@ export default function WebHome({ userVal, functions }) {
             Height={consolesHeight}
             SetHeight={consolesSetHeight}
             CloudFunction={callConsoleCloudFunction}
+            amplitude={amplitude}
           ></Compare>
         )}
 
         {/* Compare Drones screen */}
-        {category == 4 && (
+        {category == 3 && (
           <Compare
             type={"Drones"}
             setCategory={setCategory}
@@ -1158,10 +1182,12 @@ export default function WebHome({ userVal, functions }) {
             Height={dronesHeight}
             SetHeight={dronesSetHeight}
             CloudFunction={callDroneCloudFunction}
+            amplitude={amplitude}
           ></Compare>
         )}
 
-        {category == 5 && (
+        {/* Compare Graphics Cards screen */}
+        {category == 4 && (
           <Compare
             type={"Graphics Cards"}
             setCategory={setCategory}
@@ -1175,10 +1201,12 @@ export default function WebHome({ userVal, functions }) {
             Height={graphicsCardsHeight}
             SetHeight={graphicsCardsSetHeight}
             CloudFunction={callGraphicsCardsCloudFunction}
+            amplitude={amplitude}
           ></Compare>
         )}
 
-        {category == 6 && (
+        {/* Compare Processors screen */}
+        {category == 5 && (
           <Compare
             type={"CPUs"}
             setCategory={setCategory}
@@ -1192,6 +1220,7 @@ export default function WebHome({ userVal, functions }) {
             Height={CPUsHeight}
             SetHeight={CPUsSetHeight}
             CloudFunction={callCPUsCloudFunction}
+            amplitude={amplitude}
           ></Compare>
         )}
       </ScrollView>

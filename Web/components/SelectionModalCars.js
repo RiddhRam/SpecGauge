@@ -5,12 +5,14 @@ import {
   Text,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from "react-native-web";
 
 import { useState } from "react";
 import { SGStyles } from "../../styles/styles";
 
 export default function SelectionModalCars({
+  type,
   productModalVisible,
   setProductModalVisible,
   brands,
@@ -23,12 +25,15 @@ export default function SelectionModalCars({
   matchingArray,
   defaultArray,
   categories,
+  amplitude,
 }) {
   const [modalScreen, setModalScreen] = useState(0);
   const [requestedStep1, setRequestedStep1] = useState([]);
   const [requestedStep2, setRequestedStep2] = useState([]);
   const [requestedStep3, setRequestedStep3] = useState([]);
   const [requestedSpecs, setRequestedSpecs] = useState([]);
+
+  const [loading, setLoading] = useState(false);
 
   const styles = SGStyles();
 
@@ -100,42 +105,49 @@ export default function SelectionModalCars({
         <View style={styles.containerStyles.modalContainer}>
           <Text style={styles.textStyles.text}>Select {process[0]}</Text>
 
-          <ScrollView style={styles.textStyles.modalText}>
-            {brands.map((item) => (
-              <Pressable
-                style={({ pressed }) => [
-                  { padding: 10, paddingRight: 50, fontSize: 20 },
-                  pressed && styles.inputStyles.buttonNoBackgroundClicked,
-                ]}
-                key={item}
-                onPress={async () => {
-                  // For next step
-                  const tempArray = [];
+          {loading == false && (
+            <ScrollView style={styles.textStyles.modalText}>
+              {brands.map((item) => (
+                <Pressable
+                  style={({ pressed }) => [
+                    { padding: 10, paddingRight: 50, fontSize: 20 },
+                    pressed && styles.inputStyles.buttonNoBackgroundClicked,
+                  ]}
+                  key={item}
+                  onPress={async () => {
+                    amplitude.track("Request", { Brand: item, Category: type });
+                    setLoading(true);
+                    // For next step
+                    const tempArray = [];
 
-                  result = await cloudFunctionModels(item);
+                    result = await cloudFunctionModels(item);
 
-                  if (result.error) {
-                    console.log("There was an error");
-                    setProductModalVisible(false);
-                    Alert("There was an error. Please try again later.");
-                  } else {
-                    for (key in result) {
-                      tempArray.push(result[key]);
+                    if (result.error) {
+                      console.log("There was an error");
+                      setProductModalVisible(false);
+                      Alert("There was an error. Please try again later.");
+                    } else {
+                      for (key in result) {
+                        tempArray.push(result[key]);
+                      }
+
+                      setRequestedStep1(tempArray);
+                      setRequestedSpecs([
+                        { Value: item, Display: true, Category: "Brand" },
+                      ]);
+
+                      setModalScreen(1);
+                      setLoading(false);
                     }
+                  }}
+                >
+                  <p>{item}</p>
+                </Pressable>
+              ))}
+            </ScrollView>
+          )}
 
-                    setRequestedStep1(tempArray);
-                    setRequestedSpecs([
-                      { Value: item, Display: true, Category: "Brand" },
-                    ]);
-
-                    setModalScreen(1);
-                  }
-                }}
-              >
-                <p>{item}</p>
-              </Pressable>
-            ))}
-          </ScrollView>
+          {loading == true && <ActivityIndicator></ActivityIndicator>}
 
           <Pressable
             onPress={() => {
@@ -157,31 +169,41 @@ export default function SelectionModalCars({
         <View style={styles.containerStyles.modalContainer}>
           <Text style={styles.textStyles.text}>Select {process[1]}</Text>
 
-          <ScrollView style={styles.textStyles.modalText}>
-            {requestedStep1.map((item, index) => (
-              <Pressable
-                style={({ pressed }) => [
-                  { padding: 10, paddingRight: 50, fontSize: 20 },
-                  pressed && styles.inputStyles.buttonNoBackgroundClicked,
-                ]}
-                key={index}
-                onPress={async () => {
-                  result = await cloudFunctionYears({
-                    make: `${requestedSpecs[0].Value}`,
-                    model: `${item.name}`,
-                  });
-                  setRequestedStep2(result);
-                  setRequestedSpecs((prevSpecs) => [
-                    ...prevSpecs,
-                    { Value: item.name, Display: true, Category: "Model" },
-                  ]);
-                  setModalScreen(2);
-                }}
-              >
-                <p>{item.name}</p>
-              </Pressable>
-            ))}
-          </ScrollView>
+          {loading == false && (
+            <ScrollView style={styles.textStyles.modalText}>
+              {requestedStep1.map((item, index) => (
+                <Pressable
+                  style={({ pressed }) => [
+                    { padding: 10, paddingRight: 50, fontSize: 20 },
+                    pressed && styles.inputStyles.buttonNoBackgroundClicked,
+                  ]}
+                  key={index}
+                  onPress={async () => {
+                    amplitude.track("Request", {
+                      item: item.name,
+                      Category: type,
+                    });
+                    setLoading(true);
+                    result = await cloudFunctionYears({
+                      make: `${requestedSpecs[0].Value}`,
+                      model: `${item.name}`,
+                    });
+                    setRequestedStep2(result);
+                    setRequestedSpecs((prevSpecs) => [
+                      ...prevSpecs,
+                      { Value: item.name, Display: true, Category: "Model" },
+                    ]);
+                    setModalScreen(2);
+                    setLoading(false);
+                  }}
+                >
+                  <p>{item.name}</p>
+                </Pressable>
+              ))}
+            </ScrollView>
+          )}
+
+          {loading == true && <ActivityIndicator></ActivityIndicator>}
 
           <Pressable
             onPress={() => {
@@ -203,33 +225,40 @@ export default function SelectionModalCars({
         <View style={styles.containerStyles.modalContainer}>
           <Text style={styles.textStyles.text}>Select {process[2]}</Text>
 
-          <ScrollView style={styles.textStyles.modalText}>
-            {requestedStep2.map((item, index) => (
-              <Pressable
-                style={({ pressed }) => [
-                  { padding: 10, paddingRight: 50, fontSize: 20 },
-                  pressed && styles.inputStyles.buttonNoBackgroundClicked,
-                ]}
-                key={index}
-                onPress={async () => {
-                  const result = await cloudFunctionTrims({
-                    make: `${requestedSpecs[0].Value}`,
-                    model: `${requestedSpecs[1].Value}`,
-                    year: `${item}`,
-                  });
-                  setRequestedSpecs((prevSpecs) => [
-                    ...prevSpecs,
-                    { Value: item, Display: true, Category: "Year" },
-                  ]);
+          {loading == false && (
+            <ScrollView style={styles.textStyles.modalText}>
+              {requestedStep2.map((item, index) => (
+                <Pressable
+                  style={({ pressed }) => [
+                    { padding: 10, paddingRight: 50, fontSize: 20 },
+                    pressed && styles.inputStyles.buttonNoBackgroundClicked,
+                  ]}
+                  key={index}
+                  onPress={async () => {
+                    amplitude.track("Request", { item: item, Category: type });
+                    setLoading(true);
+                    const result = await cloudFunctionTrims({
+                      make: `${requestedSpecs[0].Value}`,
+                      model: `${requestedSpecs[1].Value}`,
+                      year: `${item}`,
+                    });
+                    setRequestedSpecs((prevSpecs) => [
+                      ...prevSpecs,
+                      { Value: item, Display: true, Category: "Year" },
+                    ]);
 
-                  setRequestedStep3(result);
-                  setModalScreen(3);
-                }}
-              >
-                <p>{item}</p>
-              </Pressable>
-            ))}
-          </ScrollView>
+                    setRequestedStep3(result);
+                    setModalScreen(3);
+                    setLoading(false);
+                  }}
+                >
+                  <p>{item}</p>
+                </Pressable>
+              ))}
+            </ScrollView>
+          )}
+
+          {loading == true && <ActivityIndicator></ActivityIndicator>}
 
           <Pressable
             onPress={() => {
@@ -251,152 +280,164 @@ export default function SelectionModalCars({
         <View style={styles.containerStyles.modalContainer}>
           <Text style={styles.textStyles.text}>Select {process[3]}</Text>
 
-          <ScrollView style={styles.textStyles.modalText}>
-            {requestedStep3.map((item, index) => (
-              <Pressable
-                style={({ pressed }) => [
-                  { padding: 10, paddingRight: 50, fontSize: 20 },
-                  pressed && styles.inputStyles.buttonNoBackgroundClicked,
-                ]}
-                key={index}
-                onPress={async () => {
-                  newArray = [];
+          {loading == false && (
+            <ScrollView style={styles.textStyles.modalText}>
+              {requestedStep3.map((item, index) => (
+                <Pressable
+                  style={({ pressed }) => [
+                    { padding: 10, paddingRight: 50, fontSize: 20 },
+                    pressed && styles.inputStyles.buttonNoBackgroundClicked,
+                  ]}
+                  key={index}
+                  onPress={async () => {
+                    amplitude.track("Request", {
+                      item: item.description,
+                      Category: type,
+                    });
+                    setLoading(true);
+                    newArray = [];
 
-                  newArray.push({
-                    Value: item.description,
-                    Display: true,
-                    Category: "Trim",
-                  });
+                    newArray.push({
+                      Value: item.description,
+                      Display: true,
+                      Category: "Trim",
+                    });
 
-                  const result = await cloudFunctionTrimView(item.id);
+                    const result = await cloudFunctionTrimView(item.id);
 
-                  newArray.push({
-                    Value: "$" + result.msrp,
-                    Display: true,
-                    Category: "MSRP",
-                  });
+                    newArray.push({
+                      Value: "$" + result.msrp,
+                      Display: true,
+                      Category: "MSRP",
+                    });
 
-                  matchedArray = iterateJSON(result);
+                    matchedArray = iterateJSON(result);
 
-                  tempDefaultArray = [];
+                    tempDefaultArray = [];
 
-                  let count = 0;
+                    let count = 0;
 
-                  interiorColours = "Interior Colors: \n";
+                    interiorColours = "Interior Colors: \n";
 
-                  for (
-                    let i = 0;
-                    i < result.make_model_trim_interior_colors.length;
-                    i++
-                  ) {
-                    if (
-                      i !=
-                      result.make_model_trim_interior_colors.length - 1
+                    for (
+                      let i = 0;
+                      i < result.make_model_trim_interior_colors.length;
+                      i++
                     ) {
-                      if (count != 1) {
-                        interiorColours +=
-                          result.make_model_trim_interior_colors[i].name + "; ";
-                        count++;
+                      if (
+                        i !=
+                        result.make_model_trim_interior_colors.length - 1
+                      ) {
+                        if (count != 1) {
+                          interiorColours +=
+                            result.make_model_trim_interior_colors[i].name +
+                            "; ";
+                          count++;
+                        } else {
+                          interiorColours +=
+                            result.make_model_trim_interior_colors[i].name +
+                            ";\n";
+                          count = 0;
+                        }
                       } else {
                         interiorColours +=
-                          result.make_model_trim_interior_colors[i].name +
-                          ";\n";
-                        count = 0;
+                          result.make_model_trim_interior_colors[i].name + "\n";
                       }
-                    } else {
-                      interiorColours +=
-                        result.make_model_trim_interior_colors[i].name + "\n";
                     }
-                  }
 
-                  count = 0;
+                    count = 0;
 
-                  exteriorColours = "Exterior Colors: \n";
+                    exteriorColours = "Exterior Colors: \n";
 
-                  for (
-                    let i = 0;
-                    i < result.make_model_trim_exterior_colors.length;
-                    i++
-                  ) {
-                    if (
-                      i !=
-                      result.make_model_trim_exterior_colors.length - 1
+                    for (
+                      let i = 0;
+                      i < result.make_model_trim_exterior_colors.length;
+                      i++
                     ) {
-                      if (count != 1) {
-                        exteriorColours +=
-                          result.make_model_trim_exterior_colors[i].name + "; ";
-                        count++;
+                      if (
+                        i !=
+                        result.make_model_trim_exterior_colors.length - 1
+                      ) {
+                        if (count != 1) {
+                          exteriorColours +=
+                            result.make_model_trim_exterior_colors[i].name +
+                            "; ";
+                          count++;
+                        } else {
+                          exteriorColours +=
+                            result.make_model_trim_exterior_colors[i].name +
+                            ";\n";
+                          count = 0;
+                        }
                       } else {
                         exteriorColours +=
-                          result.make_model_trim_exterior_colors[i].name +
-                          ";\n";
-                        count = 0;
+                          result.make_model_trim_exterior_colors[i].name;
                       }
-                    } else {
-                      exteriorColours +=
-                        result.make_model_trim_exterior_colors[i].name;
                     }
-                  }
 
-                  cityRange = matchedArray[19].Value.slice(
-                    0,
-                    matchedArray[19].Value.length - 1
-                  );
-                  highwayRange = matchedArray[20].Value.slice(
-                    0,
-                    matchedArray[20].Value.length - 1
-                  );
+                    cityRange = matchedArray[19].Value.slice(
+                      0,
+                      matchedArray[19].Value.length - 1
+                    );
+                    highwayRange = matchedArray[20].Value.slice(
+                      0,
+                      matchedArray[20].Value.length - 1
+                    );
 
-                  matchedArray[12].Value = interiorColours;
-                  matchedArray[13].Value = exteriorColours;
+                    matchedArray[12].Value = interiorColours;
+                    matchedArray[13].Value = exteriorColours;
 
-                  matchedArray[19].Value = cityRange;
-                  matchedArray[20].Value = highwayRange;
+                    matchedArray[19].Value = cityRange;
+                    matchedArray[20].Value = highwayRange;
 
-                  for (item in matchedArray) {
-                    newArray.push(matchedArray[item]);
-                  }
+                    for (item in matchedArray) {
+                      newArray.push(matchedArray[item]);
+                    }
 
-                  console.log(matchedArray);
+                    oldArray = [];
+                    for (item in requestedSpecs) {
+                      oldArray.push(requestedSpecs[item]);
+                    }
 
-                  oldArray = [];
-                  for (item in requestedSpecs) {
-                    oldArray.push(requestedSpecs[item]);
-                  }
+                    combinedArray = oldArray.concat(newArray);
 
-                  combinedArray = oldArray.concat(newArray);
+                    tempArray = [];
 
-                  tempArray = [];
+                    for (category in categories[0]) {
+                      tempArray.push("");
+                    }
 
-                  for (category in categories[0]) {
-                    tempArray.push("");
-                  }
-
-                  for (item in combinedArray) {
-                    if (combinedArray[item].Display) {
-                      for (let i = 0; i < tempArray.length; i++) {
-                        if (combinedArray[item].Category == categories[0][i]) {
-                          tempArray[i] += combinedArray[item].Value + "\n";
-                          break;
+                    for (item in combinedArray) {
+                      if (combinedArray[item].Display) {
+                        for (let i = 0; i < tempArray.length; i++) {
+                          if (
+                            combinedArray[item].Category == categories[0][i]
+                          ) {
+                            tempArray[i] += combinedArray[item].Value + "\n";
+                            break;
+                          }
                         }
                       }
                     }
-                  }
 
-                  setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
+                    setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
 
-                  setProductModalVisible(false);
-                  setRequestedStep1([]);
-                  setRequestedStep2([]);
-                  setRequestedStep3([]);
-                  setRequestedSpecs([]);
-                  setModalScreen(0);
-                }}
-              >
-                <p>{item.description}</p>
-              </Pressable>
-            ))}
-          </ScrollView>
+                    setProductModalVisible(false);
+                    setRequestedStep1([]);
+                    setRequestedStep2([]);
+                    setRequestedStep3([]);
+                    setRequestedSpecs([]);
+                    setModalScreen(0);
+                    setLoading(false);
+                  }}
+                >
+                  <p>{item.description}</p>
+                </Pressable>
+              ))}
+            </ScrollView>
+          )}
+
+          {loading == true && <ActivityIndicator></ActivityIndicator>}
 
           <Pressable
             onPress={() => {

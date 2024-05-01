@@ -18,6 +18,7 @@ export default function Compare({
   Height,
   SetHeight,
   CloudFunction,
+  amplitude,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
   const styles = SGStyles();
@@ -30,6 +31,7 @@ export default function Compare({
       <View style={{ marginRight: "auto", flexDirection: "row" }}>
         <Pressable
           onPress={() => {
+            amplitude.track("Go Back");
             setCategory(0);
 
             for (let i = 0; i < SetHeight.length; i++) {
@@ -47,6 +49,7 @@ export default function Compare({
 
         <Pressable
           onPress={async () => {
+            amplitude.track("Add Item");
             setProductModalVisible(true);
           }}
           style={({ pressed }) => [
@@ -74,6 +77,10 @@ export default function Compare({
                   pressed && styles.inputStyles.removeButtonClicked,
                 ]}
                 onPress={async () => {
+                  amplitude.track("Remove", {
+                    Removed: Specs[index1],
+                    Category: type,
+                  });
                   newArray = Specs.filter(
                     (subArray) => Specs[index1] !== subArray
                   );
@@ -149,6 +156,7 @@ export default function Compare({
       </ScrollView>
 
       <SelectionModal
+        type={type}
         productModalVisible={productModalVisible}
         setProductModalVisible={setProductModalVisible}
         brands={Brands}
@@ -158,6 +166,7 @@ export default function Compare({
         matchingArray={MatchingArray}
         defaultArray={DefaultArray}
         categories={Categories}
+        amplitude={amplitude}
       ></SelectionModal>
     </View>
   );

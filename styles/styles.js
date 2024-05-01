@@ -44,6 +44,13 @@ export const SGStyles = () => {
     comparisonColumns: {
       flexDirection: "column",
     },
+    comingSoonContainer: {
+      backgroundColor: theme === "dark" ? "#030612" : "#fff",
+      borderColor: "#000",
+      borderWidth: 2,
+      borderRadius: 8,
+      padding: 15,
+    },
   });
 
   const textStyles = StyleSheet.create({

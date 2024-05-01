@@ -2,12 +2,14 @@
 import "bootstrap/dist/css/bootstrap.css";
 import WebDefaultPage from "./components/WebDefaultPage";
 import WebHome from "./components/WebHome";
-import WebSearch from "./components/WebSearch";
-import WebLogIn from "./components/accounts/WebLogIn";
-import WebUserAccount from "./components/accounts/WebUserAccount";
+//import WebSearch from "./components/WebSearch";
+//import WebLogIn from "./components/accounts/WebLogIn";
+//import WebUserAccount from "./components/accounts/WebUserAccount";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import * as amplitude from "@amplitude/analytics-react-native";
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -16,7 +18,11 @@ import {
   initializeAuth,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { getFunctions } from "firebase/functions";
+
+amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
+  logLevel: amplitude.Types.LogLevel.None,
+});
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -61,21 +67,15 @@ export default function WebApp() {
         <Route
           index
           path="/home"
-          element={<WebHome userVal={userVal} functions={functions}></WebHome>}
+          element={
+            <WebHome
+              userVal={userVal}
+              functions={functions}
+              amplitude={amplitude}
+            ></WebHome>
+          }
         ></Route>
         {/* the home page */}
-        <Route
-          path="/search"
-          element={<WebSearch userVal={userVal}></WebSearch>}
-        ></Route>
-        {/* the search page */}
-        <Route path="/login" element={<WebLogIn></WebLogIn>}></Route>
-        {/* the sign up/log in page */}
-        <Route
-          path="/account"
-          element={<WebUserAccount userVal={userVal}></WebUserAccount>}
-        ></Route>
-        {/* the user account page */}
         <Route
           path="*"
           element={<WebHome userVal={userVal} functions={functions}></WebHome>}
