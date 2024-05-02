@@ -11,12 +11,6 @@ import {
 import { useState } from "react";
 import { SGStyles } from "../../styles/styles";
 
-import * as amplitude from "@amplitude/analytics-react-native";
-
-amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
-  logLevel: amplitude.Types.LogLevel.Debug,
-});
-
 export default function SelectionModal({
   type,
   productModalVisible,
@@ -28,12 +22,17 @@ export default function SelectionModal({
   matchingArray,
   defaultArray,
   categories,
+  amplitude,
 }) {
+  // Determines what screen user is on
   const [modalScreen, setModalScreen] = useState(0);
-  const [requestedStep1, setRequestedStep1] = useState([]);
+  // After brand is selected
   const [requestedStep2, setRequestedStep2] = useState([]);
+  const [requestedStep3, setRequestedStep3] = useState([]);
+  // Temporarily hold onto specs
   const [requestedSpecs, setRequestedSpecs] = useState([]);
 
+  // For the buffer animation while waiting
   const [loading, setLoading] = useState(false);
 
   const styles = SGStyles();
@@ -43,6 +42,7 @@ export default function SelectionModal({
       animationType="slide"
       transparent="true"
     >
+      {/* Select a brand, step 1 */}
       {modalScreen == 0 && (
         <View style={styles.containerStyles.modalContainer}>
           <Text style={styles.textStyles.text}>Select {process[0]}</Text>
@@ -59,12 +59,12 @@ export default function SelectionModal({
                   onPress={async () => {
                     amplitude.track("Request", { Brand: item, Category: type });
                     setLoading(true);
-                    // For next step
+                    // The items for next step
                     const tempArray = [];
                     // The specs if needed
                     const tempSpecArray = [];
 
-                    result = await cloudFunction(item);
+                    let result = await cloudFunction(item);
 
                     if (result.error) {
                       console.log("There was an error");
@@ -72,32 +72,41 @@ export default function SelectionModal({
                       Alert("There was an error. Please try again later.");
                     } else {
                       for (key in result) {
+                        {
+                          /* This is used to display items on the next screen */
+                        }
                         tempArray.push(key);
+                        {
+                          /* These are either the specs, or it keeps getting passed along */
+                        }
                         tempSpecArray.push(result[key]);
                       }
 
-                      await setRequestedStep1(tempArray);
-                      // If user doesn't have to select generations
+                      setRequestedStep2(tempArray);
+                      // If user doesn't have to select anything else
                       if (process.length == 2) {
-                        await setRequestedSpecs(tempSpecArray);
+                        setRequestedSpecs(tempSpecArray);
                       } else {
-                        step2Array = [];
-                        step2Array2 = [];
+                        // There will be a step 3
+                        let Step3Array = [];
+                        let Step3Array2 = [];
 
-                        for (item1 in tempSpecArray) {
-                          tempStep2Array = [];
-                          tempStep2Array2 = [];
-                          for (item2 in tempSpecArray[item1]) {
-                            tempStep2Array.push(tempSpecArray[item1][item2].id);
-                            tempStep2Array2.push(
+                        // Go through all items in the tempSpecArray and pass it along to the next step
+                        for (const item1 in tempSpecArray) {
+                          //
+                          let tempStep3Array = [];
+                          let tempStep3Array2 = [];
+                          for (const item2 in tempSpecArray[item1]) {
+                            tempStep3Array.push(tempSpecArray[item1][item2].id);
+                            tempStep3Array2.push(
                               tempSpecArray[item1][item2].data
                             );
                           }
-                          step2Array.push(tempStep2Array);
-                          step2Array2.push(tempStep2Array2);
+                          Step3Array.push(tempStep3Array);
+                          Step3Array2.push(tempStep3Array2);
                         }
-                        setRequestedStep2(step2Array);
-                        setRequestedSpecs(step2Array2);
+                        setRequestedStep3(Step3Array);
+                        setRequestedSpecs(Step3Array2);
                       }
 
                       setModalScreen(1);
@@ -134,7 +143,7 @@ export default function SelectionModal({
 
           {loading == false && (
             <ScrollView style={styles.textStyles.modalText}>
-              {requestedStep1.map((item, index) => (
+              {requestedStep2.map((item, index) => (
                 <Pressable
                   style={({ pressed }) => [
                     { padding: 10, paddingRight: 50, fontSize: 20 },
@@ -201,12 +210,12 @@ export default function SelectionModal({
                       }
                       await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
 
-                      setRequestedStep1([]);
+                      setRequestedStep2([]);
                       setRequestedSpecs([]);
                       setProductModalVisible(false);
                       setModalScreen(0);
                     } else {
-                      setRequestedStep2(requestedStep2[index]);
+                      setRequestedStep3(requestedStep3[index]);
                       setRequestedSpecs(requestedSpecs[index]);
                       setModalScreen(2);
                     }
@@ -242,7 +251,7 @@ export default function SelectionModal({
 
           {loading == false && (
             <ScrollView style={styles.textStyles.modalText}>
-              {requestedStep2.map((item, index) => (
+              {requestedStep3.map((item, index) => (
                 <Pressable
                   style={({ pressed }) => [
                     { padding: 10, paddingRight: 50, fontSize: 20 },
@@ -314,8 +323,8 @@ export default function SelectionModal({
                     }
                     await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
 
+                    setRequestedStep3([]);
                     setRequestedStep2([]);
-                    setRequestedStep1([]);
                     setRequestedSpecs([]);
                     setProductModalVisible(false);
                     setModalScreen(0);

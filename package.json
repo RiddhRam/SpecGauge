@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@amplitude/analytics-react-native": "^1.4.7",
-    "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "expo": "~50.0.14",
     "firebase": "^10.10.0",

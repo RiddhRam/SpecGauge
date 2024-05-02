@@ -21,6 +21,7 @@ const processes = [["a brand", "a phone"]];
 
 const brands = [["Apple", "Samsung"]];
 
+// Brands are preloaded
 const droneBrands = [
   "Autel",
   "DJI",
@@ -31,8 +32,10 @@ const droneBrands = [
   "Snaptain",
 ];
 
+// This determines how many steps the user has to go through when adding a product
 const droneProcess = ["a brand", "a drone"];
 
+// This is an array of items whose string matches the keys of the JSON that is returned from apis
 const droneMatchingArray = [
   "Brand",
   "Name",
@@ -80,6 +83,7 @@ const droneMatchingArray = [
   "has a display",
 ];
 
+// The values in this array are in the corresponding spot according to the above array
 const droneDefaultArray = [
   { Value: "--", Display: true, Category: "Brand" }, // Brand
   { Value: "--", Display: true, Category: "Name" }, // Name
@@ -155,6 +159,8 @@ const droneDefaultArray = [
   { Value: "Built-in Display", Display: false, Category: "Controls" },
 ];
 
+// This determines how many rows to show in the table, each item is 1 column, each item within the item is a row.
+// To add a product, the specs are added to the '-Specs' array in the corresponding category. '-Specs' array is below
 const droneCategories = [
   [
     "Brand",
@@ -883,13 +889,18 @@ export default function WebHome({ userVal, functions, amplitude }) {
     /* Determines which part of product selection the modal is on */
   }
 
+  {
+    /* Records the initial load of the website */
+  }
   useEffect(() => {
     amplitude.track("Screen", { Screen: "Home" });
   }, []);
 
+  // Determines the height of the rows
   let dronesHeight = [];
   let dronesSetHeight = [];
 
+  // They are initalized as 39, which is also the minimum size, setHeight is used to change the height at the corresponding index in the height array
   for (i = 0; i < droneCategories[0].length; i++) {
     const [height, setHeight] = useState(39);
     dronesHeight.push(height);
@@ -976,6 +987,7 @@ export default function WebHome({ userVal, functions, amplitude }) {
     }
   };
 
+  // Car needs 4 since it's not in my database
   const callCarModelsCloudFunction = async (product) => {
     try {
       const GetCarModels = httpsCallable(functions, "GetCarModels");
@@ -1020,6 +1032,7 @@ export default function WebHome({ userVal, functions, amplitude }) {
     }
   };
 
+  // The specs that are to be shown, initalized with the categories array
   const [droneSpecs, setDroneSpecs] = useState(droneCategories);
   const [consoleSpecs, setConsoleSpecs] = useState(consoleCategories);
   const [graphicsCardsSpecs, setGraphicsCardsSpecs] = useState(

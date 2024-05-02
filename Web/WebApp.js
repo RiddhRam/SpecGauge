@@ -20,9 +20,9 @@ import {
 } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
 
-amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
+/*amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
-});
+});*/
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
