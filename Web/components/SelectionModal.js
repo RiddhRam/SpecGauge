@@ -29,8 +29,6 @@ export default function SelectionModal({
   // After brand is selected
   const [requestedStep2, setRequestedStep2] = useState([]);
   const [requestedStep3, setRequestedStep3] = useState([]);
-  // Temporarily hold onto specs
-  const [requestedSpecs, setRequestedSpecs] = useState([]);
 
   // For the buffer animation while waiting
   const [loading, setLoading] = useState(false);
@@ -61,7 +59,7 @@ export default function SelectionModal({
                     setLoading(true);
                     // The items for next step
                     const tempArray = [];
-                    // The specs if needed
+                    // Holds the specs and other data
                     const tempSpecArray = [];
 
                     let result = await cloudFunction(item);
@@ -85,30 +83,30 @@ export default function SelectionModal({
                       setRequestedStep2(tempArray);
                       // If user doesn't have to select anything else
                       if (process.length == 2) {
-                        setRequestedSpecs(tempSpecArray);
+                        setRequestedStep3(tempSpecArray);
                       } else {
                         // There will be a step 3
                         let Step3Array = [];
-                        let Step3Array2 = [];
 
                         // Go through all items in the tempSpecArray and pass it along to the next step
-                        for (const item1 in tempSpecArray) {
-                          //
+                        for (let i = 0; i < tempSpecArray.length; i++) {
+                          // For each item on the next step
                           let tempStep3Array = [];
-                          let tempStep3Array2 = [];
-                          for (const item2 in tempSpecArray[item1]) {
-                            tempStep3Array.push(tempSpecArray[item1][item2].id);
-                            tempStep3Array2.push(
-                              tempSpecArray[item1][item2].data
-                            );
+
+                          for (const item in tempSpecArray[i]) {
+                            // Add its data in json format
+                            newJSON = {};
+
+                            newJSON["id"] = tempSpecArray[i][item].id;
+                            newJSON["data"] = tempSpecArray[i][item].data;
+                            tempStep3Array.push(newJSON);
                           }
                           Step3Array.push(tempStep3Array);
-                          Step3Array2.push(tempStep3Array2);
                         }
                         setRequestedStep3(Step3Array);
-                        setRequestedSpecs(Step3Array2);
                       }
 
+                      // Go to next step
                       setModalScreen(1);
                       setLoading(false);
                     }
@@ -137,6 +135,7 @@ export default function SelectionModal({
         </View>
       )}
 
+      {/* step 2 */}
       {modalScreen == 1 && (
         <View style={styles.containerStyles.modalContainer}>
           <Text style={styles.textStyles.text}>Select {process[1]}</Text>
@@ -153,9 +152,11 @@ export default function SelectionModal({
                   onPress={async () => {
                     amplitude.track("Request", { item: item, Category: type });
                     setLoading(true);
-                    // If user doesn't have to select generations
+
+                    // If user doesn't have to select anything else
                     if (process.length == 2) {
                       tempDefault = [];
+                      // Deep copy defaultArray in tempDefault
                       for (spec in defaultArray) {
                         newJSON = {};
 
@@ -166,19 +167,24 @@ export default function SelectionModal({
                         tempDefault.push(newJSON);
                       }
 
-                      for (key in requestedSpecs[index]) {
+                      // Iterate through all specs
+                      for (key in requestedStep3[index]) {
                         for (let i = 0; i < matchingArray.length; i++) {
+                          // Compare the items in the specs to matchingArray
                           if (key == matchingArray[i]) {
-                            value = requestedSpecs[index][key];
+                            // When a match if ound save the value are record it in tempDefault
+                            value = requestedStep3[index][key];
                             if (
                               value != "True" &&
                               value != "False" &&
                               value != "--"
                             ) {
+                              // This keeps the spec label but adds the value
                               tempDefault[i].Value = tempDefault[
                                 i
                               ].Value.replace("--", value);
-                            } else if (value == "True") {
+                            } else if (value == "True" || value == "Yes") {
+                              // Boolean values become true
                               tempDefault[i].Display = true;
                             }
 
@@ -186,12 +192,16 @@ export default function SelectionModal({
                           }
                         }
                       }
+                      // This is the array that gets added to the specs array
                       tempArray = [];
 
                       for (category in categories[0]) {
                         tempArray.push("");
                       }
 
+                      // Copy only the values, and add \n to display the next value in this category on the next line
+                      // Each cell is just 1 long string
+                      // Only if Display is true
                       for (key in tempDefault) {
                         if (tempDefault[key].Display) {
                           for (let j = 0; j < categories[0].length; j++) {
@@ -203,6 +213,7 @@ export default function SelectionModal({
                         }
                       }
 
+                      // If any are empty then just use '--'
                       for (let i = 0; i < tempArray.length; i++) {
                         if (tempArray[i] == "") {
                           tempArray[i] = "--";
@@ -210,13 +221,14 @@ export default function SelectionModal({
                       }
                       await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
 
+                      // Reset everything
                       setRequestedStep2([]);
-                      setRequestedSpecs([]);
+                      setRequestedStep3([]);
                       setProductModalVisible(false);
                       setModalScreen(0);
                     } else {
+                      // If there are more steps than 2, proceed to next screen with the select item in step 2
                       setRequestedStep3(requestedStep3[index]);
-                      setRequestedSpecs(requestedSpecs[index]);
                       setModalScreen(2);
                     }
                     setLoading(false);
@@ -245,6 +257,7 @@ export default function SelectionModal({
         </View>
       )}
 
+      {/* step 3 */}
       {modalScreen == 2 && (
         <View style={styles.containerStyles.modalContainer}>
           <Text style={styles.textStyles.text}>Select {process[2]}</Text>
@@ -257,11 +270,12 @@ export default function SelectionModal({
                     { padding: 10, paddingRight: 50, fontSize: 20 },
                     pressed && styles.inputStyles.buttonNoBackgroundClicked,
                   ]}
-                  key={item}
+                  key={item.id}
                   onPress={async () => {
                     amplitude.track("Request", { item: item, Category: type });
                     setLoading(true);
-                    // If user doesn't have to select generations
+
+                    // Deep copy defaultArray into tempDefault
                     tempDefault = [];
                     for (spec in defaultArray) {
                       newJSON = {};
@@ -273,25 +287,30 @@ export default function SelectionModal({
                       tempDefault.push(newJSON);
                     }
 
-                    for (key in requestedSpecs[index]) {
+                    // Iterate through the specs
+                    for (key in requestedStep3[index]["data"]) {
                       for (let i = 0; i < matchingArray.length; i++) {
+                        // Compare key string to matchingArray
                         if (key == matchingArray[i]) {
-                          value = requestedSpecs[index][key];
+                          value = requestedStep3[index]["data"][key];
                           if (
                             value != "True" &&
                             value != "False" &&
                             value.indexOf("--") == -1
                           ) {
+                            // for graphics cards
                             value = value.replace(/Depends/, " Depends");
 
                             value = value.replace(/;/g, " ");
 
                             tempDefault[i].Value = tempDefault[i].Value.replace(
+                              // add value without removing label
                               "--",
                               value
                             );
                             tempDefault[i].Display = true;
                           } else if (value == "True" || value == "Yes") {
+                            // show boolean labels if true
                             tempDefault[i].Display = true;
                           }
 
@@ -299,12 +318,15 @@ export default function SelectionModal({
                         }
                       }
                     }
+
+                    // this array is added to the specs array
                     tempArray = [];
 
                     for (category in categories[0]) {
                       tempArray.push("");
                     }
 
+                    // copy all values from the Value key in temp Default, only if Display is true
                     for (key in tempDefault) {
                       if (tempDefault[key].Display) {
                         for (let j = 0; j < categories[0].length; j++) {
@@ -316,6 +338,7 @@ export default function SelectionModal({
                       }
                     }
 
+                    // Replace empty categories with '--'
                     for (let i = 0; i < tempArray.length; i++) {
                       if (tempArray[i] == "") {
                         tempArray[i] = "--";
@@ -323,15 +346,15 @@ export default function SelectionModal({
                     }
                     await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
 
+                    // Reset everything
                     setRequestedStep3([]);
                     setRequestedStep2([]);
-                    setRequestedSpecs([]);
                     setProductModalVisible(false);
                     setModalScreen(0);
                     setLoading(false);
                   }}
                 >
-                  <p>{item}</p>
+                  <p>{item.id}</p>
                 </Pressable>
               ))}
             </ScrollView>
