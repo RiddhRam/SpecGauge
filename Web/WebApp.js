@@ -2,6 +2,7 @@
 import "bootstrap/dist/css/bootstrap.css";
 import WebDefaultPage from "./components/WebDefaultPage";
 import WebHome from "./components/WebHome";
+import NoPage from "./components/NoPage";
 //import WebSearch from "./components/WebSearch";
 //import WebLogIn from "./components/accounts/WebLogIn";
 //import WebUserAccount from "./components/accounts/WebUserAccount";
@@ -76,10 +77,7 @@ export default function WebApp() {
           }
         ></Route>
         {/* the home page */}
-        <Route
-          path="*"
-          element={<WebHome userVal={userVal} functions={functions}></WebHome>}
-        ></Route>
+        <Route path="*" element={<NoPage></NoPage>}></Route>
         {/* any other page, go to home */}
       </Routes>
     </BrowserRouter>
