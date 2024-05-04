@@ -14,7 +14,7 @@ export const SGStyles = () => {
     },
     // For the web navbar
     navbarContainer: {
-      backgroundColor: theme === "dark" ? "#030612" : "#ccc",
+      backgroundColor: "#030612",
       fontWeight: "bold",
       padding: 15,
     },

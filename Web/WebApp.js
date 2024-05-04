@@ -1,4 +1,4 @@
-// Boostrap design
+// Bootstrap design
 import "bootstrap/dist/css/bootstrap.css";
 import WebDefaultPage from "./components/WebDefaultPage";
 import WebHome from "./components/WebHome";
