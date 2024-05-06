@@ -875,7 +875,7 @@ const carsCategories = [
   ],
 ];
 
-export default function WebHome({ userVal, functions, amplitude }) {
+export default function WebHome({ functions, amplitude }) {
   {
     /* This is for the modal that determines the comparison type */
   }
@@ -1047,7 +1047,7 @@ export default function WebHome({ userVal, functions, amplitude }) {
   return (
     <View style={styles.containerStyles.webContainer}>
       {/* navbar */}
-      <Navbar page={"home"} userVal={userVal} />
+      <Navbar page={"home"} />
 
       {/* main body */}
 

@@ -1,15 +1,16 @@
 import { SGStyles } from "../../../styles/styles";
 import { Navbar } from "../../Navbar";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { View, Pressable, Text } from "react-native-web";
 
 import { getAuth, signOut } from "firebase/auth";
 
-export default function WebUserAccount({ userVal }) {
+export default function WebUserAccount() {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
 
   // Call SGStyles as styles
   const styles = SGStyles();
@@ -31,21 +32,23 @@ export default function WebUserAccount({ userVal }) {
 
   // send user to log in if not logged in
   useEffect(() => {
-    if (!userVal) {
+    if (!auth.currentUser) {
       navigate("/login");
+    } else {
+      setEmail(auth.currentUser.email);
     }
-  }, []);
+  });
 
   return (
     /* if logged in display email and sign out button, 
       if logged out display send user to /login */
     <View style={styles.containerStyles.webContainer}>
       {/* navbar */}
-      <Navbar page="account" userVal={userVal} />
+      <Navbar page="account" />
 
       {/* main body */}
       <View style={styles.containerStyles.largeContainer}>
-        <Text style={styles.textStyles.simpleText}>{userVal.email}</Text>
+        <Text style={styles.textStyles.simpleText}>{email}</Text>
         <Pressable
           onPress={() => {
             SignOutFunc();

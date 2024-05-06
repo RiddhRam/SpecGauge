@@ -3,9 +3,13 @@ import { SGStyles } from "../styles/styles";
 import { Link } from "react-router-dom";
 import { Image, Text, View } from "react-native-web";
 
-export const Navbar = ({ page, userVal }) => {
+import { getAuth } from "firebase/auth";
+
+export const Navbar = ({ page }) => {
   // initialize SGStyles as styles
   const styles = SGStyles();
+
+  const auth = getAuth();
 
   return (
     <View style={styles.containerStyles.navbarContainer}>
@@ -49,8 +53,8 @@ export const Navbar = ({ page, userVal }) => {
         )}
 
         {/* If logged in show "My Account" link. If logged out show "Sign Up/Log In" link. */}
-        {/* 
-        {userVal ? (
+
+        {auth.currentUser ? (
           <>
             {page === "account" ? (
               <Link to="/account" style={styles.textStyles.navbarTextSelected}>
@@ -75,7 +79,6 @@ export const Navbar = ({ page, userVal }) => {
             )}
           </>
         )}
-      */}
       </View>
     </View>
   );

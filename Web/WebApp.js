@@ -4,8 +4,8 @@ import WebDefaultPage from "./components/WebDefaultPage";
 import WebHome from "./components/WebHome";
 import NoPage from "./components/NoPage";
 //import WebSearch from "./components/WebSearch";
-//import WebLogIn from "./components/accounts/WebLogIn";
-//import WebUserAccount from "./components/accounts/WebUserAccount";
+import WebLogIn from "./components/accounts/WebLogIn";
+import WebUserAccount from "./components/accounts/WebUserAccount";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -63,22 +63,25 @@ export default function WebApp() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<WebDefaultPage></WebDefaultPage>}></Route>
         {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
+        <Route path="/" element={<WebDefaultPage></WebDefaultPage>}></Route>
+        {/* the home page */}
         <Route
           index
           path="/home"
           element={
-            <WebHome
-              userVal={userVal}
-              functions={functions}
-              amplitude={amplitude}
-            ></WebHome>
+            <WebHome functions={functions} amplitude={amplitude}></WebHome>
           }
         ></Route>
-        {/* the home page */}
+        {/* the login/signup page */}
+        <Route path="login" element={<WebLogIn></WebLogIn>}></Route>
+        {/* User's account page */}
+        <Route
+          path="account"
+          element={<WebUserAccount></WebUserAccount>}
+        ></Route>
+        {/* any other page, error 404 */}
         <Route path="*" element={<NoPage></NoPage>}></Route>
-        {/* any other page, go to home */}
       </Routes>
     </BrowserRouter>
   );

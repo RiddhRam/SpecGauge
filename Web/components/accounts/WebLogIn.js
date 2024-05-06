@@ -4,6 +4,9 @@ import WebAccountHandler from "./WebAccountHandler";
 
 import { Pressable, View } from "react-native-web";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
+import { getAuth } from "firebase/auth";
 
 export default function WebLogIn() {
   // Initialize useNavigate as navigate
@@ -11,6 +14,15 @@ export default function WebLogIn() {
 
   // Call SGStyles as styles
   const styles = SGStyles();
+
+  const auth = getAuth();
+
+  // send user to log in if not logged in
+  useEffect(() => {
+    if (auth.currentUser) {
+      navigate("/account");
+    }
+  });
 
   return (
     <View style={styles.containerStyles.webContainer}>
