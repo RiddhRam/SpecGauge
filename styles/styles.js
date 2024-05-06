@@ -78,7 +78,7 @@ export const SGStyles = () => {
     },
     navbarTextSelected: {
       textDecorationLine: "none",
-      color: theme === "dark" ? "#fff" : "#000",
+      color: theme === "dark" ? "#000" : "#fff",
       padding: 15,
       backgroundColor: theme === "dark" ? "grey" : "#aaa",
       borderRadius: 10,
@@ -161,6 +161,30 @@ export const SGStyles = () => {
     // when the button is clicked
     removeButtonClicked: {
       backgroundColor: theme === "dark" ? "#690505" : "#b53731",
+      userSelect: "none",
+    },
+    accountButton: {
+      backgroundColor: theme === "dark" ? "#171827" : "#fff",
+      color: theme === "dark" ? "#fff" : "#000",
+      borderRadius: 8,
+      fontSize: 20,
+      margin: 10,
+      padding: 10,
+      height: 50,
+      userSelect: "none",
+    },
+    accountButtonClicked: {
+      backgroundColor: theme === "dark" ? "#5d5d74" : "#e6e6e6",
+      userSelect: "none",
+    },
+    accountButtonSelected: {
+      backgroundColor: theme === "dark" ? "#3d3d54" : "#c6c6c6",
+      color: theme === "dark" ? "#fff" : "#000",
+      borderRadius: 8,
+      fontSize: 20,
+      margin: 10,
+      padding: 10,
+      height: 50,
       userSelect: "none",
     },
   });

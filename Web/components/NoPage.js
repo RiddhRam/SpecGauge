@@ -1,6 +1,6 @@
 import { SGStyles } from "../../styles/styles";
 
-import { Pressable, Text, View } from "react-native-web";
+import { Pressable, Text, View, Image } from "react-native-web";
 import { useNavigate } from "react-router-dom";
 
 export default function NoPage() {
@@ -13,7 +13,21 @@ export default function NoPage() {
   return (
     <View style={styles.containerStyles.largeContainer}>
       {/* title and logo */}
-      <Text style={styles.textStyles.text}>SpecGauge</Text>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
+        }}
+      >
+        <Image
+          source={require("../../assets/SpecGauge Logo.svg")}
+          style={{ width: 35, height: 35 }}
+        ></Image>
+        <Text style={[styles.textStyles.text, { display: "block" }]}>
+          SpecGauge
+        </Text>
+      </View>
       <Text style={styles.textStyles.errorText}>Error 404: Page not found</Text>
       <Pressable
         onPress={() => {
