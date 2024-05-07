@@ -8,7 +8,7 @@ import { View, Pressable, Text, ScrollView } from "react-native-web";
 import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
-export default function WebUserAccount() {
+export default function WebUserAccount({ amplitude }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -27,6 +27,7 @@ export default function WebUserAccount() {
   const functions = getFunctions();
 
   const callSavedComparisonsCloudFunction = async (email) => {
+    amplitude.track("Get saved comparisons");
     try {
       const GetSavedComparisons = httpsCallable(
         functions,

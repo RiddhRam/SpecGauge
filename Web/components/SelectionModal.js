@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native-web";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SGStyles } from "../../styles/styles";
 
 export default function SelectionModal({
@@ -23,12 +23,22 @@ export default function SelectionModal({
   defaultArray,
   categories,
   amplitude,
+  setSaveComparisonProcess,
 }) {
   // Determines what screen user is on
   const [modalScreen, setModalScreen] = useState(0);
   // After brand is selected
   const [requestedStep2, setRequestedStep2] = useState([]);
   const [requestedStep3, setRequestedStep3] = useState([]);
+
+  // This array will be copied then the copy will be added to saveComparisonProcess using setSaveComparisonProcess above
+  let comparisonProcessArray = [];
+  let setComparisonProcessArray = [];
+  for (item in process) {
+    const [step, setStep] = useState("");
+    comparisonProcessArray.push(step);
+    setComparisonProcessArray.push(setStep);
+  }
 
   // For the buffer animation while waiting
   const [loading, setLoading] = useState(false);
@@ -57,6 +67,9 @@ export default function SelectionModal({
                   onPress={async () => {
                     amplitude.track("Request", { Brand: item, Category: type });
                     setLoading(true);
+                    // Save first item in the process
+                    setComparisonProcessArray[0](item);
+
                     // The items for next step
                     const tempArray = [];
                     // Holds the specs and other data
@@ -152,6 +165,8 @@ export default function SelectionModal({
                   onPress={async () => {
                     amplitude.track("Request", { item: item, Category: type });
                     setLoading(true);
+                    // Save second item in the process
+                    setComparisonProcessArray[1](item);
 
                     // If user doesn't have to select anything else
                     if (process.length == 2) {
@@ -221,6 +236,22 @@ export default function SelectionModal({
                       }
                       await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
 
+                      // This could be a function
+                      // Copy the array via a deep copy
+                      newProcessArray = [];
+                      for (processItem in comparisonProcessArray) {
+                        newProcessArray.push(
+                          comparisonProcessArray[processItem]
+                        );
+                      }
+                      // Change the last item, since the updated version wasn't copied because raect doesn't update it while code is still running
+                      newProcessArray[1] = item;
+                      // Save the new specs
+                      await setSaveComparisonProcess((prevArray) => [
+                        ...prevArray,
+                        newProcessArray,
+                      ]);
+
                       // Reset everything
                       setRequestedStep2([]);
                       setRequestedStep3([]);
@@ -274,6 +305,8 @@ export default function SelectionModal({
                   onPress={async () => {
                     amplitude.track("Request", { item: item, Category: type });
                     setLoading(true);
+                    // Save the third item in the process
+                    setComparisonProcessArray[2](item.id);
 
                     // Deep copy defaultArray into tempDefault
                     tempDefault = [];
@@ -345,6 +378,17 @@ export default function SelectionModal({
                       }
                     }
                     await setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
+
+                    // Same as in the last modelScreen
+                    newProcessArray = [];
+                    for (item in comparisonProcessArray) {
+                      newProcessArray.push(item);
+                    }
+                    newProcessArray[2] = item;
+                    await setSaveComparisonProcess((prevArray) => [
+                      ...prevArray,
+                      newProcessArray,
+                    ]);
 
                     // Reset everything
                     setRequestedStep3([]);

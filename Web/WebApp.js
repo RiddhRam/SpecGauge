@@ -78,7 +78,7 @@ export default function WebApp() {
         {/* User's account page */}
         <Route
           path="account"
-          element={<WebUserAccount></WebUserAccount>}
+          element={<WebUserAccount amplitude={amplitude}></WebUserAccount>}
         ></Route>
         {/* any other page, error 404 */}
         <Route path="*" element={<NoPage></NoPage>}></Route>

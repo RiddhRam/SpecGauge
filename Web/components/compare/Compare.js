@@ -1,9 +1,12 @@
-import { Pressable, View, Text, ScrollView } from "react-native-web";
+import { Pressable, View, Text, ScrollView, Modal } from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { v4 as uuidv4 } from "uuid";
 import SelectionModal from "../SelectionModal";
+import WebAccountHandler from "../accounts/WebAccountHandler";
 
 import { useState } from "react";
+import { getAuth } from "firebase/auth";
+import { getFunctions } from "firebase/functions";
 
 export default function Compare({
   type,
@@ -21,7 +24,29 @@ export default function Compare({
   amplitude,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
+  const [notLoggedInVisible, setNotLoggedInVisible] = useState(false);
+  // Every item excluding the first item is used when save comparisons
+  // It is the path to follow in Firestore to get the product's specs
+  const [saveComparisonProcess, setSaveComparisonProcess] = useState([Process]);
+  const auth = getAuth();
+  const functions = getFunctions();
   const styles = SGStyles();
+
+  const CallSaveComparisonCloudFunction = async (comparison) => {
+    WriteSavedComparisons;
+    try {
+      const WriteSavedComparisons = httpsCallable(
+        functions,
+        "WriteSavedComparisons"
+      );
+      const result = await WriteSavedComparisons(comparison);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   return (
     <View style={styles.containerStyles.comparisonScreenContainer}>
       <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
@@ -68,8 +93,37 @@ export default function Compare({
         >
           <p>Add</p>
         </Pressable>
+
+        <Pressable
+          onPress={async () => {
+            amplitude.track("Save comparison");
+            {
+              /* Show product selection modal */
+            }
+            if (auth.currentUser != null) {
+              console.log("Logged in");
+            } else {
+              setNotLoggedInVisible(true);
+            }
+          }}
+          style={({ pressed }) => [
+            styles.inputStyles.button,
+            pressed && styles.inputStyles.buttonClicked,
+          ]}
+        >
+          <p>Save comparison</p>
+        </Pressable>
+
+        <Pressable
+          onPress={() => {
+            console.log(saveComparisonProcess);
+          }}
+        >
+          <p>Check</p>
+        </Pressable>
       </View>
 
+      {/* The table with the specs */}
       <ScrollView
         horizontal={true}
         style={styles.containerStyles.comparisonScreenContainer}
@@ -95,10 +149,17 @@ export default function Compare({
                   {
                     /* Remove item */
                   }
-                  newArray = Specs.filter(
+                  newSpecsArray = Specs.filter(
                     (subArray) => Specs[index1] !== subArray
                   );
-                  await setSpecs(newArray);
+                  await setSpecs(newSpecsArray);
+
+                  // Remove from the saveComparisonProcess
+                  newProcessArray = saveComparisonProcess.filter(
+                    (subArray) => saveComparisonProcess[index1] !== subArray
+                  );
+                  setSaveComparisonProcess(newProcessArray);
+
                   {
                     /* Specs won't be updated yet even though we used setSpecs, so the length is still 2 */
                   }
@@ -202,6 +263,28 @@ export default function Compare({
         ))}
       </ScrollView>
 
+      {/* Shows up if user needs to be logged in to complete action */}
+      <Modal
+        visible={notLoggedInVisible}
+        animationType="slide"
+        transparent="true"
+      >
+        <View style={styles.containerStyles.modalContainer}>
+          <WebAccountHandler screenType={"modal"}></WebAccountHandler>
+          <Pressable
+            style={({ pressed }) => [
+              styles.inputStyles.buttonNoBackground,
+              pressed && styles.inputStyles.buttonNoBackgroundClicked,
+            ]}
+            onPress={() => {
+              setNotLoggedInVisible(false);
+            }}
+          >
+            <p>Cancel</p>
+          </Pressable>
+        </View>
+      </Modal>
+
       {/* The product selection modal */}
       <SelectionModal
         type={type}
@@ -215,6 +298,7 @@ export default function Compare({
         defaultArray={DefaultArray}
         categories={Categories}
         amplitude={amplitude}
+        setSaveComparisonProcess={setSaveComparisonProcess}
       ></SelectionModal>
     </View>
   );

@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   Modal,
+  Image,
 } from "react-native-web";
 import { useNavigate } from "react-router-dom";
 
@@ -151,9 +152,6 @@ export default function WebAccountHandler({ screenType }) {
   return (
     // This is in a seperate component so it can be reused in a mini window too
     <View>
-      {/* Title and Logo */}
-      <h1 style={styles.textStyles.text}>SpecGauge</h1>
-
       {signUp ? (
         // Sign Up page
         <>
@@ -257,6 +255,7 @@ export default function WebAccountHandler({ screenType }) {
             <></>
           )}
 
+          {/* Upon successful password reset link request */}
           {passwordResetSent ? (
             <Text style={{ color: "#03fc13", textAlign: "center" }}>
               Request sent to your email.
@@ -272,6 +271,7 @@ export default function WebAccountHandler({ screenType }) {
             </>
           ) : (
             <>
+              {/* Log in button */}
               <Pressable
                 onPress={() => {
                   LogInFunc();
@@ -284,6 +284,7 @@ export default function WebAccountHandler({ screenType }) {
                 <p>Log In</p>
               </Pressable>
 
+              {/* Forgot password button */}
               <Pressable
                 onPress={() => {
                   setShowPasswordReset(true);
@@ -296,6 +297,7 @@ export default function WebAccountHandler({ screenType }) {
                 <p>Forgot my password</p>
               </Pressable>
 
+              {/* Back to sign up page button */}
               <Pressable
                 onPress={() => {
                   setSignUp(true);
