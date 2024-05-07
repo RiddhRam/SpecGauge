@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   View,
+  Modal,
 } from "react-native-web";
 import { useNavigate } from "react-router-dom";
 
@@ -15,6 +16,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 export default function WebAccountHandler({ screenType }) {
@@ -29,6 +31,11 @@ export default function WebAccountHandler({ screenType }) {
   const [invalidInfo, setInvalidInfo] = useState(false);
   const [invalidReason, setInvalidReason] = useState("");
 
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [passwordResetEmail, setPasswordResetEmail] = useState("");
+  const [passwordResetSent, setPasswordResetSent] = useState(false);
+  const [passwordResetError, setPasswordResetError] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,6 +43,20 @@ export default function WebAccountHandler({ screenType }) {
   /* get auth that was initalized in WebApp.js, this may timeout after a while, 
   if it does then move this inside the log in and sign up func */
   const auth = getAuth();
+
+  const resetPassword = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setPasswordResetSent(true);
+      setPasswordResetError(false);
+      setShowPasswordReset(false);
+    } catch (error) {
+      console.log(error.message);
+      setPasswordResetError(true);
+      setPasswordResetSent(false);
+      setShowPasswordReset(false);
+    }
+  };
 
   // this is executed when user clicks sign up
   const SignUpFunc = async () => {
@@ -228,6 +249,22 @@ export default function WebAccountHandler({ screenType }) {
             <></>
           )}
 
+          {passwordResetError ? (
+            <Text style={styles.textStyles.errorText}>
+              Error sending request.
+            </Text>
+          ) : (
+            <></>
+          )}
+
+          {passwordResetSent ? (
+            <Text style={{ color: "#03fc13", textAlign: "center" }}>
+              Request sent to your email.
+            </Text>
+          ) : (
+            <></>
+          )}
+
           {/* show buttons or loading animation */}
           {loading ? (
             <>
@@ -249,6 +286,18 @@ export default function WebAccountHandler({ screenType }) {
 
               <Pressable
                 onPress={() => {
+                  setShowPasswordReset(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+              >
+                <p>Forgot my password</p>
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
                   setSignUp(true);
                 }}
                 style={({ pressed }) => [
@@ -263,6 +312,46 @@ export default function WebAccountHandler({ screenType }) {
           )}
         </>
       )}
+
+      {/* Password reset modal */}
+      <Modal
+        visible={showPasswordReset}
+        animationType="slide"
+        transparent="true"
+      >
+        <View style={styles.containerStyles.modalContainer}>
+          <Text style={styles.textStyles.text}>Reset your password</Text>
+          <TextInput
+            value={passwordResetEmail}
+            style={styles.inputStyles.textInput}
+            placeholder="Email"
+            id="resetPasswordEmail"
+            onChange={(text) => setPasswordResetEmail(text.target.value)}
+          ></TextInput>
+          <Pressable
+            style={({ pressed }) => [
+              styles.inputStyles.button,
+              pressed && styles.inputStyles.buttonClicked,
+            ]}
+            onPress={() => {
+              resetPassword(passwordResetEmail);
+            }}
+          >
+            <p>Send Reset Link</p>
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.inputStyles.buttonNoBackground,
+              pressed && styles.inputStyles.buttonNoBackgroundClicked,
+            ]}
+            onPress={() => {
+              setShowPasswordReset(false);
+            }}
+          >
+            <p>Cancel</p>
+          </Pressable>
+        </View>
+      </Modal>
     </View>
   );
 }

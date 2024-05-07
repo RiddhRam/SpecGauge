@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { View, Pressable, Text, ScrollView } from "react-native-web";
 
 import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 export default function WebUserAccount() {
   // Initialize useNavigate as navigate
@@ -14,6 +15,8 @@ export default function WebUserAccount() {
   // 0 for "Your Account", 1 for Saved Comparisons, 2 for Comparison Preferences
   const [page, setPage] = useState(0);
   const [passwordResetSent, setPasswordResetSent] = useState(false);
+  const [passwordResetError, setPasswordResetError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Call SGStyles as styles
   const styles = SGStyles();
@@ -21,13 +24,31 @@ export default function WebUserAccount() {
   /* get auth that was initalized in WebApp.js, this may timeout after a while, 
   if it does then move this inside the log in and sign up func */
   const auth = getAuth();
+  const functions = getFunctions();
+
+  const callSavedComparisonsCloudFunction = async (email) => {
+    try {
+      const GetSavedComparisons = httpsCallable(
+        functions,
+        "GetSavedComparisons"
+      );
+      const result = await GetSavedComparisons(email);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
 
   const resetPassword = async () => {
     try {
       await sendPasswordResetEmail(auth, email);
       setPasswordResetSent(true);
+      setPasswordResetError(false);
     } catch (error) {
       console.log(error.message);
+      setPasswordResetError(true);
+      setPasswordResetSent(false);
     }
   };
 
@@ -73,6 +94,7 @@ export default function WebUserAccount() {
               borderRightWidth: 1,
             }}
           >
+            {/* Your Account */}
             {page == 0 ? (
               <Pressable
                 onPress={() => {
@@ -98,7 +120,7 @@ export default function WebUserAccount() {
                 <p>Your Account</p>
               </Pressable>
             )}
-
+            {/* Saved Comparisons */}
             {page == 1 ? (
               <Pressable
                 onPress={() => {
@@ -113,8 +135,11 @@ export default function WebUserAccount() {
               </Pressable>
             ) : (
               <Pressable
-                onPress={() => {
+                onPress={async () => {
+                  setLoading(true);
                   setPage(1);
+                  const result = await callSavedComparisonsCloudFunction(email);
+                  console.log(result);
                 }}
                 style={({ pressed }) => [
                   styles.inputStyles.accountButton,
@@ -124,10 +149,11 @@ export default function WebUserAccount() {
                 <p>Saved Comparisons</p>
               </Pressable>
             )}
-
+            {/* Comparison Preferences */}
             {page == 2 ? (
               <Pressable
                 onPress={() => {
+                  setLoading(true);
                   setPage(2);
                 }}
                 style={({ pressed }) => [
@@ -154,6 +180,7 @@ export default function WebUserAccount() {
 
           {/* main view */}
           <View style={{ padding: 10 }}>
+            {/* Your Account */}
             {page == 0 && (
               <View>
                 <Text style={{ fontSize: 30, color: "#4ca0d7" }}>
@@ -173,6 +200,12 @@ export default function WebUserAccount() {
                       ]}
                     >
                       Request sent to your email.
+                    </Text>
+                  )}
+
+                  {passwordResetError && (
+                    <Text style={[styles.textStyles.errorText]}>
+                      Error sending request.
                     </Text>
                   )}
                 </View>
@@ -206,6 +239,7 @@ export default function WebUserAccount() {
                 </Pressable>
               </View>
             )}
+            {/* Saved Comparisons */}
             {page == 1 && (
               <View>
                 <Text style={{ fontSize: 30, color: "#4ca0d7" }}>

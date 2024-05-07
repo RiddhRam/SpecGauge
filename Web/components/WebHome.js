@@ -988,10 +988,10 @@ export default function WebHome({ functions, amplitude }) {
   };
 
   // Car needs 4 since it's not in my database
-  const callCarModelsCloudFunction = async (product) => {
+  const callCarModelsCloudFunction = async (brand) => {
     try {
       const GetCarModels = httpsCallable(functions, "GetCarModels");
-      const result = await GetCarModels(product);
+      const result = await GetCarModels(brand);
       return result.data;
     } catch (error) {
       console.log(error);
@@ -999,10 +999,10 @@ export default function WebHome({ functions, amplitude }) {
     }
   };
 
-  const callGetCarYearsCloudFunction = async (product) => {
+  const callGetCarYearsCloudFunction = async (model) => {
     try {
       const GetCarYears = httpsCallable(functions, "GetCarYears");
-      const result = await GetCarYears(product);
+      const result = await GetCarYears(model);
       return result.data;
     } catch (error) {
       console.log(error);
@@ -1010,10 +1010,10 @@ export default function WebHome({ functions, amplitude }) {
     }
   };
 
-  const callGetCarTrimsCloudFunction = async (product) => {
+  const callGetCarTrimsCloudFunction = async (year) => {
     try {
       const GetCarTrims = httpsCallable(functions, "GetCarTrims");
-      const result = await GetCarTrims(product);
+      const result = await GetCarTrims(year);
       return result.data;
     } catch (error) {
       console.log(error);
@@ -1021,10 +1021,10 @@ export default function WebHome({ functions, amplitude }) {
     }
   };
 
-  const callGetCarTrimViewCloudFunction = async (product) => {
+  const callGetCarTrimViewCloudFunction = async (trim) => {
     try {
       const GetCarTrimView = httpsCallable(functions, "GetCarTrimView");
-      const result = await GetCarTrimView(product);
+      const result = await GetCarTrimView(trim);
       return result.data;
     } catch (error) {
       console.log(error);
