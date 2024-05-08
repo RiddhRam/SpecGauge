@@ -3,7 +3,13 @@ import { Navbar } from "../../Navbar";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { View, Pressable, Text, ScrollView } from "react-native-web";
+import {
+  View,
+  Pressable,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native-web";
 
 import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -16,6 +22,33 @@ export default function WebUserAccount({ amplitude }) {
   const [page, setPage] = useState(0);
   const [passwordResetSent, setPasswordResetSent] = useState(false);
   const [passwordResetError, setPasswordResetError] = useState(false);
+
+  const categories = [
+    "Automobiles",
+    "Consoles",
+    "Drones",
+    "Graphics Cards",
+    "CPUs",
+  ];
+
+  // This is used when user selects a comparison
+  let savedProcesses = [];
+  let setSavedProcesses = [];
+  // These are displayed to the user
+  let savedComparisons = [];
+  let setSavedComparisons = [];
+
+  for (item in categories) {
+    const [newSavedComparisons, setNewSavedComparisons] = useState([]);
+    const [newSavedProcesses, setNewSavedProcesses] = useState([]);
+
+    savedComparisons.push(newSavedComparisons);
+    setSavedComparisons.push(setNewSavedComparisons);
+
+    savedProcesses.push(newSavedProcesses);
+    setSavedProcesses.push(setNewSavedProcesses);
+  }
+
   const [loading, setLoading] = useState(false);
 
   // Call SGStyles as styles
@@ -98,7 +131,7 @@ export default function WebUserAccount({ amplitude }) {
             {/* Your Account */}
             {page == 0 ? (
               <Pressable
-                onPress={() => {
+                onPress={async () => {
                   setPage(0);
                 }}
                 style={({ pressed }) => [
@@ -112,6 +145,10 @@ export default function WebUserAccount({ amplitude }) {
               <Pressable
                 onPress={() => {
                   setPage(0);
+                  for (item in setSavedComparisons) {
+                    setSavedComparisons[item]([]);
+                    setSavedProcesses[item]([]);
+                  }
                 }}
                 style={({ pressed }) => [
                   styles.inputStyles.accountButton,
@@ -140,7 +177,64 @@ export default function WebUserAccount({ amplitude }) {
                   setLoading(true);
                   setPage(1);
                   const result = await callSavedComparisonsCloudFunction(email);
-                  console.log(result);
+
+                  // For every returned comparison
+                  for (const resultItem in result) {
+                    // Save the data
+                    const comparison = result[resultItem][0].data;
+
+                    count = 0;
+                    for (dataItem in comparison) {
+                      if (dataItem != "type") {
+                        count++;
+                      }
+                    }
+
+                    // Iterate through the categories array above
+                    for (const categoryItem in categories) {
+                      // If the saved comparison type matches this category
+                      if (comparison.type == categories[categoryItem]) {
+                        let displayName = [];
+                        // Record a new comparison
+                        let newComparisonProcess = [];
+                        for (dataItem in comparison) {
+                          if (dataItem != "type") {
+                            newComparisonProcess.push(comparison[dataItem]);
+                          }
+                        }
+                        for (const comparisonItem in newComparisonProcess) {
+                          displayName.push(
+                            newComparisonProcess[comparisonItem][0] +
+                              " " +
+                              newComparisonProcess[comparisonItem][
+                                newComparisonProcess[comparisonItem].length - 1
+                              ]
+                          );
+                          if (
+                            comparisonItem !=
+                            newComparisonProcess.length - 1
+                          ) {
+                            displayName[comparisonItem] += " vs ";
+                          }
+                        }
+                        // Update savedProcesses
+                        setSavedProcesses[categoryItem]((prevProcessArray) => [
+                          ...prevProcessArray,
+                          newComparisonProcess,
+                        ]);
+
+                        // Update savedComparisons
+                        setSavedComparisons[categoryItem](
+                          (prevComparisonArray) => [
+                            ...prevComparisonArray,
+                            displayName,
+                          ]
+                        );
+                      }
+                    }
+                  }
+
+                  setLoading(false);
                 }}
                 style={({ pressed }) => [
                   styles.inputStyles.accountButton,
@@ -153,7 +247,7 @@ export default function WebUserAccount({ amplitude }) {
             {/* Comparison Preferences */}
             {page == 2 ? (
               <Pressable
-                onPress={() => {
+                onPress={async () => {
                   setLoading(true);
                   setPage(2);
                 }}
@@ -168,6 +262,10 @@ export default function WebUserAccount({ amplitude }) {
               <Pressable
                 onPress={() => {
                   setPage(2);
+                  for (item in setSavedComparisons) {
+                    setSavedComparisons[item]([]);
+                    setSavedProcesses[item]([]);
+                  }
                 }}
                 style={({ pressed }) => [
                   styles.inputStyles.accountButton,
@@ -246,6 +344,55 @@ export default function WebUserAccount({ amplitude }) {
                 <Text style={{ fontSize: 30, color: "#4ca0d7" }}>
                   Saved Comparisons
                 </Text>
+                {loading && <ActivityIndicator></ActivityIndicator>}
+                {!loading && (
+                  <View>
+                    {categories.map(
+                      (categoryItem, categoryIndex) =>
+                        savedComparisons[categoryIndex].length != 0 && (
+                          <View
+                            key={categoryItem}
+                            style={
+                              styles.containerStyles.userAccountDetailsSection
+                            }
+                          >
+                            <Text style={styles.textStyles.userAccountDetails}>
+                              {categoryItem}
+                            </Text>
+
+                            {savedComparisons[categoryIndex].map(
+                              (comparisonItem, comparisonIndex) => (
+                                <Pressable
+                                  key={comparisonItem}
+                                  style={({ pressed }) => [
+                                    styles.inputStyles.buttonNoBackground,
+                                    pressed &&
+                                      styles.inputStyles
+                                        .buttonNoBackgroundClicked,
+                                    {
+                                      textAlign: "left",
+                                      margin: 0,
+                                      padding: 0,
+                                      height: "auto",
+                                    },
+                                  ]}
+                                  onPress={() => {
+                                    console.log(
+                                      savedProcesses[categoryIndex][
+                                        comparisonIndex
+                                      ]
+                                    );
+                                  }}
+                                >
+                                  <p>{comparisonItem}</p>
+                                </Pressable>
+                              )
+                            )}
+                          </View>
+                        )
+                    )}
+                  </View>
+                )}
               </View>
             )}
             {page == 2 && (
@@ -257,20 +404,6 @@ export default function WebUserAccount({ amplitude }) {
             )}
           </View>
         </ScrollView>
-
-        {/*}
-        <Text style={styles.textStyles.simpleText}>{email}</Text>
-        <Pressable
-          onPress={() => {
-            SignOutFunc();
-          }}
-          style={({ pressed }) => [
-            styles.inputStyles.button,
-            pressed && styles.inputStyles.buttonClicked,
-          ]}
-        >
-          <p>Log Out</p>
-        </Pressable>*/}
       </View>
     </View>
   );

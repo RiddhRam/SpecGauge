@@ -7,7 +7,6 @@ import {
   TextInput,
   View,
   Modal,
-  Image,
 } from "react-native-web";
 import { useNavigate } from "react-router-dom";
 

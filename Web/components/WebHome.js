@@ -14,7 +14,7 @@ const categories = [
   "Consoles",
   "Drones",
   "Graphics Cards",
-  "Processors",
+  "CPUs",
 ];
 
 const processes = [["a brand", "a phone"]];
@@ -1218,7 +1218,7 @@ export default function WebHome({ functions, amplitude }) {
           ></Compare>
         )}
 
-        {/* Compare Processors screen */}
+        {/* Compare CPUs screen */}
         {category == 5 && (
           <Compare
             type={"CPUs"}

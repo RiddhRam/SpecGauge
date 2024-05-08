@@ -381,10 +381,10 @@ export default function SelectionModal({
 
                     // Same as in the last modelScreen
                     newProcessArray = [];
-                    for (item in comparisonProcessArray) {
-                      newProcessArray.push(item);
+                    for (processItem in comparisonProcessArray) {
+                      newProcessArray.push(comparisonProcessArray[processItem]);
                     }
-                    newProcessArray[2] = item;
+                    newProcessArray[2] = item.id;
                     await setSaveComparisonProcess((prevArray) => [
                       ...prevArray,
                       newProcessArray,

@@ -6,7 +6,7 @@ import WebAccountHandler from "../accounts/WebAccountHandler";
 
 import { useState } from "react";
 import { getAuth } from "firebase/auth";
-import { getFunctions } from "firebase/functions";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 export default function Compare({
   type,
@@ -32,8 +32,42 @@ export default function Compare({
   const functions = getFunctions();
   const styles = SGStyles();
 
-  const CallSaveComparisonCloudFunction = async (comparison) => {
-    WriteSavedComparisons;
+  const CallSaveComparisonCloudFunction = async () => {
+    // The processes that get saved
+    arrayToSave = [];
+    for (item in saveComparisonProcess) {
+      if (item != 0) {
+        arrayToSave.push(saveComparisonProcess[item]);
+      }
+    }
+
+    // The names of the products which will be in alphabetical order so user can't save multiple of the same comparison
+    let names = [];
+
+    for (item1 in arrayToSave) {
+      let name = "";
+
+      for (item2 in arrayToSave[item1]) {
+        name += arrayToSave[item1][item2];
+      }
+      names.push(name);
+    }
+    names.sort();
+
+    // The sum of all names in alphabetical order
+    let comparisonName = "";
+    for (item in names) {
+      comparisonName += names[item];
+    }
+
+    // Pass this JSON to the cloud
+    comparison = {
+      email: auth.currentUser.email,
+      type: type,
+      name: comparisonName,
+      processes: arrayToSave,
+    };
+
     try {
       const WriteSavedComparisons = httpsCallable(
         functions,
@@ -54,6 +88,7 @@ export default function Compare({
       </Text>
 
       <View style={{ marginRight: "auto", flexDirection: "row" }}>
+        {/* Go Back button */}
         <Pressable
           onPress={() => {
             amplitude.track("Go Back");
@@ -73,11 +108,14 @@ export default function Compare({
           style={({ pressed }) => [
             styles.inputStyles.button,
             pressed && styles.inputStyles.buttonClicked,
+            // Reduce padding on the left so Save Comparison button can fit on mobile screen
+            { paddingLeft: 5 },
           ]}
         >
           <p>{"< Go Back"}</p>
         </Pressable>
 
+        {/* Add Item button */}
         <Pressable
           onPress={async () => {
             amplitude.track("Add Item");
@@ -94,6 +132,7 @@ export default function Compare({
           <p>Add</p>
         </Pressable>
 
+        {/* Save Comparison button */}
         <Pressable
           onPress={async () => {
             amplitude.track("Save comparison");
@@ -101,7 +140,7 @@ export default function Compare({
               /* Show product selection modal */
             }
             if (auth.currentUser != null) {
-              console.log("Logged in");
+              const result = await CallSaveComparisonCloudFunction();
             } else {
               setNotLoggedInVisible(true);
             }

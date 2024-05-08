@@ -51,6 +51,13 @@ export const SGStyles = () => {
       borderRadius: 8,
       padding: 15,
     },
+    userAccountDetailsSection: {
+      paddingVertical: 10,
+      marginVertical: 5,
+      borderRadius: 10,
+      backgroundColor: theme === "dark" ? "#000" : "#e6e6e6",
+      padding: 5,
+    },
   });
 
   const textStyles = StyleSheet.create({
@@ -73,12 +80,12 @@ export const SGStyles = () => {
     },
     navbarText: {
       textDecorationLine: "none",
-      color: theme === "dark" ? "#fff" : "#000",
+      color: "#fff",
       padding: 15,
     },
     navbarTextSelected: {
       textDecorationLine: "none",
-      color: theme === "dark" ? "#000" : "#fff",
+      color: "#000",
       padding: 15,
       backgroundColor: theme === "dark" ? "grey" : "#aaa",
       borderRadius: 10,
@@ -102,6 +109,10 @@ export const SGStyles = () => {
       textAlign: "center",
       padding: 10,
       borderWidth: 1,
+    },
+    userAccountDetails: {
+      color: "#3b85ae",
+      fontSize: 20,
     },
   });
 
