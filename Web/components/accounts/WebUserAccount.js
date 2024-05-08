@@ -9,6 +9,7 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
+  Modal,
 } from "react-native-web";
 
 import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
@@ -22,6 +23,14 @@ export default function WebUserAccount({ amplitude }) {
   const [page, setPage] = useState(0);
   const [passwordResetSent, setPasswordResetSent] = useState(false);
   const [passwordResetError, setPasswordResetError] = useState(false);
+
+  const [deletingSavedComparison, setDeletingSavedComparison] = useState(false);
+  const [awaitingDeletingSavedComparison, setAwaitingDeletingSavedComparison] =
+    useState(false);
+  const [
+    successfullyDeletedSavedComparison,
+    setSuccessfullyDeletedSavedComparison,
+  ] = useState(false);
 
   const categories = [
     "Automobiles",
@@ -74,6 +83,56 @@ export default function WebUserAccount({ amplitude }) {
     }
   };
 
+  const CallDeleteComparisonCloudFunction = async (
+    saveComparisonProcess,
+    type
+  ) => {
+    // The processes, which is used to form the name of the comparison to delete
+    arrayToSave = [];
+    for (item in saveComparisonProcess) {
+      arrayToSave.push(saveComparisonProcess[item]);
+    }
+
+    // The names of the products which will be in alphabetical order so user can't save multiple of the same comparison
+    let names = [];
+
+    for (item1 in arrayToSave) {
+      let name = "";
+
+      for (item2 in arrayToSave[item1]) {
+        name += arrayToSave[item1][item2];
+      }
+      names.push(name);
+    }
+    names.sort();
+
+    // The sum of all names in alphabetical order
+    let comparisonName = "";
+    for (item in names) {
+      comparisonName += names[item];
+    }
+
+    // Pass this JSON to the cloud
+    comparison = {
+      email: auth.currentUser.email,
+      type: type,
+      name: comparisonName,
+      processes: arrayToSave,
+    };
+
+    try {
+      const DeleteSavedComparisons = httpsCallable(
+        functions,
+        "DeleteSavedComparisons"
+      );
+      const result = await DeleteSavedComparisons(comparison);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   const resetPassword = async () => {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -94,6 +153,65 @@ export default function WebUserAccount({ amplitude }) {
     } catch (error) {
       console.log(error.message);
     }
+  };
+
+  const callLocalSavedComparisonsFunc = async () => {
+    setLoading(true);
+    setPage(1);
+    const result = await callSavedComparisonsCloudFunction(email);
+
+    // For every returned comparison
+    for (const resultItem in result) {
+      // Save the data
+      const comparison = result[resultItem][0].data;
+
+      count = 0;
+      for (dataItem in comparison) {
+        if (dataItem != "type") {
+          count++;
+        }
+      }
+
+      // Iterate through the categories array above
+      for (const categoryItem in categories) {
+        // If the saved comparison type matches this category
+        if (comparison.type == categories[categoryItem]) {
+          let displayName = [];
+          // Record a new comparison
+          let newComparisonProcess = [];
+          for (dataItem in comparison) {
+            if (dataItem != "type") {
+              newComparisonProcess.push(comparison[dataItem]);
+            }
+          }
+          for (const comparisonItem in newComparisonProcess) {
+            displayName.push(
+              newComparisonProcess[comparisonItem][0] +
+                " " +
+                newComparisonProcess[comparisonItem][
+                  newComparisonProcess[comparisonItem].length - 1
+                ]
+            );
+            if (comparisonItem != newComparisonProcess.length - 1) {
+              displayName[comparisonItem] += " vs ";
+            }
+          }
+          // Update savedProcesses
+          setSavedProcesses[categoryItem]((prevProcessArray) => [
+            ...prevProcessArray,
+            newComparisonProcess,
+          ]);
+
+          // Update savedComparisons
+          setSavedComparisons[categoryItem]((prevComparisonArray) => [
+            ...prevComparisonArray,
+            displayName,
+          ]);
+        }
+      }
+    }
+
+    setLoading(false);
   };
 
   // send user to log in if not logged in
@@ -117,7 +235,6 @@ export default function WebUserAccount({ amplitude }) {
         <ScrollView
           style={{
             flexDirection: "row",
-            height: "100%",
             marginRight: "auto",
           }}
           horizontal={true}
@@ -174,67 +291,7 @@ export default function WebUserAccount({ amplitude }) {
             ) : (
               <Pressable
                 onPress={async () => {
-                  setLoading(true);
-                  setPage(1);
-                  const result = await callSavedComparisonsCloudFunction(email);
-
-                  // For every returned comparison
-                  for (const resultItem in result) {
-                    // Save the data
-                    const comparison = result[resultItem][0].data;
-
-                    count = 0;
-                    for (dataItem in comparison) {
-                      if (dataItem != "type") {
-                        count++;
-                      }
-                    }
-
-                    // Iterate through the categories array above
-                    for (const categoryItem in categories) {
-                      // If the saved comparison type matches this category
-                      if (comparison.type == categories[categoryItem]) {
-                        let displayName = [];
-                        // Record a new comparison
-                        let newComparisonProcess = [];
-                        for (dataItem in comparison) {
-                          if (dataItem != "type") {
-                            newComparisonProcess.push(comparison[dataItem]);
-                          }
-                        }
-                        for (const comparisonItem in newComparisonProcess) {
-                          displayName.push(
-                            newComparisonProcess[comparisonItem][0] +
-                              " " +
-                              newComparisonProcess[comparisonItem][
-                                newComparisonProcess[comparisonItem].length - 1
-                              ]
-                          );
-                          if (
-                            comparisonItem !=
-                            newComparisonProcess.length - 1
-                          ) {
-                            displayName[comparisonItem] += " vs ";
-                          }
-                        }
-                        // Update savedProcesses
-                        setSavedProcesses[categoryItem]((prevProcessArray) => [
-                          ...prevProcessArray,
-                          newComparisonProcess,
-                        ]);
-
-                        // Update savedComparisons
-                        setSavedComparisons[categoryItem](
-                          (prevComparisonArray) => [
-                            ...prevComparisonArray,
-                            displayName,
-                          ]
-                        );
-                      }
-                    }
-                  }
-
-                  setLoading(false);
+                  callLocalSavedComparisonsFunc();
                 }}
                 style={({ pressed }) => [
                   styles.inputStyles.accountButton,
@@ -363,31 +420,66 @@ export default function WebUserAccount({ amplitude }) {
 
                             {savedComparisons[categoryIndex].map(
                               (comparisonItem, comparisonIndex) => (
-                                <Pressable
+                                <View
                                   key={comparisonItem}
-                                  style={({ pressed }) => [
-                                    styles.inputStyles.buttonNoBackground,
-                                    pressed &&
-                                      styles.inputStyles
-                                        .buttonNoBackgroundClicked,
-                                    {
-                                      textAlign: "left",
-                                      margin: 0,
-                                      padding: 0,
-                                      height: "auto",
-                                      paddingRight: 30,
-                                    },
-                                  ]}
-                                  onPress={() => {
-                                    console.log(
-                                      savedProcesses[categoryIndex][
-                                        comparisonIndex
-                                      ]
-                                    );
-                                  }}
+                                  style={{ flexDirection: "row" }}
                                 >
-                                  <p>{comparisonItem}</p>
-                                </Pressable>
+                                  {/* Button to select saved comparison */}
+                                  <Pressable
+                                    style={({ pressed }) => [
+                                      styles.inputStyles.buttonNoBackground,
+                                      pressed &&
+                                        styles.inputStyles
+                                          .buttonNoBackgroundClicked,
+                                      {
+                                        textAlign: "left",
+                                        margin: 0,
+                                        padding: 0,
+                                        height: "auto",
+                                        paddingRight: 30,
+                                      },
+                                    ]}
+                                    onPress={() => {
+                                      console.log(
+                                        savedProcesses[categoryIndex][
+                                          comparisonIndex
+                                        ]
+                                      );
+                                    }}
+                                  >
+                                    <p>{comparisonItem}</p>
+                                  </Pressable>
+                                  {/* Button to delete saved comparison */}
+                                  <Pressable
+                                    style={({ pressed }) => [
+                                      styles.inputStyles.redButtonNoBackground,
+                                      pressed &&
+                                        styles.inputStyles
+                                          .redButtonNoBackgroundClicked,
+                                    ]}
+                                    onPress={async () => {
+                                      setAwaitingDeletingSavedComparison(true);
+                                      setDeletingSavedComparison(true);
+
+                                      result =
+                                        await CallDeleteComparisonCloudFunction(
+                                          savedProcesses[categoryIndex][
+                                            comparisonIndex
+                                          ],
+                                          categories[categoryIndex]
+                                        );
+
+                                      if (result == 200) {
+                                        setSuccessfullyDeletedSavedComparison(
+                                          true
+                                        );
+                                      }
+                                      setAwaitingDeletingSavedComparison(false);
+                                    }}
+                                  >
+                                    <p>Delete</p>
+                                  </Pressable>
+                                </View>
                               )
                             )}
                           </View>
@@ -407,6 +499,56 @@ export default function WebUserAccount({ amplitude }) {
           </View>
         </ScrollView>
       </View>
+
+      <Modal
+        visible={deletingSavedComparison}
+        animationType="slide"
+        transparent="true"
+      >
+        <View style={styles.containerStyles.modalContainer}>
+          <Text></Text>
+          {awaitingDeletingSavedComparison && (
+            <ActivityIndicator></ActivityIndicator>
+          )}
+          {!awaitingDeletingSavedComparison && (
+            <View>
+              <Text style={styles.textStyles.text}>Save Comparison</Text>
+              {deletingSavedComparison ? (
+                <Text
+                  style={[
+                    styles.textStyles.successText,
+                    { padding: 10, textAlign: "center" },
+                  ]}
+                >
+                  Succesfully deleted this comparison.
+                </Text>
+              ) : (
+                <Text style={styles.textStyles.errorText}>
+                  Deleting this comparison was unsuccessful, try again later.
+                </Text>
+              )}
+              <Pressable
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+                onPress={async () => {
+                  for (item in setSavedComparisons) {
+                    setSavedComparisons[item]([]);
+                    setSavedProcesses[item]([]);
+                  }
+
+                  callLocalSavedComparisonsFunc();
+                  setDeletingSavedComparison(false);
+                  setSuccessfullyDeletedSavedComparison(false);
+                }}
+              >
+                <p>Okay</p>
+              </Pressable>
+            </View>
+          )}
+        </View>
+      </Modal>
     </View>
   );
 }

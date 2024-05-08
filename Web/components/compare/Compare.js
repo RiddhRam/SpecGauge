@@ -337,6 +337,7 @@ export default function Compare({
         </View>
       </Modal>
 
+      {/* Display status of saving comparison */}
       <Modal
         visible={savingComparison}
         animationType="slide"

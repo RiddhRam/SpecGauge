@@ -201,6 +201,16 @@ export const SGStyles = () => {
       height: 50,
       userSelect: "none",
     },
+    redButtonNoBackground: {
+      color: theme === "dark" ? "#8c0a0a" : "#cf413a",
+      fontSize: 15,
+      textAlign: "center",
+      userSelect: "none",
+    },
+    redButtonNoBackgroundClicked: {
+      color: theme === "dark" ? "#690505" : "#8f2a25",
+      userSelect: "none",
+    },
   });
 
   return {
