@@ -32,7 +32,7 @@ export const SGStyles = () => {
       borderWidth: 2,
       borderRadius: 8,
       marginTop: 200,
-      marginHorizontal: 50,
+      marginHorizontal: 20,
       alignItems: "center",
       justifyContent: "center",
     },
@@ -113,6 +113,9 @@ export const SGStyles = () => {
     userAccountDetails: {
       color: "#3b85ae",
       fontSize: 20,
+    },
+    successText: {
+      color: "#03fc13",
     },
   });
 

@@ -19,7 +19,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 
-export default function WebAccountHandler({ screenType }) {
+export default function WebAccountHandler({ screenType, setModalView }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
 
@@ -76,6 +76,8 @@ export default function WebAccountHandler({ screenType }) {
       // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
         navigate("/home");
+      } else {
+        setModalView(false);
       }
     } catch (error) {
       if (error.code == "auth/weak-password") {
@@ -121,6 +123,8 @@ export default function WebAccountHandler({ screenType }) {
       // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
         navigate("/home");
+      } else {
+        setModalView(false);
       }
     } catch (error) {
       if (error.code == "auth/invalid-password") {
@@ -256,7 +260,9 @@ export default function WebAccountHandler({ screenType }) {
 
           {/* Upon successful password reset link request */}
           {passwordResetSent ? (
-            <Text style={{ color: "#03fc13", textAlign: "center" }}>
+            <Text
+              style={[styles.textStyles.successText, { textAlign: "center" }]}
+            >
               Request sent to your email.
             </Text>
           ) : (

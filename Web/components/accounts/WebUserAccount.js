@@ -295,7 +295,8 @@ export default function WebUserAccount({ amplitude }) {
                     <Text
                       style={[
                         styles.textStyles.plainText,
-                        { color: "#03fc13", paddingTop: 5 },
+                        styles.textStyles.successText,
+                        { paddingTop: 5 },
                       ]}
                     >
                       Request sent to your email.
@@ -340,13 +341,13 @@ export default function WebUserAccount({ amplitude }) {
             )}
             {/* Saved Comparisons */}
             {page == 1 && (
-              <View>
+              <ScrollView>
                 <Text style={{ fontSize: 30, color: "#4ca0d7" }}>
                   Saved Comparisons
                 </Text>
                 {loading && <ActivityIndicator></ActivityIndicator>}
                 {!loading && (
-                  <View>
+                  <View style={{ marginRight: 20 }}>
                     {categories.map(
                       (categoryItem, categoryIndex) =>
                         savedComparisons[categoryIndex].length != 0 && (
@@ -374,6 +375,7 @@ export default function WebUserAccount({ amplitude }) {
                                       margin: 0,
                                       padding: 0,
                                       height: "auto",
+                                      paddingRight: 30,
                                     },
                                   ]}
                                   onPress={() => {
@@ -393,7 +395,7 @@ export default function WebUserAccount({ amplitude }) {
                     )}
                   </View>
                 )}
-              </View>
+              </ScrollView>
             )}
             {page == 2 && (
               <View>

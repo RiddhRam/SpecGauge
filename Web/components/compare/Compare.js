@@ -1,4 +1,11 @@
-import { Pressable, View, Text, ScrollView, Modal } from "react-native-web";
+import {
+  Pressable,
+  View,
+  Text,
+  ScrollView,
+  Modal,
+  ActivityIndicator,
+} from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { v4 as uuidv4 } from "uuid";
 import SelectionModal from "../SelectionModal";
@@ -25,6 +32,11 @@ export default function Compare({
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
   const [notLoggedInVisible, setNotLoggedInVisible] = useState(false);
+  const [savingComparison, setSavingComparison] = useState(false);
+  const [successfullySavedComparison, setSuccessfullySavedComparison] =
+    useState(false);
+  const [awaitingSavingComparison, setAwaitingSavingComparison] =
+    useState(false);
   // Every item excluding the first item is used when save comparisons
   // It is the path to follow in Firestore to get the product's specs
   const [saveComparisonProcess, setSaveComparisonProcess] = useState([Process]);
@@ -140,7 +152,13 @@ export default function Compare({
               /* Show product selection modal */
             }
             if (auth.currentUser != null) {
+              setAwaitingSavingComparison(true);
+              setSavingComparison(true);
               const result = await CallSaveComparisonCloudFunction();
+              if (result == 200) {
+                setSuccessfullySavedComparison(true);
+              }
+              setAwaitingSavingComparison(false);
             } else {
               setNotLoggedInVisible(true);
             }
@@ -151,14 +169,6 @@ export default function Compare({
           ]}
         >
           <p>Save comparison</p>
-        </Pressable>
-
-        <Pressable
-          onPress={() => {
-            console.log(saveComparisonProcess);
-          }}
-        >
-          <p>Check</p>
         </Pressable>
       </View>
 
@@ -309,7 +319,10 @@ export default function Compare({
         transparent="true"
       >
         <View style={styles.containerStyles.modalContainer}>
-          <WebAccountHandler screenType={"modal"}></WebAccountHandler>
+          <WebAccountHandler
+            screenType={"modal"}
+            setModalView={setNotLoggedInVisible}
+          ></WebAccountHandler>
           <Pressable
             style={({ pressed }) => [
               styles.inputStyles.buttonNoBackground,
@@ -321,6 +334,48 @@ export default function Compare({
           >
             <p>Cancel</p>
           </Pressable>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={savingComparison}
+        animationType="slide"
+        transparent="true"
+      >
+        <View style={styles.containerStyles.modalContainer}>
+          <Text></Text>
+          {awaitingSavingComparison && <ActivityIndicator></ActivityIndicator>}
+          {!awaitingSavingComparison && (
+            <View>
+              <Text style={styles.textStyles.text}>Save Comparison</Text>
+              {successfullySavedComparison ? (
+                <Text
+                  style={[
+                    styles.textStyles.successText,
+                    { padding: 10, textAlign: "center" },
+                  ]}
+                >
+                  Succesfully saved this comparison.
+                </Text>
+              ) : (
+                <Text style={styles.textStyles.errorText}>
+                  Saving this comparison was unsuccessful, try again later.
+                </Text>
+              )}
+              <Pressable
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                ]}
+                onPress={() => {
+                  setSavingComparison(false);
+                  setSuccessfullySavedComparison(false);
+                }}
+              >
+                <p>Okay</p>
+              </Pressable>
+            </View>
+          )}
         </View>
       </Modal>
 
