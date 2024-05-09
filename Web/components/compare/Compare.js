@@ -14,10 +14,10 @@ import WebAccountHandler from "../accounts/WebAccountHandler";
 import { useState } from "react";
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Compare({
   type,
-  setCategory,
   Brands,
   Process,
   MatchingArray,
@@ -28,6 +28,7 @@ export default function Compare({
   Height,
   SetHeight,
   CloudFunction,
+  specsToLoad,
   amplitude,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
@@ -40,9 +41,91 @@ export default function Compare({
   // Every item excluding the first item is used when save comparisons
   // It is the path to follow in Firestore to get the product's specs
   const [saveComparisonProcess, setSaveComparisonProcess] = useState([Process]);
+  const [loadedSavedComparison, setLoadedSavedComparison] = useState(false);
+  const navigate = useNavigate();
+  const { state } = useLocation();
   const auth = getAuth();
   const functions = getFunctions();
   const styles = SGStyles();
+
+  if (!loadedSavedComparison) {
+    setLoadedSavedComparison(true);
+    try {
+      const { initialSpecs, type } = state;
+      specsToLoad = initialSpecs;
+      for (specToLoad in specsToLoad) {
+        // Deep copy DefaultArray into tempDefault
+        tempDefault = [];
+        for (spec in DefaultArray) {
+          newJSON = {};
+
+          newJSON["Value"] = DefaultArray[spec].Value;
+          newJSON["Display"] = DefaultArray[spec].Display;
+          newJSON["Category"] = DefaultArray[spec].Category;
+
+          tempDefault.push(newJSON);
+        }
+        // Iterate through the specs
+        for (key in specsToLoad[specToLoad]) {
+          for (let i = 0; i < MatchingArray.length; i++) {
+            // Compare key string to MatchingArray
+            if (key == MatchingArray[i]) {
+              value = specsToLoad[specToLoad][key];
+              if (
+                value != "True" &&
+                value != "False" &&
+                value.indexOf("--") == -1
+              ) {
+                // for graphics cards
+                value = value.replace(/Depends/, " Depends");
+
+                value = value.replace(/;/g, " ");
+
+                tempDefault[i].Value = tempDefault[i].Value.replace(
+                  // add value without removing label
+                  "--",
+                  value
+                );
+                tempDefault[i].Display = true;
+              } else if (value == "True" || value == "Yes") {
+                // show boolean labels if true
+                tempDefault[i].Display = true;
+              }
+
+              break;
+            }
+          }
+        }
+
+        // this array is added to the specs array
+        tempArray = [];
+
+        for (category in Categories[0]) {
+          tempArray.push("");
+        }
+
+        // copy all values from the Value key in temp Default, only if Display is true
+        for (key in tempDefault) {
+          if (tempDefault[key].Display) {
+            for (let j = 0; j < Categories[0].length; j++) {
+              if (tempDefault[key].Category == Categories[0][j]) {
+                tempArray[j] += tempDefault[key].Value + "\n";
+                break;
+              }
+            }
+          }
+        }
+
+        // Replace empty Categories with '--'
+        for (let i = 0; i < tempArray.length; i++) {
+          if (tempArray[i] == "") {
+            tempArray[i] = "--";
+          }
+        }
+        setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
+      }
+    } catch {}
+  }
 
   const CallSaveComparisonCloudFunction = async () => {
     // The processes that get saved
@@ -104,10 +187,6 @@ export default function Compare({
         <Pressable
           onPress={() => {
             amplitude.track("Go Back");
-            {
-              /* Set page to home */
-            }
-            setCategory(0);
 
             {
               /* Reset row heights and remove all specs */
@@ -116,6 +195,7 @@ export default function Compare({
               SetHeight[i](39);
             }
             setSpecs(Categories);
+            navigate("/home");
           }}
           style={({ pressed }) => [
             styles.inputStyles.button,

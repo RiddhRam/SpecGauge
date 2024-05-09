@@ -21,6 +21,7 @@ export default function CompareCars({
   CloudFunctionYears,
   CloudFunctionTrims,
   CloudFunctionTrimView,
+  preRequestedSpecs,
   amplitude,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);

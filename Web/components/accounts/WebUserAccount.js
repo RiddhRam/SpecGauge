@@ -15,7 +15,7 @@ import {
 import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
-export default function WebUserAccount({ amplitude }) {
+export default function WebUserAccount({ amplitude, stepsArray }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -213,6 +213,39 @@ export default function WebUserAccount({ amplitude }) {
 
     setLoading(false);
   };
+
+  const directFuncArray = [
+    (callConsoleDirectCloudFunction = async (processes) => {
+      try {
+        const GetConsoles = httpsCallable(functions, "GetConsolesDirect");
+        const result = await GetConsoles(processes);
+        return result.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    }),
+    (callConsoleDirectCloudFunction = async (processes) => {
+      try {
+        const GetConsoles = httpsCallable(functions, "GetConsolesDirect");
+        const result = await GetConsoles(processes);
+        return result.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    }),
+    (callDroneDirectCloudFunction = async (processes) => {
+      try {
+        const GetDrones = httpsCallable(functions, "GetDronesDirect");
+        const result = await GetDrones(processes);
+        return result.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    }),
+  ];
 
   // send user to log in if not logged in
   useEffect(() => {
@@ -439,11 +472,38 @@ export default function WebUserAccount({ amplitude }) {
                                         paddingRight: 30,
                                       },
                                     ]}
-                                    onPress={() => {
-                                      console.log(
-                                        savedProcesses[categoryIndex][
-                                          comparisonIndex
-                                        ]
+                                    onPress={async () => {
+                                      let steps = stepsArray[categoryIndex];
+                                      let requestProcesses = [];
+
+                                      for (processItem in savedProcesses[
+                                        categoryIndex
+                                      ][comparisonIndex]) {
+                                        let newJSON = {};
+                                        for (step in savedProcesses[
+                                          categoryIndex
+                                        ][comparisonIndex][processItem]) {
+                                          newJSON[step] =
+                                            savedProcesses[categoryIndex][
+                                              comparisonIndex
+                                            ][processItem][step];
+                                        }
+                                        requestProcesses.push(newJSON);
+                                      }
+                                      const result = await directFuncArray[
+                                        categoryIndex
+                                      ](requestProcesses);
+
+                                      navigate(
+                                        `/${categories[
+                                          categoryIndex
+                                        ].toLowerCase()}`,
+                                        {
+                                          state: {
+                                            initialSpecs: result,
+                                            type: categories[categoryIndex],
+                                          },
+                                        }
                                       );
                                     }}
                                   >
@@ -500,6 +560,7 @@ export default function WebUserAccount({ amplitude }) {
         </ScrollView>
       </View>
 
+      {/* Show status of deleted comparison */}
       <Modal
         visible={deletingSavedComparison}
         animationType="slide"
@@ -513,7 +574,7 @@ export default function WebUserAccount({ amplitude }) {
           {!awaitingDeletingSavedComparison && (
             <View>
               <Text style={styles.textStyles.text}>Save Comparison</Text>
-              {deletingSavedComparison ? (
+              {successfullyDeletedSavedComparison ? (
                 <Text
                   style={[
                     styles.textStyles.successText,
