@@ -215,7 +215,7 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
   };
 
   const directFuncArray = [
-    (callConsoleDirectCloudFunction = async (processes) => {
+    (callConsolesDirectCloudFunction = async (processes) => {
       try {
         const GetConsoles = httpsCallable(functions, "GetConsolesDirect");
         const result = await GetConsoles(processes);
@@ -225,7 +225,7 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
         return error;
       }
     }),
-    (callConsoleDirectCloudFunction = async (processes) => {
+    (callConsolesDirectCloudFunction = async (processes) => {
       try {
         const GetConsoles = httpsCallable(functions, "GetConsolesDirect");
         const result = await GetConsoles(processes);
@@ -235,10 +235,33 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
         return error;
       }
     }),
-    (callDroneDirectCloudFunction = async (processes) => {
+    (callDronesDirectCloudFunction = async (processes) => {
       try {
         const GetDrones = httpsCallable(functions, "GetDronesDirect");
         const result = await GetDrones(processes);
+        return result.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    }),
+    (callGraphicsCardsDirectCloudFunction = async (processes) => {
+      try {
+        const GetGraphicsCards = httpsCallable(
+          functions,
+          "GetGraphicsCardsDirect"
+        );
+        const result = await GetGraphicsCards(processes);
+        return result.data;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    }),
+    (callCPUsDirectCloudFunction = async (processes) => {
+      try {
+        const GetCPUs = httpsCallable(functions, "GetCPUsDirect");
+        const result = await GetCPUs(processes);
         return result.data;
       } catch (error) {
         console.log(error);
@@ -473,7 +496,6 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
                                       },
                                     ]}
                                     onPress={async () => {
-                                      let steps = stepsArray[categoryIndex];
                                       let requestProcesses = [];
 
                                       for (processItem in savedProcesses[
@@ -494,14 +516,35 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
                                         categoryIndex
                                       ](requestProcesses);
 
+                                      processArray = [];
+
+                                      for (requestItem in requestProcesses) {
+                                        tempArray = [];
+                                        for (processItem in requestProcesses[
+                                          requestItem
+                                        ]) {
+                                          tempArray.push(
+                                            requestProcesses[requestItem][
+                                              processItem
+                                            ]
+                                          );
+                                        }
+                                        processArray.push(tempArray);
+                                      }
+
+                                      processArray.unshift(
+                                        stepsArray[categoryIndex]
+                                      );
+
                                       navigate(
-                                        `/${categories[
-                                          categoryIndex
-                                        ].toLowerCase()}`,
+                                        `/${categories[categoryIndex]
+                                          .toLowerCase()
+                                          .replace(" ", "")}`,
                                         {
                                           state: {
                                             initialSpecs: result,
                                             type: categories[categoryIndex],
+                                            requestProcesses: processArray,
                                           },
                                         }
                                       );

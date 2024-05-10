@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import SelectionModal from "../SelectionModal";
 import WebAccountHandler from "../accounts/WebAccountHandler";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -42,90 +42,12 @@ export default function Compare({
   // It is the path to follow in Firestore to get the product's specs
   const [saveComparisonProcess, setSaveComparisonProcess] = useState([Process]);
   const [loadedSavedComparison, setLoadedSavedComparison] = useState(false);
+  const [preloadedArray, setPreloadedArray] = useState([]);
   const navigate = useNavigate();
   const { state } = useLocation();
   const auth = getAuth();
   const functions = getFunctions();
   const styles = SGStyles();
-
-  if (!loadedSavedComparison) {
-    setLoadedSavedComparison(true);
-    try {
-      const { initialSpecs, type } = state;
-      specsToLoad = initialSpecs;
-      for (specToLoad in specsToLoad) {
-        // Deep copy DefaultArray into tempDefault
-        tempDefault = [];
-        for (spec in DefaultArray) {
-          newJSON = {};
-
-          newJSON["Value"] = DefaultArray[spec].Value;
-          newJSON["Display"] = DefaultArray[spec].Display;
-          newJSON["Category"] = DefaultArray[spec].Category;
-
-          tempDefault.push(newJSON);
-        }
-        // Iterate through the specs
-        for (key in specsToLoad[specToLoad]) {
-          for (let i = 0; i < MatchingArray.length; i++) {
-            // Compare key string to MatchingArray
-            if (key == MatchingArray[i]) {
-              value = specsToLoad[specToLoad][key];
-              if (
-                value != "True" &&
-                value != "False" &&
-                value.indexOf("--") == -1
-              ) {
-                // for graphics cards
-                value = value.replace(/Depends/, " Depends");
-
-                value = value.replace(/;/g, " ");
-
-                tempDefault[i].Value = tempDefault[i].Value.replace(
-                  // add value without removing label
-                  "--",
-                  value
-                );
-                tempDefault[i].Display = true;
-              } else if (value == "True" || value == "Yes") {
-                // show boolean labels if true
-                tempDefault[i].Display = true;
-              }
-
-              break;
-            }
-          }
-        }
-
-        // this array is added to the specs array
-        tempArray = [];
-
-        for (category in Categories[0]) {
-          tempArray.push("");
-        }
-
-        // copy all values from the Value key in temp Default, only if Display is true
-        for (key in tempDefault) {
-          if (tempDefault[key].Display) {
-            for (let j = 0; j < Categories[0].length; j++) {
-              if (tempDefault[key].Category == Categories[0][j]) {
-                tempArray[j] += tempDefault[key].Value + "\n";
-                break;
-              }
-            }
-          }
-        }
-
-        // Replace empty Categories with '--'
-        for (let i = 0; i < tempArray.length; i++) {
-          if (tempArray[i] == "") {
-            tempArray[i] = "--";
-          }
-        }
-        setSpecs((prevSpecs) => [...prevSpecs, tempArray]);
-      }
-    } catch {}
-  }
 
   const CallSaveComparisonCloudFunction = async () => {
     // The processes that get saved
@@ -176,8 +98,105 @@ export default function Compare({
     }
   };
 
+  useEffect(() => {
+    initialLoad();
+  }, []);
+
+  function initialLoad() {
+    if (!loadedSavedComparison) {
+      setLoadedSavedComparison(true);
+      try {
+        wholeSavedArray = [];
+        const { initialSpecs, type, requestProcesses } = state;
+        // this is just cause i used another name for the variable
+        specsToLoad = initialSpecs;
+        for (specToLoad in specsToLoad) {
+          // Deep copy DefaultArray into tempDefault
+          tempDefault = [];
+          for (spec in DefaultArray) {
+            newJSON = {};
+
+            newJSON["Value"] = DefaultArray[spec].Value;
+            newJSON["Display"] = DefaultArray[spec].Display;
+            newJSON["Category"] = DefaultArray[spec].Category;
+
+            tempDefault.push(newJSON);
+          }
+          // Iterate through the specs
+          for (key in specsToLoad[specToLoad]) {
+            for (let i = 0; i < MatchingArray.length; i++) {
+              // Compare key string to MatchingArray
+              if (key == MatchingArray[i]) {
+                value = specsToLoad[specToLoad][key];
+                if (
+                  value != "True" &&
+                  value != "False" &&
+                  value.indexOf("--") == -1
+                ) {
+                  // for graphics cards
+                  value = value.replace(/Depends/, " Depends");
+
+                  value = value.replace(/;/g, " ");
+
+                  tempDefault[i].Value = tempDefault[i].Value.replace(
+                    // add value without removing label
+                    "--",
+                    value
+                  );
+                  tempDefault[i].Display = true;
+                } else if (value == "True" || value == "Yes") {
+                  // show boolean labels if true
+                  tempDefault[i].Display = true;
+                }
+
+                break;
+              }
+            }
+          }
+
+          // this array is added to the specs array
+          tempArray = [];
+
+          for (category in Categories[0]) {
+            tempArray.push("");
+          }
+
+          // copy all values from the Value key in temp Default, only if Display is true
+          for (key in tempDefault) {
+            if (tempDefault[key].Display) {
+              for (let j = 0; j < Categories[0].length; j++) {
+                if (tempDefault[key].Category == Categories[0][j]) {
+                  tempArray[j] += tempDefault[key].Value + "\n";
+                  break;
+                }
+              }
+            }
+          }
+
+          // Replace empty Categories with '--'
+          for (let i = 0; i < tempArray.length; i++) {
+            if (tempArray[i] == "") {
+              tempArray[i] = "--";
+            }
+          }
+          wholeSavedArray.push(tempArray);
+          newProcessArray = [];
+
+          for (item in Process) {
+            //newProcessArray.push()
+          }
+        }
+
+        wholeSavedArray.unshift(Specs[0]);
+
+        setSpecs(wholeSavedArray);
+        setSaveComparisonProcess(requestProcesses);
+      } catch {}
+    }
+  }
+
   return (
-    <View style={styles.containerStyles.comparisonScreenContainer}>
+    <ScrollView style={styles.containerStyles.comparisonScreenContainer}>
       <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
         {type} Comparison
       </Text>
@@ -475,6 +494,6 @@ export default function Compare({
         amplitude={amplitude}
         setSaveComparisonProcess={setSaveComparisonProcess}
       ></SelectionModal>
-    </View>
+    </ScrollView>
   );
 }

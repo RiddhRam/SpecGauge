@@ -244,7 +244,7 @@ export default function SelectionModal({
                           comparisonProcessArray[processItem]
                         );
                       }
-                      // Change the last item, since the updated version wasn't copied because raect doesn't update it while code is still running
+                      // Change the last item, since the updated version wasn't copied because react doesn't update it while code is still running
                       newProcessArray[1] = item;
                       // Save the new specs
                       await setSaveComparisonProcess((prevArray) => [
