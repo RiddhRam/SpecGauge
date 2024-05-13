@@ -22,6 +22,13 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import {
+  query,
+  where,
+  getFirestore,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 
 /*amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
@@ -41,6 +48,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions();
 //connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+const db = getFirestore();
 
 const auth = initializeAuth(app, {
   persistence: browserLocalPersistence,
@@ -687,217 +695,164 @@ const CPUsCategories = [
 ];
 
 const carsProcess = ["a brand", "a model", "a year", "a trim"];
-
+const carsQueryProcess = ["Brand", "Model", "Year", "Trim"];
 const carsBrands = [
-  "AM General",
   "Acura",
   "Alfa Romeo",
   "Aston Martin",
   "Audi",
-  "BMW",
   "Bentley",
+  "BMW",
   "Bugatti",
   "Buick",
+  "BYD",
   "Cadillac",
   "Chevrolet",
   "Chrysler",
+  "Citroen",
   "Daewoo",
   "Dodge",
-  "Eagle",
-  "FIAT",
   "Ferrari",
+  "FIAT",
   "Fisker",
   "Ford",
-  "GMC",
   "Genesis",
-  "Geo",
-  "HUMMER",
+  "GMC",
+  "Hennessey",
   "Honda",
+  "Hummer",
   "Hyundai",
-  "INFINITI",
+  "INEOS",
+  "Infiniti",
   "Isuzu",
   "Jaguar",
   "Jeep",
   "Karma",
   "Kia",
-  "Lamborghini",
+  "Koenigsegg",
+  "KTM",
   "Land Rover",
+  "Lamborghini",
   "Lexus",
   "Lincoln",
   "Lotus",
   "Lucid",
-  "MINI",
   "Maserati",
   "Maybach",
   "Mazda",
   "McLaren",
   "Mercedes-Benz",
   "Mercury",
+  "Mini",
   "Mitsubishi",
   "Nissan",
   "Oldsmobile",
+  "Opel",
+  "Pagani",
   "Panoz",
+  "Peugeot",
   "Plymouth",
   "Polestar",
   "Pontiac",
   "Porsche",
-  "Ram",
+  "RAM",
+  "Renault",
+  "Rimac",
   "Rivian",
   "Rolls-Royce",
   "Saab",
   "Saturn",
   "Scion",
-  "smart",
+  "Smart",
   "Spyker",
   "Subaru",
   "Suzuki",
+  "Tata",
   "Tesla",
   "Toyota",
   "VinFast",
   "Volkswagen",
   "Volvo",
+  "Xiaomi",
 ];
-
 const carsMatchingArray = [
-  "engine_type",
-  "cylinders",
-  "size",
-  "horsepower_hp",
-  "horsepower_rpm",
-  "torque_ft_lbs",
-  "torque_rpm",
-  "valves",
-  "valve_timing",
-  "cam_type",
-  "drive_type",
-  "transmission",
-  "make_model_trim_interior_colors",
-  "make_model_trim_exterior_colors",
-  "fuel_type",
-  "fuel_tank_capacity",
-  "epa_city_mpg",
-  "epa_highway_mpg",
-  "combined_mpg",
-  "range_city",
-  "range_highway",
-  "battery_capacity_electric",
-  "epa_time_to_charge_hr_240v_electric",
-  "epa_kwh_100_mi_electric",
-  "range_electric",
-  "epa_city_mpg_electric",
-  "epa_highway_mpg_electric",
-  "epa_combined_mpg_electric",
-  "type",
-  "doors",
-  "seats",
-  "length",
-  "width",
-  "height",
-  "wheel_base",
-  "front_track",
-  "rear_track",
-  "ground_clearance",
-  "cargo_capacity",
-  "max_cargo_capacity",
-  "curb_weight",
-  "gross_weight",
-  "max_payload",
-  "max_towing_capacity",
+  "Brand",
+  "Model",
+  "Year",
+  "Trim",
+  "Body Type",
+  "Powertrain",
+  "Drivetrain",
+  "Seats",
+  "Doors",
+  "Fuel Consumption (City)",
+  "Fuel Consumption (Highway)",
+  "Fuel Consumption (Combined)",
+  "Fuel Type",
+  "Power",
+  "Torque",
+  "Valvetrain",
+  "Valves",
+  "Cylinders",
+  "Engine aspiration",
+  "Curb Weight",
+  "Length",
+  "Width",
+  "Height",
+  "Wheelbase",
+  "Tire Size",
+  "Rim size",
+  "Gears",
+  "Transmission",
+  "Battery Capacity",
+  "Electric Range",
 ];
-
 const carsDefaultArray = [
   { Value: "--", Display: true, Category: "Brand" }, // Brand
   { Value: "--", Display: true, Category: "Model" }, // Model
   { Value: "--", Display: true, Category: "Year" }, // Year
   { Value: "--", Display: true, Category: "Trim" }, // Trim
-  { Value: "--", Display: true, Category: "MSRP" }, // MSRP
-  { Value: "Motor Type: --", Display: true, Category: "Motor" },
-  { Value: "Cylinders: --", Display: false, Category: "Motor" },
-  { Value: "Displacement: --L", Display: false, Category: "Motor" },
-  { Value: "Horsepower: -- hp", Display: true, Category: "Motor" },
-  { Value: "Horsepower Optimal RPM: -- RPM", Display: true, Category: "Motor" },
-  { Value: "Torque: -- ft-lbs", Display: true, Category: "Motor" },
-  { Value: "Torque Optimal RPM: -- RPM", Display: true, Category: "Motor" },
-  { Value: "Valves: --", Display: false, Category: "Motor" },
-  { Value: "Valves Timing: --", Display: false, Category: "Motor" },
-  { Value: "Camshaft: --", Display: false, Category: "Motor" },
+  { Value: "Body Type: --", Display: true, Category: "Body" },
+  { Value: "Powertrain: --", Display: true, Category: "Motor" },
   { Value: "Drivetrain: --", Display: true, Category: "Motor" },
+  { Value: "Seats: --", Display: true, Category: "Design" },
+  { Value: "Doors: --", Display: true, Category: "Design" },
+  {
+    Value: "Fuel Consumption (City): --",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  {
+    Value: "Fuel Consumption (Highway): --",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  {
+    Value: "Fuel Consumption (Combined): --",
+    Display: false,
+    Category: "Fuel/Battery",
+  },
+  { Value: "Fuel Type: --", Display: true, Category: "Fuel/Battery" },
+  { Value: "Power: --", Display: true, Category: "Motor" },
+  { Value: "Torque: --", Display: true, Category: "Motor" },
+  { Value: "Valvetrain: --", Display: false, Category: "Motor" },
+  { Value: "Valves: --", Display: false, Category: "Motor" },
+  { Value: "Cylinders: --", Display: false, Category: "Motor" },
+  { Value: "Engine aspiration: --", Display: false, Category: "Motor" },
+  { Value: "Curb Weight: --", Display: true, Category: "Body" },
+  { Value: "Length: --", Display: true, Category: "Body" },
+  { Value: "Width: --", Display: true, Category: "Body" },
+  { Value: "Height: --", Display: true, Category: "Body" },
+  { Value: "Wheelbase: --", Display: true, Category: "Body" },
+  { Value: "Tire Size: --", Display: true, Category: "Design" },
+  { Value: "Rim Size: --", Display: true, Category: "Design" },
+  { Value: "Gears: --", Display: true, Category: "Motor" },
   { Value: "Transmission: --", Display: true, Category: "Motor" },
-  { Value: "Interior Colors: --", Display: true, Category: "Design" },
-  { Value: "Exterior Colors: --", Display: true, Category: "Design" },
-  { Value: "Fuel Type: --", Display: false, Category: "Fuel/Battery" },
-  {
-    Value: "Fuel Tank Capacity: -- gal",
-    Display: false,
-    Category: "Fuel/Battery",
-  },
-  { Value: "City MPG: --", Display: false, Category: "Fuel/Battery" },
-  { Value: "Highway MPG: --", Display: false, Category: "Fuel/Battery" },
-  { Value: "Combined MPG: --", Display: false, Category: "Fuel/Battery" },
-  { Value: "City Range (miles): --", Display: false, Category: "Fuel/Battery" },
-  {
-    Value: "Highway Range (miles): --",
-    Display: false,
-    Category: "Fuel/Battery",
-  },
   { Value: "Battery Capacity: --", Display: false, Category: "Fuel/Battery" },
-  {
-    Value: "Time to Charge with 240V: -- hours",
-    Display: false,
-    Category: "Fuel/Battery",
-  },
-  { Value: "kWh/100mi: --", Display: false, Category: "Fuel/Battery" },
-  {
-    Value: "Electric Range (miles): --",
-    Display: false,
-    Category: "Fuel/Battery",
-  },
-  {
-    Value: "City MPG (Equivalent): --",
-    Display: false,
-    Category: "Fuel/Battery",
-  },
-  {
-    Value: "Highway MPG (Equivalent): --",
-    Display: false,
-    Category: "Fuel/Battery",
-  },
-  {
-    Value: "Combined MPG (Equivalent): --",
-    Display: false,
-    Category: "Fuel/Battery",
-  },
-  { Value: "Type: --", Display: true, Category: "Body" },
-  { Value: "Doors: --", Display: true, Category: "Body" },
-  { Value: "Seats: --", Display: true, Category: "Body" },
-  { Value: "Length: -- in", Display: true, Category: "Body" },
-  { Value: "Width: -- in", Display: true, Category: "Body" },
-  { Value: "Height: -- in", Display: true, Category: "Body" },
-  { Value: "Wheelbase: -- in", Display: true, Category: "Body" },
-  { Value: "Front Track: -- in", Display: true, Category: "Body" },
-  { Value: "Rear Track: -- in", Display: true, Category: "Body" },
-  { Value: "Ground Clearance: -- in", Display: true, Category: "Utility" },
-  { Value: "Cargo Capacity: -- cu.ft.", Display: true, Category: "Utility" },
-  { Value: "Cargo Capacity: -- cu. ft.", Display: false, Category: "Utility" },
-  { Value: "Curb Weight: -- lbs", Display: true, Category: "Utility" },
-  { Value: "Gross Weight: -- lbs", Display: true, Category: "Utility" },
-  { Value: "Payload Capacity: -- lbs", Display: true, Category: "Utility" },
-  { Value: "Tow Capacity: -- lbs", Display: true, Category: "Utility" },
+  { Value: "Electric Range: --", Display: false, Category: "Fuel/Battery" },
 ];
-
 const carsCategories = [
-  [
-    "Brand",
-    "Model",
-    "Year",
-    "Trim",
-    "MSRP",
-    "Motor",
-    "Design",
-    "Fuel/Battery",
-    "Body",
-    "Utility",
-  ],
+  ["Brand", "Model", "Year", "Trim", "Body", "Motor", "Design", "Fuel/Battery"],
 ];
 
 export default function WebApp() {
@@ -995,49 +950,18 @@ export default function WebApp() {
     }
   };
 
-  // Car needs 4 since it's not in my database
-  const callCarModelsCloudFunction = async (brand) => {
-    try {
-      const GetCarModels = httpsCallable(functions, "GetCarModels");
-      const result = await GetCarModels(brand);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  };
+  const queryAutomobilesFunction = async (product) => {
+    const colRef = collection(db, "Automobiles");
+    const q = await query(colRef, where("Brand", "==", product));
 
-  const callGetCarYearsCloudFunction = async (model) => {
-    try {
-      const GetCarYears = httpsCallable(functions, "GetCarYears");
-      const result = await GetCarYears(model);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  };
+    const snapshot = await getDocs(q);
 
-  const callGetCarTrimsCloudFunction = async (year) => {
-    try {
-      const GetCarTrims = httpsCallable(functions, "GetCarTrims");
-      const result = await GetCarTrims(year);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  };
+    automobilesArray = [];
+    snapshot.forEach((doc) => {
+      automobilesArray.push(doc.data());
+    });
 
-  const callGetCarTrimViewCloudFunction = async (trim) => {
-    try {
-      const GetCarTrimView = httpsCallable(functions, "GetCarTrimView");
-      const result = await GetCarTrimView(trim);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+    return automobilesArray;
   };
 
   // The specs that are to be shown, initalized with the categories array
@@ -1082,6 +1006,8 @@ export default function WebApp() {
               type={"Automobiles"}
               Brands={carsBrands}
               Process={carsProcess}
+              QueryProcess={carsQueryProcess}
+              QueryFunction={queryAutomobilesFunction}
               MatchingArray={carsMatchingArray}
               DefaultArray={carsDefaultArray}
               Categories={carsCategories}
@@ -1089,10 +1015,6 @@ export default function WebApp() {
               setSpecs={setCarsSpecs}
               Height={carsHeight}
               SetHeight={carsSetHeight}
-              CloudFunctionModels={callCarModelsCloudFunction}
-              CloudFunctionYears={callGetCarYearsCloudFunction}
-              CloudFunctionTrims={callGetCarTrimsCloudFunction}
-              CloudFunctionTrimView={callGetCarTrimViewCloudFunction}
               amplitude={amplitude}
             ></CompareCars>
           }

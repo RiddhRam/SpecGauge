@@ -1,15 +1,17 @@
 import { Pressable, View, Text, ScrollView } from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { v4 as uuidv4 } from "uuid";
-import SelectionModalCars from "../SelectionModalCars";
+import SelectionModalCars from "./SelectionModalCars";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CompareCars({
   type,
-  setCategory,
   Brands,
   Process,
+  QueryProcess,
+  QueryFunction,
   MatchingArray,
   DefaultArray,
   Categories,
@@ -17,15 +19,12 @@ export default function CompareCars({
   setSpecs,
   Height,
   SetHeight,
-  CloudFunctionModels,
-  CloudFunctionYears,
-  CloudFunctionTrims,
-  CloudFunctionTrimView,
   preRequestedSpecs,
   amplitude,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
   const styles = SGStyles();
+  const navigate = useNavigate();
 
   {
     /* Everything is the same as the Compare screen, except for the fact that it uses
@@ -33,26 +32,20 @@ export default function CompareCars({
   }
 
   return (
-    <View style={styles.containerStyles.comparisonScreenContainer}>
+    <ScrollView style={styles.containerStyles.comparisonScreenContainer}>
       <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
         {type} Comparison
       </Text>
 
+      {/* Top buttons */}
       <View style={{ marginRight: "auto", flexDirection: "row" }}>
+        {/* Back to home */}
         <Pressable
           onPress={() => {
             {
               /* Set page to home */
             }
-            setCategory(0);
-
-            {
-              /* Reset row heights and remove all specs */
-            }
-            for (let i = 0; i < SetHeight.length; i++) {
-              SetHeight[i](39);
-            }
-            setSpecs(Categories);
+            navigate("/home");
           }}
           style={({ pressed }) => [
             styles.inputStyles.button,
@@ -62,6 +55,7 @@ export default function CompareCars({
           <p>{"< Go Back"}</p>
         </Pressable>
 
+        {/* Add a new product */}
         <Pressable
           onPress={async () => {
             amplitude.track("Add Item");
@@ -77,8 +71,31 @@ export default function CompareCars({
         >
           <p>Add</p>
         </Pressable>
+
+        {/* Reset specs to just the categories */}
+        <Pressable
+          onPress={async () => {
+            amplitude.track("Reset", {
+              Removed: Specs,
+              Category: type,
+            });
+
+            setSpecs(Categories);
+
+            for (let i = 0; i < SetHeight.length; i++) {
+              SetHeight[i](39);
+            }
+          }}
+          style={({ pressed }) => [
+            styles.inputStyles.resetButton,
+            pressed && styles.inputStyles.resetButtonClicked,
+          ]}
+        >
+          <p>Reset</p>
+        </Pressable>
       </View>
 
+      {/* Table */}
       <ScrollView
         horizontal={true}
         style={styles.containerStyles.comparisonScreenContainer}
@@ -216,10 +233,8 @@ export default function CompareCars({
         productModalVisible={productModalVisible}
         setProductModalVisible={setProductModalVisible}
         brands={Brands}
-        cloudFunctionModels={CloudFunctionModels}
-        cloudFunctionYears={CloudFunctionYears}
-        cloudFunctionTrims={CloudFunctionTrims}
-        cloudFunctionTrimView={CloudFunctionTrimView}
+        queryFunction={QueryFunction}
+        queryProcess={QueryProcess}
         process={Process}
         setSpecs={setSpecs}
         matchingArray={MatchingArray}
@@ -227,6 +242,6 @@ export default function CompareCars({
         categories={Categories}
         amplitude={amplitude}
       ></SelectionModalCars>
-    </View>
+    </ScrollView>
   );
 }

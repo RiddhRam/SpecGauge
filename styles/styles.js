@@ -211,6 +211,22 @@ export const SGStyles = () => {
       color: theme === "dark" ? "#690505" : "#8f2a25",
       userSelect: "none",
     },
+    resetButton: {
+      backgroundColor: theme === "dark" ? "#8c0a0a" : "#cf413a",
+      color: theme === "dark" ? "#fff" : "#000",
+      borderRadius: 8,
+      fontSize: 20,
+      margin: 10,
+      padding: 10,
+      height: 50,
+      textAlign: "center",
+      userSelect: "none",
+    },
+    // when the button is clicked
+    resetButtonClicked: {
+      backgroundColor: theme === "dark" ? "#690505" : "#b53731",
+      userSelect: "none",
+    },
   });
 
   return {
