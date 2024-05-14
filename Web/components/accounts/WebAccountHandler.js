@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   Modal,
+  Image,
 } from "react-native-web";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +19,7 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 export default function WebAccountHandler({ screenType, setModalView }) {
   // Initialize useNavigate as navigate
@@ -43,6 +45,7 @@ export default function WebAccountHandler({ screenType, setModalView }) {
   /* get auth that was initalized in WebApp.js, this may timeout after a while, 
   if it does then move this inside the log in and sign up func */
   const auth = getAuth();
+  const functions = getFunctions();
 
   const resetPassword = async (email) => {
     try {
@@ -51,7 +54,6 @@ export default function WebAccountHandler({ screenType, setModalView }) {
       setPasswordResetError(false);
       setShowPasswordReset(false);
     } catch (error) {
-      console.log(error.message);
       setPasswordResetError(true);
       setPasswordResetSent(false);
       setShowPasswordReset(false);
@@ -73,6 +75,12 @@ export default function WebAccountHandler({ screenType, setModalView }) {
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password); // returns a response
+      try {
+        const InitializeAccount = httpsCallable(functions, "InitializeAccount");
+        const result = await InitializeAccount(email); // returns a response
+      } catch (error) {
+        console.log(error);
+      }
       // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
         navigate("/home");
@@ -104,7 +112,6 @@ export default function WebAccountHandler({ screenType, setModalView }) {
       }
       // info is invalid
       setInvalidInfo(true);
-      console.log(error.message);
     } finally {
       // done loading
       setLoading(false);
@@ -155,6 +162,24 @@ export default function WebAccountHandler({ screenType, setModalView }) {
   return (
     // This is in a seperate component so it can be reused in a mini window too
     <View>
+      {screenType == "modal" && (
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Image
+            source={require("../../../assets/SpecGauge Logo.svg")}
+            style={{ width: 35, height: 35 }}
+          ></Image>
+          <Text style={[styles.textStyles.text, { display: "block" }]}>
+            SpecGauge
+          </Text>
+        </View>
+      )}
+
       {signUp ? (
         // Sign Up page
         <>

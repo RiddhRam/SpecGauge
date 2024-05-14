@@ -8,18 +8,20 @@ import {
 } from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { v4 as uuidv4 } from "uuid";
-import SelectionModal from "../SelectionModal";
+import SelectionModal from "./SelectionModal";
 import WebAccountHandler from "../accounts/WebAccountHandler";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Compare({
   type,
   Brands,
   Process,
+  QueryProcess,
+  QueryFunction,
   MatchingArray,
   DefaultArray,
   Categories,
@@ -27,35 +29,28 @@ export default function Compare({
   setSpecs,
   Height,
   SetHeight,
-  CloudFunction,
-  specsToLoad,
+  preRequestedSpecs,
   amplitude,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
-  const [notLoggedInVisible, setNotLoggedInVisible] = useState(false);
+  const [accountModalVisible, setAccountModalVisible] = useState(false);
   const [savingComparison, setSavingComparison] = useState(false);
   const [successfullySavedComparison, setSuccessfullySavedComparison] =
     useState(false);
   const [awaitingSavingComparison, setAwaitingSavingComparison] =
     useState(false);
-  // Every item excluding the first item is used when save comparisons
-  // It is the path to follow in Firestore to get the product's specs
-  const [saveComparisonProcess, setSaveComparisonProcess] = useState([Process]);
-  const [loadedSavedComparison, setLoadedSavedComparison] = useState(false);
-  const [preloadedArray, setPreloadedArray] = useState([]);
+  const [saveComparisonProcesses, setSaveComparisonProcesses] = useState([]);
+  const styles = SGStyles();
   const navigate = useNavigate();
-  const { state } = useLocation();
+  // Used for checking if user can use logged in features like saved comparison or preferences
   const auth = getAuth();
   const functions = getFunctions();
-  const styles = SGStyles();
 
   const CallSaveComparisonCloudFunction = async () => {
     // The processes that get saved
     arrayToSave = [];
-    for (item in saveComparisonProcess) {
-      if (item != 0) {
-        arrayToSave.push(saveComparisonProcess[item]);
-      }
+    for (item in saveComparisonProcesses) {
+      arrayToSave.push(saveComparisonProcesses[item]);
     }
 
     // The names of the products which will be in alphabetical order so user can't save multiple of the same comparison
@@ -98,135 +93,33 @@ export default function Compare({
     }
   };
 
-  useEffect(() => {
-    initialLoad();
-  }, []);
-
-  function initialLoad() {
-    if (!loadedSavedComparison) {
-      setLoadedSavedComparison(true);
-      try {
-        wholeSavedArray = [];
-        const { initialSpecs, type, requestProcesses } = state;
-        // this is just cause i used another name for the variable
-        specsToLoad = initialSpecs;
-        for (specToLoad in specsToLoad) {
-          // Deep copy DefaultArray into tempDefault
-          tempDefault = [];
-          for (spec in DefaultArray) {
-            newJSON = {};
-
-            newJSON["Value"] = DefaultArray[spec].Value;
-            newJSON["Display"] = DefaultArray[spec].Display;
-            newJSON["Category"] = DefaultArray[spec].Category;
-
-            tempDefault.push(newJSON);
-          }
-          // Iterate through the specs
-          for (key in specsToLoad[specToLoad]) {
-            for (let i = 0; i < MatchingArray.length; i++) {
-              // Compare key string to MatchingArray
-              if (key == MatchingArray[i]) {
-                value = specsToLoad[specToLoad][key];
-                if (
-                  value != "True" &&
-                  value != "False" &&
-                  value.indexOf("--") == -1
-                ) {
-                  // for graphics cards
-                  value = value.replace(/Depends/, " Depends");
-
-                  value = value.replace(/;/g, " ");
-
-                  tempDefault[i].Value = tempDefault[i].Value.replace(
-                    // add value without removing label
-                    "--",
-                    value
-                  );
-                  tempDefault[i].Display = true;
-                } else if (value == "True" || value == "Yes") {
-                  // show boolean labels if true
-                  tempDefault[i].Display = true;
-                }
-
-                break;
-              }
-            }
-          }
-
-          // this array is added to the specs array
-          tempArray = [];
-
-          for (category in Categories[0]) {
-            tempArray.push("");
-          }
-
-          // copy all values from the Value key in temp Default, only if Display is true
-          for (key in tempDefault) {
-            if (tempDefault[key].Display) {
-              for (let j = 0; j < Categories[0].length; j++) {
-                if (tempDefault[key].Category == Categories[0][j]) {
-                  tempArray[j] += tempDefault[key].Value + "\n";
-                  break;
-                }
-              }
-            }
-          }
-
-          // Replace empty Categories with '--'
-          for (let i = 0; i < tempArray.length; i++) {
-            if (tempArray[i] == "") {
-              tempArray[i] = "--";
-            }
-          }
-          wholeSavedArray.push(tempArray);
-          newProcessArray = [];
-
-          for (item in Process) {
-            //newProcessArray.push()
-          }
-        }
-
-        wholeSavedArray.unshift(Specs[0]);
-
-        setSpecs(wholeSavedArray);
-        setSaveComparisonProcess(requestProcesses);
-      } catch {}
-    }
-  }
-
   return (
     <ScrollView style={styles.containerStyles.comparisonScreenContainer}>
       <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
         {type} Comparison
       </Text>
 
-      <View style={{ marginRight: "auto", flexDirection: "row" }}>
-        {/* Go Back button */}
+      {/* Top buttons */}
+      <View
+        style={{ marginRight: "auto", flexDirection: "row", flexWrap: "wrap" }}
+      >
+        {/* Back to home */}
         <Pressable
           onPress={() => {
-            amplitude.track("Go Back");
-
             {
-              /* Reset row heights and remove all specs */
+              /* Set page to home */
             }
-            for (let i = 0; i < SetHeight.length; i++) {
-              SetHeight[i](39);
-            }
-            setSpecs(Categories);
             navigate("/home");
           }}
           style={({ pressed }) => [
             styles.inputStyles.button,
             pressed && styles.inputStyles.buttonClicked,
-            // Reduce padding on the left so Save Comparison button can fit on mobile screen
-            { paddingLeft: 5 },
           ]}
         >
           <p>{"< Go Back"}</p>
         </Pressable>
 
-        {/* Add Item button */}
+        {/* Add a new product */}
         <Pressable
           onPress={async () => {
             amplitude.track("Add Item");
@@ -243,13 +136,13 @@ export default function Compare({
           <p>Add</p>
         </Pressable>
 
-        {/* Save Comparison button */}
+        {/* Save comparison */}
         <Pressable
           onPress={async () => {
-            amplitude.track("Save comparison");
-            {
-              /* Show product selection modal */
-            }
+            amplitude.track("Save Comparison", {
+              Category: type,
+            });
+
             if (auth.currentUser != null) {
               setAwaitingSavingComparison(true);
               setSavingComparison(true);
@@ -259,7 +152,7 @@ export default function Compare({
               }
               setAwaitingSavingComparison(false);
             } else {
-              setNotLoggedInVisible(true);
+              setAccountModalVisible(true);
             }
           }}
           style={({ pressed }) => [
@@ -267,11 +160,32 @@ export default function Compare({
             pressed && styles.inputStyles.buttonClicked,
           ]}
         >
-          <p>Save comparison</p>
+          <p>Save Comparison</p>
+        </Pressable>
+
+        {/* Reset specs to just the categories */}
+        <Pressable
+          onPress={async () => {
+            amplitude.track("Reset", {
+              Category: type,
+            });
+
+            setSpecs(Categories);
+
+            for (let i = 0; i < SetHeight.length; i++) {
+              SetHeight[i](39);
+            }
+          }}
+          style={({ pressed }) => [
+            styles.inputStyles.resetButton,
+            pressed && styles.inputStyles.resetButtonClicked,
+          ]}
+        >
+          <p>Reset</p>
         </Pressable>
       </View>
 
-      {/* The table with the specs */}
+      {/* Table */}
       <ScrollView
         horizontal={true}
         style={styles.containerStyles.comparisonScreenContainer}
@@ -297,17 +211,10 @@ export default function Compare({
                   {
                     /* Remove item */
                   }
-                  newSpecsArray = Specs.filter(
+                  newArray = Specs.filter(
                     (subArray) => Specs[index1] !== subArray
                   );
-                  await setSpecs(newSpecsArray);
-
-                  // Remove from the saveComparisonProcess
-                  newProcessArray = saveComparisonProcess.filter(
-                    (subArray) => saveComparisonProcess[index1] !== subArray
-                  );
-                  setSaveComparisonProcess(newProcessArray);
-
+                  await setSpecs(newArray);
                   {
                     /* Specs won't be updated yet even though we used setSpecs, so the length is still 2 */
                   }
@@ -413,14 +320,14 @@ export default function Compare({
 
       {/* Shows up if user needs to be logged in to complete action */}
       <Modal
-        visible={notLoggedInVisible}
+        visible={accountModalVisible}
         animationType="slide"
         transparent="true"
       >
         <View style={styles.containerStyles.modalContainer}>
           <WebAccountHandler
             screenType={"modal"}
-            setModalView={setNotLoggedInVisible}
+            setModalView={setAccountModalVisible}
           ></WebAccountHandler>
           <Pressable
             style={({ pressed }) => [
@@ -428,7 +335,7 @@ export default function Compare({
               pressed && styles.inputStyles.buttonNoBackgroundClicked,
             ]}
             onPress={() => {
-              setNotLoggedInVisible(false);
+              setAccountModalVisible(false);
             }}
           >
             <p>Cancel</p>
@@ -479,20 +386,21 @@ export default function Compare({
         </View>
       </Modal>
 
-      {/* The product selection modal */}
+      {/* Shows up when user is selecting a new product */}
       <SelectionModal
         type={type}
         productModalVisible={productModalVisible}
         setProductModalVisible={setProductModalVisible}
         brands={Brands}
-        cloudFunction={CloudFunction}
+        queryFunction={QueryFunction}
+        queryProcess={QueryProcess}
         process={Process}
         setSpecs={setSpecs}
         matchingArray={MatchingArray}
         defaultArray={DefaultArray}
         categories={Categories}
+        setSaveComparisonProcesses={setSaveComparisonProcesses}
         amplitude={amplitude}
-        setSaveComparisonProcess={setSaveComparisonProcess}
       ></SelectionModal>
     </ScrollView>
   );

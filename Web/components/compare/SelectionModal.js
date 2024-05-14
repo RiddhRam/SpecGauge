@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { SGStyles } from "../../../styles/styles";
 
-export default function SelectionModalCars({
+export default function SelectionModal({
   type,
   productModalVisible,
   setProductModalVisible,
@@ -22,13 +22,14 @@ export default function SelectionModalCars({
   matchingArray,
   defaultArray,
   categories,
+  setSaveComparisonProcesses,
   amplitude,
 }) {
   const [step, setStep] = useState(0);
   const [requestedSpecs, setRequestedSpecs] = useState([]);
   const [selectionOptions, setSelectionOptions] = useState(brands);
-
   const [loading, setLoading] = useState(false);
+  const [comparisonProcess, setComparisonProcess] = useState([]);
 
   const styles = SGStyles();
 
@@ -105,7 +106,19 @@ export default function SelectionModalCars({
                     setStep(nextStep);
                     setSelectionOptions(nextSelection.sort());
                     setRequestedSpecs(tempArray);
+                    setComparisonProcess((prevProcess) => [
+                      ...prevProcess,
+                      item,
+                    ]);
                   } else {
+                    // Add the last item to this new array then add it to the total array in Compare.js
+                    tempComparisonProcess = comparisonProcess;
+                    tempComparisonProcess.push(item);
+                    setSaveComparisonProcesses((prevProcesses) => [
+                      ...prevProcesses,
+                      tempComparisonProcess,
+                    ]);
+                    setComparisonProcess([]);
                     // If its the last step
                     let tempDefaultArray = [];
 

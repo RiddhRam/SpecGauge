@@ -7,7 +7,6 @@ import NoPage from "./components/NoPage";
 import WebLogIn from "./components/accounts/WebLogIn";
 import WebUserAccount from "./components/accounts/WebUserAccount";
 import Compare from "./components/compare/Compare";
-import CompareCars from "./components/compare/CompareCars";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -21,7 +20,7 @@ import {
   initializeAuth,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { getFunctions } from "firebase/functions";
 import {
   query,
   where,
@@ -54,6 +53,12 @@ const auth = initializeAuth(app, {
   persistence: browserLocalPersistence,
 });
 
+// This determines how many steps the user has to go through when adding a product
+const consoleProcess = ["a brand", "a console"];
+
+// This is used when filtering out items in the selection modal whenever user clicks something
+const consoleQueryProcess = ["Brand", "Name"];
+
 // Brands are preloaded
 const consoleBrands = [
   "Microsoft",
@@ -79,9 +84,6 @@ const consoleBrands = [
   "Terrans",
   "Valve",
 ];
-
-// This determines how many steps the user has to go through when adding a product
-const consoleProcess = ["a brand", "a console"];
 
 // This is an array of items whose string matches the keys of the JSON that is returned from apis
 const consoleMatchingArray = [
@@ -289,6 +291,8 @@ const consoleCategories = [
   ],
 ];
 
+const droneProcess = ["a brand", "a drone"];
+const droneQueryProcess = ["Brand", "Name"];
 const droneBrands = [
   "Autel",
   "DJI",
@@ -298,9 +302,6 @@ const droneBrands = [
   "Ryze",
   "Snaptain",
 ];
-
-const droneProcess = ["a brand", "a drone"];
-
 const droneMatchingArray = [
   "Brand",
   "Name",
@@ -347,7 +348,6 @@ const droneMatchingArray = [
   "has a remote control",
   "has a display",
 ];
-
 const droneDefaultArray = [
   { Value: "--", Display: true, Category: "Brand" }, // Brand
   { Value: "--", Display: true, Category: "Name" }, // Name
@@ -422,7 +422,6 @@ const droneDefaultArray = [
   { Value: "Remote Control", Display: false, Category: "Controls" },
   { Value: "Built-in Display", Display: false, Category: "Controls" },
 ];
-
 const droneCategories = [
   [
     "Brand",
@@ -446,9 +445,8 @@ const droneCategories = [
 ];
 
 const graphicsCardsProcess = ["a brand", "a generation", "a graphics card"];
-
+const graphicsCardsQueryProcess = ["Brand", "Generation", "Card"];
 const graphicsCardsBrands = ["AMD", "Intel", "NVIDIA"];
-
 const graphicsCardsMatchingArray = [
   "Brand",
   "Generation",
@@ -486,7 +484,6 @@ const graphicsCardsMatchingArray = [
   "Texture Rate",
   "FP32 TeraFlops",
 ];
-
 const graphicsCardsDefaultArray = [
   { Value: "--", Display: true, Category: "Brand" }, // Brand
   { Value: "--", Display: true, Category: "Generation" }, // Generation
@@ -524,7 +521,6 @@ const graphicsCardsDefaultArray = [
   { Value: "Texture Rate: --", Display: true, Category: "Performance" },
   { Value: "FP32 TeraFlops: --", Display: true, Category: "Performance" },
 ];
-
 const graphicsCardsCategories = [
   [
     "Brand",
@@ -541,9 +537,8 @@ const graphicsCardsCategories = [
 ];
 
 const CPUsProcess = ["a brand", "a generation", "a processor"];
-
+const CPUsQueryProcess = ["Brand", "Generation", "CPU"];
 const CPUsBrands = ["AMD", "Intel"];
-
 const CPUsMatchingArray = [
   "Brand",
   "Generation",
@@ -607,7 +602,6 @@ const CPUsMatchingArray = [
   "FP32",
   "Bundled Cooler",
 ];
-
 const CPUsDefaultArray = [
   { Value: "--", Display: true, Category: "Brand" }, // Brand
   { Value: "--", Display: true, Category: "Generation" }, // Generation
@@ -675,7 +669,6 @@ const CPUsDefaultArray = [
   { Value: "FP32: --", Display: true, Category: "Performance" },
   { Value: "Bundled Cooler: --", Display: true, Category: "Thermal" },
 ];
-
 const CPUsCategories = [
   [
     "Brand",
@@ -906,48 +899,60 @@ export default function WebApp() {
     carsSetHeight.push(setHeight);
   }
 
-  const callDroneCloudFunction = async (product) => {
-    try {
-      const GetDrones = httpsCallable(functions, "GetDrones");
-      const result = await GetDrones(product);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+  const queryDronesFunction = async (product) => {
+    const colRef = collection(db, "Drones");
+    const q = await query(colRef, where("Brand", "==", product));
+
+    const snapshot = await getDocs(q);
+
+    dronesArray = [];
+    snapshot.forEach((doc) => {
+      DronesArray.push(doc.data());
+    });
+
+    return dronesArray;
   };
 
-  const callConsoleCloudFunction = async (product) => {
-    try {
-      const GetConsoles = httpsCallable(functions, "GetConsoles");
-      const result = await GetConsoles(product);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+  const queryConsolesFunction = async (product) => {
+    const colRef = collection(db, "Consoles");
+    const q = await query(colRef, where("Brand", "==", product));
+
+    const snapshot = await getDocs(q);
+
+    ConsolesArray = [];
+    snapshot.forEach((doc) => {
+      ConsolesArray.push(doc.data());
+    });
+
+    return ConsolesArray;
   };
 
-  const callGraphicsCardsCloudFunction = async (product) => {
-    try {
-      const GetGraphicsCards = httpsCallable(functions, "GetGraphicsCards");
-      const result = await GetGraphicsCards(product);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+  const queryGraphicsCardsFunction = async (product) => {
+    const colRef = collection(db, "Graphics Cards");
+    const q = await query(colRef, where("Brand", "==", product));
+
+    const snapshot = await getDocs(q);
+
+    GraphicsCardsArray = [];
+    snapshot.forEach((doc) => {
+      GraphicsCardsArray.push(doc.data());
+    });
+
+    return GraphicsCardsArray;
   };
 
-  const callCPUsCloudFunction = async (product) => {
-    try {
-      const GetCPUs = httpsCallable(functions, "GetCPUs");
-      const result = await GetCPUs(product);
-      return result.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+  const queryCPUsFunction = async (product) => {
+    const colRef = collection(db, "CPUs");
+    const q = await query(colRef, where("Brand", "==", product));
+
+    const snapshot = await getDocs(q);
+
+    CPUsArray = [];
+    snapshot.forEach((doc) => {
+      CPUsArray.push(doc.data());
+    });
+
+    return CPUsArray;
   };
 
   const queryAutomobilesFunction = async (product) => {
@@ -1002,7 +1007,7 @@ export default function WebApp() {
         <Route
           path="automobiles"
           element={
-            <CompareCars
+            <Compare
               type={"Automobiles"}
               Brands={carsBrands}
               Process={carsProcess}
@@ -1016,7 +1021,7 @@ export default function WebApp() {
               Height={carsHeight}
               SetHeight={carsSetHeight}
               amplitude={amplitude}
-            ></CompareCars>
+            ></Compare>
           }
         ></Route>
         {/* the consoles comparison page */}
@@ -1027,6 +1032,8 @@ export default function WebApp() {
               type={"Consoles"}
               Brands={consoleBrands}
               Process={consoleProcess}
+              QueryProcess={consoleQueryProcess}
+              QueryFunction={queryConsolesFunction}
               MatchingArray={consoleMatchingArray}
               DefaultArray={consoleDefaultArray}
               Categories={consoleCategories}
@@ -1034,7 +1041,6 @@ export default function WebApp() {
               setSpecs={setConsoleSpecs}
               Height={consolesHeight}
               SetHeight={consolesSetHeight}
-              CloudFunction={callConsoleCloudFunction}
               amplitude={amplitude}
             ></Compare>
           }
@@ -1047,6 +1053,8 @@ export default function WebApp() {
               type={"Drones"}
               Brands={droneBrands}
               Process={droneProcess}
+              QueryProcess={droneQueryProcess}
+              QueryFunction={queryDronesFunction}
               MatchingArray={droneMatchingArray}
               DefaultArray={droneDefaultArray}
               Categories={droneCategories}
@@ -1054,7 +1062,6 @@ export default function WebApp() {
               setSpecs={setDroneSpecs}
               Height={dronesHeight}
               SetHeight={dronesSetHeight}
-              CloudFunction={callDroneCloudFunction}
               amplitude={amplitude}
             ></Compare>
           }
@@ -1067,6 +1074,8 @@ export default function WebApp() {
               type={"Graphics Cards"}
               Brands={graphicsCardsBrands}
               Process={graphicsCardsProcess}
+              QueryProcess={graphicsCardsQueryProcess}
+              QueryFunction={queryGraphicsCardsFunction}
               MatchingArray={graphicsCardsMatchingArray}
               DefaultArray={graphicsCardsDefaultArray}
               Categories={graphicsCardsCategories}
@@ -1074,7 +1083,6 @@ export default function WebApp() {
               setSpecs={setGraphicsCardsSpecs}
               Height={graphicsCardsHeight}
               SetHeight={graphicsCardsSetHeight}
-              CloudFunction={callGraphicsCardsCloudFunction}
               amplitude={amplitude}
             ></Compare>
           }
@@ -1087,6 +1095,8 @@ export default function WebApp() {
               type={"CPUs"}
               Brands={CPUsBrands}
               Process={CPUsProcess}
+              QueryProcess={CPUsQueryProcess}
+              QueryFunction={queryCPUsFunction}
               MatchingArray={CPUsMatchingArray}
               DefaultArray={CPUsDefaultArray}
               Categories={CPUsCategories}
@@ -1094,7 +1104,6 @@ export default function WebApp() {
               setSpecs={setCPUsSpecs}
               Height={CPUsHeight}
               SetHeight={CPUsSetHeight}
-              CloudFunction={callCPUsCloudFunction}
               amplitude={amplitude}
             ></Compare>
           }

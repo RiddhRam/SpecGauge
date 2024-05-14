@@ -26,7 +26,7 @@ export const SGStyles = () => {
       justifyContent: "center",
     },
     modalContainer: {
-      flex: 0.9,
+      flex: 1,
       backgroundColor: theme === "dark" ? "#030612" : "#fff",
       borderColor: "#000",
       borderWidth: 2,
