@@ -14,6 +14,13 @@ import {
 
 import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import {
+  query,
+  where,
+  getFirestore,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 
 export default function WebUserAccount({ amplitude, stepsArray }) {
   // Initialize useNavigate as navigate
@@ -31,6 +38,7 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
     successfullyDeletedSavedComparison,
     setSuccessfullyDeletedSavedComparison,
   ] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const categories = [
     "Automobiles",
@@ -58,8 +66,6 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
     setSavedProcesses.push(setNewSavedProcesses);
   }
 
-  const [loading, setLoading] = useState(false);
-
   // Call SGStyles as styles
   const styles = SGStyles();
 
@@ -67,6 +73,122 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
   if it does then move this inside the log in and sign up func */
   const auth = getAuth();
   const functions = getFunctions();
+  const db = getFirestore();
+
+  const resetPassword = async () => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setPasswordResetSent(true);
+      setPasswordResetError(false);
+    } catch (error) {
+      console.log(error.message);
+      setPasswordResetError(true);
+      setPasswordResetSent(false);
+    }
+  };
+
+  // Sign out func
+  const SignOutFunc = async () => {
+    try {
+      navigate("/home");
+      await signOut(auth); // returns a response
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // Array with all direct query functions
+  const directFuncArray = [
+    (queryAutomobilesFunction = async (product) => {
+      const colRef = collection(db, "Automobiles");
+      const q = await query(
+        colRef,
+        where("Brand", "==", product[0]),
+        where("Model", "==", product[1]),
+        where("Year", "==", product[2]),
+        where("Trim", "==", product[3])
+      );
+
+      const snapshot = await getDocs(q);
+
+      automobilesArray = [];
+      snapshot.forEach((doc) => {
+        automobilesArray.push(doc.data());
+      });
+
+      return automobilesArray;
+    }),
+    (queryConsolesFunction = async (product) => {
+      const colRef = collection(db, "Consoles");
+      const q = await query(
+        colRef,
+        where("Brand", "==", product[0]),
+        where("Name", "==", product[1])
+      );
+
+      const snapshot = await getDocs(q);
+
+      ConsolesArray = [];
+      snapshot.forEach((doc) => {
+        ConsolesArray.push(doc.data());
+      });
+
+      return ConsolesArray;
+    }),
+    (queryDronesFunction = async (product) => {
+      const colRef = collection(db, "Drones");
+      const q = await query(
+        colRef,
+        where("Brand", "==", product[0]),
+        where("Name", "==", product[1])
+      );
+
+      const snapshot = await getDocs(q);
+
+      DronesArray = [];
+      snapshot.forEach((doc) => {
+        DronesArray.push(doc.data());
+      });
+
+      return DronesArray;
+    }),
+    (queryGraphicsCardsFunction = async (product) => {
+      const colRef = collection(db, "Graphics Card");
+      const q = await query(
+        colRef,
+        where("Brand", "==", product[0]),
+        where("Generation", "==", product[1]),
+        where("Card", "==", product[2])
+      );
+
+      const snapshot = await getDocs(q);
+
+      graphicsCardsArray = [];
+      snapshot.forEach((doc) => {
+        graphicsCardsArray.push(doc.data());
+      });
+
+      return graphicsCardsArray;
+    }),
+    (queryCPUsFunction = async (product) => {
+      const colRef = collection(db, "CPUs");
+      const q = await query(
+        colRef,
+        where("Brand", "==", product[0]),
+        where("Generation", "==", product[1]),
+        where("CPU", "==", product[2])
+      );
+
+      const snapshot = await getDocs(q);
+
+      CPUsArray = [];
+      snapshot.forEach((doc) => {
+        CPUsArray.push(doc.data());
+      });
+
+      return CPUsArray;
+    }),
+  ];
 
   const callSavedComparisonsCloudFunction = async (email) => {
     amplitude.track("Get saved comparisons");
@@ -117,7 +239,6 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
       email: auth.currentUser.email,
       type: type,
       name: comparisonName,
-      processes: arrayToSave,
     };
 
     try {
@@ -133,142 +254,45 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
     }
   };
 
-  const resetPassword = async () => {
-    try {
-      await sendPasswordResetEmail(auth, email);
-      setPasswordResetSent(true);
-      setPasswordResetError(false);
-    } catch (error) {
-      console.log(error.message);
-      setPasswordResetError(true);
-      setPasswordResetSent(false);
-    }
-  };
-
-  // Sign out func
-  const SignOutFunc = async () => {
-    try {
-      navigate("/home");
-      await signOut(auth); // returns a response
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   const callLocalSavedComparisonsFunc = async () => {
     setLoading(true);
     setPage(1);
     const result = await callSavedComparisonsCloudFunction(email);
 
-    // For every returned comparison
-    for (const resultItem in result) {
-      // Save the data
-      const comparison = result[resultItem][0].data;
+    for (categoryItem in result) {
+      categoryComparisonNames = [];
+      categoryComparisonProcesses = [];
+      // Generate the name of the comparison to display to the user, also create an array of the processes
+      for (comparisonItem in result[categoryItem]) {
+        const length = Object.keys(result[categoryItem][comparisonItem]).length;
 
-      count = 0;
-      for (dataItem in comparison) {
-        if (dataItem != "type") {
-          count++;
+        comparisonName = "";
+        comparisonProcess = [];
+        for (processItem in result[categoryItem][comparisonItem]) {
+          comparisonName +=
+            result[categoryItem][comparisonItem][processItem][0] +
+            " " +
+            result[categoryItem][comparisonItem][processItem][
+              result[categoryItem][comparisonItem][processItem].length - 1
+            ];
+
+          if (processItem != length - 1) {
+            comparisonName += " vs ";
+          }
+          comparisonProcess.push(
+            result[categoryItem][comparisonItem][processItem]
+          );
         }
+        categoryComparisonNames.push(comparisonName);
+        categoryComparisonProcesses.push(comparisonProcess);
       }
 
-      // Iterate through the categories array above
-      for (const categoryItem in categories) {
-        // If the saved comparison type matches this category
-        if (comparison.type == categories[categoryItem]) {
-          let displayName = [];
-          // Record a new comparison
-          let newComparisonProcess = [];
-          for (dataItem in comparison) {
-            if (dataItem != "type") {
-              newComparisonProcess.push(comparison[dataItem]);
-            }
-          }
-          for (const comparisonItem in newComparisonProcess) {
-            displayName.push(
-              newComparisonProcess[comparisonItem][0] +
-                " " +
-                newComparisonProcess[comparisonItem][
-                  newComparisonProcess[comparisonItem].length - 1
-                ]
-            );
-            if (comparisonItem != newComparisonProcess.length - 1) {
-              displayName[comparisonItem] += " vs ";
-            }
-          }
-          // Update savedProcesses
-          setSavedProcesses[categoryItem]((prevProcessArray) => [
-            ...prevProcessArray,
-            newComparisonProcess,
-          ]);
-
-          // Update savedComparisons
-          setSavedComparisons[categoryItem]((prevComparisonArray) => [
-            ...prevComparisonArray,
-            displayName,
-          ]);
-        }
-      }
+      setSavedComparisons[categoryItem](categoryComparisonNames);
+      setSavedProcesses[categoryItem](categoryComparisonProcesses);
     }
 
     setLoading(false);
   };
-
-  const directFuncArray = [
-    (callConsolesDirectCloudFunction = async (processes) => {
-      try {
-        const GetConsoles = httpsCallable(functions, "GetConsolesDirect");
-        const result = await GetConsoles(processes);
-        return result.data;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    }),
-    (callConsolesDirectCloudFunction = async (processes) => {
-      try {
-        const GetConsoles = httpsCallable(functions, "GetConsolesDirect");
-        const result = await GetConsoles(processes);
-        return result.data;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    }),
-    (callDronesDirectCloudFunction = async (processes) => {
-      try {
-        const GetDrones = httpsCallable(functions, "GetDronesDirect");
-        const result = await GetDrones(processes);
-        return result.data;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    }),
-    (callGraphicsCardsDirectCloudFunction = async (processes) => {
-      try {
-        const GetGraphicsCards = httpsCallable(
-          functions,
-          "GetGraphicsCardsDirect"
-        );
-        const result = await GetGraphicsCards(processes);
-        return result.data;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    }),
-    (callCPUsDirectCloudFunction = async (processes) => {
-      try {
-        const GetCPUs = httpsCallable(functions, "GetCPUsDirect");
-        const result = await GetCPUs(processes);
-        return result.data;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    }),
-  ];
 
   // send user to log in if not logged in
   useEffect(() => {
@@ -496,58 +520,20 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
                                       },
                                     ]}
                                     onPress={async () => {
-                                      let requestProcesses = [];
-
-                                      for (processItem in savedProcesses[
+                                      // Iterate through all processes in the clicked comparison
+                                      for (item in savedProcesses[
                                         categoryIndex
                                       ][comparisonIndex]) {
-                                        let newJSON = {};
-                                        for (step in savedProcesses[
+                                        // Call the direct function for this category and pass in the process
+                                        const result = await directFuncArray[
                                           categoryIndex
-                                        ][comparisonIndex][processItem]) {
-                                          newJSON[step] =
-                                            savedProcesses[categoryIndex][
-                                              comparisonIndex
-                                            ][processItem][step];
-                                        }
-                                        requestProcesses.push(newJSON);
+                                        ](
+                                          savedProcesses[categoryIndex][
+                                            comparisonIndex
+                                          ][item]
+                                        );
+                                        console.log(result[0]);
                                       }
-                                      const result = await directFuncArray[
-                                        categoryIndex
-                                      ](requestProcesses);
-
-                                      processArray = [];
-
-                                      for (requestItem in requestProcesses) {
-                                        tempArray = [];
-                                        for (processItem in requestProcesses[
-                                          requestItem
-                                        ]) {
-                                          tempArray.push(
-                                            requestProcesses[requestItem][
-                                              processItem
-                                            ]
-                                          );
-                                        }
-                                        processArray.push(tempArray);
-                                      }
-
-                                      processArray.unshift(
-                                        stepsArray[categoryIndex]
-                                      );
-
-                                      navigate(
-                                        `/${categories[categoryIndex]
-                                          .toLowerCase()
-                                          .replace(" ", "")}`,
-                                        {
-                                          state: {
-                                            initialSpecs: result,
-                                            type: categories[categoryIndex],
-                                            requestProcesses: processArray,
-                                          },
-                                        }
-                                      );
                                     }}
                                   >
                                     <p>{comparisonItem}</p>
@@ -569,7 +555,7 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
                                           savedProcesses[categoryIndex][
                                             comparisonIndex
                                           ],
-                                          categories[categoryIndex]
+                                          categoryItem
                                         );
 
                                       if (result == 200) {

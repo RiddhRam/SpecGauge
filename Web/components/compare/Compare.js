@@ -171,6 +171,7 @@ export default function Compare({
             });
 
             setSpecs(Categories);
+            setSaveComparisonProcesses([]);
 
             for (let i = 0; i < SetHeight.length; i++) {
               SetHeight[i](39);
@@ -211,10 +212,18 @@ export default function Compare({
                   {
                     /* Remove item */
                   }
-                  newArray = Specs.filter(
+                  newSpecsArray = Specs.filter(
                     (subArray) => Specs[index1] !== subArray
                   );
-                  await setSpecs(newArray);
+                  await setSpecs(newSpecsArray);
+
+                  newComparisonProcessArray = saveComparisonProcesses.filter(
+                    // not 0 indexed so have to subtract 1
+                    (subArray) =>
+                      saveComparisonProcesses[index1 - 1] !== subArray
+                  );
+                  setSaveComparisonProcesses(newComparisonProcessArray);
+
                   {
                     /* Specs won't be updated yet even though we used setSpecs, so the length is still 2 */
                   }
