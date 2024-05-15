@@ -7,12 +7,11 @@ import {
   ActivityIndicator,
 } from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
-import { v4 as uuidv4 } from "uuid";
 import SelectionModal from "./SelectionModal";
 import WebAccountHandler from "../accounts/WebAccountHandler";
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
@@ -29,7 +28,6 @@ export default function Compare({
   setSpecs,
   Height,
   SetHeight,
-  preRequestedSpecs,
   amplitude,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
@@ -42,9 +40,100 @@ export default function Compare({
   const [saveComparisonProcesses, setSaveComparisonProcesses] = useState([]);
   const styles = SGStyles();
   const navigate = useNavigate();
+  const { state } = useLocation();
   // Used for checking if user can use logged in features like saved comparison or preferences
   const auth = getAuth();
   const functions = getFunctions();
+
+  useEffect(() => {
+    try {
+      const { prerequestedSpecs, processArray } = state;
+
+      {
+        /* Set the process array directly */
+      }
+      setSaveComparisonProcesses(processArray);
+
+      {
+        /* For specs, we need to organize them into their categories since a similar function to the onein SelectionModal.js */
+      }
+
+      const tempArray = [];
+      tempArray.push(Categories[0]);
+      // Iterate through all requested specs
+      for (specsIndex in prerequestedSpecs) {
+        let tempDefaultArray = [];
+
+        // Deep Copy DefaultArray into tempDefaultArray then we will use tempDefaultArray from here on
+        for (let i = 0; i < DefaultArray.length; i++) {
+          newJSON = {};
+          newJSON["Value"] = DefaultArray[i].Value;
+          newJSON["Display"] = DefaultArray[i].Display;
+          newJSON["Category"] = DefaultArray[i].Category;
+          tempDefaultArray.push(newJSON);
+        }
+
+        // Iterate through each key in a particular product
+        for (key in prerequestedSpecs[specsIndex]) {
+          for (let i = 0; i < MatchingArray.length; i++) {
+            // Compare the items in the specs to matchingArray
+            if (key == MatchingArray[i]) {
+              // When a match if ound save the value are record it in tempDefault
+              value = prerequestedSpecs[specsIndex][key];
+              if (
+                value != "True" &&
+                value != "False" &&
+                value != "--" &&
+                value != "----" // have to add this since some values accidentally got saved as "----"
+              ) {
+                // This keeps the spec label but adds the value
+                tempDefaultArray[i].Value = tempDefaultArray[i].Value.replace(
+                  "--",
+                  value
+                );
+                tempDefaultArray[i].Display = true;
+              } else if (value == "True" || value == "Yes") {
+                // Boolean values become true
+                tempDefaultArray[i].Display = true;
+              }
+
+              break;
+            }
+          }
+        }
+
+        // This is the array that set as the specs array
+        tempSpecsArray = [];
+
+        for (category in Categories[0]) {
+          tempSpecsArray.push("");
+        }
+
+        // Copy only the values, and add \n to display the next value in this category on the next line
+        // Each cell is just 1 long string
+        // Only if Display is true
+        for (key in tempDefaultArray) {
+          if (tempDefaultArray[key].Display) {
+            for (let i = 0; i < Categories[0].length; i++) {
+              if (tempDefaultArray[key].Category == Categories[0][i]) {
+                tempSpecsArray[i] += tempDefaultArray[key].Value + "\n";
+                break;
+              }
+            }
+          }
+        }
+
+        // If any are empty then just use '--'
+        for (let i = 0; i < tempSpecsArray.length; i++) {
+          if (tempSpecsArray[i] == "") {
+            tempSpecsArray[i] = "--";
+          }
+        }
+        tempArray.push(tempSpecsArray);
+      }
+      setSpecs(tempArray);
+    } catch {}
+  }, [state]);
 
   const CallSaveComparisonCloudFunction = async () => {
     // The processes that get saved
@@ -163,7 +252,7 @@ export default function Compare({
           <p>Save Comparison</p>
         </Pressable>
 
-        {/* Reset specs to just the categories */}
+        {/* Reset specs to just the categories and processes to empty array */}
         <Pressable
           onPress={async () => {
             amplitude.track("Reset", {
@@ -194,7 +283,7 @@ export default function Compare({
         {/* For each item in spec, show a column */}
         {Specs.map((item, index1) => (
           <View
-            key={uuidv4() + item}
+            key={item + index1}
             style={[styles.containerStyles.comparisonColumns]}
           >
             {/* If it's not the first column (the category labels), then show a remove button */}
@@ -284,7 +373,7 @@ export default function Compare({
               {item.map((spec, index2) => (
                 /* We loop through each row in each column */
                 <Text
-                  key={uuidv4() + spec}
+                  key={spec + index2}
                   /* the category labels have a special blue background so they have a different style, specCategoryText */
                   style={[
                     { height: Height[index2] },

@@ -1,6 +1,6 @@
 {
   "name": "specgauge",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -9,15 +9,14 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@amplitude/analytics-react-native": "^1.4.7",
+    "@amplitude/analytics-react-native": "^1.4.8",
     "bootstrap": "^5.3.3",
     "expo": "~50.0.14",
-    "firebase": "^10.10.0",
+    "firebase": "^10.12.0",
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-web": "^0.19.10",
-    "react-router-dom": "^6.22.3",
-    "uuid": "^9.0.1"
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

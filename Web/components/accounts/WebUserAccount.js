@@ -22,6 +22,22 @@ import {
   getDocs,
 } from "firebase/firestore";
 
+const links = [
+  "/automobiles",
+  "/consoles",
+  "/drones",
+  "/graphicsCards",
+  "/cpus",
+];
+
+const categories = [
+  "Automobiles",
+  "Consoles",
+  "Drones",
+  "Graphics Cards",
+  "CPUs",
+];
+
 export default function WebUserAccount({ amplitude, stepsArray }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
@@ -39,14 +55,6 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
     setSuccessfullyDeletedSavedComparison,
   ] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const categories = [
-    "Automobiles",
-    "Consoles",
-    "Drones",
-    "Graphics Cards",
-    "CPUs",
-  ];
 
   // This is used when user selects a comparison
   let savedProcesses = [];
@@ -520,8 +528,12 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
                                       },
                                     ]}
                                     onPress={async () => {
+                                      setLoading(true);
+
+                                      prerequestedSpecs = [];
+                                      processArray = [];
                                       // Iterate through all processes in the clicked comparison
-                                      for (item in savedProcesses[
+                                      for (processItem in savedProcesses[
                                         categoryIndex
                                       ][comparisonIndex]) {
                                         // Call the direct function for this category and pass in the process
@@ -530,10 +542,23 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
                                         ](
                                           savedProcesses[categoryIndex][
                                             comparisonIndex
-                                          ][item]
+                                          ][processItem]
                                         );
-                                        console.log(result[0]);
+                                        // There should only be 1 result anyways, but just in case there's several, this will use the first one
+                                        prerequestedSpecs.push(result[0]);
+                                        processArray.push(
+                                          savedProcesses[categoryIndex][
+                                            comparisonIndex
+                                          ][processItem]
+                                        );
                                       }
+                                      setLoading(false);
+                                      navigate(links[categoryIndex], {
+                                        state: {
+                                          prerequestedSpecs: prerequestedSpecs,
+                                          processArray: processArray,
+                                        },
+                                      });
                                     }}
                                   >
                                     <p>{comparisonItem}</p>

@@ -111,6 +111,7 @@ export default function SelectionModal({
                       item,
                     ]);
                   } else {
+                    // If its the last step
                     // Add the last item to this new array then add it to the total array in Compare.js
                     tempComparisonProcess = comparisonProcess;
                     tempComparisonProcess.push(item);
@@ -119,7 +120,7 @@ export default function SelectionModal({
                       tempComparisonProcess,
                     ]);
                     setComparisonProcess([]);
-                    // If its the last step
+
                     let tempDefaultArray = [];
 
                     // Deep Copy defaultArray into tempDefaultArray then we will use tempDefaultArray from here on
