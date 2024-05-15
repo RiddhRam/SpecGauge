@@ -1,7 +1,15 @@
 import { Navbar } from "../Navbar";
 import { SGStyles } from "../../styles/styles";
 
-import { Modal, Pressable, View, Text, ScrollView } from "react-native-web";
+import {
+  Modal,
+  Pressable,
+  View,
+  Text,
+  ScrollView,
+  Image,
+  Linking,
+} from "react-native-web";
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -47,31 +55,70 @@ export default function WebHome({ amplitude }) {
 
       {/* main body */}
 
+      {/* Main view */}
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         {/* Selection comparison type, default screen */}
         <View style={styles.containerStyles.largeContainer}>
-          <View
-            style={[
-              styles.containerStyles.comingSoonContainer,
-              { marginBottom: 30 },
-            ]}
-          >
+          <View style={{ alignItems: "center" }}>
+            {/* Subtitle */}
             <Text
               style={[
-                {
-                  fontSize: 30,
-                },
                 styles.textStyles.simpleText,
+                { fontSize: 30, marginBottom: 60 },
               ]}
             >
-              Coming Soon
+              Your comparison tool for vehicles and electronics.
             </Text>
-            <Text style={styles.textStyles.simpleText}>Pros and Cons</Text>
-            <Text style={styles.textStyles.simpleText}>Saved Comparisons</Text>
-            <Text style={styles.textStyles.simpleText}>Accounts</Text>
-          </View>
+            {/* Updates */}
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                marginBottom: 30,
+                padding: 50,
+                width: "100%",
+                justifyContent: "space-around",
+              }}
+            >
+              {/* Coming soon */}
+              <View style={[styles.containerStyles.comingSoonContainer]}>
+                <Text
+                  style={[
+                    {
+                      fontSize: 25,
+                    },
+                    styles.textStyles.simpleText,
+                  ]}
+                >
+                  Coming Soon
+                </Text>
+                <Text style={styles.textStyles.plainText}>• Pros and Cons</Text>
+                <Text style={styles.textStyles.plainText}>
+                  • Phones and Tablets
+                </Text>
+                <Text style={styles.textStyles.plainText}></Text>
+              </View>
 
-          <View>
+              {/* Recently added */}
+              <View style={[styles.containerStyles.comingSoonContainer]}>
+                <Text
+                  style={[
+                    {
+                      fontSize: 25,
+                    },
+                    styles.textStyles.simpleText,
+                  ]}
+                >
+                  Recently added
+                </Text>
+                <Text style={styles.textStyles.plainText}>• Accounts</Text>
+                <Text style={styles.textStyles.plainText}>• Automobiles</Text>
+                <Text style={styles.textStyles.plainText}>
+                  • Saved Comparisons
+                </Text>
+              </View>
+            </View>
+            {/* Compare button */}
             <Pressable
               onPress={() => {
                 setCompareModalVisible(true);
@@ -83,55 +130,105 @@ export default function WebHome({ amplitude }) {
             >
               <p>Compare</p>
             </Pressable>
-
-            <Modal
-              visible={compareModalVisible}
-              animationType="slide"
-              transparent="true"
-            >
-              <View style={styles.containerStyles.modalContainer}>
-                <Text style={styles.textStyles.text}>Select a category</Text>
-
-                <ScrollView style={styles.textStyles.modalText}>
-                  {categories.map((item, index) => (
-                    <Pressable
-                      style={({ pressed }) => [
-                        { padding: 10, paddingRight: 50, fontSize: 20 },
-                        pressed && styles.inputStyles.buttonNoBackgroundClicked,
-                      ]}
-                      key={item}
-                      onPress={() => {
-                        amplitude.track("Screen", { Screen: item });
-                        {
-                          /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
-                        }
-
-                        navigate(`${links[index]}`);
-
-                        setCompareModalVisible(false);
-                      }}
-                    >
-                      <p>{item}</p>
-                    </Pressable>
-                  ))}
-                </ScrollView>
-
-                <Pressable
-                  onPress={() => {
-                    setCompareModalVisible(false);
-                  }}
-                  style={({ pressed }) => [
-                    styles.inputStyles.button,
-                    pressed && styles.inputStyles.buttonClicked,
-                  ]}
-                >
-                  <p>Cancel</p>
-                </Pressable>
-              </View>
-            </Modal>
           </View>
         </View>
       </ScrollView>
+
+      {/* Footer */}
+      <View
+        style={{ marginTop: 20, alignItems: "center", paddingVertical: 10 }}
+      >
+        <Text style={[{ fontSize: 20 }]}>Social Media</Text>
+        <View style={{ flexDirection: "row" }}>
+          {/* Instagram */}
+          <Pressable
+            onPress={() => {
+              Linking.openURL("https://www.instagram.com/specgauge").catch(
+                (err) => console.error("Couldn't load page", err)
+              );
+            }}
+          >
+            <Image
+              source={require("../../assets/instagram icon.png")}
+              style={{ width: 35, height: 35 }}
+            ></Image>
+          </Pressable>
+          {/* TikTok */}
+          <Pressable
+            onPress={() => {
+              Linking.openURL(
+                "https://www.tiktok.com/@specgauge_official"
+              ).catch((err) => console.error("Couldn't load page", err));
+            }}
+          >
+            <Image
+              source={require("../../assets/tiktok icon.png")}
+              style={{ width: 35, height: 35 }}
+            ></Image>
+          </Pressable>
+          {/* X */}
+          <Pressable
+            onPress={() => {
+              Linking.openURL("https://twitter.com/SpecGauge").catch((err) =>
+                console.error("Couldn't load page", err)
+              );
+            }}
+          >
+            <Image
+              source={require("../../assets/x icon.png")}
+              style={{ width: 35, height: 35 }}
+            ></Image>
+          </Pressable>
+        </View>
+        <Text style={[{ fontSize: 20 }]}>Contact Us</Text>
+        <Text>Email: specgauge@gmail.com</Text>
+      </View>
+      {/* Category selection modal */}
+      <Modal
+        visible={compareModalVisible}
+        animationType="slide"
+        transparent="true"
+      >
+        <View style={styles.containerStyles.modalContainer}>
+          <Text style={styles.textStyles.text}>Select a category</Text>
+
+          <ScrollView style={styles.textStyles.modalText}>
+            {categories.map((item, index) => (
+              <Pressable
+                style={({ pressed }) => [
+                  { padding: 10, paddingRight: 50, fontSize: 20 },
+                  pressed && styles.inputStyles.buttonNoBackgroundClicked,
+                ]}
+                key={item}
+                onPress={() => {
+                  amplitude.track("Screen", { Screen: item });
+                  {
+                    /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
+                  }
+
+                  navigate(`${links[index]}`);
+
+                  setCompareModalVisible(false);
+                }}
+              >
+                <p>{item}</p>
+              </Pressable>
+            ))}
+          </ScrollView>
+
+          <Pressable
+            onPress={() => {
+              setCompareModalVisible(false);
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.button,
+              pressed && styles.inputStyles.buttonClicked,
+            ]}
+          >
+            <p>Cancel</p>
+          </Pressable>
+        </View>
+      </Modal>
     </View>
   );
 }

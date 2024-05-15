@@ -50,6 +50,8 @@ export const SGStyles = () => {
       borderWidth: 2,
       borderRadius: 8,
       padding: 15,
+      flex: 1,
+      marginHorizontal: 10,
     },
     userAccountDetailsSection: {
       paddingVertical: 10,
@@ -96,6 +98,9 @@ export const SGStyles = () => {
     },
     plainText: {
       color: theme === "dark" ? "#fff" : "#000",
+    },
+    reversePlainText: {
+      color: theme === "dark" ? "#000" : "#fff",
     },
     comparisonText: {
       color: theme === "dark" ? "#fff" : "#000",

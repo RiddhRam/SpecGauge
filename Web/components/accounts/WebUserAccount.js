@@ -389,37 +389,6 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
                 <p>Saved Comparisons</p>
               </Pressable>
             )}
-            {/* Comparison Preferences */}
-            {page == 2 ? (
-              <Pressable
-                onPress={async () => {
-                  setLoading(true);
-                  setPage(2);
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.accountButtonSelected,
-                  pressed && styles.inputStyles.accountButtonClicked,
-                ]}
-              >
-                <p>Comparison Preferences</p>
-              </Pressable>
-            ) : (
-              <Pressable
-                onPress={() => {
-                  setPage(2);
-                  for (item in setSavedComparisons) {
-                    setSavedComparisons[item]([]);
-                    setSavedProcesses[item]([]);
-                  }
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.accountButton,
-                  pressed && styles.inputStyles.accountButtonClicked,
-                ]}
-              >
-                <p>Comparison Preferences</p>
-              </Pressable>
-            )}
           </View>
 
           {/* main view */}
@@ -602,13 +571,6 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
                   </View>
                 )}
               </ScrollView>
-            )}
-            {page == 2 && (
-              <View>
-                <Text style={{ fontSize: 30, color: "#4ca0d7" }}>
-                  Comparison Preferences
-                </Text>
-              </View>
             )}
           </View>
         </ScrollView>
