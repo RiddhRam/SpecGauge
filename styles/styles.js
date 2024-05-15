@@ -60,6 +60,9 @@ export const SGStyles = () => {
       backgroundColor: theme === "dark" ? "#000" : "#e6e6e6",
       padding: 5,
     },
+    reverseBackground: {
+      backgroundColor: theme === "dark" ? "#fff" : "#000",
+    },
   });
 
   const textStyles = StyleSheet.create({

@@ -136,9 +136,14 @@ export default function WebHome({ amplitude }) {
 
       {/* Footer */}
       <View
-        style={{ marginTop: 20, alignItems: "center", paddingVertical: 10 }}
+        style={[
+          { marginTop: 20, alignItems: "center", paddingVertical: 10 },
+          styles.containerStyles.reverseBackground,
+        ]}
       >
-        <Text style={[{ fontSize: 20 }]}>Social Media</Text>
+        <Text style={[{ fontSize: 20 }, styles.textStyles.reversePlainText]}>
+          Social Media
+        </Text>
         <View style={{ flexDirection: "row" }}>
           {/* Instagram */}
           <Pressable
@@ -180,8 +185,12 @@ export default function WebHome({ amplitude }) {
             ></Image>
           </Pressable>
         </View>
-        <Text style={[{ fontSize: 20 }]}>Contact Us</Text>
-        <Text>Email: specgauge@gmail.com</Text>
+        <Text style={[{ fontSize: 20 }, styles.textStyles.reversePlainText]}>
+          Contact Us
+        </Text>
+        <Text style={styles.textStyles.reversePlainText}>
+          Email: specgauge@gmail.com
+        </Text>
       </View>
       {/* Category selection modal */}
       <Modal

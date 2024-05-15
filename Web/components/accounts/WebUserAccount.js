@@ -38,7 +38,7 @@ const categories = [
   "CPUs",
 ];
 
-export default function WebUserAccount({ amplitude, stepsArray }) {
+export default function WebUserAccount({ amplitude }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -217,6 +217,7 @@ export default function WebUserAccount({ amplitude, stepsArray }) {
     saveComparisonProcess,
     type
   ) => {
+    amplitude.track("Delete saved comparison");
     // The processes, which is used to form the name of the comparison to delete
     arrayToSave = [];
     for (item in saveComparisonProcess) {
