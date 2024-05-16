@@ -1,14 +1,15 @@
 import { Navbar } from "../../Navbar";
 import { SGStyles } from "../../../styles/styles";
+import { Footer } from "../../Footer";
 import WebAccountHandler from "./WebAccountHandler";
 
-import { Pressable, View } from "react-native-web";
+import { Pressable, View, ScrollView } from "react-native-web";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import { getAuth } from "firebase/auth";
 
-export default function WebLogIn() {
+export default function WebLogIn({ amplitude, isMobile }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
 
@@ -25,7 +26,7 @@ export default function WebLogIn() {
   });
 
   return (
-    <View style={styles.containerStyles.webContainer}>
+    <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* navbar */}
       <Navbar page={"login"} />
 
@@ -49,6 +50,8 @@ export default function WebLogIn() {
         </Pressable>
         {/* If user doesn't want to use an account, only available if on browser or if they don't want to save comparisons */}
       </View>
-    </View>
+
+      <Footer amplitude={amplitude} isMobile={isMobile} />
+    </ScrollView>
   );
 }

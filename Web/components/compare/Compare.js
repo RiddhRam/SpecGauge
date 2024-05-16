@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { Footer } from "../../Footer";
 
 export default function Compare({
   type,
@@ -29,6 +30,7 @@ export default function Compare({
   Height,
   SetHeight,
   amplitude,
+  isMobile,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
   const [accountModalVisible, setAccountModalVisible] = useState(false);
@@ -183,238 +185,247 @@ export default function Compare({
   };
 
   return (
-    <ScrollView style={styles.containerStyles.comparisonScreenContainer}>
-      <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
-        {type} Comparison
-      </Text>
+    <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
+      {/* Main Body */}
+      <View style={styles.containerStyles.comparisonScreenContainer}>
+        <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
+          {type} Comparison
+        </Text>
 
-      {/* Top buttons */}
-      <View
-        style={{ marginRight: "auto", flexDirection: "row", flexWrap: "wrap" }}
-      >
-        {/* Back to home */}
-        <Pressable
-          onPress={() => {
-            {
-              /* Set page to home */
-            }
-            navigate("/home");
+        {/* Top buttons */}
+        <View
+          style={{
+            marginRight: "auto",
+            flexDirection: "row",
+            flexWrap: "wrap",
           }}
-          style={({ pressed }) => [
-            styles.inputStyles.button,
-            pressed && styles.inputStyles.buttonClicked,
-          ]}
         >
-          <p>{"< Go Back"}</p>
-        </Pressable>
-
-        {/* Add a new product */}
-        <Pressable
-          onPress={async () => {
-            amplitude.track("Add Item");
-            {
-              /* Show product selection modal */
-            }
-            setProductModalVisible(true);
-          }}
-          style={({ pressed }) => [
-            styles.inputStyles.button,
-            pressed && styles.inputStyles.buttonClicked,
-          ]}
-        >
-          <p>Add</p>
-        </Pressable>
-
-        {/* Save comparison */}
-        <Pressable
-          onPress={async () => {
-            amplitude.track("Save Comparison", {
-              Category: type,
-            });
-
-            if (auth.currentUser != null) {
-              setAwaitingSavingComparison(true);
-              setSavingComparison(true);
-              const result = await CallSaveComparisonCloudFunction();
-              if (result == 200) {
-                setSuccessfullySavedComparison(true);
+          {/* Back to home */}
+          <Pressable
+            onPress={() => {
+              {
+                /* Set page to home */
               }
-              setAwaitingSavingComparison(false);
-            } else {
-              setAccountModalVisible(true);
-            }
-          }}
-          style={({ pressed }) => [
-            styles.inputStyles.button,
-            pressed && styles.inputStyles.buttonClicked,
-          ]}
-        >
-          <p>Save Comparison</p>
-        </Pressable>
-
-        {/* Reset specs to just the categories and processes to empty array */}
-        <Pressable
-          onPress={async () => {
-            amplitude.track("Reset", {
-              Category: type,
-            });
-
-            setSpecs(Categories);
-            setSaveComparisonProcesses([]);
-
-            for (let i = 0; i < SetHeight.length; i++) {
-              SetHeight[i](39);
-            }
-          }}
-          style={({ pressed }) => [
-            styles.inputStyles.resetButton,
-            pressed && styles.inputStyles.resetButtonClicked,
-          ]}
-        >
-          <p>Reset</p>
-        </Pressable>
-      </View>
-
-      {/* Table */}
-      <ScrollView
-        horizontal={true}
-        style={styles.containerStyles.comparisonScreenContainer}
-      >
-        {/* For each item in spec, show a column */}
-        {Specs.map((item, index1) => (
-          <View
-            key={item + index1}
-            style={[styles.containerStyles.comparisonColumns]}
+              navigate("/home");
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.button,
+              pressed && styles.inputStyles.buttonClicked,
+            ]}
           >
-            {/* If it's not the first column (the category labels), then show a remove button */}
-            {index1 != 0 && (
-              <Pressable
-                style={({ pressed }) => [
-                  styles.inputStyles.removeButton,
-                  pressed && styles.inputStyles.removeButtonClicked,
-                ]}
-                onPress={async () => {
-                  amplitude.track("Remove", {
-                    Removed: Specs[index1],
-                    Category: type,
-                  });
-                  {
-                    /* Remove item */
-                  }
-                  newSpecsArray = Specs.filter(
-                    (subArray) => Specs[index1] !== subArray
-                  );
-                  await setSpecs(newSpecsArray);
+            <p>{"< Go Back"}</p>
+          </Pressable>
 
-                  newComparisonProcessArray = saveComparisonProcesses.filter(
-                    // not 0 indexed so have to subtract 1
-                    (subArray) =>
-                      saveComparisonProcesses[index1 - 1] !== subArray
-                  );
-                  setSaveComparisonProcesses(newComparisonProcessArray);
+          {/* Add a new product */}
+          <Pressable
+            onPress={async () => {
+              amplitude.track("Add Item");
+              {
+                /* Show product selection modal */
+              }
+              setProductModalVisible(true);
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.button,
+              pressed && styles.inputStyles.buttonClicked,
+            ]}
+          >
+            <p>Add</p>
+          </Pressable>
 
-                  {
-                    /* Specs won't be updated yet even though we used setSpecs, so the length is still 2 */
-                  }
-                  {
-                    /* If the length is 2 then 1 is removed, then there is 1 item left, which is the category labels */
-                  }
-                  {
-                    /* Category labels default height is 39 */
-                  }
-                  if (Specs.length == 2) {
-                    for (let i = 0; i < SetHeight.length; i++) {
-                      SetHeight[i](39);
-                    }
-                  } else {
-                    {
-                      /* Calculate new height if 1 or more specs are left */
-                    }
-                    for (let i = 1; i < Specs.length; i++) {
-                      /* We loop through each column*/
-                      for (let j = 0; j < Specs[i].length; j++) {
-                        /* We loop through row in each column */
-                        let counter = 0;
-                        let position = 0;
-                        while (true) {
-                          {
-                            /* Height is determined by (number of '\n' - 1) * 17 + 39 */
-                            /* We count the number of \n in each column */
-                          }
-                          position = Specs[i][j].indexOf("\n", position);
-                          if (position == -1) {
-                            break;
-                          }
-                          counter++;
-                          position += 1;
-                        }
-                        {
-                          /* Since an item was removed, the height can only be the same or smaller */
-                          /* We check if old height is greater then new height, then change it, or else leave it  */
-                        }
-                        for (let k = 0; k < Height.length; k++) {
-                          const newHeight = (counter - 1) * 17 + 39;
-                          if (Height[k] > newHeight) {
-                            SetHeight[k](newHeight);
-                          }
-                        }
-                      }
-                    }
-                  }
-                }}
-              >
-                <p>Remove</p>
-              </Pressable>
-            )}
+          {/* Save comparison */}
+          <Pressable
+            onPress={async () => {
+              amplitude.track("Save Comparison", {
+                Category: type,
+              });
 
+              if (auth.currentUser != null) {
+                setAwaitingSavingComparison(true);
+                setSavingComparison(true);
+                const result = await CallSaveComparisonCloudFunction();
+                if (result == 200) {
+                  setSuccessfullySavedComparison(true);
+                }
+                setAwaitingSavingComparison(false);
+              } else {
+                setAccountModalVisible(true);
+              }
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.button,
+              pressed && styles.inputStyles.buttonClicked,
+            ]}
+          >
+            <p>Save Comparison</p>
+          </Pressable>
+
+          {/* Reset specs to just the categories and processes to empty array */}
+          <Pressable
+            onPress={async () => {
+              amplitude.track("Reset", {
+                Category: type,
+              });
+
+              setSpecs(Categories);
+              setSaveComparisonProcesses([]);
+
+              for (let i = 0; i < SetHeight.length; i++) {
+                SetHeight[i](39);
+              }
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.resetButton,
+              pressed && styles.inputStyles.resetButtonClicked,
+            ]}
+          >
+            <p>Reset</p>
+          </Pressable>
+        </View>
+
+        {/* Table */}
+        <ScrollView
+          horizontal={true}
+          style={styles.containerStyles.comparisonScreenContainer}
+        >
+          {/* For each item in spec, show a column */}
+          {Specs.map((item, index1) => (
             <View
-              style={index1 == 0 ? { marginTop: 100 } : { marginTop: 26.5 }}
+              key={item + index1}
+              style={[styles.containerStyles.comparisonColumns]}
             >
-              {item.map((spec, index2) => (
-                /* We loop through each row in each column */
-                <Text
-                  key={spec + index2}
-                  /* the category labels have a special blue background so they have a different style, specCategoryText */
-                  style={[
-                    { height: Height[index2] },
-                    index1 == 0
-                      ? styles.textStyles.specCategoryText
-                      : styles.textStyles.comparisonText,
+              {/* If it's not the first column (the category labels), then show a remove button */}
+              {index1 != 0 && (
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.inputStyles.removeButton,
+                    pressed && styles.inputStyles.removeButtonClicked,
                   ]}
-                  onLayout={async () => {
-                    let counter = 0;
-                    let position = 0;
-
-                    while (true) {
-                      {
-                        /* Height is determined by (number of '\n' - 1) * 17 + 39 */
-                        /* We count the number of \n in each column */
-                      }
-                      position = spec.indexOf("\n", position);
-                      if (position == -1) {
-                        break;
-                      }
-                      counter++;
-                      position += 1;
+                  onPress={async () => {
+                    amplitude.track("Remove", {
+                      Removed: Specs[index1],
+                      Category: type,
+                    });
+                    {
+                      /* Remove item */
                     }
+                    newSpecsArray = Specs.filter(
+                      (subArray) => Specs[index1] !== subArray
+                    );
+                    await setSpecs(newSpecsArray);
+
+                    newComparisonProcessArray = saveComparisonProcesses.filter(
+                      // not 0 indexed so have to subtract 1
+                      (subArray) =>
+                        saveComparisonProcesses[index1 - 1] !== subArray
+                    );
+                    setSaveComparisonProcesses(newComparisonProcessArray);
 
                     {
-                      /* Since an item was added, the height can only be the same or larger */
-                      /* We check if old height is less then new height, then change it, or else leave it  */
+                      /* Specs won't be updated yet even though we used setSpecs, so the length is still 2 */
                     }
-                    const newHeight = (counter - 1) * 17 + 39;
-                    if (Height[index2] < newHeight) {
-                      SetHeight[index2](newHeight);
+                    {
+                      /* If the length is 2 then 1 is removed, then there is 1 item left, which is the category labels */
+                    }
+                    {
+                      /* Category labels default height is 39 */
+                    }
+                    if (Specs.length == 2) {
+                      for (let i = 0; i < SetHeight.length; i++) {
+                        SetHeight[i](39);
+                      }
+                    } else {
+                      {
+                        /* Calculate new height if 1 or more specs are left */
+                      }
+                      for (let i = 1; i < Specs.length; i++) {
+                        /* We loop through each column*/
+                        for (let j = 0; j < Specs[i].length; j++) {
+                          /* We loop through row in each column */
+                          let counter = 0;
+                          let position = 0;
+                          while (true) {
+                            {
+                              /* Height is determined by (number of '\n' - 1) * 17 + 39 */
+                              /* We count the number of \n in each column */
+                            }
+                            position = Specs[i][j].indexOf("\n", position);
+                            if (position == -1) {
+                              break;
+                            }
+                            counter++;
+                            position += 1;
+                          }
+                          {
+                            /* Since an item was removed, the height can only be the same or smaller */
+                            /* We check if old height is greater then new height, then change it, or else leave it  */
+                          }
+                          for (let k = 0; k < Height.length; k++) {
+                            const newHeight = (counter - 1) * 17 + 39;
+                            if (Height[k] > newHeight) {
+                              SetHeight[k](newHeight);
+                            }
+                          }
+                        }
+                      }
                     }
                   }}
                 >
-                  {spec}
-                </Text>
-              ))}
+                  <p>Remove</p>
+                </Pressable>
+              )}
+
+              <View
+                style={index1 == 0 ? { marginTop: 100 } : { marginTop: 26.5 }}
+              >
+                {item.map((spec, index2) => (
+                  /* We loop through each row in each column */
+                  <Text
+                    key={spec + index2}
+                    /* the category labels have a special blue background so they have a different style, specCategoryText */
+                    style={[
+                      { height: Height[index2] },
+                      index1 == 0
+                        ? styles.textStyles.specCategoryText
+                        : styles.textStyles.comparisonText,
+                    ]}
+                    onLayout={async () => {
+                      let counter = 0;
+                      let position = 0;
+
+                      while (true) {
+                        {
+                          /* Height is determined by (number of '\n' - 1) * 17 + 39 */
+                          /* We count the number of \n in each column */
+                        }
+                        position = spec.indexOf("\n", position);
+                        if (position == -1) {
+                          break;
+                        }
+                        counter++;
+                        position += 1;
+                      }
+
+                      {
+                        /* Since an item was added, the height can only be the same or larger */
+                        /* We check if old height is less then new height, then change it, or else leave it  */
+                      }
+                      const newHeight = (counter - 1) * 17 + 39;
+                      if (Height[index2] < newHeight) {
+                        SetHeight[index2](newHeight);
+                      }
+                    }}
+                  >
+                    {spec}
+                  </Text>
+                ))}
+              </View>
             </View>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+      </View>
+
+      <Footer amplitude={amplitude} isMobile={isMobile} />
 
       {/* Shows up if user needs to be logged in to complete action */}
       <Modal

@@ -1,5 +1,6 @@
 import { SGStyles } from "../../../styles/styles";
 import { Navbar } from "../../Navbar";
+import { Footer } from "../../Footer";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +39,7 @@ const categories = [
   "CPUs",
 ];
 
-export default function WebUserAccount({ amplitude }) {
+export default function WebUserAccount({ amplitude, isMobile }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -313,9 +314,8 @@ export default function WebUserAccount({ amplitude }) {
   });
 
   return (
-    /* if logged in display email and sign out button, 
-      if logged out display send user to /login */
-    <View style={styles.containerStyles.webContainer}>
+    /* if logged in display user settings */
+    <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* navbar */}
       <Navbar page="account" />
 
@@ -577,6 +577,8 @@ export default function WebUserAccount({ amplitude }) {
         </ScrollView>
       </View>
 
+      <Footer amplitude={amplitude} isMobile={isMobile} />
+
       {/* Show status of deleted comparison */}
       <Modal
         visible={deletingSavedComparison}
@@ -627,6 +629,6 @@ export default function WebUserAccount({ amplitude }) {
           )}
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }

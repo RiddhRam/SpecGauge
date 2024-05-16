@@ -28,6 +28,7 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
+import { useWindowDimensions } from "react-native";
 
 amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
@@ -978,12 +979,22 @@ export default function WebApp() {
   const [CPUsSpecs, setCPUsSpecs] = useState(CPUsCategories);
   const [carsSpecs, setCarsSpecs] = useState(carsCategories);
 
+  const window = useWindowDimensions();
+
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     // listen for changes (sign in, sign out)
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       // update userVal upon any change
       setUserVal(user);
     });
+
+    if (window.width <= 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
 
     return () => {
       unsubscribe();
@@ -1000,7 +1011,7 @@ export default function WebApp() {
           index
           path="/home"
           element={
-            <WebHome functions={functions} amplitude={amplitude}></WebHome>
+            <WebHome amplitude={amplitude} isMobile={isMobile}></WebHome>
           }
         ></Route>
         {/* the automobiles comparison page */}
@@ -1021,6 +1032,7 @@ export default function WebApp() {
               Height={carsHeight}
               SetHeight={carsSetHeight}
               amplitude={amplitude}
+              isMobile={isMobile}
             ></Compare>
           }
         ></Route>
@@ -1042,6 +1054,7 @@ export default function WebApp() {
               Height={consolesHeight}
               SetHeight={consolesSetHeight}
               amplitude={amplitude}
+              isMobile={isMobile}
             ></Compare>
           }
         ></Route>
@@ -1063,6 +1076,7 @@ export default function WebApp() {
               Height={dronesHeight}
               SetHeight={dronesSetHeight}
               amplitude={amplitude}
+              isMobile={isMobile}
             ></Compare>
           }
         ></Route>
@@ -1084,6 +1098,7 @@ export default function WebApp() {
               Height={graphicsCardsHeight}
               SetHeight={graphicsCardsSetHeight}
               amplitude={amplitude}
+              isMobile={isMobile}
             ></Compare>
           }
         ></Route>
@@ -1105,18 +1120,32 @@ export default function WebApp() {
               Height={CPUsHeight}
               SetHeight={CPUsSetHeight}
               amplitude={amplitude}
+              isMobile={isMobile}
             ></Compare>
           }
         ></Route>
         {/* the login/signup page */}
-        <Route path="login" element={<WebLogIn></WebLogIn>}></Route>
+        <Route
+          path="login"
+          element={
+            <WebLogIn amplitude={amplitude} isMobile={isMobile}></WebLogIn>
+          }
+        ></Route>
         {/* User's account page */}
         <Route
           path="account"
-          element={<WebUserAccount amplitude={amplitude}></WebUserAccount>}
+          element={
+            <WebUserAccount
+              amplitude={amplitude}
+              isMobile={isMobile}
+            ></WebUserAccount>
+          }
         ></Route>
         {/* any other page, error 404 */}
-        <Route path="*" element={<NoPage></NoPage>}></Route>
+        <Route
+          path="*"
+          element={<NoPage amplitude={amplitude} isMobile={isMobile}></NoPage>}
+        ></Route>
       </Routes>
     </BrowserRouter>
   );

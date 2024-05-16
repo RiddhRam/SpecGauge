@@ -10,6 +10,7 @@ export const SGStyles = () => {
   const containerStyles = StyleSheet.create({
     // For the whole web screen
     webContainer: {
+      height: "123%",
       width: "100%",
     },
     // For the web navbar
@@ -37,21 +38,17 @@ export const SGStyles = () => {
       justifyContent: "center",
     },
     comparisonScreenContainer: {
-      flex: 1,
+      flexGrow: 1,
       backgroundColor: theme === "dark" ? "#171827" : "#fff",
       padding: 20,
-    },
-    comparisonColumns: {
-      flexDirection: "column",
     },
     comingSoonContainer: {
       backgroundColor: theme === "dark" ? "#030612" : "#fff",
       borderColor: "#000",
       borderWidth: 2,
       borderRadius: 8,
-      padding: 15,
-      flex: 1,
-      marginHorizontal: 10,
+      padding: 20,
+      margin: 20,
     },
     userAccountDetailsSection: {
       paddingVertical: 10,

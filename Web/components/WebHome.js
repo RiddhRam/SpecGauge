@@ -1,18 +1,12 @@
 import { Navbar } from "../Navbar";
 import { SGStyles } from "../../styles/styles";
 
-import {
-  Modal,
-  Pressable,
-  View,
-  Text,
-  ScrollView,
-  Image,
-  Linking,
-} from "react-native-web";
+import { Modal, Pressable, View, Text, ScrollView } from "react-native-web";
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { Footer } from "../Footer";
+import { Platform } from "react-native";
 
 const categories = [
   "Automobiles",
@@ -30,7 +24,7 @@ const links = [
   "/cpus",
 ];
 
-export default function WebHome({ amplitude }) {
+export default function WebHome({ amplitude, isMobile }) {
   {
     /* This is for the modal that determines the comparison type */
   }
@@ -49,14 +43,12 @@ export default function WebHome({ amplitude }) {
   const styles = SGStyles();
 
   return (
-    <View style={styles.containerStyles.webContainer}>
+    <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* navbar */}
       <Navbar page={"home"} />
 
-      {/* main body */}
-
       {/* Main view */}
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={{ flexGrow: 1 }}>
         {/* Selection comparison type, default screen */}
         <View style={styles.containerStyles.largeContainer}>
           <View style={{ alignItems: "center" }}>
@@ -64,7 +56,7 @@ export default function WebHome({ amplitude }) {
             <Text
               style={[
                 styles.textStyles.simpleText,
-                { fontSize: 30, marginBottom: 60 },
+                { fontSize: isMobile ? 20 : 30, marginBottom: 60 },
               ]}
             >
               Your comparison tool for vehicles and electronics.
@@ -72,33 +64,12 @@ export default function WebHome({ amplitude }) {
             {/* Updates */}
             <View
               style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                marginBottom: 30,
+                flexDirection: isMobile ? "column" : "row",
                 padding: 50,
                 width: "100%",
                 justifyContent: "space-around",
               }}
             >
-              {/* Coming soon */}
-              <View style={[styles.containerStyles.comingSoonContainer]}>
-                <Text
-                  style={[
-                    {
-                      fontSize: 25,
-                    },
-                    styles.textStyles.simpleText,
-                  ]}
-                >
-                  Coming Soon
-                </Text>
-                <Text style={styles.textStyles.plainText}>• Pros and Cons</Text>
-                <Text style={styles.textStyles.plainText}>
-                  • Phones and Tablets
-                </Text>
-                <Text style={styles.textStyles.plainText}></Text>
-              </View>
-
               {/* Recently added */}
               <View style={[styles.containerStyles.comingSoonContainer]}>
                 <Text
@@ -117,6 +88,25 @@ export default function WebHome({ amplitude }) {
                   • Saved Comparisons
                 </Text>
               </View>
+
+              {/* Coming soon */}
+              <View style={[styles.containerStyles.comingSoonContainer]}>
+                <Text
+                  style={[
+                    {
+                      fontSize: 25,
+                    },
+                    styles.textStyles.simpleText,
+                  ]}
+                >
+                  Coming Soon
+                </Text>
+                <Text style={styles.textStyles.plainText}>• Pros and Cons</Text>
+                <Text style={styles.textStyles.plainText}>
+                  • Phones and Tablets
+                </Text>
+                <Text style={styles.textStyles.plainText}></Text>
+              </View>
             </View>
             {/* Compare button */}
             <Pressable
@@ -132,66 +122,11 @@ export default function WebHome({ amplitude }) {
             </Pressable>
           </View>
         </View>
-      </ScrollView>
+      </View>
 
       {/* Footer */}
-      <View
-        style={[
-          { marginTop: 20, alignItems: "center", paddingVertical: 10 },
-          styles.containerStyles.reverseBackground,
-        ]}
-      >
-        <Text style={[{ fontSize: 20 }, styles.textStyles.reversePlainText]}>
-          Social Media
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          {/* Instagram */}
-          <Pressable
-            onPress={() => {
-              Linking.openURL("https://www.instagram.com/specgauge").catch(
-                (err) => console.error("Couldn't load page", err)
-              );
-            }}
-          >
-            <Image
-              source={require("../../assets/instagram icon.png")}
-              style={{ width: 35, height: 35 }}
-            ></Image>
-          </Pressable>
-          {/* TikTok */}
-          <Pressable
-            onPress={() => {
-              Linking.openURL(
-                "https://www.tiktok.com/@specgauge_official"
-              ).catch((err) => console.error("Couldn't load page", err));
-            }}
-          >
-            <Image
-              source={require("../../assets/tiktok icon.png")}
-              style={{ width: 35, height: 35 }}
-            ></Image>
-          </Pressable>
-          {/* X */}
-          <Pressable
-            onPress={() => {
-              Linking.openURL("https://twitter.com/SpecGauge").catch((err) =>
-                console.error("Couldn't load page", err)
-              );
-            }}
-          >
-            <Image
-              source={require("../../assets/x icon.png")}
-              style={{ width: 35, height: 35 }}
-            ></Image>
-          </Pressable>
-        </View>
-        <Text style={[{ fontSize: 20 }, styles.textStyles.reversePlainText]}>
-          Contact Us
-        </Text>
-        <Text style={styles.textStyles.reversePlainText}>
-          Email: specgauge@gmail.com
-        </Text>
-      </View>
+      <Footer amplitude={amplitude} isMobile={isMobile} />
+
       {/* Category selection modal */}
       <Modal
         visible={compareModalVisible}
@@ -210,7 +145,10 @@ export default function WebHome({ amplitude }) {
                 ]}
                 key={item}
                 onPress={() => {
-                  amplitude.track("Screen", { Screen: item });
+                  amplitude.track("Screen", {
+                    Screen: item,
+                    Platform: isMobile ? "Mobile" : "Computer",
+                  });
                   {
                     /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
                   }
@@ -238,6 +176,6 @@ export default function WebHome({ amplitude }) {
           </Pressable>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }
