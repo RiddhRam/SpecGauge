@@ -19,7 +19,6 @@ export default function SelectionModal({
   queryProcess,
   process,
   setSpecs,
-  matchingArray,
   defaultArray,
   categories,
   setSaveComparisonProcesses,
@@ -134,21 +133,25 @@ export default function SelectionModal({
 
                     // Iterate through all specs in the only item in the array
                     for (key in tempArray[0]) {
-                      for (let i = 0; i < matchingArray.length; i++) {
-                        // Compare the items in the specs to matchingArray
-                        if (key == matchingArray[i]) {
+                      for (let i = 0; i < defaultArray.length; i++) {
+                        // Compare the items in the specs to the Matching key of the DefaultArray items
+                        if (key == defaultArray[i].Matching) {
                           // When a match if ound save the value are record it in tempDefault
                           value = tempArray[0][key];
                           if (
                             value != "True" &&
                             value != "False" &&
                             value != "--" &&
-                            value != "----" // have to add this since some values accidentally got saved as "----"
+                            value != "----" &&
+                            value.length != 0 // have to add this since some values accidentally got saved as "----"
                           ) {
                             // This keeps the spec label but adds the value
                             tempDefaultArray[i].Value = tempDefaultArray[
                               i
                             ].Value.replace("--", value);
+                            tempDefaultArray[i].Value = tempDefaultArray[
+                              i
+                            ].Value.replace(/;/g, " ");
                             tempDefaultArray[i].Display = true;
                           } else if (value == "True" || value == "Yes") {
                             // Boolean values become true
@@ -221,6 +224,7 @@ export default function SelectionModal({
             setProductModalVisible(false);
             setSelectionOptions(brands);
             setRequestedSpecs([]);
+            setComparisonProcess([]);
             setStep(0);
           }}
           style={({ pressed }) => [

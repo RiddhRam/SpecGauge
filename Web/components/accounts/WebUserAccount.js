@@ -317,7 +317,7 @@ export default function WebUserAccount({ amplitude, isMobile }) {
     /* if logged in display user settings */
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* navbar */}
-      <Navbar page="account" />
+      <Navbar style={{ height: "25%" }} page={"account"} />
 
       {/* main body */}
       <View style={styles.containerStyles.largeContainer}>
@@ -523,6 +523,7 @@ export default function WebUserAccount({ amplitude, isMobile }) {
                                         );
                                       }
                                       setLoading(false);
+
                                       navigate(links[categoryIndex], {
                                         state: {
                                           prerequestedSpecs: prerequestedSpecs,

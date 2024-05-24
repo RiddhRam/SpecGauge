@@ -41,6 +41,7 @@ export const SGStyles = () => {
       flexGrow: 1,
       backgroundColor: theme === "dark" ? "#171827" : "#fff",
       padding: 20,
+      marginBottom: 50,
     },
     comingSoonContainer: {
       backgroundColor: theme === "dark" ? "#030612" : "#fff",

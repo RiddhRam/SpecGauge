@@ -45,10 +45,10 @@ export default function WebHome({ amplitude, isMobile }) {
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* navbar */}
-      <Navbar page={"home"} />
+      <Navbar style={{ height: "25%" }} page={"home"} />
 
       {/* Main view */}
-      <View style={{ flexGrow: 1 }}>
+      <View style={{ flexGrow: 1, height: "75%" }}>
         {/* Selection comparison type, default screen */}
         <View style={styles.containerStyles.largeContainer}>
           <View style={{ alignItems: "center" }}>
@@ -56,16 +56,32 @@ export default function WebHome({ amplitude, isMobile }) {
             <Text
               style={[
                 styles.textStyles.simpleText,
-                { fontSize: isMobile ? 20 : 30, marginBottom: 60 },
+                { fontSize: isMobile ? 20 : 30, marginBottom: 10 },
+                { marginTop: 30 },
               ]}
             >
               Your comparison tool for vehicles and electronics.
             </Text>
+
+            {/* Compare button */}
+            <Pressable
+              onPress={() => {
+                setCompareModalVisible(true);
+              }}
+              style={({ pressed }) => [
+                styles.inputStyles.button,
+                pressed && styles.inputStyles.buttonClicked,
+                { marginBottom: 15, marginTop: 25 },
+              ]}
+            >
+              <p>Start Comparing</p>
+            </Pressable>
+
             {/* Updates */}
             <View
               style={{
                 flexDirection: isMobile ? "column" : "row",
-                padding: 50,
+                padding: 10,
                 width: "100%",
                 justifyContent: "space-around",
               }}
@@ -108,18 +124,6 @@ export default function WebHome({ amplitude, isMobile }) {
                 <Text style={styles.textStyles.plainText}></Text>
               </View>
             </View>
-            {/* Compare button */}
-            <Pressable
-              onPress={() => {
-                setCompareModalVisible(true);
-              }}
-              style={({ pressed }) => [
-                styles.inputStyles.button,
-                pressed && styles.inputStyles.buttonClicked,
-              ]}
-            >
-              <p>Compare</p>
-            </Pressable>
           </View>
         </View>
       </View>

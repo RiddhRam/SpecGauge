@@ -22,7 +22,6 @@ export default function Compare({
   Process,
   QueryProcess,
   QueryFunction,
-  MatchingArray,
   DefaultArray,
   Categories,
   Specs,
@@ -77,9 +76,9 @@ export default function Compare({
 
         // Iterate through each key in a particular product
         for (key in prerequestedSpecs[specsIndex]) {
-          for (let i = 0; i < MatchingArray.length; i++) {
-            // Compare the items in the specs to matchingArray
-            if (key == MatchingArray[i]) {
+          for (let i = 0; i < DefaultArray.length; i++) {
+            // Compare the items in the specs to the Matching key of the DefaultArray items
+            if (key == DefaultArray[i].Matching) {
               // When a match if ound save the value are record it in tempDefault
               value = prerequestedSpecs[specsIndex][key];
               if (
@@ -505,7 +504,6 @@ export default function Compare({
         queryProcess={QueryProcess}
         process={Process}
         setSpecs={setSpecs}
-        matchingArray={MatchingArray}
         defaultArray={DefaultArray}
         categories={Categories}
         setSaveComparisonProcesses={setSaveComparisonProcesses}
