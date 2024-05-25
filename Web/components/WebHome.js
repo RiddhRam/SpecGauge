@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { Footer } from "../Footer";
-import { Platform } from "react-native";
 
 const categories = [
   "Automobiles",

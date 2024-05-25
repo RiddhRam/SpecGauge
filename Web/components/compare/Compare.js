@@ -39,6 +39,8 @@ export default function Compare({
   const [awaitingSavingComparison, setAwaitingSavingComparison] =
     useState(false);
   const [saveComparisonProcesses, setSaveComparisonProcesses] = useState([]);
+  const [pros, setPros] = useState([]);
+  const [displayPros, setDisplayPros] = useState([]);
   const styles = SGStyles();
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -136,6 +138,78 @@ export default function Compare({
     } catch {}
   }, [state]);
 
+  useEffect(() => {
+    // If at least 2 products
+    if (pros.length >= 2) {
+      // This array keeps track of the pros for each product
+      productPros = [];
+      for (item in pros) {
+        productPros.push([]);
+      }
+
+      // Iterate through each Important spec
+      for (item in pros[0]) {
+        // If spec is a boolean type
+        if (pros[0][item].Type == "B") {
+          // Keeps track of first occurence of true value, and counts occurences
+          let tracker = { firstIndex: null, count: 0 };
+          // Iterate through all products and check this spec to find all true values
+          for (item1 in pros) {
+            if (pros[item1][item].Value == "True") {
+              // Track first occurence
+              if (tracker.count == 0) {
+                tracker.firstIndex = item1;
+              }
+              tracker.count++;
+            }
+          }
+          // If only 1 occurence
+          if (tracker.count == 1) {
+            // Iterate through DefaultArray to find the Value, since for some reason, Value got changed to "True" and "False" in the pros array
+            for (item1 in DefaultArray) {
+              if (pros[0][item].Matching == DefaultArray[item1].Matching) {
+                // Add value to that products pros
+                productPros[tracker.firstIndex] +=
+                  DefaultArray[item1].Value + "\n";
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      for (item in productPros) {
+        if (productPros[item].length == 0) {
+          productPros[item] = "--";
+        }
+      }
+      setDisplayPros(productPros);
+    } else {
+      setDisplayPros(["Add at least 2 items to view the pros"]);
+    }
+  }, [pros]);
+
+  useEffect(() => {
+    newSpecsArray = [];
+    // Deep copy Specs into newSpecsArray
+    for (item in Specs) {
+      newSpecsArray.push(Specs[item]);
+    }
+    prosIndex = 0;
+
+    for (item in newSpecsArray[0]) {
+      if (newSpecsArray[0][item] == "Pros") {
+        prosIndex = item;
+        break;
+      }
+    }
+    for (let i = 1; i < newSpecsArray.length; i++) {
+      newSpecsArray[i][prosIndex] = displayPros[i - 1];
+    }
+    console.log(newSpecsArray);
+    setSpecs(newSpecsArray);
+  }, [displayPros]);
+
   const CallSaveComparisonCloudFunction = async () => {
     // The processes that get saved
     arrayToSave = [];
@@ -206,6 +280,15 @@ export default function Compare({
                 /* Set page to home */
               }
               navigate("/home");
+
+              setSpecs(Categories);
+              setSaveComparisonProcesses([]);
+              setPros([]);
+              setDisplayPros([]);
+
+              for (item in SetHeight) {
+                SetHeight[item](39);
+              }
             }}
             style={({ pressed }) => [
               styles.inputStyles.button,
@@ -268,6 +351,7 @@ export default function Compare({
 
               setSpecs(Categories);
               setSaveComparisonProcesses([]);
+              setPros([]);
 
               for (let i = 0; i < SetHeight.length; i++) {
                 SetHeight[i](39);
@@ -312,6 +396,12 @@ export default function Compare({
                       (subArray) => Specs[index1] !== subArray
                     );
                     await setSpecs(newSpecsArray);
+
+                    // index1 isn't zero indexed
+                    newPros = pros.filter(
+                      (subArray) => pros[index1 - 1] !== subArray
+                    );
+                    setPros(newPros);
 
                     newComparisonProcessArray = saveComparisonProcesses.filter(
                       // not 0 indexed so have to subtract 1
@@ -361,8 +451,12 @@ export default function Compare({
                           }
                           for (let k = 0; k < Height.length; k++) {
                             const newHeight = (counter - 1) * 17 + 39;
-                            if (Height[k] > newHeight) {
-                              SetHeight[k](newHeight);
+                            if (newHeight >= 39) {
+                              if (Height[k] > newHeight && newHeight >= 39) {
+                                SetHeight[k](newHeight);
+                              }
+                            } else {
+                              SetHeight[k](39);
                             }
                           }
                         }
@@ -507,6 +601,7 @@ export default function Compare({
         defaultArray={DefaultArray}
         categories={Categories}
         setSaveComparisonProcesses={setSaveComparisonProcesses}
+        setPros={setPros}
         amplitude={amplitude}
       ></SelectionModal>
     </ScrollView>

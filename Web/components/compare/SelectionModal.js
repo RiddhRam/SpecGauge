@@ -22,6 +22,7 @@ export default function SelectionModal({
   defaultArray,
   categories,
   setSaveComparisonProcesses,
+  setPros,
   amplitude,
 }) {
   const [step, setStep] = useState(0);
@@ -121,22 +122,36 @@ export default function SelectionModal({
                     setComparisonProcess([]);
 
                     let tempDefaultArray = [];
+                    let tempProsArray = [];
 
                     // Deep Copy defaultArray into tempDefaultArray then we will use tempDefaultArray from here on
                     for (let i = 0; i < defaultArray.length; i++) {
+                      const defaultArrayItem = defaultArray[i];
                       newJSON = {};
-                      newJSON["Value"] = defaultArray[i].Value;
-                      newJSON["Display"] = defaultArray[i].Display;
-                      newJSON["Category"] = defaultArray[i].Category;
+                      newJSON["Value"] = defaultArrayItem.Value;
+                      newJSON["Display"] = defaultArrayItem.Display;
+                      newJSON["Category"] = defaultArrayItem.Category;
                       tempDefaultArray.push(newJSON);
+
+                      if (defaultArrayItem.Important) {
+                        newJSON2 = {};
+                        newJSON2["Value"] = defaultArrayItem.Value;
+                        newJSON2["Display"] = defaultArrayItem.Display;
+                        newJSON2["Category"] = defaultArrayItem.Category;
+                        newJSON2["Matching"] = defaultArrayItem.Matching;
+                        newJSON2["Type"] = defaultArrayItem.Type;
+                        newJSON2["HigherNumber"] =
+                          defaultArrayItem.HigherNumber;
+
+                        tempProsArray.push(newJSON2);
+                      }
                     }
 
-                    // Iterate through all specs in the only item in the array
                     for (key in tempArray[0]) {
                       for (let i = 0; i < defaultArray.length; i++) {
                         // Compare the items in the specs to the Matching key of the DefaultArray items
                         if (key == defaultArray[i].Matching) {
-                          // When a match if ound save the value are record it in tempDefault
+                          // When a match is found save the value are record it in tempDefault
                           value = tempArray[0][key];
                           if (
                             value != "True" &&
@@ -158,10 +173,21 @@ export default function SelectionModal({
                             tempDefaultArray[i].Display = true;
                           }
 
+                          // If not based on user preference, we will deal with user preferences later
+                          if (!defaultArray[i].Preference) {
+                            for (let j = 0; j != tempProsArray.length; j++) {
+                              if (tempProsArray[j].Matching == key) {
+                                tempProsArray[j].Value = value;
+                              }
+                            }
+                          }
+
                           break;
                         }
                       }
                     }
+
+                    await setPros((prevPros) => [...prevPros, tempProsArray]);
 
                     // This is the array that gets added to the specs array
                     tempSpecsArray = [];
