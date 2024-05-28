@@ -203,7 +203,7 @@ export default function Compare({
           }
         }
         // If spec is a number type
-        /*else if (pros[0][item].Type == "N") {
+        else if (pros[0][item].Type == "N") {
           // Keeps track of each number for this spec
           let tracker = {
             HigherNumber: pros[0][item].HigherNumber,
@@ -276,13 +276,15 @@ export default function Compare({
             pro = pros[bestIndex][item];
             for (item1 in Categories[0]) {
               if (pro.Category == Categories[0][item1]) {
-                prosCategories[item1].values += `${pro.Value} \n`;
+                productPros[bestIndex][item1] += `${pro.Value} \n`;
                 break;
               }
             }
           }
-        }*/
+        }
       }
+
+      console.log(productPros);
 
       for (item in productPros) {
         if (productPros[item].length == 0) {
@@ -502,10 +504,7 @@ export default function Compare({
         >
           {/* For each item in spec, show a column */}
           {Specs.map((item, index1) => (
-            <View
-              key={item + index1}
-              style={[styles.containerStyles.comparisonColumns]}
-            >
+            <View key={item + index1}>
               {/* If it's not the first column (the category labels), then show a remove button */}
               {index1 != 0 && (
                 <Pressable
@@ -602,44 +601,67 @@ export default function Compare({
               >
                 {item.map((spec, index2) => (
                   /* We loop through each row in each column */
-                  <Text
-                    key={spec + index2}
-                    /* the category labels have a special blue background so they have a different style, specCategoryText */
-                    style={[
-                      { height: Height[index2] },
-                      index1 == 0
-                        ? styles.textStyles.specCategoryText
-                        : styles.textStyles.comparisonText,
-                    ]}
-                    onLayout={async () => {
-                      let counter = 0;
-                      let position = 0;
 
-                      while (true) {
-                        {
-                          /* Height is determined by (number of '\n' - 1) * 17 + 39 */
-                          /* We count the number of \n in each column */
-                        }
-                        position = spec.indexOf("\n", position);
-                        if (position == -1) {
-                          break;
-                        }
-                        counter++;
-                        position += 1;
-                      }
+                  <View key={spec + index2}>
+                    {index2 != prosIndex ? (
+                      <Text
+                        /* the category labels have a special blue background so they have a different style, specCategoryText */
+                        style={[
+                          { height: Height[index2] },
+                          index1 == 0
+                            ? styles.textStyles.specCategoryText
+                            : styles.textStyles.comparisonText,
+                        ]}
+                        onLayout={async () => {
+                          let counter = 0;
+                          let position = 0;
 
-                      {
-                        /* Since an item was added, the height can only be the same or larger */
-                        /* We check if old height is less then new height, then change it, or else leave it  */
-                      }
-                      const newHeight = (counter - 1) * 17 + 39;
-                      if (Height[index2] < newHeight) {
-                        SetHeight[index2](newHeight);
-                      }
-                    }}
-                  >
-                    {spec}
-                  </Text>
+                          while (true) {
+                            {
+                              /* Height is determined by (number of '\n' - 1) * 17 + 39 */
+                              /* We count the number of \n in each column */
+                            }
+                            position = spec.indexOf("\n", position);
+                            if (position == -1) {
+                              break;
+                            }
+                            counter++;
+                            position += 1;
+                          }
+
+                          {
+                            /* Since an item was added, the height can only be the same or larger */
+                            /* We check if old height is less then new height, then change it, or else leave it  */
+                          }
+                          const newHeight = (counter - 1) * 17 + 39;
+                          if (Height[index2] < newHeight) {
+                            SetHeight[index2](newHeight);
+                          }
+                        }}
+                      >
+                        {spec}
+                      </Text>
+                    ) : (
+                      <ScrollView>
+                        <Text
+                          /* the category labels have a special blue background so they have a different style, specCategoryText */
+                          style={[
+                            { height: Height[index2] },
+                            index1 != 0
+                              ? styles.textStyles.comparisonText
+                              : index2 == prosIndex
+                              ? styles.textStyles.proText
+                              : styles.textStyles.specCategoryText,
+                          ]}
+                          onLayout={async () => {
+                            SetHeight[prosIndex](78);
+                          }}
+                        >
+                          {spec}
+                        </Text>
+                      </ScrollView>
+                    )}
+                  </View>
                 ))}
               </View>
             </View>

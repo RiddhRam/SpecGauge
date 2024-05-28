@@ -108,6 +108,7 @@ export const SGStyles = () => {
       textAlign: "center",
       padding: 10,
       borderWidth: 1,
+      borderColor: theme === "dark" ? "#121320" : "#eee",
     },
     specCategoryText: {
       backgroundColor: "#4ca0d7",
@@ -115,6 +116,15 @@ export const SGStyles = () => {
       textAlign: "center",
       padding: 10,
       borderWidth: 1,
+      borderColor: theme === "dark" ? "#121320" : "#fff",
+    },
+    proText: {
+      backgroundColor: "#24b54b",
+      color: theme === "dark" ? "#fff" : "#000",
+      textAlign: "center",
+      padding: 10,
+      borderWidth: 1,
+      borderColor: theme === "dark" ? "#121320" : "#fff",
     },
     userAccountDetails: {
       color: "#3b85ae",
