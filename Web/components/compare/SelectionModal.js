@@ -156,6 +156,8 @@ export default function SelectionModal({
                           if (
                             value != "True" &&
                             value != "False" &&
+                            value != "No" &&
+                            value != "Yes" &&
                             value != "--" &&
                             value != "----" &&
                             value.length != 0 // have to add this since some values accidentally got saved as "----"
@@ -173,6 +175,7 @@ export default function SelectionModal({
                             tempDefaultArray[i].Display = true;
                           }
 
+                          // Record Pros to tempProsArray
                           // If not based on user preference, we will deal with user preferences later
                           if (!defaultArray[i].Preference) {
                             for (let j = 0; j != tempProsArray.length; j++) {

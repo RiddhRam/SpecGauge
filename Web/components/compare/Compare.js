@@ -30,6 +30,7 @@ export default function Compare({
   SetHeight,
   amplitude,
   isMobile,
+  prosIndex,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
   const [accountModalVisible, setAccountModalVisible] = useState(false);
@@ -47,6 +48,18 @@ export default function Compare({
   // Used for checking if user can use logged in features like saved comparison or preferences
   const auth = getAuth();
   const functions = getFunctions();
+
+  // This returns an array that is just the base of the pros string array, It's just empty categories with \n
+  const defaultProCategories = () => {
+    prosCategoriesTemp = [];
+
+    // The pros will be organized to their respective categories
+    for (item in Categories[0]) {
+      prosCategoriesTemp.push(`${Categories[0][item]} \n`);
+    }
+
+    return prosCategoriesTemp;
+  };
 
   useEffect(() => {
     try {
@@ -86,6 +99,8 @@ export default function Compare({
               if (
                 value != "True" &&
                 value != "False" &&
+                value != "No" &&
+                value != "Yes" &&
                 value != "--" &&
                 value != "----" // have to add this since some values accidentally got saved as "----"
               ) {
@@ -144,7 +159,7 @@ export default function Compare({
       // This array keeps track of the pros for each product
       productPros = [];
       for (item in pros) {
-        productPros.push([]);
+        productPros.push(defaultProCategories());
       }
 
       // Iterate through each Important spec
@@ -155,7 +170,10 @@ export default function Compare({
           let tracker = { firstIndex: null, count: 0 };
           // Iterate through all products and check this spec to find all true values
           for (item1 in pros) {
-            if (pros[item1][item].Value == "True") {
+            if (
+              pros[item1][item].Value == "True" ||
+              pros[item1][item].Value == "Yes"
+            ) {
               // Track first occurence
               if (tracker.count == 0) {
                 tracker.firstIndex = item1;
@@ -168,14 +186,102 @@ export default function Compare({
             // Iterate through DefaultArray to find the Value, since for some reason, Value got changed to "True" and "False" in the pros array
             for (item1 in DefaultArray) {
               if (pros[0][item].Matching == DefaultArray[item1].Matching) {
+                categoryIndex = 0;
+
+                for (item2 in Categories[0]) {
+                  if (pros[0][item].Category == Categories[0][item2]) {
+                    categoryIndex = item2;
+                    break;
+                  }
+                }
                 // Add value to that products pros
-                productPros[tracker.firstIndex] +=
+                productPros[tracker.firstIndex][categoryIndex] +=
                   DefaultArray[item1].Value + "\n";
                 break;
               }
             }
           }
         }
+        // If spec is a number type
+        /*else if (pros[0][item].Type == "N") {
+          // Keeps track of each number for this spec
+          let tracker = {
+            HigherNumber: pros[0][item].HigherNumber,
+            values: [],
+          };
+          // Iterate through all products and check this spec to find values
+          for (item1 in pros) {
+            // The value
+            newNumber = pros[item1][item].Value;
+            // If a string with units after a space, split and get first item
+            try {
+              newNumber = newNumber.split(" ")[0];
+            } catch (error) {
+              console.log(error);
+            }
+            // Convert strings to numbers
+            try {
+              newNumber = Number(newNumber);
+            } catch (error) {
+              console.log(error);
+            }
+            tracker.values.push(newNumber);
+          }
+
+          // The value to save
+          bestValue = NaN;
+          // The index of the product
+          bestIndex = NaN;
+          // Iterate through all values that were saved for this spec
+          for (item1 in tracker.values) {
+            // Save for readability
+            itemValue = tracker.values[item1];
+            if (!isNaN(itemValue)) {
+              // Higher number is better
+              if (tracker.HigherNumber == true) {
+                if (isNaN(bestValue)) {
+                  // Initialize the first value
+                  bestValue = itemValue;
+                  bestIndex = 0;
+                } else if (bestValue < itemValue) {
+                  // If new value is better, make a new array and set them to bestValue and bestIndex
+                  bestValue = itemValue;
+                  bestIndex = item1;
+                } else if (bestValue == itemValue) {
+                  // If duplicate, then reset everything
+                  bestValue = NaN;
+                  bestIndex = NaN;
+                }
+              }
+              // Lower number is better
+              else if (tracker.HigherNumber == false) {
+                if (isNaN(bestValue)) {
+                  // Initialize the first value
+                  bestValue = itemValue;
+                  bestIndex = 0;
+                } else if (bestValue > itemValue) {
+                  // If new value is better, make a new array and set them to bestValue and bestIndex
+                  bestValue = itemValue;
+                  bestIndex = item1;
+                } else if (bestValue == itemValue) {
+                  // If duplicate, then reset everything
+                  bestValue = NaN;
+                  bestIndex = NaN;
+                }
+              }
+            }
+          }
+
+          if (!isNaN(bestValue)) {
+            pro = pros[bestIndex][item];
+            for (item1 in Categories[0]) {
+              if (pro.Category == Categories[0][item1]) {
+                prosCategories[item1].values += `${pro.Value} \n`;
+                break;
+              }
+            }
+          }
+        }*/
       }
 
       for (item in productPros) {
@@ -190,24 +296,47 @@ export default function Compare({
   }, [pros]);
 
   useEffect(() => {
-    newSpecsArray = [];
-    // Deep copy Specs into newSpecsArray
-    for (item in Specs) {
-      newSpecsArray.push(Specs[item]);
-    }
-    prosIndex = 0;
-
-    for (item in newSpecsArray[0]) {
-      if (newSpecsArray[0][item] == "Pros") {
-        prosIndex = item;
-        break;
+    if (displayPros.length >= 2) {
+      newSpecsArray = [];
+      // Deep copy Specs into newSpecsArray
+      for (item in Specs) {
+        newSpecsArray.push(Specs[item]);
       }
+      defaultProCategoriesValue = defaultProCategories();
+      for (let i = 0; i < newSpecsArray.length - 1; i++) {
+        newPros = "";
+
+        for (item in defaultProCategoriesValue) {
+          // Make sure the category isn't empty, or else don't add it
+          if (!(defaultProCategoriesValue[item] == displayPros[i][item])) {
+            // The pros of this category returned from the selection modal
+            originalPros = displayPros[i][item] + "\n";
+
+            // Replace the category with the uppercase version, this makes it more readable for the user
+            newPros += originalPros.replace(
+              defaultProCategoriesValue[item],
+              defaultProCategoriesValue[item].toUpperCase()
+            );
+          }
+        }
+        if (newPros.length == 0) {
+          newPros = "--";
+        }
+        newSpecsArray[i + 1][prosIndex] = newPros;
+      }
+      setSpecs(newSpecsArray);
+    } else if (Specs.length == 2) {
+      newSpecsArray = [];
+      // Deep copy Specs into newSpecsArray
+      for (item in Specs) {
+        newSpecsArray.push(Specs[item]);
+      }
+
+      newSpecsArray[1][prosIndex] = "Add at least 2 items to view the pros";
+
+      setSpecs(newSpecsArray);
+      SetHeight[prosIndex](39);
     }
-    for (let i = 1; i < newSpecsArray.length; i++) {
-      newSpecsArray[i][prosIndex] = displayPros[i - 1];
-    }
-    console.log(newSpecsArray);
-    setSpecs(newSpecsArray);
   }, [displayPros]);
 
   const CallSaveComparisonCloudFunction = async () => {

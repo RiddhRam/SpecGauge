@@ -1046,8 +1046,8 @@ const droneDefaultArray = [
     Matching: "weight",
     Mandatory: false,
     Type: "N",
-    Preference: true,
-    Important: true,
+    Preference: false,
+    Important: false,
     HigherNumber: false,
   },
   {
@@ -2216,7 +2216,7 @@ const CPUsDefaultArray = [
     Category: "Clock",
     Matching: "Multiplier Unlocked",
     Mandatory: true,
-    Type: "S",
+    Type: "B",
     Preference: false,
     Important: true,
     HigherNumber: true,
@@ -3236,6 +3236,7 @@ export default function WebApp() {
               SetHeight={carsSetHeight}
               amplitude={amplitude}
               isMobile={isMobile}
+              prosIndex={4}
             ></Compare>
           }
         ></Route>
@@ -3257,6 +3258,7 @@ export default function WebApp() {
               SetHeight={consolesSetHeight}
               amplitude={amplitude}
               isMobile={isMobile}
+              prosIndex={2}
             ></Compare>
           }
         ></Route>
@@ -3278,6 +3280,7 @@ export default function WebApp() {
               SetHeight={dronesSetHeight}
               amplitude={amplitude}
               isMobile={isMobile}
+              prosIndex={2}
             ></Compare>
           }
         ></Route>
@@ -3299,6 +3302,7 @@ export default function WebApp() {
               SetHeight={graphicsCardsSetHeight}
               amplitude={amplitude}
               isMobile={isMobile}
+              prosIndex={3}
             ></Compare>
           }
         ></Route>
@@ -3320,6 +3324,7 @@ export default function WebApp() {
               SetHeight={CPUsSetHeight}
               amplitude={amplitude}
               isMobile={isMobile}
+              prosIndex={3}
             ></Compare>
           }
         ></Route>
