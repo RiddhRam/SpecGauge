@@ -14,72 +14,67 @@ export const Navbar = ({ page }) => {
   return (
     <View style={styles.containerStyles.navbarContainer}>
       {/* The title and logo */}
-      <View
+      <Link
         style={{
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "row",
+          textDecorationLine: "none",
         }}
       >
-        <Image
-          source={require("../assets/SpecGauge Logo.svg")}
-          style={{ width: 35, height: 35 }}
-        ></Image>
-        <Text style={[styles.textStyles.text, { display: "block" }]}>
-          SpecGauge
-        </Text>
-      </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            source={require("../assets/SpecGauge Logo.svg")}
+            style={{ width: 35, height: 35 }}
+          ></Image>
+          <Text style={[styles.textStyles.text]}>SpecGauge</Text>
+        </View>
+      </Link>
       {/* The links */}
       {/* If currently on the page of one of the links, that link is highlighted */}
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        {page === "home" ? (
-          <Link to="/home" style={styles.textStyles.navbarTextSelected}>
-            Home
-          </Link>
-        ) : (
+      {page == "login" && (
+        <View style={{ justifyContent: "flex-start" }}>
           <Link to="/home" style={styles.textStyles.navbarText}>
-            Home
+            <Image
+              source={require("../assets/Home Icon.png")}
+              style={{ width: 35, height: 37 }}
+            ></Image>
           </Link>
-        )}
-        {/* 
-        {page === "search" ? (
-          <Link to="/search" style={styles.textStyles.navbarTextSelected}>
-            Search
+        </View>
+      )}
+      {page == "account" && (
+        <View style={{ justifyContent: "flex-start" }}>
+          <Link to="/home" style={styles.textStyles.navbarText}>
+            <Image
+              source={require("../assets/Home Icon.png")}
+              style={{ width: 35, height: 37 }}
+            ></Image>
           </Link>
-        ) : (
-          <Link to="/search" style={styles.textStyles.navbarText}>
-            Search
-          </Link>
-        )}
+        </View>
+      )}
 
-        {/* If logged in show "My Account" link. If logged out show "Sign Up/Log In" link. */}
-
-        {auth.currentUser ? (
-          <>
-            {page === "account" ? (
-              <Link to="/account" style={styles.textStyles.navbarTextSelected}>
-                My Account
-              </Link>
-            ) : (
-              <Link to="/account" style={styles.textStyles.navbarText}>
-                My Account
-              </Link>
-            )}
-          </>
-        ) : (
-          <>
-            {page === "login" ? (
-              <Link to="/login" style={styles.textStyles.navbarTextSelected}>
-                Sign Up/Log In
-              </Link>
-            ) : (
-              <Link to="/login" style={styles.textStyles.navbarText}>
-                Sign Up/Log In
-              </Link>
-            )}
-          </>
-        )}
-      </View>
+      {page == "home" && (
+        <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
+          {auth.currentUser ? (
+            <Link to="/account" style={styles.textStyles.navbarText}>
+              <Image
+                source={require("../assets/Profile Icon.png")}
+                style={{ width: 37, height: 37 }}
+              ></Image>
+            </Link>
+          ) : (
+            <Link to="/login" style={styles.textStyles.navbarText}>
+              <Image
+                source={require("../assets/Profile Icon.png")}
+                style={{ width: 37, height: 37 }}
+              ></Image>
+            </Link>
+          )}
+        </View>
+      )}
     </View>
   );
 };

@@ -162,6 +162,13 @@ export default function Compare({
         productPros.push(defaultProCategories());
       }
 
+      referencePros = [];
+      for (item in DefaultArray) {
+        if (DefaultArray[item].Important) {
+          referencePros.push(DefaultArray[item].Value);
+        }
+      }
+
       // Iterate through each Important spec
       for (item in pros[0]) {
         // If spec is a boolean type
@@ -216,15 +223,12 @@ export default function Compare({
             // If a string with units after a space, split and get first item
             try {
               newNumber = newNumber.split(" ")[0];
-            } catch (error) {
-              console.log(error);
-            }
+            } catch {}
             // Convert strings to numbers
             try {
               newNumber = Number(newNumber);
-            } catch (error) {
-              console.log(error);
-            }
+            } catch {}
+
             tracker.values.push(newNumber);
           }
 
@@ -275,8 +279,11 @@ export default function Compare({
           if (!isNaN(bestValue)) {
             pro = pros[bestIndex][item];
             for (item1 in Categories[0]) {
-              if (pro.Category == Categories[0][item1]) {
-                productPros[bestIndex][item1] += `${pro.Value} \n`;
+              if (pro.Category == Categories[0][item1] && pro.Value != "--") {
+                productPros[bestIndex][item1] += `${referencePros[item].replace(
+                  "--",
+                  pro.Value
+                )} \n`;
                 break;
               }
             }
@@ -284,13 +291,6 @@ export default function Compare({
         }
       }
 
-      console.log(productPros);
-
-      for (item in productPros) {
-        if (productPros[item].length == 0) {
-          productPros[item] = "--";
-        }
-      }
       setDisplayPros(productPros);
     } else {
       setDisplayPros(["Add at least 2 items to view the pros"]);

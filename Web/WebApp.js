@@ -2504,8 +2504,8 @@ const CPUsDefaultArray = [
     Mandatory: false,
     Type: "N",
     Preference: false,
-    Important: false,
-    HigherNumber: false,
+    Important: true,
+    HigherNumber: true,
   },
   {
     Value: "E-Core L1: --",
@@ -2538,7 +2538,7 @@ const CPUsDefaultArray = [
     Type: "S",
     Preference: false,
     Important: true,
-    HigherNumber: true,
+    HigherNumber: false,
   },
   {
     Value: "Motherboards: --",

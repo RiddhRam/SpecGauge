@@ -86,13 +86,6 @@ export const SGStyles = () => {
       color: "#fff",
       padding: 15,
     },
-    navbarTextSelected: {
-      textDecorationLine: "none",
-      color: "#000",
-      padding: 15,
-      backgroundColor: theme === "dark" ? "grey" : "#aaa",
-      borderRadius: 10,
-    },
     modalText: {
       color: theme === "dark" ? "#fff" : "#000",
       textAlign: "left",
