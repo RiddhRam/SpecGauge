@@ -97,11 +97,8 @@ export default function WebHome({ amplitude, isMobile }) {
                 >
                   Recently added
                 </Text>
-                <Text style={styles.textStyles.plainText}>• Accounts</Text>
-                <Text style={styles.textStyles.plainText}>• Automobiles</Text>
-                <Text style={styles.textStyles.plainText}>
-                  • Saved Comparisons
-                </Text>
+                <Text style={styles.textStyles.plainText}>• Improved UI </Text>
+                <Text style={styles.textStyles.plainText}>• Pros</Text>
               </View>
 
               {/* Coming soon */}
@@ -116,7 +113,7 @@ export default function WebHome({ amplitude, isMobile }) {
                 >
                   Coming Soon
                 </Text>
-                <Text style={styles.textStyles.plainText}>• Pros and Cons</Text>
+                <Text style={styles.textStyles.plainText}>• Definitions</Text>
                 <Text style={styles.textStyles.plainText}>
                   • Phones and Tablets
                 </Text>

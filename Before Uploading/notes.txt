@@ -1,0 +1,15 @@
+Add _redirects to dist
+
+add     
+<meta
+      name="description"
+      content="Your comparison tool for vehicles and electronics"
+/>
+below the 
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+/>
+line
+
+make sure amplitude was enabled
