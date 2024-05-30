@@ -171,7 +171,6 @@ export default function Compare({
 
       // Iterate through each Important spec
       for (item in pros[0]) {
-        referencePros.push(DefaultArray[item].Value);
         // If spec is a boolean type
         if (pros[0][item].Type == "B") {
           // Keeps track of first occurence of true value, and counts occurences
@@ -224,6 +223,9 @@ export default function Compare({
             // If a string with units after a space, split and get first item
             try {
               newNumber = newNumber.split(" ")[0];
+              // Remove commas and spaces
+              newNumber = newNumber.replace(",", "");
+              newNumber = newNumber.replace(" ", "");
             } catch {}
             // Convert strings to numbers
             try {
@@ -234,7 +236,9 @@ export default function Compare({
           }
 
           // The value to save
-          bestValue = NaN;
+          totalBestValue = NaN;
+          // Track the latest value that caused a change, if NaN, then 2 duplicates were found
+          lastBestValue = NaN;
           // The index of the product
           bestIndex = NaN;
           // Iterate through all values that were saved for this spec
@@ -244,40 +248,44 @@ export default function Compare({
             if (!isNaN(itemValue)) {
               // Higher number is better
               if (tracker.HigherNumber == true) {
-                if (isNaN(bestValue)) {
+                if (isNaN(totalBestValue)) {
                   // Initialize the first value
-                  bestValue = itemValue;
+                  totalBestValue = itemValue;
+                  lastBestValue = totalBestValue;
                   bestIndex = 0;
-                } else if (bestValue < itemValue) {
-                  // If new value is better, make a new array and set them to bestValue and bestIndex
-                  bestValue = itemValue;
+                } else if (totalBestValue < itemValue) {
+                  // If new value is better, make a new array and set them to totalBestValue, lastBestValue and bestIndex
+                  totalBestValue = itemValue;
+                  lastBestValue = itemValue;
                   bestIndex = item1;
-                } else if (bestValue == itemValue) {
-                  // If duplicate, then reset everything
-                  bestValue = NaN;
+                } else if (totalBestValue == itemValue) {
+                  // If duplicate, then record that to lastBestValue but don't change totalBestValue so we know what the highest value was
+                  lastBestValue = NaN;
                   bestIndex = NaN;
                 }
               }
               // Lower number is better
               else if (tracker.HigherNumber == false) {
-                if (isNaN(bestValue)) {
+                if (isNaN(totalBestValue)) {
                   // Initialize the first value
-                  bestValue = itemValue;
+                  totalBestValue = itemValue;
+                  lastBestValue = totalBestValue;
                   bestIndex = 0;
-                } else if (bestValue > itemValue) {
-                  // If new value is better, make a new array and set them to bestValue and bestIndex
-                  bestValue = itemValue;
+                } else if (totalBestValue > itemValue) {
+                  // If new value is better, make a new array and set them to totalBestValue, lastBestValue and bestIndex
+                  totalBestValue = itemValue;
+                  lastBestValue = itemValue;
                   bestIndex = item1;
-                } else if (bestValue == itemValue) {
-                  // If duplicate, then reset everything
-                  bestValue = NaN;
+                } else if (totalBestValue == itemValue) {
+                  // If duplicate, then record that to lastBestValue but don't change totalBestValue so we know what the highest value was
+                  lastBestValue = NaN;
                   bestIndex = NaN;
                 }
               }
             }
           }
 
-          if (!isNaN(bestValue)) {
+          if (!isNaN(lastBestValue) && !isNaN(lastBestValue)) {
             pro = pros[bestIndex][item];
             for (item1 in Categories[0]) {
               if (pro.Category == Categories[0][item1] && pro.Value != "--") {

@@ -29,9 +29,9 @@ import {
 } from "firebase/firestore";
 import { useWindowDimensions } from "react-native";
 
-/*amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
+amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
-});*/
+});
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -1045,10 +1045,10 @@ const droneDefaultArray = [
     Display: true,
     Category: "Weight",
     Matching: "weight",
-    Mandatory: false,
-    Type: "N",
+    Mandatory: true,
+    Type: "SU",
     Preference: false,
-    Important: false,
+    Important: true,
     HigherNumber: false,
   },
   {
@@ -1294,7 +1294,7 @@ const droneDefaultArray = [
     HigherNumber: false,
   },
   {
-    Value: "Burst Shot mode",
+    Value: "Burst Shot mode: --",
     Display: true,
     Category: "Camera Features",
     Matching: "continuous shooting at high resolution",
@@ -1800,7 +1800,7 @@ const graphicsCardsDefaultArray = [
     Category: "Memory",
     Matching: "Memory Bandwidth",
     Mandatory: true,
-    Type: "N",
+    Type: "SU",
     Preference: false,
     Important: true,
     HigherNumber: true,
@@ -2103,7 +2103,7 @@ const CPUsDefaultArray = [
   },
   {
     Value: "Hybrid Cores: --",
-    Display: true,
+    Display: false,
     Category: "CPU",
     Matching: "Hybrid Cores",
     Mandatory: false,
@@ -2114,7 +2114,7 @@ const CPUsDefaultArray = [
   },
   {
     Value: "LP E-Cores: --",
-    Display: true,
+    Display: false,
     Category: "CPU",
     Matching: "LP E-Cores",
     Mandatory: true,
@@ -2180,7 +2180,7 @@ const CPUsDefaultArray = [
   },
   {
     Value: "E-Core Frequency: --",
-    Display: true,
+    Display: false,
     Category: "CPU",
     Matching: "E-Core Frequency",
     Mandatory: true,
@@ -2191,7 +2191,7 @@ const CPUsDefaultArray = [
   },
   {
     Value: "LP E-Core Boost: --",
-    Display: true,
+    Display: false,
     Category: "CPU",
     Matching: "LP E-Core Boost",
     Mandatory: true,
