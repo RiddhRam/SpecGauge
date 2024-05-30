@@ -41,6 +41,10 @@ export const SGStyles = () => {
       flexGrow: 1,
       backgroundColor: theme === "dark" ? "#171827" : "#fff",
       padding: 20,
+      paddingTop: 10,
+      marginBottom: 50,
+    },
+    comparisonScreenTable: {
       marginBottom: 50,
     },
     comingSoonContainer: {

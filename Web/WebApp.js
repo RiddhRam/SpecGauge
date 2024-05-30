@@ -746,7 +746,7 @@ const consoleDefaultArray = [
     HigherNumber: false,
   },
   {
-    Value: "Sound Output: --",
+    Value: "Sound Output Channel: --",
     Display: true,
     Category: "Audio",
     Matching: "number of channels of sound output",
@@ -823,7 +823,7 @@ const consoleDefaultArray = [
     HigherNumber: false,
   },
   {
-    Value: "Controllers: --",
+    Value: "Maximum Controllers: --",
     Display: true,
     Category: "Controllers",
     Matching: "number of controllers",
@@ -946,6 +946,7 @@ const consoleCategories = [
     "RAM",
     "Storage",
     "Display",
+    "Controllers",
     "Height",
     "Width",
     "Length",
@@ -3061,9 +3062,9 @@ export default function WebApp() {
   let dronesHeight = [];
   let dronesSetHeight = [];
 
-  // They are initalized as 39, which is also the minimum size, setHeight is used to change the height at the corresponding index in the height array
+  // They are initalized as 52, which is also the minimum size, setHeight is used to change the height at the corresponding index in the height array
   for (i = 0; i < droneCategories[0].length; i++) {
-    const [height, setHeight] = useState(39);
+    const [height, setHeight] = useState(52);
     dronesHeight.push(height);
     dronesSetHeight.push(setHeight);
   }
@@ -3072,7 +3073,7 @@ export default function WebApp() {
   let consolesSetHeight = [];
 
   for (i = 0; i < consoleCategories[0].length; i++) {
-    const [height, setHeight] = useState(39);
+    const [height, setHeight] = useState(52);
     consolesHeight.push(height);
     consolesSetHeight.push(setHeight);
   }
@@ -3081,7 +3082,7 @@ export default function WebApp() {
   let graphicsCardsSetHeight = [];
 
   for (i = 0; i < graphicsCardsCategories[0].length; i++) {
-    const [height, setHeight] = useState(39);
+    const [height, setHeight] = useState(52);
     graphicsCardsHeight.push(height);
     graphicsCardsSetHeight.push(setHeight);
   }
@@ -3090,7 +3091,7 @@ export default function WebApp() {
   let CPUsSetHeight = [];
 
   for (i = 0; i < CPUsCategories[0].length; i++) {
-    const [height, setHeight] = useState(39);
+    const [height, setHeight] = useState(52);
     CPUsHeight.push(height);
     CPUsSetHeight.push(setHeight);
   }
@@ -3099,7 +3100,7 @@ export default function WebApp() {
   let carsSetHeight = [];
 
   for (i = 0; i < CPUsCategories[0].length; i++) {
-    const [height, setHeight] = useState(39);
+    const [height, setHeight] = useState(52);
     carsHeight.push(height);
     carsSetHeight.push(setHeight);
   }

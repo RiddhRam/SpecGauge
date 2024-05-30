@@ -171,6 +171,7 @@ export default function Compare({
 
       // Iterate through each Important spec
       for (item in pros[0]) {
+        referencePros.push(DefaultArray[item].Value);
         // If spec is a boolean type
         if (pros[0][item].Type == "B") {
           // Keeps track of first occurence of true value, and counts occurences
@@ -337,7 +338,7 @@ export default function Compare({
       newSpecsArray[1][prosIndex] = "Add at least 2 items to view the pros";
 
       setSpecs(newSpecsArray);
-      SetHeight[prosIndex](39);
+      SetHeight[prosIndex](52);
     }
   }, [displayPros]);
 
@@ -418,7 +419,7 @@ export default function Compare({
               setDisplayPros([]);
 
               for (item in SetHeight) {
-                SetHeight[item](39);
+                SetHeight[item](52);
               }
             }}
             style={({ pressed }) => [
@@ -485,7 +486,7 @@ export default function Compare({
               setPros([]);
 
               for (let i = 0; i < SetHeight.length; i++) {
-                SetHeight[i](39);
+                SetHeight[i](52);
               }
             }}
             style={({ pressed }) => [
@@ -497,10 +498,16 @@ export default function Compare({
           </Pressable>
         </View>
 
+        {Specs.length == 1 && (
+          <Text style={[styles.textStyles.simpleText, { fontSize: 20 }]}>
+            Click the "Add" button to get started
+          </Text>
+        )}
+
         {/* Table */}
         <ScrollView
           horizontal={true}
-          style={styles.containerStyles.comparisonScreenContainer}
+          style={styles.containerStyles.comparisonScreenTable}
         >
           {/* For each item in spec, show a column */}
           {Specs.map((item, index1) => (
@@ -545,11 +552,11 @@ export default function Compare({
                       /* If the length is 2 then 1 is removed, then there is 1 item left, which is the category labels */
                     }
                     {
-                      /* Category labels default height is 39 */
+                      /* Category labels default height is 52 */
                     }
                     if (Specs.length == 2) {
                       for (let i = 0; i < SetHeight.length; i++) {
-                        SetHeight[i](39);
+                        SetHeight[i](52);
                       }
                     } else {
                       {
@@ -563,7 +570,7 @@ export default function Compare({
                           let position = 0;
                           while (true) {
                             {
-                              /* Height is determined by (number of '\n' - 1) * 17 + 39 */
+                              /* Height is determined by (number of '\n' - 1) * 17 + 52 */
                               /* We count the number of \n in each column */
                             }
                             position = Specs[i][j].indexOf("\n", position);
@@ -578,13 +585,13 @@ export default function Compare({
                             /* We check if old height is greater then new height, then change it, or else leave it  */
                           }
                           for (let k = 0; k < Height.length; k++) {
-                            const newHeight = (counter - 1) * 17 + 39;
-                            if (newHeight >= 39) {
-                              if (Height[k] > newHeight && newHeight >= 39) {
+                            const newHeight = (counter - 1) * 17 + 52;
+                            if (newHeight >= 52) {
+                              if (Height[k] > newHeight && newHeight >= 52) {
                                 SetHeight[k](newHeight);
                               }
                             } else {
-                              SetHeight[k](39);
+                              SetHeight[k](52);
                             }
                           }
                         }
@@ -597,7 +604,13 @@ export default function Compare({
               )}
 
               <View
-                style={index1 == 0 ? { marginTop: 100 } : { marginTop: 26.5 }}
+                style={
+                  index1 == 0
+                    ? Specs.length != 1
+                      ? { marginTop: 73.5, width: 120 }
+                      : { marginTop: 50, width: 120 }
+                    : { marginTop: 0 }
+                }
               >
                 {item.map((spec, index2) => (
                   /* We loop through each row in each column */
@@ -618,7 +631,7 @@ export default function Compare({
 
                           while (true) {
                             {
-                              /* Height is determined by (number of '\n' - 1) * 17 + 39 */
+                              /* Height is determined by (number of '\n' - 1) * 17 + 52 */
                               /* We count the number of \n in each column */
                             }
                             position = spec.indexOf("\n", position);
@@ -633,7 +646,7 @@ export default function Compare({
                             /* Since an item was added, the height can only be the same or larger */
                             /* We check if old height is less then new height, then change it, or else leave it  */
                           }
-                          const newHeight = (counter - 1) * 17 + 39;
+                          const newHeight = (counter - 1) * 17 + 52;
                           if (Height[index2] < newHeight) {
                             SetHeight[index2](newHeight);
                           }
