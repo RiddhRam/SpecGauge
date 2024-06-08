@@ -39,7 +39,7 @@ const categories = [
   "CPUs",
 ];
 
-export default function WebUserAccount({ amplitude, isMobile }) {
+export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -502,6 +502,7 @@ export default function WebUserAccount({ amplitude, isMobile }) {
 
                                       prerequestedSpecs = [];
                                       processArray = [];
+                                      prosArray = [];
                                       // Iterate through all processes in the clicked comparison
                                       for (processItem in savedProcesses[
                                         categoryIndex
@@ -521,6 +522,63 @@ export default function WebUserAccount({ amplitude, isMobile }) {
                                             comparisonIndex
                                           ][processItem]
                                         );
+
+                                        tempProsArray = [];
+
+                                        for (
+                                          let i = 0;
+                                          i <
+                                          defaultArrays[categoryIndex].length;
+                                          i++
+                                        ) {
+                                          defaultArrayItem =
+                                            defaultArrays[categoryIndex][i];
+                                          if (defaultArrayItem.Important) {
+                                            newJSON = {};
+                                            newJSON["Value"] =
+                                              defaultArrayItem.Value;
+                                            newJSON["Display"] =
+                                              defaultArrayItem.Display;
+                                            newJSON["Category"] =
+                                              defaultArrayItem.Category;
+                                            newJSON["Matching"] =
+                                              defaultArrayItem.Matching;
+                                            newJSON["Type"] =
+                                              defaultArrayItem.Type;
+                                            newJSON["Preference"] =
+                                              defaultArrayItem.Preference;
+                                            newJSON["HigherNumber"] =
+                                              defaultArrayItem.HigherNumber;
+
+                                            tempProsArray.push(newJSON);
+                                          }
+                                        }
+
+                                        // Record Pros to tempProsArray
+                                        for (
+                                          let j = 0;
+                                          j != tempProsArray.length;
+                                          j++
+                                        ) {
+                                          // If not based on user preference, we will deal with user preferences later
+                                          if (!tempProsArray[j].Preference) {
+                                            proValue =
+                                              result[0][
+                                                tempProsArray[j].Matching
+                                              ];
+
+                                            if (proValue != undefined) {
+                                              tempProsArray[j].Value =
+                                                result[0][
+                                                  tempProsArray[j].Matching
+                                                ];
+                                            } else {
+                                              tempProsArray[j].Value = "--";
+                                            }
+                                          }
+                                        }
+
+                                        prosArray.push(tempProsArray);
                                       }
                                       setLoading(false);
 
@@ -528,6 +586,7 @@ export default function WebUserAccount({ amplitude, isMobile }) {
                                         state: {
                                           prerequestedSpecs: prerequestedSpecs,
                                           processArray: processArray,
+                                          prosArray: prosArray,
                                         },
                                       });
                                     }}

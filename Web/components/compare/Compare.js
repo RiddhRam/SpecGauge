@@ -63,7 +63,7 @@ export default function Compare({
 
   useEffect(() => {
     try {
-      const { prerequestedSpecs, processArray } = state;
+      const { prerequestedSpecs, processArray, prosArray } = state;
 
       {
         /* Set the process array directly */
@@ -150,6 +150,7 @@ export default function Compare({
         tempArray.push(tempSpecsArray);
       }
       setSpecs(tempArray);
+      setPros(prosArray);
     } catch {}
   }, [state]);
 
