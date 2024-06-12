@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Footer } from "../Footer";
 
-const categories = [
+const comparisonCategories = [
   "Automobiles",
   "Consoles",
   "Drones",
@@ -15,12 +15,20 @@ const categories = [
   "CPUs",
 ];
 
-const links = [
-  "/automobiles",
-  "/consoles",
-  "/drones",
-  "/graphicsCards",
-  "/cpus",
+const predictionCategories = ["Automobiles", "Graphics Cards", "CPUs"];
+
+const comparisonLinks = [
+  "/comparison/automobiles",
+  "/comparison/consoles",
+  "/comparison/drones",
+  "/comparison/graphicsCards",
+  "/comparison/cpus",
+];
+
+const predictionLinks = [
+  "/prediction/automobiles",
+  "/prediction/graphicsCards",
+  "/prediction/cpus",
 ];
 
 export default function WebHome({ amplitude, isMobile }) {
@@ -28,6 +36,7 @@ export default function WebHome({ amplitude, isMobile }) {
     /* This is for the modal that determines the comparison type */
   }
   const [compareModalVisible, setCompareModalVisible] = useState(false);
+  const [predictModalVisible, setPredictModalVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -59,22 +68,38 @@ export default function WebHome({ amplitude, isMobile }) {
                 { marginTop: 30 },
               ]}
             >
-              Your comparison tool for vehicles and electronics.
+              Compare Today. Predict Tomorrow.
             </Text>
 
-            {/* Compare button */}
-            <Pressable
-              onPress={() => {
-                setCompareModalVisible(true);
-              }}
-              style={({ pressed }) => [
-                styles.inputStyles.button,
-                pressed && styles.inputStyles.buttonClicked,
-                { marginBottom: 15, marginTop: 25 },
-              ]}
-            >
-              <p>Start Comparing</p>
-            </Pressable>
+            <View>
+              {/* Compare button */}
+              <Pressable
+                onPress={() => {
+                  setCompareModalVisible(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginBottom: 15, marginTop: 25 },
+                ]}
+              >
+                <p>Start Comparing</p>
+              </Pressable>
+
+              {/* Prediction button */}
+              <Pressable
+                onPress={() => {
+                  setPredictModalVisible(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginBottom: 15, marginTop: 25 },
+                ]}
+              >
+                <p>Prediction Analysis</p>
+              </Pressable>
+            </View>
 
             {/* Updates */}
             <View
@@ -127,7 +152,7 @@ export default function WebHome({ amplitude, isMobile }) {
       {/* Footer */}
       <Footer amplitude={amplitude} isMobile={isMobile} />
 
-      {/* Category selection modal */}
+      {/* Comparison Category selection modal */}
       <Modal
         visible={compareModalVisible}
         animationType="slide"
@@ -137,7 +162,7 @@ export default function WebHome({ amplitude, isMobile }) {
           <Text style={styles.textStyles.text}>Select a category</Text>
 
           <ScrollView style={styles.textStyles.modalText}>
-            {categories.map((item, index) => (
+            {comparisonCategories.map((item, index) => (
               <Pressable
                 style={({ pressed }) => [
                   { padding: 10, paddingRight: 50, fontSize: 20 },
@@ -145,7 +170,7 @@ export default function WebHome({ amplitude, isMobile }) {
                 ]}
                 key={item}
                 onPress={() => {
-                  amplitude.track("Screen", {
+                  amplitude.track("Comparison Screen", {
                     Screen: item,
                     Platform: isMobile ? "Mobile" : "Computer",
                   });
@@ -153,7 +178,7 @@ export default function WebHome({ amplitude, isMobile }) {
                     /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
                   }
 
-                  navigate(`${links[index]}`);
+                  navigate(`${comparisonLinks[index]}`);
 
                   setCompareModalVisible(false);
                 }}
@@ -166,6 +191,56 @@ export default function WebHome({ amplitude, isMobile }) {
           <Pressable
             onPress={() => {
               setCompareModalVisible(false);
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.button,
+              pressed && styles.inputStyles.buttonClicked,
+            ]}
+          >
+            <p>Cancel</p>
+          </Pressable>
+        </View>
+      </Modal>
+
+      {/* Prediction Category selection modal */}
+      <Modal
+        visible={predictModalVisible}
+        animationType="slide"
+        transparent="true"
+      >
+        <View style={styles.containerStyles.modalContainer}>
+          <Text style={styles.textStyles.text}>Select a category</Text>
+
+          <ScrollView style={styles.textStyles.modalText}>
+            {predictionCategories.map((item, index) => (
+              <Pressable
+                style={({ pressed }) => [
+                  { padding: 10, paddingRight: 50, fontSize: 20 },
+                  pressed && styles.inputStyles.buttonNoBackgroundClicked,
+                ]}
+                key={item}
+                onPress={() => {
+                  amplitude.track("Prediction Screen", {
+                    Screen: item,
+                    Platform: isMobile ? "Mobile" : "Computer",
+                  });
+                  {
+                    /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
+                  }
+
+                  navigate(`${predictionLinks[index]}`);
+
+                  setPredictModalVisible(false);
+                }}
+              >
+                <p>{item}</p>
+              </Pressable>
+            ))}
+          </ScrollView>
+
+          <Pressable
+            onPress={() => {
+              setPredictModalVisible(false);
             }}
             style={({ pressed }) => [
               styles.inputStyles.button,

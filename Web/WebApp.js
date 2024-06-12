@@ -7,6 +7,8 @@ import NoPage from "./components/NoPage";
 import WebLogIn from "./components/accounts/WebLogIn";
 import WebUserAccount from "./components/accounts/WebUserAccount";
 import Compare from "./components/compare/Compare";
+import PredictAutomobiles from "./components/predict/PredictAutomobiles";
+import PredictMath from "./components/predict/PredictMath";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -3221,7 +3223,7 @@ export default function WebApp() {
         ></Route>
         {/* the automobiles comparison page */}
         <Route
-          path="automobiles"
+          path="comparison/automobiles"
           element={
             <Compare
               type={"Automobiles"}
@@ -3243,7 +3245,7 @@ export default function WebApp() {
         ></Route>
         {/* the consoles comparison page */}
         <Route
-          path="consoles"
+          path="comparison/consoles"
           element={
             <Compare
               type={"Consoles"}
@@ -3265,7 +3267,7 @@ export default function WebApp() {
         ></Route>
         {/* the drones comparison page */}
         <Route
-          path="drones"
+          path="comparison/drones"
           element={
             <Compare
               type={"Drones"}
@@ -3287,7 +3289,7 @@ export default function WebApp() {
         ></Route>
         {/* the graphics cards comparison page */}
         <Route
-          path="graphicsCards"
+          path="comparison/graphicsCards"
           element={
             <Compare
               type={"Graphics Cards"}
@@ -3309,7 +3311,7 @@ export default function WebApp() {
         ></Route>
         {/* the cpus comparison page */}
         <Route
-          path="cpus"
+          path="comparison/cpus"
           element={
             <Compare
               type={"CPUs"}
@@ -3351,6 +3353,39 @@ export default function WebApp() {
                 CPUsDefaultArray,
               ]}
             ></WebUserAccount>
+          }
+        ></Route>
+        {/* the automobiles prediction page */}
+        <Route
+          path="prediction/automobiles"
+          element={
+            <PredictAutomobiles
+              type={"Automobiles"}
+              amplitude={amplitude}
+              isMobile={isMobile}
+            ></PredictAutomobiles>
+          }
+        ></Route>
+        {/* the graphicsCards prediction page */}
+        <Route
+          path="prediction/graphicsCards"
+          element={
+            <PredictMath
+              type={"Graphics Cards"}
+              amplitude={amplitude}
+              isMobile={isMobile}
+            ></PredictMath>
+          }
+        ></Route>
+        {/* the cpus prediction page */}
+        <Route
+          path="prediction/cpus"
+          element={
+            <PredictMath
+              type={"CPUs"}
+              amplitude={amplitude}
+              isMobile={isMobile}
+            ></PredictMath>
           }
         ></Route>
         {/* any other page, error 404 */}
