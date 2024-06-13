@@ -1,15 +1,23 @@
-import { Text, ScrollView, View, Pressable, TextInput } from "react-native-web";
+import {
+  Text,
+  ScrollView,
+  View,
+  Pressable,
+  TextInput,
+  Modal,
+} from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { Footer } from "../../Footer";
 import { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { ChromePicker } from "react-color";
 
 import { Line } from "react-chartjs-2";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { Dropdown } from "react-native-element-dropdown";
-
+import seedrandom from "seedrandom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -125,14 +133,13 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
   // Maximum scroll length according to current zoom level
   const [scrollLimit, setScrollLimit] = useState(24);
 
-  const [displayAverageCarPrices, setDisplayAverageCarPrices] = useState(
-    averageCarPrices.slice(startIndex, endIndex)
-  );
+  const displayAverageCarPrices = averageCarPrices.slice(startIndex, endIndex);
 
   const [initialPrice, setInitialPrice] = useState("");
   const [releaseYear, setReleaseYear] = useState("");
   const [brand, setBrand] = useState("");
   const [dropdownFocus, setDropdownFocus] = useState(false);
+  const [colorChangeIndex, setColorChangeIndex] = useState(0);
 
   const [originalPoints, setOriginalPoints] = useState([averageCarPrices]);
   const dropdownData = [
@@ -273,7 +280,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     { label: "Plymouth", value: normal },
     { label: "Polestar", value: normal },
     { label: "Pontiac", value: normal },
-    { label: "Porsche", value: expensiveSport },
+    { label: "Porsche", value: normal },
     { label: "RAM", value: normal },
     { label: "Renault", value: normal },
     { label: "Rimac", value: superCar },
@@ -295,11 +302,17 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     { label: "Xiaomi", value: fast },
   ];
 
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [error, setError] = useState("");
+
   const [lineValueDataset, setLineValueDataset] = useState([
     {
-      label: "Average Car Price",
+      label: "Average Car Price (USD $)",
       data: displayAverageCarPrices,
-      borderColor: "rgb(75, 192, 192)",
+      borderColor: `rgb(${Math.random() * 255}, ${Math.random() * 255},${
+        Math.random() * 255
+      })`,
     },
   ]);
   const lineOptions = {
@@ -323,7 +336,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
       y: {
         title: {
           display: true,
-          text: "Price (USD $)", // Label for the y-axis
+          text: "Price", // Label for the y-axis
           color: "#4ca0d7",
         },
         grid: {
@@ -337,7 +350,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     datasets: lineValueDataset,
   };
 
-  function OnScrollChangeTrigger(value) {
+  const OnScrollChangeTrigger = (value) => {
     const difference = value - startIndex;
     startIndex += difference;
     endIndex += difference;
@@ -352,9 +365,9 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
       newDataset.push(newItem);
     }
     setLineValueDataset(newDataset);
-  }
+  };
 
-  function OnZoomChangeTrigger(value) {
+  const OnZoomChangeTrigger = (value) => {
     // Difference of years
     const difference = yearsCount - value;
     // We move the last number if position isn't at the end
@@ -379,7 +392,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
       newDataset.push(newItem);
     }
     setLineValueDataset(newDataset);
-  }
+  };
 
   const handleNumberInput = (text, setValue) => {
     if (/^\d*$/.test(text)) {
@@ -391,12 +404,15 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
   function addToGraph(priceString, yearString, brand) {
     const price = parseFloat(priceString);
     const year = parseInt(yearString);
+
     // If price is not at least 7500
-    if (price < 7500) {
+    if (price < 7500 || isNaN(price)) {
       return "Enter a price of at least $7500";
     } // If year is too old or new
-    else if (year < 2000 || year > 2025) {
+    else if (year < 2000 || year > 2025 || isNaN(year)) {
       return "Enter a year between 2000 and 2025";
+    } else if (brand.length == 0) {
+      return "Select a brand";
     }
 
     // The rate that the price drops
@@ -410,6 +426,8 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     }
     // This gets appended to lineValuesDataset to display
     let prices = [];
+    // This is used for the seed
+    let lastPrice = price;
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
       // If vehicle wasn't manufactured yet, then don't display price for that year
@@ -417,8 +435,17 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
         prices.push(null);
       } // For each year it was released, calculate the price for that year
       else {
-        const newPrice = price * Math.E ** (rate * (i - year));
-        prices.push(newPrice);
+        const seed = `${price}${brand}${year}${lastPrice}`;
+        const rng = seedrandom(seed);
+        const newCalculatedPrice =
+          price * Math.E ** ((rate + rng() * 0.02) * (i - year));
+        let newRandomPrice = rng() * 0.1 * lastPrice + newCalculatedPrice;
+        if (newRandomPrice > lastPrice) {
+          newRandomPrice =
+            newRandomPrice - newCalculatedPrice - newCalculatedPrice * -1;
+        }
+        prices.push(newRandomPrice);
+        lastPrice = newRandomPrice;
       }
     }
 
@@ -450,8 +477,19 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
         break;
       }
     }
-    return prices;
+    return 0;
   }
+
+  const updateColor = (newColor) => {
+    // Update the points being displayed
+    newDataset = [];
+    for (item in lineValueDataset) {
+      let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
+      newDataset.push(newItem);
+    }
+    newDataset[colorChangeIndex].borderColor = newColor.hex;
+    setLineValueDataset(newDataset);
+  };
 
   useEffect(() => {
     if (updateGraph) {
@@ -647,7 +685,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
               <TextInput
                 value={initialPrice}
                 style={styles.inputStyles.predictionTextInput}
-                placeholder="Initial Price (USD $)"
+                placeholder="Initial New Price"
                 id="initialPrice"
                 inputMode="numeric"
                 onChange={(text) =>
@@ -694,9 +732,14 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                 }}
               />
 
+              {/* Add */}
               <Pressable
                 onPress={() => {
-                  addToGraph(initialPrice, releaseYear, brand);
+                  const result = addToGraph(initialPrice, releaseYear, brand);
+                  if (result != 0) {
+                    setError(result);
+                    setShowErrorModal(true);
+                  }
                 }}
                 style={({ pressed }) => [
                   styles.inputStyles.button,
@@ -706,12 +749,107 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
               >
                 <p>Add</p>
               </Pressable>
+
+              {/* Edit */}
+              <Pressable
+                onPress={() => {
+                  setShowEditModal(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { width: "50%", marginLeft: 0 },
+                ]}
+              >
+                <p>Edit</p>
+              </Pressable>
             </View>
           </View>
         )}
       </View>
 
       <Footer amplitude={amplitude} isMobile={isMobile} />
+
+      {/* Edit Modal */}
+      <Modal visible={showEditModal} animationType="slide" transparent="true">
+        <View style={styles.containerStyles.modalContainer}>
+          <Text style={styles.textStyles.text}>Edit Graph</Text>
+          <ScrollView style={styles.textStyles.modalText}>
+            {lineValueDataset.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  borderWidth: 3,
+                  borderColor: item.borderColor,
+                  padding: 15,
+                  marginVertical: 15,
+                  marginHorizontal: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={[
+                    styles.textStyles.plainText,
+                    { fontSize: 20, marginRight: 5 },
+                  ]}
+                >
+                  {item.label}
+                </Text>
+
+                {colorChangeIndex == index ? (
+                  <ChromePicker
+                    color={item.borderColor}
+                    onChange={updateColor}
+                  ></ChromePicker>
+                ) : (
+                  <Pressable
+                    style={{
+                      width: 20,
+                      height: 20,
+                      backgroundColor: item.borderColor,
+                    }}
+                    onPress={() => {
+                      setColorChangeIndex(index);
+                    }}
+                  ></Pressable>
+                )}
+              </View>
+            ))}
+          </ScrollView>
+          <Pressable
+            onPress={() => {
+              // Reset the modal
+              setShowEditModal(false);
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.button,
+              pressed && styles.inputStyles.buttonClicked,
+            ]}
+          >
+            <p>Cancel</p>
+          </Pressable>
+        </View>
+      </Modal>
+      {/* Error Modal */}
+      <Modal visible={showErrorModal} animationType="slide" transparent="true">
+        <View style={styles.containerStyles.modalContainer}>
+          <Text style={styles.textStyles.text}>Error</Text>
+          <Text style={styles.textStyles.errorText}>{error}</Text>
+          <Pressable
+            onPress={() => {
+              // Reset the modal
+              setShowErrorModal(false);
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.button,
+              pressed && styles.inputStyles.buttonClicked,
+            ]}
+          >
+            <p>Cancel</p>
+          </Pressable>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
