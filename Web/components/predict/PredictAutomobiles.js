@@ -5,6 +5,7 @@ import {
   Pressable,
   TextInput,
   Modal,
+  Image,
 } from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { Footer } from "../../Footer";
@@ -115,6 +116,166 @@ const reliable = -0.05;
 const expensiveSport = -0.04;
 const superCar = -0.03;
 
+const dropdownData = [
+  { label: "Acura", value: "Acura" },
+  { label: "Alfa Romeo", value: "Alfa Romeo" },
+  { label: "Aston Martin", value: "Aston Martin" },
+  { label: "Audi", value: "Audi" },
+  { label: "Bentley", value: "Bentley" },
+  { label: "BMW", value: "BMW" },
+  { label: "Bugatti", value: "Bugatti" },
+  { label: "Buick", value: "Buick" },
+  { label: "BYD", value: "BYD" },
+  { label: "Cadillac", value: "Cadillac" },
+  { label: "Chevrolet", value: "Chevrolet" },
+  { label: "Chrysler", value: "Chrysler" },
+  { label: "Citroen", value: "Citroen" },
+  { label: "Daewoo", value: "Daewoo" },
+  { label: "Dodge", value: "Dodge" },
+  { label: "Ferrari", value: "Ferrari" },
+  { label: "Fiat", value: "Fiat" },
+  { label: "Fisker", value: "Fisker" },
+  { label: "Ford", value: "Ford" },
+  { label: "Genesis", value: "Genesis" },
+  { label: "GMC", value: "GMC" },
+  { label: "Hennessey", value: "Hennessey" },
+  { label: "Honda", value: "Honda" },
+  { label: "Hummer", value: "Hummer" },
+  { label: "Hyundai", value: "Hyundai" },
+  { label: "INEOS", value: "INEOS" },
+  { label: "Infiniti", value: "Infiniti" },
+  { label: "Isuzu", value: "Isuzu" },
+  { label: "Jaguar", value: "Jaguar" },
+  { label: "Jeep", value: "Jeep" },
+  { label: "Karma", value: "Karma" },
+  { label: "Kia", value: "Kia" },
+  { label: "Koenigsegg", value: "Koenigsegg" },
+  { label: "KTM", value: "KTM" },
+  { label: "Lamborghini", value: "Lamborghini" },
+  { label: "Land Rover", value: "Land Rover" },
+  { label: "Lexus", value: "Lexus" },
+  { label: "Lincoln", value: "Lincoln" },
+  { label: "Lotus", value: "Lotus" },
+  { label: "Lucid", value: "Lucid" },
+  { label: "Maserati", value: "Maserati" },
+  { label: "Maybach", value: "Maybach" },
+  { label: "Mazda", value: "Mazda" },
+  { label: "McLaren", value: "McLaren" },
+  { label: "Mercedes-Benz", value: "Mercedes-Benz" },
+  { label: "Mercury", value: "Mercury" },
+  { label: "Mini", value: "Mini" },
+  { label: "Mitsubishi", value: "Mitsubishi" },
+  { label: "Nissan", value: "Nissan" },
+  { label: "Oldsmobile", value: "Oldsmobile" },
+  { label: "Opel", value: "Opel" },
+  { label: "Pagani", value: "Pagani" },
+  { label: "Panoz", value: "Panoz" },
+  { label: "Peugeot", value: "Peugeot" },
+  { label: "Plymouth", value: "Plymouth" },
+  { label: "Polestar", value: "Polestar" },
+  { label: "Pontiac", value: "Pontiac" },
+  { label: "Porsche", value: "Porsche" },
+  { label: "RAM", value: "RAM" },
+  { label: "Renault", value: "Renault" },
+  { label: "Rimac", value: "Rimac" },
+  { label: "Rivian", value: "Rivian" },
+  { label: "Rolls-Royce", value: "Rolls-Royce" },
+  { label: "Saab", value: "Saab" },
+  { label: "Saturn", value: "Saturn" },
+  { label: "Scion", value: "Scion" },
+  { label: "Smart", value: "Smart" },
+  { label: "Spyker", value: "Spyker" },
+  { label: "Subaru", value: "Subaru" },
+  { label: "Suzuki", value: "Suzuki" },
+  { label: "Tata", value: "Tata" },
+  { label: "Tesla", value: "Tesla" },
+  { label: "Toyota", value: "Toyota" },
+  { label: "VinFast", value: "VinFast" },
+  { label: "Volkswagen", value: "Volkswagen" },
+  { label: "Volvo", value: "Volvo" },
+  { label: "Xiaomi", value: "Xiaomi" },
+];
+
+const brandValues = [
+  { label: "Acura", value: reliable },
+  { label: "Alfa Romeo", value: normal },
+  { label: "Aston Martin", value: expensiveSport },
+  { label: "Audi", value: normal },
+  { label: "Bentley", value: expensiveSport },
+  { label: "BMW", value: normal },
+  { label: "Bugatti", value: superCar },
+  { label: "Buick", value: normal },
+  { label: "BYD", value: normal },
+  { label: "Cadillac", value: normal },
+  { label: "Chevrolet", value: fast },
+  { label: "Chrysler", value: normal },
+  { label: "Citroen", value: fast },
+  { label: "Daewoo", value: normal },
+  { label: "Dodge", value: normal },
+  { label: "Ferrari", value: superCar },
+  { label: "Fiat", value: fast },
+  { label: "Fisker", value: fast },
+  { label: "Ford", value: normal },
+  { label: "Genesis", value: normal },
+  { label: "GMC", value: normal },
+  { label: "Hennessey", value: superCar },
+  { label: "Honda", value: reliable },
+  { label: "Hummer", value: fast },
+  { label: "Hyundai", value: normal },
+  { label: "INEOS", value: fast },
+  { label: "Infiniti", value: normal },
+  { label: "Isuzu", value: normal },
+  { label: "Jaguar", value: expensiveSport },
+  { label: "Jeep", value: normal },
+  { label: "Karma", value: normal },
+  { label: "Kia", value: normal },
+  { label: "Koenigsegg", value: superCar },
+  { label: "KTM", value: expensiveSport },
+  { label: "Lamborghini", value: expensiveSport },
+  { label: "Land Rover", value: normal },
+  { label: "Lexus", value: reliable },
+  { label: "Lincoln", value: normal },
+  { label: "Lotus", value: normal },
+  { label: "Lucid", value: normal },
+  { label: "Maserati", value: expensiveSport },
+  { label: "Maybach", value: superCar },
+  { label: "Mazda", value: reliable },
+  { label: "McLaren", value: expensiveSport },
+  { label: "Mercedes-Benz", value: normal },
+  { label: "Mercury", value: normal },
+  { label: "Mini", value: normal },
+  { label: "Mitsubishi", value: reliable },
+  { label: "Nissan", value: reliable },
+  { label: "Oldsmobile", value: normal },
+  { label: "Opel", value: normal },
+  { label: "Pagani", value: superCar },
+  { label: "Panoz", value: normal },
+  { label: "Peugeot", value: normal },
+  { label: "Plymouth", value: normal },
+  { label: "Polestar", value: normal },
+  { label: "Pontiac", value: normal },
+  { label: "Porsche", value: normal },
+  { label: "RAM", value: normal },
+  { label: "Renault", value: normal },
+  { label: "Rimac", value: superCar },
+  { label: "Rivian", value: normal },
+  { label: "Rolls-Royce", value: expensiveSport },
+  { label: "Saab", value: normal },
+  { label: "Saturn", value: normal },
+  { label: "Scion", value: normal },
+  { label: "Smart", value: fast },
+  { label: "Spyker", value: normal },
+  { label: "Subaru", value: reliable },
+  { label: "Suzuki", value: normal },
+  { label: "Tata", value: normal },
+  { label: "Tesla", value: normal },
+  { label: "Toyota", value: reliable },
+  { label: "VinFast", value: fast },
+  { label: "Volkswagen", value: normal },
+  { label: "Volvo", value: reliable },
+  { label: "Xiaomi", value: fast },
+];
+
 export default function PredictAutomobiles({ type, amplitude, isMobile }) {
   styles = SGStyles();
   const navigate = useNavigate();
@@ -142,165 +303,6 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
   const [colorChangeIndex, setColorChangeIndex] = useState(0);
 
   const [originalPoints, setOriginalPoints] = useState([averageCarPrices]);
-  const dropdownData = [
-    { label: "Acura", value: "Acura" },
-    { label: "Alfa Romeo", value: "Alfa Romeo" },
-    { label: "Aston Martin", value: "Aston Martin" },
-    { label: "Audi", value: "Audi" },
-    { label: "Bentley", value: "Bentley" },
-    { label: "BMW", value: "BMW" },
-    { label: "Bugatti", value: "Bugatti" },
-    { label: "Buick", value: "Buick" },
-    { label: "BYD", value: "BYD" },
-    { label: "Cadillac", value: "Cadillac" },
-    { label: "Chevrolet", value: "Chevrolet" },
-    { label: "Chrysler", value: "Chrysler" },
-    { label: "Citroen", value: "Citroen" },
-    { label: "Daewoo", value: "Daewoo" },
-    { label: "Dodge", value: "Dodge" },
-    { label: "Ferrari", value: "Ferrari" },
-    { label: "Fiat", value: "Fiat" },
-    { label: "Fisker", value: "Fisker" },
-    { label: "Ford", value: "Ford" },
-    { label: "Genesis", value: "Genesis" },
-    { label: "GMC", value: "GMC" },
-    { label: "Hennessey", value: "Hennessey" },
-    { label: "Honda", value: "Honda" },
-    { label: "Hummer", value: "Hummer" },
-    { label: "Hyundai", value: "Hyundai" },
-    { label: "INEOS", value: "INEOS" },
-    { label: "Infiniti", value: "Infiniti" },
-    { label: "Isuzu", value: "Isuzu" },
-    { label: "Jaguar", value: "Jaguar" },
-    { label: "Jeep", value: "Jeep" },
-    { label: "Karma", value: "Karma" },
-    { label: "Kia", value: "Kia" },
-    { label: "Koenigsegg", value: "Koenigsegg" },
-    { label: "KTM", value: "KTM" },
-    { label: "Lamborghini", value: "Lamborghini" },
-    { label: "Land Rover", value: "Land Rover" },
-    { label: "Lexus", value: "Lexus" },
-    { label: "Lincoln", value: "Lincoln" },
-    { label: "Lotus", value: "Lotus" },
-    { label: "Lucid", value: "Lucid" },
-    { label: "Maserati", value: "Maserati" },
-    { label: "Maybach", value: "Maybach" },
-    { label: "Mazda", value: "Mazda" },
-    { label: "McLaren", value: "McLaren" },
-    { label: "Mercedes-Benz", value: "Mercedes-Benz" },
-    { label: "Mercury", value: "Mercury" },
-    { label: "Mini", value: "Mini" },
-    { label: "Mitsubishi", value: "Mitsubishi" },
-    { label: "Nissan", value: "Nissan" },
-    { label: "Oldsmobile", value: "Oldsmobile" },
-    { label: "Opel", value: "Opel" },
-    { label: "Pagani", value: "Pagani" },
-    { label: "Panoz", value: "Panoz" },
-    { label: "Peugeot", value: "Peugeot" },
-    { label: "Plymouth", value: "Plymouth" },
-    { label: "Polestar", value: "Polestar" },
-    { label: "Pontiac", value: "Pontiac" },
-    { label: "Porsche", value: "Porsche" },
-    { label: "RAM", value: "RAM" },
-    { label: "Renault", value: "Renault" },
-    { label: "Rimac", value: "Rimac" },
-    { label: "Rivian", value: "Rivian" },
-    { label: "Rolls-Royce", value: "Rolls-Royce" },
-    { label: "Saab", value: "Saab" },
-    { label: "Saturn", value: "Saturn" },
-    { label: "Scion", value: "Scion" },
-    { label: "Smart", value: "Smart" },
-    { label: "Spyker", value: "Spyker" },
-    { label: "Subaru", value: "Subaru" },
-    { label: "Suzuki", value: "Suzuki" },
-    { label: "Tata", value: "Tata" },
-    { label: "Tesla", value: "Tesla" },
-    { label: "Toyota", value: "Toyota" },
-    { label: "VinFast", value: "VinFast" },
-    { label: "Volkswagen", value: "Volkswagen" },
-    { label: "Volvo", value: "Volvo" },
-    { label: "Xiaomi", value: "Xiaomi" },
-  ];
-
-  const brandValues = [
-    { label: "Acura", value: reliable },
-    { label: "Alfa Romeo", value: normal },
-    { label: "Aston Martin", value: expensiveSport },
-    { label: "Audi", value: normal },
-    { label: "Bentley", value: expensiveSport },
-    { label: "BMW", value: normal },
-    { label: "Bugatti", value: superCar },
-    { label: "Buick", value: normal },
-    { label: "BYD", value: normal },
-    { label: "Cadillac", value: normal },
-    { label: "Chevrolet", value: fast },
-    { label: "Chrysler", value: normal },
-    { label: "Citroen", value: fast },
-    { label: "Daewoo", value: normal },
-    { label: "Dodge", value: normal },
-    { label: "Ferrari", value: superCar },
-    { label: "Fiat", value: fast },
-    { label: "Fisker", value: fast },
-    { label: "Ford", value: normal },
-    { label: "Genesis", value: normal },
-    { label: "GMC", value: normal },
-    { label: "Hennessey", value: superCar },
-    { label: "Honda", value: reliable },
-    { label: "Hummer", value: fast },
-    { label: "Hyundai", value: normal },
-    { label: "INEOS", value: fast },
-    { label: "Infiniti", value: normal },
-    { label: "Isuzu", value: normal },
-    { label: "Jaguar", value: expensiveSport },
-    { label: "Jeep", value: normal },
-    { label: "Karma", value: normal },
-    { label: "Kia", value: normal },
-    { label: "Koenigsegg", value: superCar },
-    { label: "KTM", value: expensiveSport },
-    { label: "Lamborghini", value: expensiveSport },
-    { label: "Land Rover", value: normal },
-    { label: "Lexus", value: reliable },
-    { label: "Lincoln", value: normal },
-    { label: "Lotus", value: normal },
-    { label: "Lucid", value: normal },
-    { label: "Maserati", value: expensiveSport },
-    { label: "Maybach", value: superCar },
-    { label: "Mazda", value: reliable },
-    { label: "McLaren", value: expensiveSport },
-    { label: "Mercedes-Benz", value: normal },
-    { label: "Mercury", value: normal },
-    { label: "Mini", value: normal },
-    { label: "Mitsubishi", value: reliable },
-    { label: "Nissan", value: reliable },
-    { label: "Oldsmobile", value: normal },
-    { label: "Opel", value: normal },
-    { label: "Pagani", value: superCar },
-    { label: "Panoz", value: normal },
-    { label: "Peugeot", value: normal },
-    { label: "Plymouth", value: normal },
-    { label: "Polestar", value: normal },
-    { label: "Pontiac", value: normal },
-    { label: "Porsche", value: normal },
-    { label: "RAM", value: normal },
-    { label: "Renault", value: normal },
-    { label: "Rimac", value: superCar },
-    { label: "Rivian", value: normal },
-    { label: "Rolls-Royce", value: expensiveSport },
-    { label: "Saab", value: normal },
-    { label: "Saturn", value: normal },
-    { label: "Scion", value: normal },
-    { label: "Smart", value: fast },
-    { label: "Spyker", value: normal },
-    { label: "Subaru", value: reliable },
-    { label: "Suzuki", value: normal },
-    { label: "Tata", value: normal },
-    { label: "Tesla", value: normal },
-    { label: "Toyota", value: reliable },
-    { label: "VinFast", value: fast },
-    { label: "Volkswagen", value: normal },
-    { label: "Volvo", value: reliable },
-    { label: "Xiaomi", value: fast },
-  ];
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -788,6 +790,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                   alignItems: "center",
                 }}
               >
+                {/* Label name */}
                 <Text
                   style={[
                     styles.textStyles.plainText,
@@ -797,12 +800,15 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                   {item.label}
                 </Text>
 
+                {/* Change color */}
                 {colorChangeIndex == index ? (
+                  // Color picker
                   <ChromePicker
                     color={item.borderColor}
                     onChange={updateColor}
                   ></ChromePicker>
                 ) : (
+                  // Enable Color Picker
                   <Pressable
                     style={{
                       width: 20,
@@ -814,12 +820,38 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                     }}
                   ></Pressable>
                 )}
+
+                {/* Delete Button */}
+                <Pressable
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    newOriginalPoints = originalPoints.filter(
+                      (array) => array !== originalPoints[index]
+                    );
+                    setOriginalPoints(newOriginalPoints);
+                    newLineValueDataset = lineValueDataset.filter(
+                      (array) => array !== lineValueDataset[index]
+                    );
+                    setLineValueDataset(newLineValueDataset);
+
+                    console.log(newLineValueDataset);
+                    console.log(newOriginalPoints);
+
+                    setColorChangeIndex(0);
+                  }}
+                >
+                  <Image
+                    source={require("../../../assets/Trash Icon.png")}
+                    style={{ width: 20, height: 20 }}
+                  ></Image>
+                </Pressable>
               </View>
             ))}
           </ScrollView>
+          {/* Cancel button */}
           <Pressable
             onPress={() => {
-              // Reset the modal
+              // Hide the modal
               setShowEditModal(false);
             }}
             style={({ pressed }) => [
@@ -836,9 +868,10 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
         <View style={styles.containerStyles.modalContainer}>
           <Text style={styles.textStyles.text}>Error</Text>
           <Text style={styles.textStyles.errorText}>{error}</Text>
+          {/* Cancel button */}
           <Pressable
             onPress={() => {
-              // Reset the modal
+              // Hide the modal
               setShowErrorModal(false);
             }}
             style={({ pressed }) => [
