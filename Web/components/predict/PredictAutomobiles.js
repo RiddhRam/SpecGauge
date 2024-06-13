@@ -1,7 +1,7 @@
 import { Text, ScrollView, View, Pressable } from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { Footer } from "../../Footer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -197,6 +197,18 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     setDisplayAverageCarPrices(averageCarPrices.slice(startIndex, endIndex));
   };
 
+  const [viewStyle, setViewStyle] = useState(
+    isMobile ? { flex: 0.6, marginRight: 20 } : { width: "60%" }
+  );
+
+  useEffect(() => {
+    setViewStyle(
+      isMobile
+        ? { flex: 0.6, marginRight: 20, marginTop: 65 }
+        : { width: "60%" }
+    );
+  }, [isMobile]);
+
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* Main Body */}
@@ -252,74 +264,88 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
             <p>Test AI</p>
           </Pressable>
         </View>
-        <Line options={lineOptions} data={lineData}></Line>
-        {/* Sliders */}
-        <View>
-          {/* Scroll */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 10,
-            }}
-          >
-            <Text style={[styles.textStyles.plainText, { marginRight: 10 }]}>
-              Scroll
-            </Text>
-            <Slider
-              value={position}
-              onChange={OnScrollChangeTrigger}
-              step={1}
-              min={0}
-              max={scrollLimit}
-              trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
-              railStyle={{ backgroundColor: "lightblue", height: 10 }}
-              handleStyle={{
-                marginLeft: 0,
-                marginTop: -2,
-              }}
-            />
+
+        {/* Main Content */}
+        <View style={{ flexDirection: "row" }}>
+          {/* Graph and Scroll slider */}
+          <View style={{ width: "60%" }}>
+            {/* Graph */}
+            <Line options={lineOptions} data={lineData} />
+            {/* Scroll */}
+            <View style={{ flexDirection: "row" }}>
+              <Text
+                style={[
+                  styles.textStyles.plainText,
+                  { marginRight: 10, userSelect: "none" },
+                ]}
+              >
+                Scroll
+              </Text>
+              <Slider
+                value={position}
+                onChange={OnScrollChangeTrigger}
+                step={1}
+                min={0}
+                max={scrollLimit}
+                trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
+                railStyle={{ backgroundColor: "lightblue", height: 10 }}
+                handleStyle={{
+                  marginLeft: 0,
+                  marginTop: -2,
+                }}
+              />
+            </View>
           </View>
-          {/* Zoom */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 10,
-            }}
-          >
-            <Text style={[styles.textStyles.plainText, { marginRight: 10 }]}>
-              Zoom
-            </Text>
-            <Text
-              style={[
-                styles.textStyles.plainText,
-                { marginRight: 10, fontSize: 20 },
-              ]}
-            >
-              -
-            </Text>
-            <Slider
-              value={yearsCount}
-              onChange={OnZoomChangeTrigger}
-              step={1}
-              min={22}
-              max={44}
-              trackStyle={{ backgroundColor: "#4ca0d7" }}
-              railStyle={{ backgroundColor: "lightblue" }}
-            />
-            <Text
-              style={[
-                styles.textStyles.plainText,
-                { marginLeft: 15, fontSize: 20 },
-              ]}
-            >
-              +
-            </Text>
+          {/* Zoom slider */}
+          <View style={{ flex: 0.3 }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text
+                style={[
+                  styles.textStyles.plainText,
+                  { marginRight: 10, userSelect: "none" },
+                ]}
+              >
+                Zoom
+              </Text>
+              <Text
+                style={[
+                  styles.textStyles.plainText,
+                  { marginRight: 10, fontSize: 20, userSelect: "none" },
+                ]}
+              >
+                -
+              </Text>
+              <Slider
+                value={yearsCount}
+                onChange={OnZoomChangeTrigger}
+                step={1}
+                min={22}
+                max={44}
+                trackStyle={{ backgroundColor: "#4ca0d7" }}
+                railStyle={{ backgroundColor: "lightblue" }}
+              />
+              <Text
+                style={[
+                  styles.textStyles.plainText,
+                  { marginLeft: 15, fontSize: 20, userSelect: "none" },
+                ]}
+              >
+                +
+              </Text>
+            </View>
           </View>
         </View>
+
+        {/* Zoom */}
+        {/*<View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          
+        </View>*/}
       </View>
 
       <Footer amplitude={amplitude} isMobile={isMobile} />
