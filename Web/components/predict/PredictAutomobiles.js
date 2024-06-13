@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, Pressable } from "react-native-web";
+import { Text, ScrollView, View, Pressable, TextInput } from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { Footer } from "../../Footer";
 import { useState, useEffect } from "react";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import { Dropdown } from "react-native-element-dropdown";
 
 import {
   Chart as ChartJS,
@@ -18,7 +19,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  plugins,
 } from "chart.js";
 
 ChartJS.register(
@@ -101,6 +101,12 @@ const averageCarPrices = [
 let startIndex = 24;
 let endIndex = 56;
 
+const fast = -0.14;
+const normal = -0.11;
+const reliable = -0.05;
+const expensiveSport = -0.04;
+const superCar = -0.03;
+
 export default function PredictAutomobiles({ type, amplitude, isMobile }) {
   styles = SGStyles();
   const navigate = useNavigate();
@@ -111,6 +117,9 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
   // Determines number of years to display, 22 for 22 years, anything over that is 22 - excess = number of years
   const [yearsCount, setYearsCount] = useState(22);
 
+  // If this changes to true, useEffect will rerender the graph points
+  const [updateGraph, setUpdateGraph] = useState(false);
+
   // Scroll position
   const [position, setPosition] = useState(24);
   // Maximum scroll length according to current zoom level
@@ -120,6 +129,179 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     averageCarPrices.slice(startIndex, endIndex)
   );
 
+  const [initialPrice, setInitialPrice] = useState("");
+  const [releaseYear, setReleaseYear] = useState("");
+  const [brand, setBrand] = useState("");
+  const [dropdownFocus, setDropdownFocus] = useState(false);
+
+  const [originalPoints, setOriginalPoints] = useState([averageCarPrices]);
+  const dropdownData = [
+    { label: "Acura", value: "Acura" },
+    { label: "Alfa Romeo", value: "Alfa Romeo" },
+    { label: "Aston Martin", value: "Aston Martin" },
+    { label: "Audi", value: "Audi" },
+    { label: "Bentley", value: "Bentley" },
+    { label: "BMW", value: "BMW" },
+    { label: "Bugatti", value: "Bugatti" },
+    { label: "Buick", value: "Buick" },
+    { label: "BYD", value: "BYD" },
+    { label: "Cadillac", value: "Cadillac" },
+    { label: "Chevrolet", value: "Chevrolet" },
+    { label: "Chrysler", value: "Chrysler" },
+    { label: "Citroen", value: "Citroen" },
+    { label: "Daewoo", value: "Daewoo" },
+    { label: "Dodge", value: "Dodge" },
+    { label: "Ferrari", value: "Ferrari" },
+    { label: "Fiat", value: "Fiat" },
+    { label: "Fisker", value: "Fisker" },
+    { label: "Ford", value: "Ford" },
+    { label: "Genesis", value: "Genesis" },
+    { label: "GMC", value: "GMC" },
+    { label: "Hennessey", value: "Hennessey" },
+    { label: "Honda", value: "Honda" },
+    { label: "Hummer", value: "Hummer" },
+    { label: "Hyundai", value: "Hyundai" },
+    { label: "INEOS", value: "INEOS" },
+    { label: "Infiniti", value: "Infiniti" },
+    { label: "Isuzu", value: "Isuzu" },
+    { label: "Jaguar", value: "Jaguar" },
+    { label: "Jeep", value: "Jeep" },
+    { label: "Karma", value: "Karma" },
+    { label: "Kia", value: "Kia" },
+    { label: "Koenigsegg", value: "Koenigsegg" },
+    { label: "KTM", value: "KTM" },
+    { label: "Lamborghini", value: "Lamborghini" },
+    { label: "Land Rover", value: "Land Rover" },
+    { label: "Lexus", value: "Lexus" },
+    { label: "Lincoln", value: "Lincoln" },
+    { label: "Lotus", value: "Lotus" },
+    { label: "Lucid", value: "Lucid" },
+    { label: "Maserati", value: "Maserati" },
+    { label: "Maybach", value: "Maybach" },
+    { label: "Mazda", value: "Mazda" },
+    { label: "McLaren", value: "McLaren" },
+    { label: "Mercedes-Benz", value: "Mercedes-Benz" },
+    { label: "Mercury", value: "Mercury" },
+    { label: "Mini", value: "Mini" },
+    { label: "Mitsubishi", value: "Mitsubishi" },
+    { label: "Nissan", value: "Nissan" },
+    { label: "Oldsmobile", value: "Oldsmobile" },
+    { label: "Opel", value: "Opel" },
+    { label: "Pagani", value: "Pagani" },
+    { label: "Panoz", value: "Panoz" },
+    { label: "Peugeot", value: "Peugeot" },
+    { label: "Plymouth", value: "Plymouth" },
+    { label: "Polestar", value: "Polestar" },
+    { label: "Pontiac", value: "Pontiac" },
+    { label: "Porsche", value: "Porsche" },
+    { label: "RAM", value: "RAM" },
+    { label: "Renault", value: "Renault" },
+    { label: "Rimac", value: "Rimac" },
+    { label: "Rivian", value: "Rivian" },
+    { label: "Rolls-Royce", value: "Rolls-Royce" },
+    { label: "Saab", value: "Saab" },
+    { label: "Saturn", value: "Saturn" },
+    { label: "Scion", value: "Scion" },
+    { label: "Smart", value: "Smart" },
+    { label: "Spyker", value: "Spyker" },
+    { label: "Subaru", value: "Subaru" },
+    { label: "Suzuki", value: "Suzuki" },
+    { label: "Tata", value: "Tata" },
+    { label: "Tesla", value: "Tesla" },
+    { label: "Toyota", value: "Toyota" },
+    { label: "VinFast", value: "VinFast" },
+    { label: "Volkswagen", value: "Volkswagen" },
+    { label: "Volvo", value: "Volvo" },
+    { label: "Xiaomi", value: "Xiaomi" },
+  ];
+
+  const brandValues = [
+    { label: "Acura", value: reliable },
+    { label: "Alfa Romeo", value: normal },
+    { label: "Aston Martin", value: expensiveSport },
+    { label: "Audi", value: normal },
+    { label: "Bentley", value: expensiveSport },
+    { label: "BMW", value: normal },
+    { label: "Bugatti", value: superCar },
+    { label: "Buick", value: normal },
+    { label: "BYD", value: normal },
+    { label: "Cadillac", value: normal },
+    { label: "Chevrolet", value: fast },
+    { label: "Chrysler", value: normal },
+    { label: "Citroen", value: fast },
+    { label: "Daewoo", value: normal },
+    { label: "Dodge", value: normal },
+    { label: "Ferrari", value: superCar },
+    { label: "Fiat", value: fast },
+    { label: "Fisker", value: fast },
+    { label: "Ford", value: normal },
+    { label: "Genesis", value: normal },
+    { label: "GMC", value: normal },
+    { label: "Hennessey", value: superCar },
+    { label: "Honda", value: reliable },
+    { label: "Hummer", value: fast },
+    { label: "Hyundai", value: normal },
+    { label: "INEOS", value: fast },
+    { label: "Infiniti", value: normal },
+    { label: "Isuzu", value: normal },
+    { label: "Jaguar", value: expensiveSport },
+    { label: "Jeep", value: normal },
+    { label: "Karma", value: normal },
+    { label: "Kia", value: normal },
+    { label: "Koenigsegg", value: superCar },
+    { label: "KTM", value: expensiveSport },
+    { label: "Lamborghini", value: expensiveSport },
+    { label: "Land Rover", value: normal },
+    { label: "Lexus", value: reliable },
+    { label: "Lincoln", value: normal },
+    { label: "Lotus", value: normal },
+    { label: "Lucid", value: normal },
+    { label: "Maserati", value: expensiveSport },
+    { label: "Maybach", value: superCar },
+    { label: "Mazda", value: reliable },
+    { label: "McLaren", value: expensiveSport },
+    { label: "Mercedes-Benz", value: normal },
+    { label: "Mercury", value: normal },
+    { label: "Mini", value: normal },
+    { label: "Mitsubishi", value: reliable },
+    { label: "Nissan", value: reliable },
+    { label: "Oldsmobile", value: normal },
+    { label: "Opel", value: normal },
+    { label: "Pagani", value: superCar },
+    { label: "Panoz", value: normal },
+    { label: "Peugeot", value: normal },
+    { label: "Plymouth", value: normal },
+    { label: "Polestar", value: normal },
+    { label: "Pontiac", value: normal },
+    { label: "Porsche", value: expensiveSport },
+    { label: "RAM", value: normal },
+    { label: "Renault", value: normal },
+    { label: "Rimac", value: superCar },
+    { label: "Rivian", value: normal },
+    { label: "Rolls-Royce", value: expensiveSport },
+    { label: "Saab", value: normal },
+    { label: "Saturn", value: normal },
+    { label: "Scion", value: normal },
+    { label: "Smart", value: fast },
+    { label: "Spyker", value: normal },
+    { label: "Subaru", value: reliable },
+    { label: "Suzuki", value: normal },
+    { label: "Tata", value: normal },
+    { label: "Tesla", value: normal },
+    { label: "Toyota", value: reliable },
+    { label: "VinFast", value: fast },
+    { label: "Volkswagen", value: normal },
+    { label: "Volvo", value: reliable },
+    { label: "Xiaomi", value: fast },
+  ];
+
+  const [lineValueDataset, setLineValueDataset] = useState([
+    {
+      label: "Average Car Price",
+      data: displayAverageCarPrices,
+      borderColor: "rgb(75, 192, 192)",
+    },
+  ]);
   const lineOptions = {
     responsive: true,
     plugins: {
@@ -141,7 +323,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
       y: {
         title: {
           display: true,
-          text: "Average Car Price (USD)", // Label for the y-axis
+          text: "Price (USD $)", // Label for the y-axis
           color: "#4ca0d7",
         },
         grid: {
@@ -152,31 +334,27 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
   };
   const lineData = {
     labels: displayYears,
-    datasets: [
-      {
-        label: "Average Car Price",
-        data: displayAverageCarPrices,
-        borderColor: "rgb(75, 192, 192)",
-      },
-      {
-        label: "Toyota",
-        data: [null, 30000, 30000, 30000],
-        borderColor: "rgb(192, 19, 12)",
-      },
-    ],
+    datasets: lineValueDataset,
   };
 
-  const OnScrollChangeTrigger = (value) => {
+  function OnScrollChangeTrigger(value) {
     const difference = value - startIndex;
     startIndex += difference;
     endIndex += difference;
 
     setPosition(value);
     setDisplayYears(years.slice(startIndex, endIndex));
-    setDisplayAverageCarPrices(averageCarPrices.slice(startIndex, endIndex));
-  };
+    // Update the points being displayed
+    newDataset = [];
+    for (item in lineValueDataset) {
+      let newItem = lineValueDataset[item];
+      newItem.data = originalPoints[item].slice(startIndex, endIndex);
+      newDataset.push(newItem);
+    }
+    setLineValueDataset(newDataset);
+  }
 
-  const OnZoomChangeTrigger = (value) => {
+  function OnZoomChangeTrigger(value) {
     // Difference of years
     const difference = yearsCount - value;
     // We move the last number if position isn't at the end
@@ -194,20 +372,100 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     // Update the years being displayed
     setDisplayYears(years.slice(startIndex, endIndex));
     // Update the points being displayed
-    setDisplayAverageCarPrices(averageCarPrices.slice(startIndex, endIndex));
+    newDataset = [];
+    for (item in lineValueDataset) {
+      let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
+      newItem.data = originalPoints[item].slice(startIndex, endIndex);
+      newDataset.push(newItem);
+    }
+    setLineValueDataset(newDataset);
+  }
+
+  const handleNumberInput = (text, setValue) => {
+    if (/^\d*$/.test(text)) {
+      // Regex to check if the input is only digits
+      setValue(text);
+    }
   };
 
-  const [viewStyle, setViewStyle] = useState(
-    isMobile ? { flex: 0.6, marginRight: 20 } : { width: "60%" }
-  );
+  function addToGraph(priceString, yearString, brand) {
+    const price = parseFloat(priceString);
+    const year = parseInt(yearString);
+    // If price is not at least 7500
+    if (price < 7500) {
+      return "Enter a price of at least $7500";
+    } // If year is too old or new
+    else if (year < 2000 || year > 2025) {
+      return "Enter a year between 2000 and 2025";
+    }
+
+    // The rate that the price drops
+    let rate = null;
+    // Iterate through the brandValues array and find the rate for this brand
+    for (item in brandValues) {
+      if (brand == brandValues[item].label) {
+        rate = brandValues[item].value;
+        break;
+      }
+    }
+    // This gets appended to lineValuesDataset to display
+    let prices = [];
+    // Start at 2000 for readability, each i value is an x value on the graph (years)
+    for (let i = 2000; i < 2056; i++) {
+      // If vehicle wasn't manufactured yet, then don't display price for that year
+      if (i < year) {
+        prices.push(null);
+      } // For each year it was released, calculate the price for that year
+      else {
+        const newPrice = price * Math.E ** (rate * (i - year));
+        prices.push(newPrice);
+      }
+    }
+
+    while (true) {
+      let matchFound = false;
+      const red = Math.random() * 255;
+      const green = Math.random() * 255;
+      const blue = Math.random() * 255;
+
+      newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+      for (item in lineValueDataset) {
+        if (newBorderColor == lineValueDataset[item].borderColor) {
+          matchFound = true;
+          break;
+        }
+      }
+
+      if (!matchFound) {
+        newLine = {
+          label: `$${price} ${year} ${brand}`,
+          data: prices,
+          borderColor: newBorderColor,
+        };
+        setOriginalPoints((prevPoints) => [...prevPoints, prices]);
+        setLineValueDataset((prevLines) => [...prevLines, newLine]);
+        setUpdateGraph(true);
+
+        break;
+      }
+    }
+    return prices;
+  }
 
   useEffect(() => {
-    setViewStyle(
-      isMobile
-        ? { flex: 0.6, marginRight: 20, marginTop: 65 }
-        : { width: "60%" }
-    );
-  }, [isMobile]);
+    if (updateGraph) {
+      setUpdateGraph(false);
+      // Update the points being displayed
+      newDataset = [];
+      for (item in lineValueDataset) {
+        let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
+        newItem.data = originalPoints[item].slice(startIndex, endIndex);
+        newDataset.push(newItem);
+      }
+      setLineValueDataset(newDataset);
+    }
+  }, [isMobile, updateGraph]);
 
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
@@ -216,7 +474,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
         <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
           {type} Prediction
         </Text>
-        {/* Top Fields */}
+        {/* Top Buttons */}
         <View
           style={{
             marginRight: "auto",
@@ -239,36 +497,11 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
           >
             <p>{"< Go Back"}</p>
           </Pressable>
-
-          <Pressable
-            onPress={() => {
-              //console.log("Testing AI");
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-            ]}
-          >
-            <p>Add</p>
-          </Pressable>
-
-          <Pressable
-            onPress={() => {
-              console.log("Testing AI");
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-            ]}
-          >
-            <p>Test AI</p>
-          </Pressable>
         </View>
 
         {/* Main Content */}
-        <View style={{ flexDirection: "row" }}>
-          {/* Graph and Scroll slider */}
-          <View style={{ width: "60%" }}>
+        {isMobile ? (
+          <View>
             {/* Graph */}
             <Line options={lineOptions} data={lineData} />
             {/* Scroll */}
@@ -295,57 +528,187 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                 }}
               />
             </View>
-          </View>
-          {/* Zoom slider */}
-          <View style={{ flex: 0.3 }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
-                style={[
-                  styles.textStyles.plainText,
-                  { marginRight: 10, userSelect: "none" },
-                ]}
-              >
-                Zoom
-              </Text>
-              <Text
-                style={[
-                  styles.textStyles.plainText,
-                  { marginRight: 10, fontSize: 20, userSelect: "none" },
-                ]}
-              >
-                -
-              </Text>
-              <Slider
-                value={yearsCount}
-                onChange={OnZoomChangeTrigger}
-                step={1}
-                min={22}
-                max={44}
-                trackStyle={{ backgroundColor: "#4ca0d7" }}
-                railStyle={{ backgroundColor: "lightblue" }}
-              />
-              <Text
-                style={[
-                  styles.textStyles.plainText,
-                  { marginLeft: 15, fontSize: 20, userSelect: "none" },
-                ]}
-              >
-                +
-              </Text>
+            {/* Zoom slider */}
+            <View style={{ flex: 0.3 }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text
+                  style={[
+                    styles.textStyles.plainText,
+                    { marginRight: 10, userSelect: "none" },
+                  ]}
+                >
+                  Zoom
+                </Text>
+                <Text
+                  style={[
+                    styles.textStyles.plainText,
+                    { marginRight: 10, fontSize: 20, userSelect: "none" },
+                  ]}
+                >
+                  -
+                </Text>
+                <Slider
+                  value={yearsCount}
+                  onChange={OnZoomChangeTrigger}
+                  step={1}
+                  min={22}
+                  max={44}
+                  trackStyle={{ backgroundColor: "#4ca0d7" }}
+                  railStyle={{ backgroundColor: "lightblue" }}
+                />
+                <Text
+                  style={[
+                    styles.textStyles.plainText,
+                    {
+                      marginLeft: 10,
+                      marginTop: 10,
+                      fontSize: 20,
+                      userSelect: "none",
+                    },
+                  ]}
+                >
+                  +
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
+        ) : (
+          <View style={{ flexDirection: "row" }}>
+            {/* Graph and Scroll slider */}
+            <View style={{ width: "55%" }}>
+              {/* Graph */}
+              <Line options={lineOptions} data={lineData} />
+              {/* Scroll */}
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={[
+                    styles.textStyles.plainText,
+                    { marginRight: 10, userSelect: "none" },
+                  ]}
+                >
+                  Scroll
+                </Text>
+                <Slider
+                  value={position}
+                  onChange={OnScrollChangeTrigger}
+                  step={1}
+                  min={0}
+                  max={scrollLimit}
+                  trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
+                  railStyle={{ backgroundColor: "lightblue", height: 10 }}
+                  handleStyle={{
+                    marginLeft: 0,
+                    marginTop: -2,
+                  }}
+                />
+              </View>
+            </View>
+            {/* Side Controls */}
+            <View style={{ flex: 1, marginLeft: 15 }}>
+              {/* Zoom slider */}
+              <View style={{ width: "30%" }}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text
+                    style={[
+                      styles.textStyles.plainText,
+                      { marginRight: 10, userSelect: "none" },
+                    ]}
+                  >
+                    Zoom
+                  </Text>
+                  <Text
+                    style={[
+                      styles.textStyles.plainText,
+                      { marginRight: 10, fontSize: 20, userSelect: "none" },
+                    ]}
+                  >
+                    -
+                  </Text>
+                  <Slider
+                    value={yearsCount}
+                    onChange={OnZoomChangeTrigger}
+                    step={1}
+                    min={22}
+                    max={44}
+                    trackStyle={{ backgroundColor: "#4ca0d7" }}
+                    railStyle={{ backgroundColor: "lightblue" }}
+                  />
+                  <Text
+                    style={[
+                      styles.textStyles.plainText,
+                      { marginLeft: 15, fontSize: 20, userSelect: "none" },
+                    ]}
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+              {/* Initial Price Field */}
+              <TextInput
+                value={initialPrice}
+                style={styles.inputStyles.predictionTextInput}
+                placeholder="Initial Price (USD $)"
+                id="initialPrice"
+                inputMode="numeric"
+                onChange={(text) =>
+                  handleNumberInput(text.nativeEvent.text, setInitialPrice)
+                }
+              ></TextInput>
 
-        {/* Zoom */}
-        {/*<View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-        >
-          
-        </View>*/}
+              {/* Release Year Field */}
+              <TextInput
+                value={releaseYear}
+                style={styles.inputStyles.predictionTextInput}
+                placeholder="Release Year"
+                id="releaseYear"
+                inputMode="numeric"
+                onChange={(text) =>
+                  handleNumberInput(text.nativeEvent.text, setReleaseYear)
+                }
+              ></TextInput>
+
+              {/* Brand drop down */}
+              <Dropdown
+                style={{ marginTop: 15, width: "50%" }}
+                placeholderStyle={styles.inputStyles.predictionTextInput}
+                selectedTextStyle={styles.inputStyles.predictionTextInput}
+                containerStyle={styles.containerStyles.dropdownMenu}
+                inputSearchStyle={styles.inputStyles.searchTextInput}
+                selectedStyle={styles.containerStyles.dropdownMenu}
+                itemContainerStyle={styles.containerStyles.dropdownMenuItem}
+                itemTextStyle={{ color: "#4ca0d7" }}
+                data={dropdownData}
+                search
+                labelField="label"
+                valueField="value"
+                placeholder={
+                  !dropdownFocus ? "Select a brand" : "Select a brand"
+                }
+                searchPlaceholder="Search"
+                value={brand}
+                onFocus={() => setDropdownFocus(true)}
+                onBlur={() => setDropdownFocus(false)}
+                onChange={(item) => {
+                  setBrand(item.value);
+                  setDropdownFocus(false);
+                }}
+              />
+
+              <Pressable
+                onPress={() => {
+                  addToGraph(initialPrice, releaseYear, brand);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { width: "50%", marginLeft: 0, marginTop: 25 },
+                ]}
+              >
+                <p>Add</p>
+              </Pressable>
+            </View>
+          </View>
+        )}
       </View>
 
       <Footer amplitude={amplitude} isMobile={isMobile} />
