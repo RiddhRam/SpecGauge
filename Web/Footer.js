@@ -9,7 +9,7 @@ export const Footer = ({ amplitude, isMobile }) => {
     <View
       style={[
         {
-          marginTop: 20,
+          marginTop: 10,
           paddingVertical: 10,
           flexDirection: "row",
           justifyContent: "space-around",
@@ -24,6 +24,7 @@ export const Footer = ({ amplitude, isMobile }) => {
           style={[
             { fontSize: isMobile ? 20 : 30 },
             styles.textStyles.reversePlainText,
+            { userSelect: "none" },
           ]}
         >
           Social Media
@@ -39,7 +40,11 @@ export const Footer = ({ amplitude, isMobile }) => {
               );
               amplitude.track("Instagram");
             }}
-            style={{ flexDirection: "row", alignItems: "center" }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              userSelect: "none",
+            }}
           >
             <Image
               source={require("../assets/instagram icon.png")}
@@ -61,7 +66,11 @@ export const Footer = ({ amplitude, isMobile }) => {
               );
               amplitude.track("TikTok");
             }}
-            style={{ flexDirection: "row", alignItems: "center" }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              userSelect: "none",
+            }}
           >
             <Image
               source={require("../assets/tiktok icon.png")}
@@ -83,7 +92,11 @@ export const Footer = ({ amplitude, isMobile }) => {
               );
               amplitude.track("X");
             }}
-            style={{ flexDirection: "row", alignItems: "center" }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              userSelect: "none",
+            }}
           >
             <Image
               source={require("../assets/x icon.png")}
@@ -103,6 +116,7 @@ export const Footer = ({ amplitude, isMobile }) => {
           style={[
             styles.textStyles.reversePlainText,
             { fontSize: isMobile ? 20 : 30 },
+            { userSelect: "none" },
           ]}
         >
           Contact Us

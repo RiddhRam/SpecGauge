@@ -23,12 +23,12 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-const links = [
-  "/automobiles",
-  "/consoles",
-  "/drones",
-  "/graphicsCards",
-  "/cpus",
+const comparisonLinks = [
+  "/comparison/automobiles",
+  "/comparison/consoles",
+  "/comparison/drones",
+  "/comparison/graphicsCards",
+  "/comparison/cpus",
 ];
 
 const categories = [
@@ -582,7 +582,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
                                       }
                                       setLoading(false);
 
-                                      navigate(links[categoryIndex], {
+                                      navigate(comparisonLinks[categoryIndex], {
                                         state: {
                                           prerequestedSpecs: prerequestedSpecs,
                                           processArray: processArray,

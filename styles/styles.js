@@ -65,6 +65,13 @@ export const SGStyles = () => {
     reverseBackground: {
       backgroundColor: theme === "dark" ? "#fff" : "#000",
     },
+    dropdownMenu: {
+      backgroundColor: theme === "dark" ? "#171827" : "#fff",
+      padding: 5,
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: theme === "dark" ? "#131423" : "#eee",
+    },
   });
 
   const textStyles = StyleSheet.create({
@@ -239,6 +246,28 @@ export const SGStyles = () => {
     resetButtonClicked: {
       backgroundColor: theme === "dark" ? "#690505" : "#b53731",
       userSelect: "none",
+    },
+    predictionTextInput: {
+      borderColor: "#4ca0d7",
+      borderWidth: 2,
+      borderRadius: 8,
+      color: "#999",
+      fontSize: 24,
+      marginVertical: 10,
+      marginLeft: 0,
+      padding: 5,
+      userSelect: "none",
+      outlineStyle: "none",
+      width: "92%",
+    },
+    searchTextInput: {
+      borderColor: "#4ca0d7",
+      borderRadius: 8,
+      color: "#999",
+      fontSize: 24,
+      padding: 5,
+      userSelect: "none",
+      outlineStyle: "none",
     },
   });
 
