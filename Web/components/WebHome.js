@@ -123,7 +123,9 @@ export default function WebHome({ amplitude, isMobile }) {
                   Recently added
                 </Text>
                 <Text style={styles.textStyles.plainText}>• Improved UI </Text>
-                <Text style={styles.textStyles.plainText}>• Pros</Text>
+                <Text style={styles.textStyles.plainText}>
+                  • Prediction Analysis AI
+                </Text>
               </View>
 
               {/* Coming soon */}
@@ -139,9 +141,7 @@ export default function WebHome({ amplitude, isMobile }) {
                   Coming Soon
                 </Text>
                 <Text style={styles.textStyles.plainText}>• Definitions</Text>
-                <Text style={styles.textStyles.plainText}>
-                  • Phones and Tablets
-                </Text>
+                <Text style={styles.textStyles.plainText}></Text>
                 <Text style={styles.textStyles.plainText}></Text>
               </View>
             </View>

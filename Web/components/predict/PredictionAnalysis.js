@@ -19,6 +19,7 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { Dropdown } from "react-native-element-dropdown";
 import seedrandom from "seedrandom";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -48,235 +49,18 @@ const years = [
   2052, 2053, 2054, 2055,
 ];
 
-const averageCarPrices = [
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  24596.49306,
-  24568.04833,
-  24499.73456,
-  23629.92042,
-  26551.32829,
-  35249.10294,
-  34998.1869,
-  31601.678,
-  29804.43696,
-  28069.02268,
-  26335.33643,
-  26434.31044,
-  26533.18701,
-  26631.96533,
-  26730.64605,
-  26829.22803,
-  26927.71208,
-  27026.09842,
-  27124.38395,
-  27222.57373,
-  27320.66564,
-  27706.09402,
-  28091.13666,
-  28475.79633,
-  28860.07368,
-  29243.96935,
-  29627.4796,
-  30010.60948,
-  30393.35726,
-  30775.72255,
-  31157.70719,
-  31539.31261,
-  31920.53863,
-  32301.38433,
-  32681.85482,
-  33061.94786,
-  32613.79568,
-  32166.10259,
-  31718.85731,
-];
-
 let startIndex = 24;
 let endIndex = 56;
 
-const fast = -0.14;
-const normal = -0.11;
-const reliable = -0.05;
-const expensiveSport = -0.04;
-const superCar = -0.03;
-
-const dropdownData = [
-  { label: "Acura", value: "Acura" },
-  { label: "Alfa Romeo", value: "Alfa Romeo" },
-  { label: "Aston Martin", value: "Aston Martin" },
-  { label: "Audi", value: "Audi" },
-  { label: "Bentley", value: "Bentley" },
-  { label: "BMW", value: "BMW" },
-  { label: "Bugatti", value: "Bugatti" },
-  { label: "Buick", value: "Buick" },
-  { label: "BYD", value: "BYD" },
-  { label: "Cadillac", value: "Cadillac" },
-  { label: "Chevrolet", value: "Chevrolet" },
-  { label: "Chrysler", value: "Chrysler" },
-  { label: "Citroen", value: "Citroen" },
-  { label: "Daewoo", value: "Daewoo" },
-  { label: "Dodge", value: "Dodge" },
-  { label: "Ferrari", value: "Ferrari" },
-  { label: "Fiat", value: "Fiat" },
-  { label: "Fisker", value: "Fisker" },
-  { label: "Ford", value: "Ford" },
-  { label: "Genesis", value: "Genesis" },
-  { label: "GMC", value: "GMC" },
-  { label: "Hennessey", value: "Hennessey" },
-  { label: "Honda", value: "Honda" },
-  { label: "Hummer", value: "Hummer" },
-  { label: "Hyundai", value: "Hyundai" },
-  { label: "INEOS", value: "INEOS" },
-  { label: "Infiniti", value: "Infiniti" },
-  { label: "Isuzu", value: "Isuzu" },
-  { label: "Jaguar", value: "Jaguar" },
-  { label: "Jeep", value: "Jeep" },
-  { label: "Karma", value: "Karma" },
-  { label: "Kia", value: "Kia" },
-  { label: "Koenigsegg", value: "Koenigsegg" },
-  { label: "KTM", value: "KTM" },
-  { label: "Lamborghini", value: "Lamborghini" },
-  { label: "Land Rover", value: "Land Rover" },
-  { label: "Lexus", value: "Lexus" },
-  { label: "Lincoln", value: "Lincoln" },
-  { label: "Lotus", value: "Lotus" },
-  { label: "Lucid", value: "Lucid" },
-  { label: "Maserati", value: "Maserati" },
-  { label: "Maybach", value: "Maybach" },
-  { label: "Mazda", value: "Mazda" },
-  { label: "McLaren", value: "McLaren" },
-  { label: "Mercedes-Benz", value: "Mercedes-Benz" },
-  { label: "Mercury", value: "Mercury" },
-  { label: "Mini", value: "Mini" },
-  { label: "Mitsubishi", value: "Mitsubishi" },
-  { label: "Nissan", value: "Nissan" },
-  { label: "Oldsmobile", value: "Oldsmobile" },
-  { label: "Opel", value: "Opel" },
-  { label: "Pagani", value: "Pagani" },
-  { label: "Panoz", value: "Panoz" },
-  { label: "Peugeot", value: "Peugeot" },
-  { label: "Plymouth", value: "Plymouth" },
-  { label: "Polestar", value: "Polestar" },
-  { label: "Pontiac", value: "Pontiac" },
-  { label: "Porsche", value: "Porsche" },
-  { label: "RAM", value: "RAM" },
-  { label: "Renault", value: "Renault" },
-  { label: "Rimac", value: "Rimac" },
-  { label: "Rivian", value: "Rivian" },
-  { label: "Rolls-Royce", value: "Rolls-Royce" },
-  { label: "Saab", value: "Saab" },
-  { label: "Saturn", value: "Saturn" },
-  { label: "Scion", value: "Scion" },
-  { label: "Smart", value: "Smart" },
-  { label: "Spyker", value: "Spyker" },
-  { label: "Subaru", value: "Subaru" },
-  { label: "Suzuki", value: "Suzuki" },
-  { label: "Tata", value: "Tata" },
-  { label: "Tesla", value: "Tesla" },
-  { label: "Toyota", value: "Toyota" },
-  { label: "VinFast", value: "VinFast" },
-  { label: "Volkswagen", value: "Volkswagen" },
-  { label: "Volvo", value: "Volvo" },
-  { label: "Xiaomi", value: "Xiaomi" },
-];
-
-const brandValues = [
-  { label: "Acura", value: reliable },
-  { label: "Alfa Romeo", value: normal },
-  { label: "Aston Martin", value: expensiveSport },
-  { label: "Audi", value: normal },
-  { label: "Bentley", value: expensiveSport },
-  { label: "BMW", value: normal },
-  { label: "Bugatti", value: superCar },
-  { label: "Buick", value: normal },
-  { label: "BYD", value: normal },
-  { label: "Cadillac", value: normal },
-  { label: "Chevrolet", value: fast },
-  { label: "Chrysler", value: normal },
-  { label: "Citroen", value: fast },
-  { label: "Daewoo", value: normal },
-  { label: "Dodge", value: normal },
-  { label: "Ferrari", value: superCar },
-  { label: "Fiat", value: fast },
-  { label: "Fisker", value: fast },
-  { label: "Ford", value: normal },
-  { label: "Genesis", value: normal },
-  { label: "GMC", value: normal },
-  { label: "Hennessey", value: superCar },
-  { label: "Honda", value: reliable },
-  { label: "Hummer", value: fast },
-  { label: "Hyundai", value: normal },
-  { label: "INEOS", value: fast },
-  { label: "Infiniti", value: normal },
-  { label: "Isuzu", value: normal },
-  { label: "Jaguar", value: expensiveSport },
-  { label: "Jeep", value: normal },
-  { label: "Karma", value: normal },
-  { label: "Kia", value: normal },
-  { label: "Koenigsegg", value: superCar },
-  { label: "KTM", value: expensiveSport },
-  { label: "Lamborghini", value: expensiveSport },
-  { label: "Land Rover", value: normal },
-  { label: "Lexus", value: reliable },
-  { label: "Lincoln", value: normal },
-  { label: "Lotus", value: normal },
-  { label: "Lucid", value: normal },
-  { label: "Maserati", value: expensiveSport },
-  { label: "Maybach", value: superCar },
-  { label: "Mazda", value: reliable },
-  { label: "McLaren", value: expensiveSport },
-  { label: "Mercedes-Benz", value: normal },
-  { label: "Mercury", value: normal },
-  { label: "Mini", value: normal },
-  { label: "Mitsubishi", value: reliable },
-  { label: "Nissan", value: reliable },
-  { label: "Oldsmobile", value: normal },
-  { label: "Opel", value: normal },
-  { label: "Pagani", value: superCar },
-  { label: "Panoz", value: normal },
-  { label: "Peugeot", value: normal },
-  { label: "Plymouth", value: normal },
-  { label: "Polestar", value: normal },
-  { label: "Pontiac", value: normal },
-  { label: "Porsche", value: normal },
-  { label: "RAM", value: normal },
-  { label: "Renault", value: normal },
-  { label: "Rimac", value: superCar },
-  { label: "Rivian", value: normal },
-  { label: "Rolls-Royce", value: expensiveSport },
-  { label: "Saab", value: normal },
-  { label: "Saturn", value: normal },
-  { label: "Scion", value: normal },
-  { label: "Smart", value: fast },
-  { label: "Spyker", value: normal },
-  { label: "Subaru", value: reliable },
-  { label: "Suzuki", value: normal },
-  { label: "Tata", value: normal },
-  { label: "Tesla", value: normal },
-  { label: "Toyota", value: reliable },
-  { label: "VinFast", value: fast },
-  { label: "Volkswagen", value: normal },
-  { label: "Volvo", value: reliable },
-  { label: "Xiaomi", value: fast },
-];
-
-export default function PredictAutomobiles({ type, amplitude, isMobile }) {
+export default function PredictionAnalysis({
+  type,
+  amplitude,
+  isMobile,
+  averagePrices,
+  brandValues,
+  dropdownData,
+  minimumPrice,
+}) {
   styles = SGStyles();
   const navigate = useNavigate();
   // Years being displayed
@@ -294,29 +78,21 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
   // Maximum scroll length according to current zoom level
   const [scrollLimit, setScrollLimit] = useState(24);
 
-  const displayAverageCarPrices = averageCarPrices.slice(startIndex, endIndex);
-
   const [initialPrice, setInitialPrice] = useState("");
   const [releaseYear, setReleaseYear] = useState("");
   const [brand, setBrand] = useState("");
   const [dropdownFocus, setDropdownFocus] = useState(false);
   const [colorChangeIndex, setColorChangeIndex] = useState(0);
 
-  const [originalPoints, setOriginalPoints] = useState([averageCarPrices]);
+  const [originalPoints, setOriginalPoints] = useState([]);
+  const [initalizedAveragePrices, setInitializedAveragePrices] =
+    useState(false);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [error, setError] = useState("");
 
-  const [lineValueDataset, setLineValueDataset] = useState([
-    {
-      label: "Average Car Price (USD $)",
-      data: displayAverageCarPrices,
-      borderColor: `rgb(${Math.random() * 255}, ${Math.random() * 255},${
-        Math.random() * 255
-      })`,
-    },
-  ]);
+  const [lineValueDataset, setLineValueDataset] = useState([]);
   const lineOptions = {
     responsive: true,
     plugins: {
@@ -408,8 +184,8 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     const year = parseInt(yearString);
 
     // If price is not at least 7500
-    if (price < 7500 || isNaN(price)) {
-      return "Enter a price of at least $7500";
+    if (price < minimumPrice || isNaN(price)) {
+      return `Enter a price of at least ${minimumPrice}`;
     } // If year is too old or new
     else if (year < 2000 || year > 2025 || isNaN(year)) {
       return "Enter a year between 2000 and 2025";
@@ -419,6 +195,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
 
     // The rate that the price drops
     let rate = null;
+    console.log(brandValues);
     // Iterate through the brandValues array and find the rate for this brand
     for (item in brandValues) {
       if (brand == brandValues[item].label) {
@@ -430,6 +207,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
     let prices = [];
     // This is used for the seed
     let lastPrice = price;
+    console.log(rate);
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
       // If vehicle wasn't manufactured yet, then don't display price for that year
@@ -505,6 +283,22 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
       }
       setLineValueDataset(newDataset);
     }
+    if (!initalizedAveragePrices) {
+      if (averagePrices != null) {
+        setOriginalPoints([averagePrices.slice()]);
+        setLineValueDataset([
+          {
+            label: `Average ${type} Price (USD $)`,
+            data: averagePrices.slice(startIndex, endIndex),
+            borderColor: `rgb(${Math.random() * 255}, ${Math.random() * 255},${
+              Math.random() * 255
+            })`,
+          },
+        ]);
+      }
+
+      setInitializedAveragePrices(true);
+    }
   }, [isMobile, updateGraph]);
 
   return (
@@ -541,6 +335,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
 
         {/* Main Content */}
         {isMobile ? (
+          /* Mobile View */
           <View>
             {/* Graph */}
             <Line options={lineOptions} data={lineData} />
@@ -569,7 +364,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
               />
             </View>
             {/* Zoom slider */}
-            <View style={{ flex: 0.3 }}>
+            <View style={{ flex: 0.3, marginTop: 5 }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text
                   style={[
@@ -601,7 +396,6 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                     styles.textStyles.plainText,
                     {
                       marginLeft: 10,
-                      marginTop: 10,
                       fontSize: 20,
                       userSelect: "none",
                     },
@@ -611,8 +405,208 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                 </Text>
               </View>
             </View>
+            {/* Bottom Controls */}
+            <View style={{ marginTop: 20 }}>
+              {/* Initial Price Field */}
+              <TextInput
+                value={initialPrice}
+                style={[
+                  styles.inputStyles.predictionTextInput,
+                  { fontSize: 16, width: "100%" },
+                ]}
+                placeholder="Initial New Price"
+                id="initialPrice"
+                inputMode="numeric"
+                onChange={(text) =>
+                  handleNumberInput(text.nativeEvent.text, setInitialPrice)
+                }
+              ></TextInput>
+              {/* Release Year Field */}
+              <TextInput
+                value={releaseYear}
+                style={[
+                  styles.inputStyles.predictionTextInput,
+                  { fontSize: 16, width: "100%" },
+                ]}
+                placeholder="Release Year"
+                id="releaseYear"
+                inputMode="numeric"
+                onChange={(text) =>
+                  handleNumberInput(text.nativeEvent.text, setReleaseYear)
+                }
+              ></TextInput>
+              {/* Brand drop down */}
+              <Dropdown
+                style={{ marginTop: 15 }}
+                placeholderStyle={[
+                  styles.inputStyles.predictionTextInput,
+                  { fontSize: 16, width: "100%" },
+                ]}
+                selectedTextStyle={[
+                  styles.inputStyles.predictionTextInput,
+                  { fontSize: 16, width: "100%" },
+                ]}
+                containerStyle={styles.containerStyles.dropdownMenu}
+                inputSearchStyle={styles.inputStyles.searchTextInput}
+                selectedStyle={styles.containerStyles.dropdownMenu}
+                itemContainerStyle={styles.containerStyles.dropdownMenu}
+                itemTextStyle={{ color: "#4ca0d7" }}
+                data={dropdownData}
+                search
+                labelField="label"
+                valueField="value"
+                placeholder={
+                  !dropdownFocus ? "Select a brand" : "Select a brand"
+                }
+                searchPlaceholder="Search"
+                value={brand}
+                onFocus={() => setDropdownFocus(true)}
+                onBlur={() => setDropdownFocus(false)}
+                onChange={(item) => {
+                  setBrand(item.value);
+                  setDropdownFocus(false);
+                }}
+              />
+              {/* Add */}
+              <Pressable
+                onPress={() => {
+                  const result = addToGraph(initialPrice, releaseYear, brand);
+                  if (result != 0) {
+                    setError(result);
+                    setShowErrorModal(true);
+                  }
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginLeft: 0, marginTop: 25, width: "100%" },
+                ]}
+              >
+                <p>Add</p>
+              </Pressable>
+              {/* Edit */}
+              <Pressable
+                onPress={() => {
+                  setShowEditModal(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginLeft: 0, width: "100%" },
+                ]}
+              >
+                <p>Edit</p>
+              </Pressable>
+              {/* Add Average Price, only if available */}
+              {averagePrices && (
+                <Pressable
+                  onPress={() => {
+                    while (true) {
+                      let matchFound = false;
+                      const red = Math.random() * 255;
+                      const green = Math.random() * 255;
+                      const blue = Math.random() * 255;
+
+                      newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+                      for (item in lineValueDataset) {
+                        if (
+                          newBorderColor == lineValueDataset[item].borderColor
+                        ) {
+                          matchFound = true;
+                          break;
+                        }
+                      }
+
+                      if (!matchFound) {
+                        newLine = {
+                          label: `Average ${type} Price (USD $)`,
+                          data: averagePrices.slice(),
+                          borderColor: newBorderColor,
+                        };
+                        setOriginalPoints((prevPoints) => [
+                          ...prevPoints,
+                          averagePrices.slice(),
+                        ]);
+                        setLineValueDataset((prevLines) => [
+                          ...prevLines,
+                          newLine,
+                        ]);
+                        setUpdateGraph(true);
+
+                        break;
+                      }
+                    }
+                  }}
+                  style={({ pressed }) => [
+                    styles.inputStyles.button,
+                    pressed && styles.inputStyles.buttonClicked,
+                    { marginLeft: 0, width: "100%" },
+                  ]}
+                >
+                  <p>Add Average {type} Price</p>
+                </Pressable>
+              )}
+
+              {/* Export CSV */}
+              <Pressable
+                onPress={() => {
+                  // This data will be converted to a csv
+                  let exportData = [];
+                  // The first row, and in the first column is the years
+                  firstJSON = {};
+                  firstJSON["Year"] = "Year";
+                  // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
+                  for (let j = 0; j < lineValueDataset.length; j++) {
+                    firstJSON[lineValueDataset[j].label] =
+                      lineValueDataset[j].label;
+                  }
+                  // Add the first row
+                  exportData.push(firstJSON);
+                  // Iterate through all years on the visible graph
+                  for (let i = startIndex; i < endIndex; i++) {
+                    let newJSON = {};
+                    // Year of the current row
+                    newJSON["Year"] = 2000 + i;
+                    // Iterate through prices of the current index for each item
+                    for (let j = 0; j < lineValueDataset.length; j++) {
+                      newJSON[lineValueDataset[j].label] = originalPoints[j][i];
+                    }
+                    // Add this row
+                    exportData.push(newJSON);
+                  }
+
+                  // Don't know what all this does, don't touch it
+                  const csv = exportData
+                    .map((row) => {
+                      return Object.values(row).toString();
+                    })
+                    .join("\n");
+
+                  const blob = new Blob([csv], {
+                    type: "text/csv;charset=utf-8;",
+                  });
+                  const link = document.createElement("a");
+                  const url = URL.createObjectURL(blob);
+                  link.setAttribute("href", url);
+                  link.setAttribute("download", "table_data.csv");
+                  link.style.visibility = "hidden";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginLeft: 0, width: "100%" },
+                ]}
+              >
+                <p>Export CSV</p>
+              </Pressable>
+            </View>
           </View>
         ) : (
+          /* Computer View */
           <View style={{ flexDirection: "row" }}>
             {/* Graph and Scroll slider */}
             <View style={{ width: "55%" }}>
@@ -643,10 +637,10 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                 />
               </View>
             </View>
-            {/* Side Controls */}
-            <View style={{ flex: 1, marginLeft: 15 }}>
+            {/* Side Controls First Column */}
+            <View style={{ marginLeft: 15 }}>
               {/* Zoom slider */}
-              <View style={{ width: "30%" }}>
+              <View style={{ width: "98%" }}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text
                     style={[
@@ -709,7 +703,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
 
               {/* Brand drop down */}
               <Dropdown
-                style={{ marginTop: 15, width: "50%" }}
+                style={{ marginTop: 15 }}
                 placeholderStyle={styles.inputStyles.predictionTextInput}
                 selectedTextStyle={styles.inputStyles.predictionTextInput}
                 containerStyle={styles.containerStyles.dropdownMenu}
@@ -746,7 +740,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                 style={({ pressed }) => [
                   styles.inputStyles.button,
                   pressed && styles.inputStyles.buttonClicked,
-                  { width: "50%", marginLeft: 0, marginTop: 25 },
+                  { marginLeft: 0, marginTop: 25 },
                 ]}
               >
                 <p>Add</p>
@@ -760,10 +754,120 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                 style={({ pressed }) => [
                   styles.inputStyles.button,
                   pressed && styles.inputStyles.buttonClicked,
-                  { width: "50%", marginLeft: 0 },
+                  { marginLeft: 0 },
                 ]}
               >
                 <p>Edit</p>
+              </Pressable>
+            </View>
+            {/* Side Controls Second Column */}
+            <View style={{ marginTop: 212, marginLeft: 0 }}>
+              {/* Add Average Price, only if available */}
+              {averagePrices && (
+                <Pressable
+                  onPress={() => {
+                    while (true) {
+                      let matchFound = false;
+                      const red = Math.random() * 255;
+                      const green = Math.random() * 255;
+                      const blue = Math.random() * 255;
+
+                      newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+                      for (item in lineValueDataset) {
+                        if (
+                          newBorderColor == lineValueDataset[item].borderColor
+                        ) {
+                          matchFound = true;
+                          break;
+                        }
+                      }
+
+                      if (!matchFound) {
+                        newLine = {
+                          label: `Average ${type} Price (USD $)`,
+                          data: averagePrices.slice(),
+                          borderColor: newBorderColor,
+                        };
+                        setOriginalPoints((prevPoints) => [
+                          ...prevPoints,
+                          averagePrices.slice(),
+                        ]);
+                        setLineValueDataset((prevLines) => [
+                          ...prevLines,
+                          newLine,
+                        ]);
+                        setUpdateGraph(true);
+
+                        break;
+                      }
+                    }
+                  }}
+                  style={({ pressed }) => [
+                    styles.inputStyles.button,
+                    pressed && styles.inputStyles.buttonClicked,
+                    { marginLeft: 0, width: "100%" },
+                  ]}
+                >
+                  <p>Add Average {type} Price</p>
+                </Pressable>
+              )}
+
+              {/* Export CSV */}
+              <Pressable
+                onPress={() => {
+                  // This data will be converted to a csv
+                  let exportData = [];
+                  // The first row, and in the first column is the years
+                  firstJSON = {};
+                  firstJSON["Year"] = "Year";
+                  // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
+                  for (let j = 0; j < lineValueDataset.length; j++) {
+                    firstJSON[lineValueDataset[j].label] =
+                      lineValueDataset[j].label;
+                  }
+                  // Add the first row
+                  exportData.push(firstJSON);
+                  // Iterate through all years on the visible graph
+                  for (let i = startIndex; i < endIndex; i++) {
+                    let newJSON = {};
+                    // Year of the current row
+                    newJSON["Year"] = 2000 + i;
+                    // Iterate through prices of the current index for each car
+                    for (let j = 0; j < lineValueDataset.length; j++) {
+                      newJSON[lineValueDataset[j].label] = originalPoints[j][i];
+                    }
+                    // Add this row
+                    exportData.push(newJSON);
+                  }
+
+                  // Don't know what all this does, don't touch it
+                  const csv = exportData
+                    .map((row) => {
+                      return Object.values(row).toString();
+                    })
+                    .join("\n");
+
+                  const blob = new Blob([csv], {
+                    type: "text/csv;charset=utf-8;",
+                  });
+                  const link = document.createElement("a");
+                  const url = URL.createObjectURL(blob);
+                  link.setAttribute("href", url);
+                  // table_data.csv is the name of the file, maybe the name can be changed according to the category
+                  link.setAttribute("download", "table_data.csv");
+                  link.style.visibility = "hidden";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginLeft: 0, width: "100%" },
+                ]}
+              >
+                <p>Export CSV</p>
               </Pressable>
             </View>
           </View>
@@ -825,6 +929,7 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                 <Pressable
                   style={{ marginLeft: 10 }}
                   onPress={() => {
+                    // Remove this item and set the color change index to 0 to minimize errors
                     newOriginalPoints = originalPoints.filter(
                       (array) => array !== originalPoints[index]
                     );
@@ -833,9 +938,6 @@ export default function PredictAutomobiles({ type, amplitude, isMobile }) {
                       (array) => array !== lineValueDataset[index]
                     );
                     setLineValueDataset(newLineValueDataset);
-
-                    console.log(newLineValueDataset);
-                    console.log(newOriginalPoints);
 
                     setColorChangeIndex(0);
                   }}

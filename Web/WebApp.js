@@ -7,8 +7,7 @@ import NoPage from "./components/NoPage";
 import WebLogIn from "./components/accounts/WebLogIn";
 import WebUserAccount from "./components/accounts/WebUserAccount";
 import Compare from "./components/compare/Compare";
-import PredictAutomobiles from "./components/predict/PredictAutomobiles";
-import PredictMath from "./components/predict/PredictMath";
+import PredictionAnalysis from "./components/predict/PredictionAnalysis";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -3056,6 +3055,252 @@ const carsCategories = [
   ],
 ];
 
+const fast = -0.14;
+const normal = -0.11;
+const reliable = -0.05;
+const expensiveSport = -0.04;
+const superCar = -0.03;
+
+const automobilesAveragePrices = [
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  24596.49306,
+  24568.04833,
+  24499.73456,
+  23629.92042,
+  26551.32829,
+  35249.10294,
+  34998.1869,
+  31601.678,
+  29804.43696,
+  28069.02268,
+  26335.33643,
+  26434.31044,
+  26533.18701,
+  26631.96533,
+  26730.64605,
+  26829.22803,
+  26927.71208,
+  27026.09842,
+  27124.38395,
+  27222.57373,
+  27320.66564,
+  27706.09402,
+  28091.13666,
+  28475.79633,
+  28860.07368,
+  29243.96935,
+  29627.4796,
+  30010.60948,
+  30393.35726,
+  30775.72255,
+  31157.70719,
+  31539.31261,
+  31920.53863,
+  32301.38433,
+  32681.85482,
+  33061.94786,
+  32613.79568,
+  32166.10259,
+  31718.85731,
+];
+const automobilesDropdownData = [
+  { label: "Acura", value: "Acura" },
+  { label: "Alfa Romeo", value: "Alfa Romeo" },
+  { label: "Aston Martin", value: "Aston Martin" },
+  { label: "Audi", value: "Audi" },
+  { label: "Bentley", value: "Bentley" },
+  { label: "BMW", value: "BMW" },
+  { label: "Bugatti", value: "Bugatti" },
+  { label: "Buick", value: "Buick" },
+  { label: "BYD", value: "BYD" },
+  { label: "Cadillac", value: "Cadillac" },
+  { label: "Chevrolet", value: "Chevrolet" },
+  { label: "Chrysler", value: "Chrysler" },
+  { label: "Citroen", value: "Citroen" },
+  { label: "Daewoo", value: "Daewoo" },
+  { label: "Dodge", value: "Dodge" },
+  { label: "Ferrari", value: "Ferrari" },
+  { label: "Fiat", value: "Fiat" },
+  { label: "Fisker", value: "Fisker" },
+  { label: "Ford", value: "Ford" },
+  { label: "Genesis", value: "Genesis" },
+  { label: "GMC", value: "GMC" },
+  { label: "Hennessey", value: "Hennessey" },
+  { label: "Honda", value: "Honda" },
+  { label: "Hummer", value: "Hummer" },
+  { label: "Hyundai", value: "Hyundai" },
+  { label: "INEOS", value: "INEOS" },
+  { label: "Infiniti", value: "Infiniti" },
+  { label: "Isuzu", value: "Isuzu" },
+  { label: "Jaguar", value: "Jaguar" },
+  { label: "Jeep", value: "Jeep" },
+  { label: "Karma", value: "Karma" },
+  { label: "Kia", value: "Kia" },
+  { label: "Koenigsegg", value: "Koenigsegg" },
+  { label: "KTM", value: "KTM" },
+  { label: "Lamborghini", value: "Lamborghini" },
+  { label: "Land Rover", value: "Land Rover" },
+  { label: "Lexus", value: "Lexus" },
+  { label: "Lincoln", value: "Lincoln" },
+  { label: "Lotus", value: "Lotus" },
+  { label: "Lucid", value: "Lucid" },
+  { label: "Maserati", value: "Maserati" },
+  { label: "Maybach", value: "Maybach" },
+  { label: "Mazda", value: "Mazda" },
+  { label: "McLaren", value: "McLaren" },
+  { label: "Mercedes-Benz", value: "Mercedes-Benz" },
+  { label: "Mercury", value: "Mercury" },
+  { label: "Mini", value: "Mini" },
+  { label: "Mitsubishi", value: "Mitsubishi" },
+  { label: "Nissan", value: "Nissan" },
+  { label: "Oldsmobile", value: "Oldsmobile" },
+  { label: "Opel", value: "Opel" },
+  { label: "Pagani", value: "Pagani" },
+  { label: "Panoz", value: "Panoz" },
+  { label: "Peugeot", value: "Peugeot" },
+  { label: "Plymouth", value: "Plymouth" },
+  { label: "Polestar", value: "Polestar" },
+  { label: "Pontiac", value: "Pontiac" },
+  { label: "Porsche", value: "Porsche" },
+  { label: "RAM", value: "RAM" },
+  { label: "Renault", value: "Renault" },
+  { label: "Rimac", value: "Rimac" },
+  { label: "Rivian", value: "Rivian" },
+  { label: "Rolls-Royce", value: "Rolls-Royce" },
+  { label: "Saab", value: "Saab" },
+  { label: "Saturn", value: "Saturn" },
+  { label: "Scion", value: "Scion" },
+  { label: "Smart", value: "Smart" },
+  { label: "Spyker", value: "Spyker" },
+  { label: "Subaru", value: "Subaru" },
+  { label: "Suzuki", value: "Suzuki" },
+  { label: "Tata", value: "Tata" },
+  { label: "Tesla", value: "Tesla" },
+  { label: "Toyota", value: "Toyota" },
+  { label: "VinFast", value: "VinFast" },
+  { label: "Volkswagen", value: "Volkswagen" },
+  { label: "Volvo", value: "Volvo" },
+  { label: "Xiaomi", value: "Xiaomi" },
+];
+
+const automobilesBrandValues = [
+  { label: "Acura", value: reliable },
+  { label: "Alfa Romeo", value: normal },
+  { label: "Aston Martin", value: expensiveSport },
+  { label: "Audi", value: normal },
+  { label: "Bentley", value: expensiveSport },
+  { label: "BMW", value: normal },
+  { label: "Bugatti", value: superCar },
+  { label: "Buick", value: normal },
+  { label: "BYD", value: normal },
+  { label: "Cadillac", value: normal },
+  { label: "Chevrolet", value: fast },
+  { label: "Chrysler", value: normal },
+  { label: "Citroen", value: fast },
+  { label: "Daewoo", value: normal },
+  { label: "Dodge", value: normal },
+  { label: "Ferrari", value: superCar },
+  { label: "Fiat", value: fast },
+  { label: "Fisker", value: fast },
+  { label: "Ford", value: normal },
+  { label: "Genesis", value: normal },
+  { label: "GMC", value: normal },
+  { label: "Hennessey", value: superCar },
+  { label: "Honda", value: reliable },
+  { label: "Hummer", value: fast },
+  { label: "Hyundai", value: normal },
+  { label: "INEOS", value: fast },
+  { label: "Infiniti", value: normal },
+  { label: "Isuzu", value: normal },
+  { label: "Jaguar", value: expensiveSport },
+  { label: "Jeep", value: normal },
+  { label: "Karma", value: normal },
+  { label: "Kia", value: normal },
+  { label: "Koenigsegg", value: superCar },
+  { label: "KTM", value: expensiveSport },
+  { label: "Lamborghini", value: expensiveSport },
+  { label: "Land Rover", value: normal },
+  { label: "Lexus", value: reliable },
+  { label: "Lincoln", value: normal },
+  { label: "Lotus", value: normal },
+  { label: "Lucid", value: normal },
+  { label: "Maserati", value: expensiveSport },
+  { label: "Maybach", value: superCar },
+  { label: "Mazda", value: reliable },
+  { label: "McLaren", value: expensiveSport },
+  { label: "Mercedes-Benz", value: normal },
+  { label: "Mercury", value: normal },
+  { label: "Mini", value: normal },
+  { label: "Mitsubishi", value: reliable },
+  { label: "Nissan", value: reliable },
+  { label: "Oldsmobile", value: normal },
+  { label: "Opel", value: normal },
+  { label: "Pagani", value: superCar },
+  { label: "Panoz", value: normal },
+  { label: "Peugeot", value: normal },
+  { label: "Plymouth", value: normal },
+  { label: "Polestar", value: normal },
+  { label: "Pontiac", value: normal },
+  { label: "Porsche", value: normal },
+  { label: "RAM", value: normal },
+  { label: "Renault", value: normal },
+  { label: "Rimac", value: superCar },
+  { label: "Rivian", value: normal },
+  { label: "Rolls-Royce", value: expensiveSport },
+  { label: "Saab", value: normal },
+  { label: "Saturn", value: normal },
+  { label: "Scion", value: normal },
+  { label: "Smart", value: fast },
+  { label: "Spyker", value: normal },
+  { label: "Subaru", value: reliable },
+  { label: "Suzuki", value: normal },
+  { label: "Tata", value: normal },
+  { label: "Tesla", value: normal },
+  { label: "Toyota", value: reliable },
+  { label: "VinFast", value: fast },
+  { label: "Volkswagen", value: normal },
+  { label: "Volvo", value: reliable },
+  { label: "Xiaomi", value: fast },
+];
+
+const graphicsCardsDropdownData = [
+  { label: "AMD", value: "AMD" },
+  { label: "Intel", value: "Intel" },
+  { label: "NVIDIA", value: "NVIDIA" },
+];
+
+const graphicsCardsBrandValues = [
+  { label: "AMD", value: fast },
+  { label: "Intel", value: fast },
+  { label: "NVIDIA", value: normal },
+];
+
+const processorsDropdownData = [
+  { label: "AMD", value: "AMD" },
+  { label: "Intel", value: "Intel" },
+];
+
+const processorsBrandValues = [
+  { label: "AMD", value: normal },
+  { label: "Intel", value: normal },
+];
+
 export default function WebApp() {
   // userVal of firebase
   const [userVal, setUserVal] = useState(false);
@@ -3359,33 +3604,45 @@ export default function WebApp() {
         <Route
           path="prediction/automobiles"
           element={
-            <PredictAutomobiles
+            <PredictionAnalysis
               type={"Automobiles"}
               amplitude={amplitude}
               isMobile={isMobile}
-            ></PredictAutomobiles>
+              averagePrices={automobilesAveragePrices}
+              brandValues={automobilesBrandValues}
+              dropdownData={automobilesDropdownData}
+              minimumPrice={7500}
+            ></PredictionAnalysis>
           }
         ></Route>
         {/* the graphicsCards prediction page */}
         <Route
           path="prediction/graphicsCards"
           element={
-            <PredictMath
+            <PredictionAnalysis
               type={"Graphics Cards"}
               amplitude={amplitude}
               isMobile={isMobile}
-            ></PredictMath>
+              averagePrices={null}
+              brandValues={graphicsCardsBrandValues}
+              dropdownData={graphicsCardsDropdownData}
+              minimumPrice={200}
+            ></PredictionAnalysis>
           }
         ></Route>
         {/* the cpus prediction page */}
         <Route
           path="prediction/cpus"
           element={
-            <PredictMath
-              type={"CPUs"}
+            <PredictionAnalysis
+              type={"Processors"}
               amplitude={amplitude}
               isMobile={isMobile}
-            ></PredictMath>
+              averagePrices={null}
+              brandValues={processorsBrandValues}
+              dropdownData={processorsDropdownData}
+              minimumPrice={150}
+            ></PredictionAnalysis>
           }
         ></Route>
         {/* any other page, error 404 */}
