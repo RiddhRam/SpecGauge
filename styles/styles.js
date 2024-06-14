@@ -72,10 +72,6 @@ export const SGStyles = () => {
       borderWidth: 1,
       borderColor: theme === "dark" ? "#131423" : "#eee",
     },
-    dropdownMenuText: {
-      backgroundColor: theme === "dark" ? "#171827" : "#fff",
-      padding: 5,
-    },
   });
 
   const textStyles = StyleSheet.create({
