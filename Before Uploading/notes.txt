@@ -1,10 +1,7 @@
 Add _redirects to dist
 
 add     
-<meta
-      name="description"
-      content="Your comparison tool for vehicles and electronics"
-/>
+    <meta name="description" content="Compare Today. Predict Tomorrow." />
 below the 
 <meta
     name="viewport"

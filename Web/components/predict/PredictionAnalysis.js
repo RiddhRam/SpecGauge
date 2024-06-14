@@ -746,6 +746,14 @@ export default function PredictionAnalysis({
                   if (result != 0) {
                     setError(result);
                     setShowErrorModal(true);
+                    amplitude.track("Error adding item", { error: result });
+                  } else {
+                    amplitude.track("Add Prediction Item", {
+                      type: type,
+                      initialPrice: initialPrice,
+                      releaseYear: releaseYear,
+                      brand: brand,
+                    });
                   }
                 }}
                 style={({ pressed }) => [
@@ -777,6 +785,7 @@ export default function PredictionAnalysis({
               {averagePrices && (
                 <Pressable
                   onPress={() => {
+                    amplitude.track("Add Average Price", { type: type });
                     while (true) {
                       let matchFound = false;
                       const red = Math.random() * 255;
@@ -829,6 +838,7 @@ export default function PredictionAnalysis({
                 onPress={() => {
                   // This data will be converted to a csv
                   let exportData = [];
+                  amplitude.track("Export CSV");
                   // The first row, and in the first column is the years
                   firstJSON = {};
                   firstJSON["Year"] = "Year";
