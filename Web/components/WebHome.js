@@ -64,8 +64,8 @@ export default function WebHome({ amplitude, isMobile }) {
             <Text
               style={[
                 styles.textStyles.simpleText,
-                { fontSize: isMobile ? 20 : 30, marginBottom: 10 },
-                { marginTop: 30 },
+                { fontSize: isMobile ? 20 : 30 },
+                { marginTop: -30 },
               ]}
             >
               Compare Today. Predict Tomorrow.
