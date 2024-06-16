@@ -15,6 +15,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { Footer } from "../../Footer";
+import { Navbar } from "../../Navbar";
 
 export default function Compare({
   type,
@@ -400,6 +401,7 @@ export default function Compare({
 
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
+      <Navbar page="home" isMobile={isMobile}></Navbar>
       {/* Main Body */}
       <View style={styles.containerStyles.comparisonScreenContainer}>
         <Text style={[styles.textStyles.text, { fontSize: 25 }]}>

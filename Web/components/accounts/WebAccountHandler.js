@@ -168,11 +168,13 @@ export default function WebAccountHandler({ screenType, setModalView }) {
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "row",
+            marginTop: 20,
           }}
         >
           <Image
-            source={require("../../../assets/SpecGauge Logo.svg")}
+            source={require("../../../assets/SpecGauge SEO Logo.webp")}
             style={{ width: 35, height: 35 }}
+            alt="SpecGauge Logo"
           ></Image>
           <Text style={[styles.textStyles.text, { display: "block" }]}>
             SpecGauge

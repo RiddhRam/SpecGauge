@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, useColorScheme } from "react-native";
+import { useWindowDimensions } from "react-native";
 
 export const SGStyles = () => {
   // Get user's color scheme
   const scheme = useColorScheme();
   // Set the app theme
   const [theme, setTheme] = useState(scheme);
+
+  const window = useWindowDimensions();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (window.width <= 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  });
 
   const containerStyles = StyleSheet.create({
     // For the whole web screen
@@ -75,10 +87,15 @@ export const SGStyles = () => {
   });
 
   const textStyles = StyleSheet.create({
-    // For regular text
     text: {
       color: "#4ca0d7",
       fontSize: 40,
+      padding: 10,
+      textAlign: "center",
+    },
+    titleText: {
+      color: "#4ca0d7",
+      fontSize: isMobile ? 25 : 40,
       padding: 10,
       textAlign: "center",
     },

@@ -229,6 +229,12 @@ export default function SelectionModal({
                       tempSpecsArray,
                     ]);
 
+                    amplitude.track("Complete Request", {
+                      Brand: item,
+                      Category: type,
+                      Product: tempSpecsArray[1],
+                    });
+
                     // Reset the modal
                     setProductModalVisible(false);
                     setStep(0);

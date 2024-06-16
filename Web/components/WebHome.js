@@ -54,7 +54,7 @@ export default function WebHome({ amplitude, isMobile }) {
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* navbar */}
-      <Navbar style={{ height: "25%" }} page={"home"} />
+      <Navbar style={{ height: "25%" }} page={"home"} isMobile={isMobile} />
 
       {/* Main view */}
       <View style={{ flexGrow: 1, height: "75%" }}>

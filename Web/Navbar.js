@@ -7,7 +7,7 @@ import { getAuth } from "firebase/auth";
 
 import { A } from "@expo/html-elements";
 
-export const Navbar = ({ page }) => {
+export const Navbar = ({ page, isMobile }) => {
   // initialize SGStyles as styles
   const styles = SGStyles();
 
@@ -30,10 +30,13 @@ export const Navbar = ({ page }) => {
           }}
         >
           <Image
-            source={require("../assets/SpecGauge Logo.svg")}
-            style={{ width: 35, height: 35 }}
+            source={require("../assets/SpecGauge SEO Logo.webp")}
+            style={
+              isMobile ? { width: 25, height: 25 } : { width: 35, height: 35 }
+            }
+            alt={"SpecGauge Logo"}
           ></Image>
-          <Text style={[styles.textStyles.text]}>SpecGauge</Text>
+          <Text style={styles.textStyles.titleText}>SpecGauge</Text>
         </View>
       </Link>
       {/* The links */}
@@ -41,10 +44,15 @@ export const Navbar = ({ page }) => {
       {(page == "login" || page == "account") && (
         <View style={{ justifyContent: "flex-start" }}>
           <Link to="/home" style={styles.textStyles.navbarText}>
-            <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
-                source={require("../assets/Home Icon.png")}
-                style={{ width: 35, height: 37 }}
+                source={require("../assets/Home Icon.webp")}
+                style={
+                  isMobile
+                    ? { width: 25, height: 27 }
+                    : { width: 35, height: 37 }
+                }
+                alt="Home Icon"
               ></Image>
               <Text style={styles.textStyles.navbarText}>Home</Text>
             </View>
@@ -57,14 +65,20 @@ export const Navbar = ({ page }) => {
           style={{
             justifyContent: "flex-end",
             flexDirection: "row",
+            alignItems: "center",
           }}
         >
           {auth.currentUser ? (
             <>
               <A href={`${currentDomain}/account`} target="_self">
                 <Image
-                  source={require("../assets/Profile Icon.png")}
-                  style={{ width: 37, height: 37 }}
+                  source={require("../assets/Profile Icon.webp")}
+                  style={
+                    isMobile
+                      ? { width: 27, height: 27 }
+                      : { width: 37, height: 37 }
+                  }
+                  alt="Profile Icon"
                 ></Image>
               </A>
               <A
@@ -79,8 +93,13 @@ export const Navbar = ({ page }) => {
             <>
               <A href={`${currentDomain}/login`} target="_self">
                 <Image
-                  source={require("../assets/Profile Icon.png")}
-                  style={{ width: 37, height: 37 }}
+                  source={require("../assets/Profile Icon.webp")}
+                  style={
+                    isMobile
+                      ? { width: 27, height: 27 }
+                      : { width: 37, height: 37 }
+                  }
+                  alt="Profile Icon"
                 ></Image>
               </A>
               <A

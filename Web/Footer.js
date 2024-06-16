@@ -47,8 +47,9 @@ export const Footer = ({ amplitude, isMobile }) => {
             }}
           >
             <Image
-              source={require("../assets/instagram icon.png")}
+              source={require("../assets/instagram icon.webp")}
               style={{ width: 35, height: 35 }}
+              alt="Instagram Logo"
             ></Image>
             <Text
               style={[styles.textStyles.reversePlainText, { fontSize: 12 }]}
@@ -73,8 +74,9 @@ export const Footer = ({ amplitude, isMobile }) => {
             }}
           >
             <Image
-              source={require("../assets/tiktok icon.png")}
+              source={require("../assets/tiktok icon.webp")}
               style={{ width: 35, height: 35 }}
+              alt="TikTok Logo"
             ></Image>
             <Text
               style={[styles.textStyles.reversePlainText, { fontSize: 12 }]}
@@ -99,8 +101,9 @@ export const Footer = ({ amplitude, isMobile }) => {
             }}
           >
             <Image
-              source={require("../assets/x icon.png")}
+              source={require("../assets/x icon.webp")}
               style={{ width: 35, height: 35 }}
+              alt="X Logo"
             ></Image>
             <Text
               style={[styles.textStyles.reversePlainText, { fontSize: 12 }]}
@@ -123,7 +126,9 @@ export const Footer = ({ amplitude, isMobile }) => {
         </Text>
 
         {/* Have to add this padding to account for the empty space in the png files that mess up the spacing */}
-        <View style={{ paddingVertical: 6 }}>
+        <View
+          style={[{ paddingVertical: 6 }, isMobile ? { fontSize: 13 } : {}]}
+        >
           <a
             href="mailto:specgauge@gmail.com?subject=Hello&body=I%20wanted%20to%20reach%20out%20because..."
             style={styles.textStyles.reversePlainText}

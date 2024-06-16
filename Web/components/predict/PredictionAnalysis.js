@@ -9,6 +9,7 @@ import {
 } from "react-native-web";
 import { SGStyles } from "../../../styles/styles";
 import { Footer } from "../../Footer";
+import { Navbar } from "../../Navbar";
 import { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -304,6 +305,7 @@ export default function PredictionAnalysis({
 
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
+      <Navbar page="home" isMobile={isMobile}></Navbar>
       {/* Main Body */}
       <View style={styles.containerStyles.comparisonScreenContainer}>
         <Text style={[styles.textStyles.text, { fontSize: 25 }]}>
@@ -970,8 +972,9 @@ export default function PredictionAnalysis({
                   }}
                 >
                   <Image
-                    source={require("../../../assets/Trash Icon.png")}
+                    source={require("../../../assets/Trash Icon.webp")}
                     style={{ width: 20, height: 20 }}
+                    alt="Trash Icon for deleting"
                   ></Image>
                 </Pressable>
               </View>

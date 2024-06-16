@@ -1,12 +1,3 @@
 Add _redirects to dist
 
-add     
-    <meta name="description" content="Compare Today. Predict Tomorrow." />
-below the 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, shrink-to-fit=no"
-/>
-line in index.html
-
 make sure amplitude was enabled

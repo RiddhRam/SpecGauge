@@ -318,7 +318,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
     /* if logged in display user settings */
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* navbar */}
-      <Navbar style={{ height: "25%" }} page={"account"} />
+      <Navbar style={{ height: "25%" }} page={"account"} isMobile={isMobile} />
 
       {/* main body */}
       <View style={styles.containerStyles.largeContainer}>
