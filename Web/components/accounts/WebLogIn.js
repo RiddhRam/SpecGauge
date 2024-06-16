@@ -23,6 +23,7 @@ export default function WebLogIn({ amplitude, isMobile }) {
     if (auth.currentUser) {
       navigate("/account");
     }
+    amplitude.track("Screen", { Screen: "Log In" });
   });
 
   return (

@@ -625,64 +625,47 @@ export default function Compare({
                   /* We loop through each row in each column */
 
                   <View key={spec + index2}>
-                    {index2 != prosIndex ? (
-                      <Text
-                        /* the category labels have a special blue background so they have a different style, specCategoryText */
-                        style={[
-                          { height: Height[index2] },
-                          index1 == 0
-                            ? styles.textStyles.specCategoryText
-                            : styles.textStyles.comparisonText,
-                        ]}
-                        onLayout={async () => {
-                          let counter = 0;
-                          let position = 0;
+                    <Text
+                      /* the category labels have a special blue background so they have a different style, specCategoryText */
+                      style={[
+                        { height: Height[index2] },
+                        index1 != 0
+                          ? index2 == prosIndex
+                            ? styles.textStyles.proText
+                            : styles.textStyles.comparisonText
+                          : index2 == prosIndex
+                          ? styles.textStyles.proText
+                          : styles.textStyles.specCategoryText,
+                      ]}
+                      onLayout={async () => {
+                        let counter = 0;
+                        let position = 0;
 
-                          while (true) {
-                            {
-                              /* Height is determined by (number of '\n' - 1) * 17 + 52 */
-                              /* We count the number of \n in each column */
-                            }
-                            position = spec.indexOf("\n", position);
-                            if (position == -1) {
-                              break;
-                            }
-                            counter++;
-                            position += 1;
-                          }
-
+                        while (true) {
                           {
-                            /* Since an item was added, the height can only be the same or larger */
-                            /* We check if old height is less then new height, then change it, or else leave it  */
+                            /* Height is determined by (number of '\n' - 1) * 17 + 52 */
+                            /* We count the number of \n in each column */
                           }
-                          const newHeight = (counter - 1) * 17 + 52;
-                          if (Height[index2] < newHeight) {
-                            SetHeight[index2](newHeight);
+                          position = spec.indexOf("\n", position);
+                          if (position == -1) {
+                            break;
                           }
-                        }}
-                      >
-                        {spec}
-                      </Text>
-                    ) : (
-                      <ScrollView>
-                        <Text
-                          /* the category labels have a special blue background so they have a different style, specCategoryText */
-                          style={[
-                            { height: Height[index2] },
-                            index1 != 0
-                              ? styles.textStyles.comparisonText
-                              : index2 == prosIndex
-                              ? styles.textStyles.proText
-                              : styles.textStyles.specCategoryText,
-                          ]}
-                          onLayout={async () => {
-                            SetHeight[prosIndex](78);
-                          }}
-                        >
-                          {spec}
-                        </Text>
-                      </ScrollView>
-                    )}
+                          counter++;
+                          position += 1;
+                        }
+
+                        {
+                          /* Since an item was added, the height can only be the same or larger */
+                          /* We check if old height is less then new height, then change it, or else leave it  */
+                        }
+                        const newHeight = (counter - 1) * 17 + 52;
+                        if (Height[index2] < newHeight) {
+                          SetHeight[index2](newHeight);
+                        }
+                      }}
+                    >
+                      {spec}
+                    </Text>
                   </View>
                 ))}
               </View>

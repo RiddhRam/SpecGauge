@@ -311,6 +311,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
     } else {
       setEmail(auth.currentUser.email);
     }
+    amplitude.track("Screen", { Screen: "Log In" });
   });
 
   return (

@@ -618,210 +618,271 @@ export default function PredictionAnalysis({
           </View>
         ) : (
           /* Computer View */
-          <View style={{ flexDirection: "row" }}>
-            {/* Graph and Scroll slider */}
-            <View style={{ width: "55%" }}>
-              {/* Graph */}
-              <Line options={lineOptions} data={lineData} />
-              {/* Scroll */}
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={[
-                    styles.textStyles.plainText,
-                    { marginRight: 10, userSelect: "none" },
-                  ]}
-                >
-                  Scroll
-                </Text>
-                <Slider
-                  value={position}
-                  onChange={OnScrollChangeTrigger}
-                  step={1}
-                  min={0}
-                  max={scrollLimit}
-                  trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
-                  railStyle={{ backgroundColor: "lightblue", height: 10 }}
-                  handleStyle={{
-                    marginLeft: 0,
-                    marginTop: -2,
-                  }}
-                />
-              </View>
-            </View>
-            {/* Side Controls First Column */}
-            <View style={{ marginLeft: 15 }}>
-              {/* Zoom slider */}
-              <View style={{ width: "98%" }}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <ScrollView horizontal={true}>
+            <View style={{ flexDirection: "row" }}>
+              {/* Graph and Scroll slider */}
+              <View style={{ width: "55%" }}>
+                {/* Graph */}
+                <Line options={lineOptions} data={lineData} />
+                {/* Scroll */}
+                <View style={{ flexDirection: "row" }}>
                   <Text
                     style={[
                       styles.textStyles.plainText,
                       { marginRight: 10, userSelect: "none" },
                     ]}
                   >
-                    Zoom
-                  </Text>
-                  <Text
-                    style={[
-                      styles.textStyles.plainText,
-                      { marginRight: 10, fontSize: 20, userSelect: "none" },
-                    ]}
-                  >
-                    -
+                    Scroll
                   </Text>
                   <Slider
-                    value={yearsCount}
-                    onChange={OnZoomChangeTrigger}
+                    value={position}
+                    onChange={OnScrollChangeTrigger}
                     step={1}
-                    min={22}
-                    max={44}
-                    trackStyle={{ backgroundColor: "#4ca0d7" }}
-                    railStyle={{ backgroundColor: "lightblue" }}
+                    min={0}
+                    max={scrollLimit}
+                    trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
+                    railStyle={{ backgroundColor: "lightblue", height: 10 }}
+                    handleStyle={{
+                      marginLeft: 0,
+                      marginTop: -2,
+                    }}
                   />
-                  <Text
-                    style={[
-                      styles.textStyles.plainText,
-                      { marginLeft: 15, fontSize: 20, userSelect: "none" },
-                    ]}
-                  >
-                    +
-                  </Text>
                 </View>
               </View>
-              {/* Initial Price Field */}
-              <TextInput
-                value={initialPrice}
-                style={styles.inputStyles.predictionTextInput}
-                placeholder="Initial New Price"
-                id="initialPrice"
-                inputMode="numeric"
-                onChange={(text) =>
-                  handleNumberInput(text.nativeEvent.text, setInitialPrice)
-                }
-              ></TextInput>
-
-              {/* Release Year Field */}
-              <TextInput
-                value={releaseYear}
-                style={styles.inputStyles.predictionTextInput}
-                placeholder="Release Year"
-                id="releaseYear"
-                inputMode="numeric"
-                onChange={(text) =>
-                  handleNumberInput(text.nativeEvent.text, setReleaseYear)
-                }
-              ></TextInput>
-
-              {/* Brand drop down */}
-              <Dropdown
-                style={{ marginTop: 15 }}
-                placeholderStyle={styles.inputStyles.predictionTextInput}
-                selectedTextStyle={styles.inputStyles.predictionTextInput}
-                containerStyle={styles.containerStyles.dropdownMenu}
-                inputSearchStyle={styles.inputStyles.searchTextInput}
-                selectedStyle={styles.containerStyles.dropdownMenu}
-                itemContainerStyle={styles.containerStyles.dropdownMenuItem}
-                itemTextStyle={{ color: "#4ca0d7" }}
-                data={dropdownData}
-                search
-                labelField="label"
-                valueField="value"
-                placeholder={
-                  !dropdownFocus ? "Select a brand" : "Select a brand"
-                }
-                searchPlaceholder="Search"
-                value={brand}
-                onFocus={() => setDropdownFocus(true)}
-                onBlur={() => setDropdownFocus(false)}
-                onChange={(item) => {
-                  setBrand(item.value);
-                  setDropdownFocus(false);
-                }}
-              />
-
-              {/* Add */}
-              <Pressable
-                onPress={() => {
-                  const result = addToGraph(initialPrice, releaseYear, brand);
-                  if (result != 0) {
-                    setError(result);
-                    setShowErrorModal(true);
-                    amplitude.track("Error adding item", { error: result });
-                  } else {
-                    amplitude.track("Add Prediction Item", {
-                      type: type,
-                      initialPrice: initialPrice,
-                      releaseYear: releaseYear,
-                      brand: brand,
-                    });
+              {/* Side Controls First Column */}
+              <View style={{ marginLeft: 15 }}>
+                {/* Zoom slider */}
+                <View style={{ width: "98%" }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text
+                      style={[
+                        styles.textStyles.plainText,
+                        { marginRight: 10, userSelect: "none" },
+                      ]}
+                    >
+                      Zoom
+                    </Text>
+                    <Text
+                      style={[
+                        styles.textStyles.plainText,
+                        { marginRight: 10, fontSize: 20, userSelect: "none" },
+                      ]}
+                    >
+                      -
+                    </Text>
+                    <Slider
+                      value={yearsCount}
+                      onChange={OnZoomChangeTrigger}
+                      step={1}
+                      min={22}
+                      max={44}
+                      trackStyle={{ backgroundColor: "#4ca0d7" }}
+                      railStyle={{ backgroundColor: "lightblue" }}
+                    />
+                    <Text
+                      style={[
+                        styles.textStyles.plainText,
+                        { marginLeft: 15, fontSize: 20, userSelect: "none" },
+                      ]}
+                    >
+                      +
+                    </Text>
+                  </View>
+                </View>
+                {/* Initial Price Field */}
+                <TextInput
+                  value={initialPrice}
+                  style={styles.inputStyles.predictionTextInput}
+                  placeholder="Initial New Price"
+                  id="initialPrice"
+                  inputMode="numeric"
+                  onChange={(text) =>
+                    handleNumberInput(text.nativeEvent.text, setInitialPrice)
                   }
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                  { marginLeft: 0, marginTop: 25 },
-                ]}
-              >
-                <p>Add</p>
-              </Pressable>
+                ></TextInput>
 
-              {/* Edit */}
-              <Pressable
-                onPress={() => {
-                  setShowEditModal(true);
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                  { marginLeft: 0 },
-                ]}
-              >
-                <p>Edit</p>
-              </Pressable>
-            </View>
-            {/* Side Controls Second Column */}
-            <View style={{ marginTop: 212, marginLeft: 0 }}>
-              {/* Add Average Price, only if available */}
-              {averagePrices && (
+                {/* Release Year Field */}
+                <TextInput
+                  value={releaseYear}
+                  style={styles.inputStyles.predictionTextInput}
+                  placeholder="Release Year"
+                  id="releaseYear"
+                  inputMode="numeric"
+                  onChange={(text) =>
+                    handleNumberInput(text.nativeEvent.text, setReleaseYear)
+                  }
+                ></TextInput>
+
+                {/* Brand drop down */}
+                <Dropdown
+                  style={{ marginTop: 15 }}
+                  placeholderStyle={styles.inputStyles.predictionTextInput}
+                  selectedTextStyle={styles.inputStyles.predictionTextInput}
+                  containerStyle={styles.containerStyles.dropdownMenu}
+                  inputSearchStyle={styles.inputStyles.searchTextInput}
+                  selectedStyle={styles.containerStyles.dropdownMenu}
+                  itemContainerStyle={styles.containerStyles.dropdownMenuItem}
+                  itemTextStyle={{ color: "#4ca0d7" }}
+                  data={dropdownData}
+                  search
+                  labelField="label"
+                  valueField="value"
+                  placeholder={
+                    !dropdownFocus ? "Select a brand" : "Select a brand"
+                  }
+                  searchPlaceholder="Search"
+                  value={brand}
+                  onFocus={() => setDropdownFocus(true)}
+                  onBlur={() => setDropdownFocus(false)}
+                  onChange={(item) => {
+                    setBrand(item.value);
+                    setDropdownFocus(false);
+                  }}
+                />
+
+                {/* Add */}
                 <Pressable
                   onPress={() => {
-                    amplitude.track("Add Average Price", { type: type });
-                    while (true) {
-                      let matchFound = false;
-                      const red = Math.random() * 255;
-                      const green = Math.random() * 255;
-                      const blue = Math.random() * 255;
+                    const result = addToGraph(initialPrice, releaseYear, brand);
+                    if (result != 0) {
+                      setError(result);
+                      setShowErrorModal(true);
+                      amplitude.track("Error adding item", { error: result });
+                    } else {
+                      amplitude.track("Add Prediction Item", {
+                        type: type,
+                        initialPrice: initialPrice,
+                        releaseYear: releaseYear,
+                        brand: brand,
+                      });
+                    }
+                  }}
+                  style={({ pressed }) => [
+                    styles.inputStyles.button,
+                    pressed && styles.inputStyles.buttonClicked,
+                    { marginLeft: 0, marginTop: 25 },
+                  ]}
+                >
+                  <p>Add</p>
+                </Pressable>
 
-                      newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+                {/* Edit */}
+                <Pressable
+                  onPress={() => {
+                    setShowEditModal(true);
+                  }}
+                  style={({ pressed }) => [
+                    styles.inputStyles.button,
+                    pressed && styles.inputStyles.buttonClicked,
+                    { marginLeft: 0 },
+                  ]}
+                >
+                  <p>Edit</p>
+                </Pressable>
+              </View>
+              {/* Side Controls Second Column */}
+              <View style={{ marginTop: 212, marginLeft: 0 }}>
+                {/* Add Average Price, only if available */}
+                {averagePrices && (
+                  <Pressable
+                    onPress={() => {
+                      amplitude.track("Add Average Price", { type: type });
+                      while (true) {
+                        let matchFound = false;
+                        const red = Math.random() * 255;
+                        const green = Math.random() * 255;
+                        const blue = Math.random() * 255;
 
-                      for (item in lineValueDataset) {
-                        if (
-                          newBorderColor == lineValueDataset[item].borderColor
-                        ) {
-                          matchFound = true;
+                        newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+                        for (item in lineValueDataset) {
+                          if (
+                            newBorderColor == lineValueDataset[item].borderColor
+                          ) {
+                            matchFound = true;
+                            break;
+                          }
+                        }
+
+                        if (!matchFound) {
+                          newLine = {
+                            label: `Average ${type} Price (USD $)`,
+                            data: averagePrices.slice(),
+                            borderColor: newBorderColor,
+                          };
+                          setOriginalPoints((prevPoints) => [
+                            ...prevPoints,
+                            averagePrices.slice(),
+                          ]);
+                          setLineValueDataset((prevLines) => [
+                            ...prevLines,
+                            newLine,
+                          ]);
+                          setUpdateGraph(true);
+
                           break;
                         }
                       }
+                    }}
+                    style={({ pressed }) => [
+                      styles.inputStyles.button,
+                      pressed && styles.inputStyles.buttonClicked,
+                      { marginLeft: 0, width: "100%" },
+                    ]}
+                  >
+                    <p>Add Average {type} Price</p>
+                  </Pressable>
+                )}
 
-                      if (!matchFound) {
-                        newLine = {
-                          label: `Average ${type} Price (USD $)`,
-                          data: averagePrices.slice(),
-                          borderColor: newBorderColor,
-                        };
-                        setOriginalPoints((prevPoints) => [
-                          ...prevPoints,
-                          averagePrices.slice(),
-                        ]);
-                        setLineValueDataset((prevLines) => [
-                          ...prevLines,
-                          newLine,
-                        ]);
-                        setUpdateGraph(true);
-
-                        break;
-                      }
+                {/* Export CSV */}
+                <Pressable
+                  onPress={() => {
+                    // This data will be converted to a csv
+                    let exportData = [];
+                    amplitude.track("Export CSV");
+                    // The first row, and in the first column is the years
+                    firstJSON = {};
+                    firstJSON["Year"] = "Year";
+                    // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
+                    for (let j = 0; j < lineValueDataset.length; j++) {
+                      firstJSON[lineValueDataset[j].label] =
+                        lineValueDataset[j].label;
                     }
+                    // Add the first row
+                    exportData.push(firstJSON);
+                    // Iterate through all years on the visible graph
+                    for (let i = startIndex; i < endIndex; i++) {
+                      let newJSON = {};
+                      // Year of the current row
+                      newJSON["Year"] = 2000 + i;
+                      // Iterate through prices of the current index for each car
+                      for (let j = 0; j < lineValueDataset.length; j++) {
+                        newJSON[lineValueDataset[j].label] =
+                          originalPoints[j][i];
+                      }
+                      // Add this row
+                      exportData.push(newJSON);
+                    }
+
+                    // Don't know what all this does, don't touch it
+                    const csv = exportData
+                      .map((row) => {
+                        return Object.values(row).toString();
+                      })
+                      .join("\n");
+
+                    const blob = new Blob([csv], {
+                      type: "text/csv;charset=utf-8;",
+                    });
+                    const link = document.createElement("a");
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    // table_data.csv is the name of the file, maybe the name can be changed according to the category
+                    link.setAttribute("download", "table_data.csv");
+                    link.style.visibility = "hidden";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                   }}
                   style={({ pressed }) => [
                     styles.inputStyles.button,
@@ -829,69 +890,11 @@ export default function PredictionAnalysis({
                     { marginLeft: 0, width: "100%" },
                   ]}
                 >
-                  <p>Add Average {type} Price</p>
+                  <p>Export CSV</p>
                 </Pressable>
-              )}
-
-              {/* Export CSV */}
-              <Pressable
-                onPress={() => {
-                  // This data will be converted to a csv
-                  let exportData = [];
-                  amplitude.track("Export CSV");
-                  // The first row, and in the first column is the years
-                  firstJSON = {};
-                  firstJSON["Year"] = "Year";
-                  // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
-                  for (let j = 0; j < lineValueDataset.length; j++) {
-                    firstJSON[lineValueDataset[j].label] =
-                      lineValueDataset[j].label;
-                  }
-                  // Add the first row
-                  exportData.push(firstJSON);
-                  // Iterate through all years on the visible graph
-                  for (let i = startIndex; i < endIndex; i++) {
-                    let newJSON = {};
-                    // Year of the current row
-                    newJSON["Year"] = 2000 + i;
-                    // Iterate through prices of the current index for each car
-                    for (let j = 0; j < lineValueDataset.length; j++) {
-                      newJSON[lineValueDataset[j].label] = originalPoints[j][i];
-                    }
-                    // Add this row
-                    exportData.push(newJSON);
-                  }
-
-                  // Don't know what all this does, don't touch it
-                  const csv = exportData
-                    .map((row) => {
-                      return Object.values(row).toString();
-                    })
-                    .join("\n");
-
-                  const blob = new Blob([csv], {
-                    type: "text/csv;charset=utf-8;",
-                  });
-                  const link = document.createElement("a");
-                  const url = URL.createObjectURL(blob);
-                  link.setAttribute("href", url);
-                  // table_data.csv is the name of the file, maybe the name can be changed according to the category
-                  link.setAttribute("download", "table_data.csv");
-                  link.style.visibility = "hidden";
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                  { marginLeft: 0, width: "100%" },
-                ]}
-              >
-                <p>Export CSV</p>
-              </Pressable>
+              </View>
             </View>
-          </View>
+          </ScrollView>
         )}
       </View>
 
@@ -985,7 +988,7 @@ export default function PredictionAnalysis({
               pressed && styles.inputStyles.buttonClicked,
             ]}
           >
-            <p>Cancel</p>
+            <p>Close</p>
           </Pressable>
         </View>
       </Modal>
@@ -1005,7 +1008,7 @@ export default function PredictionAnalysis({
               pressed && styles.inputStyles.buttonClicked,
             ]}
           >
-            <p>Cancel</p>
+            <p>Okay</p>
           </Pressable>
         </View>
       </Modal>

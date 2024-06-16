@@ -59,47 +59,17 @@ export default function WebHome({ amplitude, isMobile }) {
       <View style={{ flexGrow: 1, height: "75%" }}>
         {/* Selection comparison type, default screen */}
         <View style={styles.containerStyles.largeContainer}>
-          <View style={{ alignItems: "center" }}>
+          <View style={{ alignItems: "center", flex: 1, width: "100%" }}>
             {/* Subtitle */}
             <Text
               style={[
                 styles.textStyles.simpleText,
                 { fontSize: isMobile ? 20 : 30 },
-                { marginTop: -30 },
+                { marginTop: 40 },
               ]}
             >
               Compare Today. Predict Tomorrow.
             </Text>
-
-            <View>
-              {/* Compare button */}
-              <Pressable
-                onPress={() => {
-                  setCompareModalVisible(true);
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                  { marginBottom: 15, marginTop: 25 },
-                ]}
-              >
-                <p>Start Comparing</p>
-              </Pressable>
-
-              {/* Prediction button */}
-              <Pressable
-                onPress={() => {
-                  setPredictModalVisible(true);
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                  { marginBottom: 15, marginTop: 25 },
-                ]}
-              >
-                <p>Prediction Analysis</p>
-              </Pressable>
-            </View>
 
             {/* Updates */}
             <View
@@ -107,7 +77,8 @@ export default function WebHome({ amplitude, isMobile }) {
                 flexDirection: isMobile ? "column" : "row",
                 padding: 10,
                 width: "100%",
-                justifyContent: "space-around",
+                justifyContent: "center",
+                marginTop: 30,
               }}
             >
               {/* Recently added */}
@@ -143,6 +114,53 @@ export default function WebHome({ amplitude, isMobile }) {
                 <Text style={styles.textStyles.plainText}>• Definitions</Text>
                 <Text style={styles.textStyles.plainText}></Text>
                 <Text style={styles.textStyles.plainText}></Text>
+              </View>
+            </View>
+
+            {/* Navigation */}
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 20,
+              }}
+            >
+              {/* Compare */}
+              <View>
+                <Text style={styles.textStyles.plainText}>
+                  Compare thousands of different products side by side
+                </Text>
+                <Pressable
+                  onPress={() => {
+                    setCompareModalVisible(true);
+                  }}
+                  style={({ pressed }) => [
+                    styles.inputStyles.button,
+                    pressed && styles.inputStyles.buttonClicked,
+                    { marginBottom: 15, marginTop: 25 },
+                  ]}
+                >
+                  <p>Start Comparing</p>
+                </Pressable>
+              </View>
+
+              {/* Prediction */}
+              <View>
+                <Text style={styles.textStyles.plainText}>
+                  Predict future prices of products
+                </Text>
+                <Pressable
+                  onPress={() => {
+                    setPredictModalVisible(true);
+                  }}
+                  style={({ pressed }) => [
+                    styles.inputStyles.button,
+                    pressed && styles.inputStyles.buttonClicked,
+                    { marginBottom: 15, marginTop: 25 },
+                  ]}
+                >
+                  <p>Price Prediction</p>
+                </Pressable>
               </View>
             </View>
           </View>
