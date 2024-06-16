@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { Footer } from "../Footer";
+import { H1 } from "@expo/html-elements";
 
 const comparisonCategories = [
   "Automobiles",
@@ -61,7 +62,8 @@ export default function WebHome({ amplitude, isMobile }) {
         <View style={styles.containerStyles.largeContainer}>
           <View style={{ alignItems: "center", flex: 1, width: "100%" }}>
             {/* Subtitle */}
-            <Text
+
+            <H1
               style={[
                 styles.textStyles.simpleText,
                 { fontSize: isMobile ? 20 : 30 },
@@ -69,7 +71,7 @@ export default function WebHome({ amplitude, isMobile }) {
               ]}
             >
               Compare Today. Predict Tomorrow.
-            </Text>
+            </H1>
 
             {/* Updates */}
             <View
@@ -127,9 +129,9 @@ export default function WebHome({ amplitude, isMobile }) {
             >
               {/* Compare */}
               <View>
-                <Text style={styles.textStyles.plainText}>
+                <p style={styles.textStyles.plainText}>
                   Compare thousands of different products side by side
-                </Text>
+                </p>
                 <Pressable
                   onPress={() => {
                     setCompareModalVisible(true);
@@ -146,9 +148,9 @@ export default function WebHome({ amplitude, isMobile }) {
 
               {/* Prediction */}
               <View>
-                <Text style={styles.textStyles.plainText}>
+                <p style={styles.textStyles.plainText}>
                   Predict future prices of products
-                </Text>
+                </p>
                 <Pressable
                   onPress={() => {
                     setPredictModalVisible(true);

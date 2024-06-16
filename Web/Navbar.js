@@ -5,11 +5,14 @@ import { Image, Text, View } from "react-native-web";
 
 import { getAuth } from "firebase/auth";
 
+import { A } from "@expo/html-elements";
+
 export const Navbar = ({ page }) => {
   // initialize SGStyles as styles
   const styles = SGStyles();
 
   const auth = getAuth();
+  const currentDomain = window.location.origin;
 
   return (
     <View style={styles.containerStyles.navbarContainer}>
@@ -35,43 +38,59 @@ export const Navbar = ({ page }) => {
       </Link>
       {/* The links */}
       {/* If currently on the page of one of the links, that link is highlighted */}
-      {page == "login" && (
+      {(page == "login" || page == "account") && (
         <View style={{ justifyContent: "flex-start" }}>
           <Link to="/home" style={styles.textStyles.navbarText}>
-            <Image
-              source={require("../assets/Home Icon.png")}
-              style={{ width: 35, height: 37 }}
-            ></Image>
-          </Link>
-        </View>
-      )}
-      {page == "account" && (
-        <View style={{ justifyContent: "flex-start" }}>
-          <Link to="/home" style={styles.textStyles.navbarText}>
-            <Image
-              source={require("../assets/Home Icon.png")}
-              style={{ width: 35, height: 37 }}
-            ></Image>
+            <View style={{ flexDirection: "row" }}>
+              <Image
+                source={require("../assets/Home Icon.png")}
+                style={{ width: 35, height: 37 }}
+              ></Image>
+              <Text style={styles.textStyles.navbarText}>Home</Text>
+            </View>
           </Link>
         </View>
       )}
 
       {page == "home" && (
-        <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
+        <View
+          style={{
+            justifyContent: "flex-end",
+            flexDirection: "row",
+          }}
+        >
           {auth.currentUser ? (
-            <Link to="/account" style={styles.textStyles.navbarText}>
-              <Image
-                source={require("../assets/Profile Icon.png")}
-                style={{ width: 37, height: 37 }}
-              ></Image>
-            </Link>
+            <>
+              <A href={`${currentDomain}/account`} target="_self">
+                <Image
+                  source={require("../assets/Profile Icon.png")}
+                  style={{ width: 37, height: 37 }}
+                ></Image>
+              </A>
+              <A
+                href={`${currentDomain}/account`}
+                target="_self"
+                style={{ alignContent: "center", marginLeft: 0 }}
+              >
+                <Text style={styles.textStyles.navbarText}>My Account</Text>
+              </A>
+            </>
           ) : (
-            <Link to="/login" style={styles.textStyles.navbarText}>
-              <Image
-                source={require("../assets/Profile Icon.png")}
-                style={{ width: 37, height: 37 }}
-              ></Image>
-            </Link>
+            <>
+              <A href={`${currentDomain}/login`} target="_self">
+                <Image
+                  source={require("../assets/Profile Icon.png")}
+                  style={{ width: 37, height: 37 }}
+                ></Image>
+              </A>
+              <A
+                href={`${currentDomain}/login`}
+                target="_self"
+                style={{ alignContent: "center", marginLeft: 0 }}
+              >
+                <Text style={styles.textStyles.navbarText}>Log In</Text>
+              </A>
+            </>
           )}
         </View>
       )}
