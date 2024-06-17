@@ -6,11 +6,11 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build": "react-scripts build"
   },
   "dependencies": {
     "@amplitude/analytics-react-native": "^1.4.8",
-    "@expo/html-elements": "^0.10.1",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "expo": "~50.0.14",

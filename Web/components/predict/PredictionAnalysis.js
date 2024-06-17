@@ -305,7 +305,7 @@ export default function PredictionAnalysis({
 
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
-      <Navbar page="home" isMobile={isMobile}></Navbar>
+      <Navbar page="prediction" isMobile={isMobile}></Navbar>
       {/* Main Body */}
       <View style={styles.containerStyles.comparisonScreenContainer}>
         <Text style={[styles.textStyles.text, { fontSize: 25 }]}>

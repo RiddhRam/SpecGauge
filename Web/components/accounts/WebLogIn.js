@@ -29,7 +29,7 @@ export default function WebLogIn({ amplitude, isMobile }) {
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       {/* navbar */}
-      <Navbar style={{ height: "25%" }} page={"login"} isMobile={isMobile} />
+      <Navbar page={"login"} isMobile={isMobile} />
 
       {/* main body */}
       <View style={styles.containerStyles.largeContainer}>

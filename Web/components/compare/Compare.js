@@ -401,7 +401,7 @@ export default function Compare({
 
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
-      <Navbar page="home" isMobile={isMobile}></Navbar>
+      <Navbar page="compare" isMobile={isMobile}></Navbar>
       {/* Main Body */}
       <View style={styles.containerStyles.comparisonScreenContainer}>
         <Text style={[styles.textStyles.text, { fontSize: 25 }]}>

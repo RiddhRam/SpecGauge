@@ -14,7 +14,7 @@ export default function NoPage({ amplitude, isMobile }) {
 
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
-      <Navbar page="home" isMobile={isMobile}></Navbar>
+      <Navbar page="nopage" isMobile={isMobile}></Navbar>
       <View style={styles.containerStyles.largeContainer}>
         {/* title and logo */}
         <View

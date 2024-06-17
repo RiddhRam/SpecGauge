@@ -1,12 +1,18 @@
 import { Navbar } from "../Navbar";
 import { SGStyles } from "../../styles/styles";
 
-import { Modal, Pressable, View, Text, ScrollView } from "react-native-web";
+import {
+  Modal,
+  Pressable,
+  View,
+  Text,
+  ScrollView,
+  useColorScheme,
+} from "react-native-web";
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { Footer } from "../Footer";
-import { H1 } from "@expo/html-elements";
 
 const comparisonCategories = [
   "Automobiles",
@@ -40,6 +46,7 @@ export default function WebHome({ amplitude, isMobile }) {
   const [predictModalVisible, setPredictModalVisible] = useState(false);
 
   const navigate = useNavigate();
+  const scheme = useColorScheme();
 
   {
     /* Records the initial load of the website */
@@ -52,118 +59,123 @@ export default function WebHome({ amplitude, isMobile }) {
   const styles = SGStyles();
 
   return (
-    <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
+    <ScrollView>
       {/* navbar */}
-      <Navbar style={{ height: "25%" }} page={"home"} isMobile={isMobile} />
+      <Navbar page={"home"} isMobile={isMobile} />
 
       {/* Main view */}
-      <View style={{ flexGrow: 1, height: "75%" }}>
+      <View>
         {/* Selection comparison type, default screen */}
-        <View style={styles.containerStyles.largeContainer}>
-          <View style={{ alignItems: "center", flex: 1, width: "100%" }}>
-            {/* Subtitle */}
+        <View
+          style={{
+            backgroundColor: scheme === "dark" ? "#171827" : "#fff",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {/* Subtitle */}
+          <p
+            style={{
+              fontSize: isMobile ? 20 : 30,
+              marginTop: 40,
+              fontDisplay: "swap",
+              color: scheme === "dark" ? "#fff" : "#000",
+              textAlign: "center",
+            }}
+          >
+            Compare Today. Predict Tomorrow.
+          </p>
 
-            <H1
-              style={[
-                styles.textStyles.simpleText,
-                { fontSize: isMobile ? 20 : 30 },
-                { marginTop: 40 },
-              ]}
-            >
-              Compare Today. Predict Tomorrow.
-            </H1>
-
-            {/* Updates */}
-            <View
-              style={{
-                flexDirection: isMobile ? "column" : "row",
-                padding: 10,
-                width: "100%",
-                justifyContent: "center",
-                marginTop: 30,
-              }}
-            >
-              {/* Recently added */}
-              <View style={[styles.containerStyles.comingSoonContainer]}>
-                <Text
-                  style={[
-                    {
-                      fontSize: 25,
-                    },
-                    styles.textStyles.simpleText,
-                  ]}
-                >
-                  Recently added
-                </Text>
-                <Text style={styles.textStyles.plainText}>• Improved UI </Text>
-                <Text style={styles.textStyles.plainText}>
-                  • Prediction Analysis AI
-                </Text>
-              </View>
-
-              {/* Coming soon */}
-              <View style={[styles.containerStyles.comingSoonContainer]}>
-                <Text
-                  style={[
-                    {
-                      fontSize: 25,
-                    },
-                    styles.textStyles.simpleText,
-                  ]}
-                >
-                  Coming Soon
-                </Text>
-                <Text style={styles.textStyles.plainText}>• Definitions</Text>
-                <Text style={styles.textStyles.plainText}></Text>
-                <Text style={styles.textStyles.plainText}></Text>
-              </View>
+          {/* Updates */}
+          <View
+            style={{
+              flexDirection: isMobile ? "column" : "row",
+              padding: 10,
+              width: "100%",
+              justifyContent: "center",
+              marginTop: 10,
+            }}
+          >
+            {/* Recently added */}
+            <View style={[styles.containerStyles.comingSoonContainer]}>
+              <Text
+                style={[
+                  {
+                    fontSize: 25,
+                  },
+                  styles.textStyles.simpleText,
+                ]}
+              >
+                Recently added
+              </Text>
+              <Text style={styles.textStyles.plainText}>• Improved UI </Text>
+              <Text style={styles.textStyles.plainText}>
+                • Prediction Analysis AI
+              </Text>
             </View>
 
-            {/* Navigation */}
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 20,
-              }}
-            >
-              {/* Compare */}
-              <View>
-                <p style={styles.textStyles.plainText}>
-                  Compare thousands of different products side by side
-                </p>
-                <Pressable
-                  onPress={() => {
-                    setCompareModalVisible(true);
-                  }}
-                  style={({ pressed }) => [
-                    styles.inputStyles.button,
-                    pressed && styles.inputStyles.buttonClicked,
-                    { marginBottom: 15, marginTop: 25 },
-                  ]}
-                >
-                  <p>Start Comparing</p>
-                </Pressable>
-              </View>
+            {/* Coming soon */}
+            <View style={[styles.containerStyles.comingSoonContainer]}>
+              <Text
+                style={[
+                  {
+                    fontSize: 25,
+                  },
+                  styles.textStyles.simpleText,
+                ]}
+              >
+                Coming Soon
+              </Text>
+              <Text style={styles.textStyles.plainText}>• Definitions</Text>
+              <Text style={styles.textStyles.plainText}></Text>
+              <Text style={styles.textStyles.plainText}></Text>
+            </View>
+          </View>
 
-              {/* Prediction */}
-              <View>
-                <p style={styles.textStyles.plainText}>
-                  Predict future prices of products
-                </p>
-                <Pressable
-                  onPress={() => {
-                    setPredictModalVisible(true);
-                  }}
-                  style={({ pressed }) => [
-                    styles.inputStyles.button,
-                    pressed && styles.inputStyles.buttonClicked,
-                    { marginBottom: 15, marginTop: 25 },
-                  ]}
-                >
-                  <p>Price Prediction</p>
-                </Pressable>
-              </View>
+          {/* Navigation */}
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 20,
+            }}
+          >
+            {/* Compare */}
+            <View>
+              <p style={styles.textStyles.plainText}>
+                Compare thousands of different products side by side
+              </p>
+              <Pressable
+                onPress={() => {
+                  setCompareModalVisible(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginBottom: 15, marginTop: 25 },
+                ]}
+              >
+                <p>Start Comparing</p>
+              </Pressable>
+            </View>
+
+            {/* Prediction */}
+            <View style={{ marginTop: 20 }}>
+              <p style={styles.textStyles.plainText}>
+                Predict future prices of products
+              </p>
+              <Pressable
+                onPress={() => {
+                  setPredictModalVisible(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginBottom: 15, marginTop: 25, marginBottom: 60 },
+                ]}
+              >
+                <p>Price Prediction</p>
+              </Pressable>
             </View>
           </View>
         </View>

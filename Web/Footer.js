@@ -1,9 +1,11 @@
 import { SGStyles } from "../styles/styles";
 import { Image, Text, View, Pressable } from "react-native-web";
+import { useNavigate } from "react-router-dom";
 
 export const Footer = ({ amplitude, isMobile }) => {
   // initialize SGStyles as styles
   const styles = SGStyles();
+  const navigate = useNavigate();
 
   return (
     <View
@@ -18,8 +20,9 @@ export const Footer = ({ amplitude, isMobile }) => {
         styles.containerStyles.reverseBackground,
       ]}
     >
-      {/* Social Media */}
-      <View style={{ alignItems: "center" }}>
+      {/* Social Media and Information */}
+      <View style={{ alignItems: "flex-start" }}>
+        {/* Social Media */}
         <Text
           style={[
             { fontSize: isMobile ? 20 : 30 },
@@ -109,6 +112,87 @@ export const Footer = ({ amplitude, isMobile }) => {
               style={[styles.textStyles.reversePlainText, { fontSize: 12 }]}
             >
               SpecGauge
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* Information */}
+        <Text
+          style={[
+            { fontSize: isMobile ? 20 : 30 },
+            styles.textStyles.reversePlainText,
+            { userSelect: "none", marginTop: 15 },
+          ]}
+        >
+          Information
+        </Text>
+
+        <View style={{ alignItems: "flex-start" }}>
+          {/* About Us */}
+          <Pressable
+            onPress={() => {
+              amplitude.track("About Us");
+              navigate("/aboutus");
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.buttonNoBackground,
+              pressed && styles.inputStyles.buttonNoBackgroundClicked,
+              {
+                padding: 0,
+                marginLeft: 10,
+                marginTop: 15,
+                marginBottom: 0,
+              },
+            ]}
+          >
+            <Text
+              style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+            >
+              About Us
+            </Text>
+          </Pressable>
+          {/* Terms of Service */}
+          <Pressable
+            onPress={() => {
+              amplitude.track("Terms of Service");
+              navigate("/termsofservice");
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.buttonNoBackground,
+              pressed && styles.inputStyles.buttonNoBackgroundClicked,
+              {
+                padding: 0,
+                marginLeft: 10,
+                marginVertical: 0,
+              },
+            ]}
+          >
+            <Text
+              style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+            >
+              Terms of Service
+            </Text>
+          </Pressable>
+          {/* Privacy Policy */}
+          <Pressable
+            onPress={() => {
+              amplitude.track("Privacy Policy");
+              navigate("/privacypolicy");
+            }}
+            style={({ pressed }) => [
+              styles.inputStyles.buttonNoBackground,
+              pressed && styles.inputStyles.buttonNoBackgroundClicked,
+              {
+                padding: 0,
+                marginLeft: 10,
+                marginVertical: 0,
+              },
+            ]}
+          >
+            <Text
+              style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+            >
+              Privacy Policy
             </Text>
           </Pressable>
         </View>

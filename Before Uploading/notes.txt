@@ -1,3 +1,13 @@
 Add _redirects to dist
 
+add 
+<meta name="robots" content="index, nofollow">
+<meta property="og:title" content="SpecGauge | Compare products and predict prices">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://SpecGauge.com/home">
+<meta property="og:description" content="Compare product specs side by side. Predict future prices of products.">
+<meta property="og:site_name" content="SpecGauge">
+below 
+<meta name="description">
+
 make sure amplitude was enabled

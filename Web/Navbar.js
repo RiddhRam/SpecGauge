@@ -5,8 +5,6 @@ import { Image, Text, View } from "react-native-web";
 
 import { getAuth } from "firebase/auth";
 
-import { A } from "@expo/html-elements";
-
 export const Navbar = ({ page, isMobile }) => {
   // initialize SGStyles as styles
   const styles = SGStyles();
@@ -21,6 +19,7 @@ export const Navbar = ({ page, isMobile }) => {
         style={{
           textDecorationLine: "none",
         }}
+        to="/home"
       >
         <View
           style={{
@@ -36,83 +35,106 @@ export const Navbar = ({ page, isMobile }) => {
             }
             alt={"SpecGauge Logo"}
           ></Image>
-          <Text style={styles.textStyles.titleText}>SpecGauge</Text>
+          <Text
+            style={{
+              color: "#4ca0d7",
+              fontSize: isMobile ? 25 : 40,
+              padding: 10,
+              textAlign: "center",
+              fontDisplay: "swap",
+            }}
+          >
+            SpecGauge
+          </Text>
         </View>
       </Link>
       {/* The links */}
-      {/* If currently on the page of one of the links, that link is highlighted */}
-      {(page == "login" || page == "account") && (
-        <View style={{ justifyContent: "flex-start" }}>
-          <Link to="/home" style={styles.textStyles.navbarText}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Image
-                source={require("../assets/Home Icon.webp")}
-                style={
-                  isMobile
-                    ? { width: 25, height: 27 }
-                    : { width: 35, height: 37 }
-                }
-                alt="Home Icon"
-              ></Image>
-              <Text style={styles.textStyles.navbarText}>Home</Text>
-            </View>
-          </Link>
-        </View>
-      )}
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        {/* If currently on the page of one of the links, that link is highlighted */}
+        {page != "home" ? (
+          <View>
+            <Link to="/home" style={styles.textStyles.navbarText}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/Home Icon.webp")}
+                  style={
+                    isMobile
+                      ? { width: 25, height: 27 }
+                      : { width: 35, height: 37 }
+                  }
+                  alt="Home Icon"
+                ></Image>
+                <Text style={styles.textStyles.navbarText}>Home</Text>
+              </View>
+            </Link>
+          </View>
+        ) : (
+          <View style={{ height: 77 }}></View>
+        )}
 
-      {page == "home" && (
-        <View
-          style={{
-            justifyContent: "flex-end",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          {auth.currentUser ? (
-            <>
-              <A href={`${currentDomain}/account`} target="_self">
-                <Image
-                  source={require("../assets/Profile Icon.webp")}
-                  style={
-                    isMobile
-                      ? { width: 27, height: 27 }
-                      : { width: 37, height: 37 }
-                  }
-                  alt="Profile Icon"
-                ></Image>
-              </A>
-              <A
-                href={`${currentDomain}/account`}
-                target="_self"
-                style={{ alignContent: "center", marginLeft: 0 }}
-              >
-                <Text style={styles.textStyles.navbarText}>My Account</Text>
-              </A>
-            </>
-          ) : (
-            <>
-              <A href={`${currentDomain}/login`} target="_self">
-                <Image
-                  source={require("../assets/Profile Icon.webp")}
-                  style={
-                    isMobile
-                      ? { width: 27, height: 27 }
-                      : { width: 37, height: 37 }
-                  }
-                  alt="Profile Icon"
-                ></Image>
-              </A>
-              <A
-                href={`${currentDomain}/login`}
-                target="_self"
-                style={{ alignContent: "center", marginLeft: 0 }}
-              >
-                <Text style={styles.textStyles.navbarText}>Log In</Text>
-              </A>
-            </>
-          )}
-        </View>
-      )}
+        {page != "account" && page != "login" ? (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            {auth.currentUser ? (
+              <>
+                <a href={`${currentDomain}/account`} target="_self">
+                  <Image
+                    source={require("../assets/Profile Icon.webp")}
+                    style={
+                      isMobile
+                        ? { width: 27, height: 27 }
+                        : { width: 37, height: 37 }
+                    }
+                    alt="Profile Icon"
+                  ></Image>
+                </a>
+                <a
+                  href={`${currentDomain}/account`}
+                  target="_self"
+                  style={{
+                    alignContent: "center",
+                    marginLeft: 0,
+                    textDecoration: "none",
+                  }}
+                >
+                  <Text style={styles.textStyles.navbarText}>My Account</Text>
+                </a>
+              </>
+            ) : (
+              <>
+                <a href={`${currentDomain}/login`} target="_self">
+                  <Image
+                    source={require("../assets/Profile Icon.webp")}
+                    style={
+                      isMobile
+                        ? { width: 27, height: 27 }
+                        : { width: 37, height: 37 }
+                    }
+                    alt="Profile Icon"
+                  ></Image>
+                </a>
+                <a
+                  href={`${currentDomain}/login`}
+                  target="_self"
+                  style={{
+                    alignContent: "center",
+                    marginLeft: 0,
+                    textDecoration: "none",
+                  }}
+                >
+                  <Text style={styles.textStyles.navbarText}>Log In</Text>
+                </a>
+              </>
+            )}
+          </View>
+        ) : (
+          <></>
+        )}
+      </View>
     </View>
   );
 };

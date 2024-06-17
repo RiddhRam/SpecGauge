@@ -33,7 +33,6 @@ export const SGStyles = () => {
     },
     // For Views and divs that take up the main part of the screen
     largeContainer: {
-      flex: 1,
       backgroundColor: theme === "dark" ? "#171827" : "#fff",
       alignItems: "center",
       justifyContent: "center",
@@ -93,12 +92,6 @@ export const SGStyles = () => {
       padding: 10,
       textAlign: "center",
     },
-    titleText: {
-      color: "#4ca0d7",
-      fontSize: isMobile ? 25 : 40,
-      padding: 10,
-      textAlign: "center",
-    },
     errorText: {
       color: "#f00",
       fontSize: 15,
@@ -153,6 +146,18 @@ export const SGStyles = () => {
     },
     successText: {
       color: "#03fc13",
+    },
+    infoText: {
+      color: theme === "dark" ? "#fff" : "#000",
+      fontSize: 20,
+    },
+    infoSubtitle: {
+      color: "#4ca0d7",
+      fontSize: 27,
+      padding: 10,
+      paddingLeft: 0,
+      fontWeight: "bold",
+      textAlign: "center",
     },
   });
 
