@@ -32,9 +32,9 @@ import {
 } from "firebase/firestore";
 import { useWindowDimensions } from "react-native";
 
-amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
+/*amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
-});
+});*/
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -3803,6 +3803,8 @@ export default function App() {
             ></Information>
           }
         ></Route>
+        {/* the robots.txt page */}
+
         {/* any other page, error 404 */}
         <Route
           path="*"

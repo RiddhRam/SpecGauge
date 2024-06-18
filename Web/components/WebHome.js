@@ -52,7 +52,8 @@ export default function WebHome({ amplitude, isMobile }) {
     /* Records the initial load of the website */
   }
   useEffect(() => {
-    amplitude.track("Screen", { Screen: "Home" });
+    amplitude.track("Screen", { Screen: "Home", ColorScheme: scheme });
+    console.log(scheme);
   }, []);
 
   // Call SGStyles as styles
