@@ -140,28 +140,9 @@ export default function WebHome({ amplitude, isMobile }) {
               marginTop: 20,
             }}
           >
-            {/* Compare */}
-            <View>
-              <p style={styles.textStyles.plainText}>
-                Compare thousands of different products side by side
-              </p>
-              <Pressable
-                onPress={() => {
-                  setCompareModalVisible(true);
-                }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                  { marginBottom: 15, marginTop: 25 },
-                ]}
-              >
-                <p>Start Comparing</p>
-              </Pressable>
-            </View>
-
             {/* Prediction */}
-            <View style={{ marginTop: 20 }}>
-              <p style={styles.textStyles.plainText}>
+            <View style={{ marginTop: 20, width: "100%" }}>
+              <p style={styles.textStyles.simpleText}>
                 Predict future prices of products
               </p>
               <Pressable
@@ -171,10 +152,28 @@ export default function WebHome({ amplitude, isMobile }) {
                 style={({ pressed }) => [
                   styles.inputStyles.button,
                   pressed && styles.inputStyles.buttonClicked,
-                  { marginBottom: 15, marginTop: 25, marginBottom: 60 },
+                  { marginTop: 15, marginBottom: 60 },
                 ]}
               >
                 <p>Price Prediction</p>
+              </Pressable>
+            </View>
+            {/* Compare */}
+            <View style={{ width: "100%" }}>
+              <p style={styles.textStyles.simpleText}>
+                Compare thousands of different products side by side
+              </p>
+              <Pressable
+                onPress={() => {
+                  setCompareModalVisible(true);
+                }}
+                style={({ pressed }) => [
+                  styles.inputStyles.button,
+                  pressed && styles.inputStyles.buttonClicked,
+                  { marginBottom: 60, marginTop: 15 },
+                ]}
+              >
+                <p>Start Comparing</p>
               </Pressable>
             </View>
           </View>

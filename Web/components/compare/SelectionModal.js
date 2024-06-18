@@ -230,7 +230,7 @@ export default function SelectionModal({
                     ]);
 
                     amplitude.track("Complete Request", {
-                      Brand: item,
+                      Brand: tempSpecsArray[0],
                       Category: type,
                       Product: tempSpecsArray[1],
                     });
