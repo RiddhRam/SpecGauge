@@ -1,5 +1,6 @@
 import { Navbar } from "../Navbar";
 import { SGStyles } from "../../styles/styles";
+import { Footer } from "../Footer";
 
 import {
   Modal,
@@ -12,7 +13,6 @@ import {
 import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { Footer } from "../Footer";
 
 const comparisonCategories = [
   "Automobiles",

@@ -26,4 +26,10 @@ add
 below 
 <meta name="description">
 
+replace 
+<link rel="shortcut icon" href="/favicon.ico" />
+with
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" type="image/vnd.microsoft.icon" />
+<link rel="apple-touch-icon" sizes="180x180" href="/SpecGauge iOS.png" type="image/png>
+
 make sure amplitude was enabled

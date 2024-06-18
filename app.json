@@ -4,27 +4,11 @@
     "slug": "SpecGauge",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.ryd.specgauge"
-    },
     "web": {
-      "favicon": "./assets/favicon.png",
-      "description": "Compare product specs side by side. Predict future prices of products."
+      "favicon": "./assets/SpecGauge Logo.png",
+      "description": "Compare car and electronic specs side by side. Predict future prices of products."
     },
     "extra": {
       "eas": {
