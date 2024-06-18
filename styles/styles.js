@@ -164,7 +164,7 @@ export const SGStyles = () => {
   const inputStyles = StyleSheet.create({
     // for buttons
     button: {
-      backgroundColor: theme === "dark" ? "#3d3d54" : "#c6c6c6",
+      backgroundColor: theme === "dark" ? "#3d3d54" : "#4ca0d7",
       color: theme === "dark" ? "#fff" : "#000",
       borderRadius: 8,
       fontSize: 20,
