@@ -352,6 +352,13 @@ export default function Compare({
     }
   }, [displayPros]);
 
+  useEffect(() => {
+    amplitude.track("Comparison Screen", {
+      Screen: type,
+      Platform: isMobile ? "Mobile" : "Computer",
+    });
+  }, []);
+
   const CallSaveComparisonCloudFunction = async () => {
     // The processes that get saved
     arrayToSave = [];

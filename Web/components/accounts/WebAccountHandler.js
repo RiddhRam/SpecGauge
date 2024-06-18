@@ -126,7 +126,6 @@ export default function WebAccountHandler({ screenType, setModalView }) {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password); // returns a response
-
       // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
         navigate("/home");

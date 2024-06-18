@@ -1,7 +1,23 @@
 Add _redirects to dist
 
+Add directly below <head>
+<!-- Google tag (gtag.js) -->
+<script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=AW-16550385489"
+></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+
+  gtag("config", "AW-16550385489");
+</script>
+
 add 
-<meta name="robots" content="index, nofollow">
+<meta name="robots" content="index, follow">
 <meta property="og:title" content="SpecGauge | Compare products and predict prices">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://SpecGauge.com/home">

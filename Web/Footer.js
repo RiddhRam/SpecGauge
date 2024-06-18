@@ -131,7 +131,6 @@ export const Footer = ({ amplitude, isMobile }) => {
           {/* About Us */}
           <Pressable
             onPress={() => {
-              amplitude.track("About Us");
               navigate("/aboutus");
             }}
             style={({ pressed }) => [
@@ -154,7 +153,6 @@ export const Footer = ({ amplitude, isMobile }) => {
           {/* Terms of Service */}
           <Pressable
             onPress={() => {
-              amplitude.track("Terms of Service");
               navigate("/termsofservice");
             }}
             style={({ pressed }) => [
@@ -176,7 +174,6 @@ export const Footer = ({ amplitude, isMobile }) => {
           {/* Privacy Policy */}
           <Pressable
             onPress={() => {
-              amplitude.track("Privacy Policy");
               navigate("/privacypolicy");
             }}
             style={({ pressed }) => [

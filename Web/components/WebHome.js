@@ -53,7 +53,6 @@ export default function WebHome({ amplitude, isMobile }) {
   }
   useEffect(() => {
     amplitude.track("Screen", { Screen: "Home", ColorScheme: scheme });
-    console.log(scheme);
   }, []);
 
   // Call SGStyles as styles
@@ -202,10 +201,6 @@ export default function WebHome({ amplitude, isMobile }) {
                 ]}
                 key={item}
                 onPress={() => {
-                  amplitude.track("Comparison Screen", {
-                    Screen: item,
-                    Platform: isMobile ? "Mobile" : "Computer",
-                  });
                   {
                     /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
                   }
@@ -252,10 +247,6 @@ export default function WebHome({ amplitude, isMobile }) {
                 ]}
                 key={item}
                 onPress={() => {
-                  amplitude.track("Prediction Screen", {
-                    Screen: item,
-                    Platform: isMobile ? "Mobile" : "Computer",
-                  });
                   {
                     /* It needs to be incremented because index is 0 indexed, but the values in the if statement isn't */
                   }

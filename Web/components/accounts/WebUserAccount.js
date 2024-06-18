@@ -311,6 +311,9 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
     } else {
       setEmail(auth.currentUser.email);
     }
+  });
+
+  useEffect(() => {
     amplitude.track("Screen", { Screen: "Log In" });
   });
 
@@ -345,6 +348,11 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
                   styles.inputStyles.accountButtonSelected,
                   pressed && styles.inputStyles.accountButtonClicked,
                 ]}
+                onLayout={() => {
+                  amplitude.track("Account Page", {
+                    Screen: "Your Account",
+                  });
+                }}
               >
                 <p>Your Account</p>
               </Pressable>
@@ -382,6 +390,9 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
               <Pressable
                 onPress={async () => {
                   callLocalSavedComparisonsFunc();
+                  amplitude.track("Account Page", {
+                    Screen: "Saved Comparisons",
+                  });
                 }}
                 style={({ pressed }) => [
                   styles.inputStyles.accountButton,

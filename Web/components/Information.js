@@ -3,11 +3,15 @@ import { SGStyles } from "../../styles/styles";
 import { Text, View, ScrollView } from "react-native-web";
 import { Footer } from "../Footer";
 import { Navbar } from "../Navbar";
+import { useEffect } from "react";
 
 export default function Information({ amplitude, isMobile, title, text }) {
   // Call SGStyles as styles
   const styles = SGStyles();
 
+  useEffect(() => {
+    amplitude.track("Screen", { Screen: title });
+  }, []);
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       <Navbar page="aboutus" isMobile={isMobile}></Navbar>

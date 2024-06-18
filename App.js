@@ -32,9 +32,9 @@ import {
 } from "firebase/firestore";
 import { useWindowDimensions } from "react-native";
 
-/*amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
+amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
-});*/
+});
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -3776,7 +3776,7 @@ export default function App() {
             ></Information>
           }
         ></Route>
-        {/* the about us page */}
+        {/* the privacy policy page */}
         <Route
           path="privacypolicy"
           element={
@@ -3792,6 +3792,9 @@ export default function App() {
 <Text style={styles.textStyles.infoText}>We collect user activity data through Amplitude to understand how our app is used and improve it for you. This data helps us tweak features and make your experience better. The data is not linked to you or your email. We do not store any of your usage data on our servers. We don't sell this info to third parties — your privacy is our priority.</Text>
 <Text style={styles.textStyles.infoText}>{"\n"}</Text>
 <Text style={styles.textStyles.infoText}>{"\n"}</Text>
+<Text style={styles.textStyles.infoText}>When users visit our website, we utilize Google Ads to promote our services. Google Ads may place cookies on users' browsers and collect certain anonymous information for advertising purposes. This data helps us reach our audience effectively. Please note that Google Ads operates independently and has its own privacy policies regarding the data it collects.</Text>
+<Text style={styles.textStyles.infoText}>{"\n"}</Text>
+<Text style={styles.textStyles.infoText}>{"\n"}</Text>
 <Text style={styles.textStyles.infoText}>When users create accounts using their email and password, we collect and store this information securely. It's used solely for account management purposes, like resetting passwords or sending important updates related to their account.</Text>
 <Text style={styles.textStyles.infoText}>{"\n"}</Text>
 <Text style={styles.textStyles.infoText}>{"\n"}</Text>
@@ -3803,8 +3806,6 @@ export default function App() {
             ></Information>
           }
         ></Route>
-        {/* the robots.txt page */}
-
         {/* any other page, error 404 */}
         <Route
           path="*"

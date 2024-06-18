@@ -303,6 +303,13 @@ export default function PredictionAnalysis({
     }
   }, [isMobile, updateGraph]);
 
+  useEffect(() => {
+    amplitude.track("Prediction Screen", {
+      Screen: type,
+      Platform: isMobile ? "Mobile" : "Computer",
+    });
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
       <Navbar page="prediction" isMobile={isMobile}></Navbar>
