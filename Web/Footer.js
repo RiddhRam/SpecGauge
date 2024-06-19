@@ -6,6 +6,7 @@ export const Footer = ({ amplitude, isMobile }) => {
   // initialize SGStyles as styles
   const styles = SGStyles();
   const navigate = useNavigate();
+  const currentDomain = window.location.origin;
 
   return (
     <View
@@ -129,69 +130,56 @@ export const Footer = ({ amplitude, isMobile }) => {
 
         <View style={{ alignItems: "flex-start" }}>
           {/* About Us */}
-          <Pressable
-            onPress={() => {
-              navigate("/aboutus");
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.buttonNoBackground,
-              pressed && styles.inputStyles.buttonNoBackgroundClicked,
-              {
-                padding: 0,
+          <View style={{ paddingVertical: 10 }}>
+            <a
+              href={`${currentDomain}/aboutus`}
+              target="_self"
+              style={{
+                textDecoration: "none",
                 marginLeft: 10,
-                marginTop: 15,
-                marginBottom: 0,
-              },
-            ]}
-          >
-            <Text
-              style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+              }}
             >
-              About Us
-            </Text>
-          </Pressable>
+              <Text
+                style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+              >
+                About Us
+              </Text>
+            </a>
+          </View>
           {/* Terms of Service */}
-          <Pressable
-            onPress={() => {
-              navigate("/termsofservice");
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.buttonNoBackground,
-              pressed && styles.inputStyles.buttonNoBackgroundClicked,
-              {
-                padding: 0,
+          <View style={{ paddingVertical: 10 }}>
+            <a
+              href={`${currentDomain}/termsofservice`}
+              target="_self"
+              style={{
+                textDecoration: "none",
                 marginLeft: 10,
-                marginVertical: 0,
-              },
-            ]}
-          >
-            <Text
-              style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+              }}
             >
-              Terms of Service
-            </Text>
-          </Pressable>
+              <Text
+                style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+              >
+                Terms of Service
+              </Text>
+            </a>
+          </View>
           {/* Privacy Policy */}
-          <Pressable
-            onPress={() => {
-              navigate("/privacypolicy");
-            }}
-            style={({ pressed }) => [
-              styles.inputStyles.buttonNoBackground,
-              pressed && styles.inputStyles.buttonNoBackgroundClicked,
-              {
-                padding: 0,
+          <View style={{ paddingVertical: 10 }}>
+            <a
+              href={`${currentDomain}/privacypolicy`}
+              target="_self"
+              style={{
+                textDecoration: "none",
                 marginLeft: 10,
-                marginVertical: 0,
-              },
-            ]}
-          >
-            <Text
-              style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+              }}
             >
-              Privacy Policy
-            </Text>
-          </Pressable>
+              <Text
+                style={[styles.textStyles.reversePlainText, { fontSize: 14 }]}
+              >
+                Privacy Policy
+              </Text>
+            </a>
+          </View>
         </View>
       </View>
       {/* Contact Us */}
