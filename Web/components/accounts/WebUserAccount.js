@@ -1,6 +1,7 @@
 import { SGStyles } from "../../../styles/styles";
 import { Navbar } from "../../Navbar";
 import { Footer } from "../../Footer";
+import GetSpecificProduct from "../GetSpecificProduct";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -512,94 +513,16 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
                                     onPress={async () => {
                                       setLoading(true);
 
-                                      prerequestedSpecs = [];
-                                      processArray = [];
-                                      prosArray = [];
-                                      // Iterate through all processes in the clicked comparison
-                                      for (processItem in savedProcesses[
-                                        categoryIndex
-                                      ][comparisonIndex]) {
-                                        // Call the direct function for this category and pass in the process
-                                        const result = await directFuncArray[
-                                          categoryIndex
-                                        ](
-                                          savedProcesses[categoryIndex][
-                                            comparisonIndex
-                                          ][processItem]
-                                        );
-                                        // There should only be 1 result anyways, but just in case there's several, this will use the first one
-                                        prerequestedSpecs.push(result[0]);
-                                        processArray.push(
-                                          savedProcesses[categoryIndex][
-                                            comparisonIndex
-                                          ][processItem]
-                                        );
-
-                                        tempProsArray = [];
-
-                                        for (
-                                          let i = 0;
-                                          i <
-                                          defaultArrays[categoryIndex].length;
-                                          i++
-                                        ) {
-                                          defaultArrayItem =
-                                            defaultArrays[categoryIndex][i];
-                                          if (defaultArrayItem.Important) {
-                                            newJSON = {};
-                                            newJSON["Value"] =
-                                              defaultArrayItem.Value;
-                                            newJSON["Display"] =
-                                              defaultArrayItem.Display;
-                                            newJSON["Category"] =
-                                              defaultArrayItem.Category;
-                                            newJSON["Matching"] =
-                                              defaultArrayItem.Matching;
-                                            newJSON["Type"] =
-                                              defaultArrayItem.Type;
-                                            newJSON["Preference"] =
-                                              defaultArrayItem.Preference;
-                                            newJSON["HigherNumber"] =
-                                              defaultArrayItem.HigherNumber;
-
-                                            tempProsArray.push(newJSON);
-                                          }
-                                        }
-
-                                        // Record Pros to tempProsArray
-                                        for (
-                                          let j = 0;
-                                          j != tempProsArray.length;
-                                          j++
-                                        ) {
-                                          // If not based on user preference, we will deal with user preferences later
-                                          if (!tempProsArray[j].Preference) {
-                                            proValue =
-                                              result[0][
-                                                tempProsArray[j].Matching
-                                              ];
-
-                                            if (proValue != undefined) {
-                                              tempProsArray[j].Value =
-                                                result[0][
-                                                  tempProsArray[j].Matching
-                                                ];
-                                            } else {
-                                              tempProsArray[j].Value = "--";
-                                            }
-                                          }
-                                        }
-
-                                        prosArray.push(tempProsArray);
-                                      }
-                                      setLoading(false);
+                                      const result = await GetSpecificProduct(
+                                        defaultArrays[categoryIndex],
+                                        savedProcesses[categoryIndex][
+                                          comparisonIndex
+                                        ],
+                                        directFuncArray[categoryIndex]
+                                      );
 
                                       navigate(comparisonLinks[categoryIndex], {
-                                        state: {
-                                          prerequestedSpecs: prerequestedSpecs,
-                                          processArray: processArray,
-                                          prosArray: prosArray,
-                                        },
+                                        state: result,
                                       });
                                     }}
                                   >

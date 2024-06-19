@@ -81,52 +81,44 @@ export const Navbar = ({ page, isMobile }) => {
           >
             {auth.currentUser ? (
               <>
-                <a href={`${currentDomain}/account`} target="_self">
-                  <Image
-                    source={require("../assets/Profile Icon.webp")}
-                    style={
-                      isMobile
-                        ? { width: 27, height: 27 }
-                        : { width: 37, height: 37 }
-                    }
-                    alt="Profile Icon"
-                  ></Image>
-                </a>
                 <a
                   href={`${currentDomain}/account`}
                   target="_self"
-                  style={{
-                    alignContent: "center",
-                    marginLeft: 0,
-                    textDecoration: "none",
-                  }}
+                  style={{ textDecoration: "none" }}
                 >
-                  <Text style={styles.textStyles.navbarText}>My Account</Text>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Image
+                      source={require("../assets/Profile Icon.webp")}
+                      style={
+                        isMobile
+                          ? { width: 27, height: 27 }
+                          : { width: 37, height: 37 }
+                      }
+                      alt="Profile Icon"
+                    ></Image>
+                    <Text style={styles.textStyles.navbarText}>My Account</Text>
+                  </View>
                 </a>
               </>
             ) : (
               <>
-                <a href={`${currentDomain}/login`} target="_self">
-                  <Image
-                    source={require("../assets/Profile Icon.webp")}
-                    style={
-                      isMobile
-                        ? { width: 27, height: 27 }
-                        : { width: 37, height: 37 }
-                    }
-                    alt="Profile Icon"
-                  ></Image>
-                </a>
                 <a
                   href={`${currentDomain}/login`}
                   target="_self"
-                  style={{
-                    alignContent: "center",
-                    marginLeft: 0,
-                    textDecoration: "none",
-                  }}
+                  style={{ textDecoration: "none" }}
                 >
-                  <Text style={styles.textStyles.navbarText}>Log In</Text>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Image
+                      source={require("../assets/Profile Icon.webp")}
+                      style={
+                        isMobile
+                          ? { width: 27, height: 27 }
+                          : { width: 37, height: 37 }
+                      }
+                      alt="Profile Icon"
+                    ></Image>
+                    <Text style={styles.textStyles.navbarText}>Log In</Text>
+                  </View>
                 </a>
               </>
             )}

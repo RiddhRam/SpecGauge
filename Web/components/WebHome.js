@@ -74,7 +74,7 @@ export default function WebHome({ amplitude, isMobile }) {
           }}
         >
           {/* Subtitle */}
-          <p
+          <h1
             style={{
               fontSize: isMobile ? 20 : 30,
               marginTop: 40,
@@ -84,7 +84,7 @@ export default function WebHome({ amplitude, isMobile }) {
             }}
           >
             Compare Today. Predict Tomorrow.
-          </p>
+          </h1>
 
           {/* Updates */}
           <View
