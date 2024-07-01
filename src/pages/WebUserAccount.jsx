@@ -11,13 +11,6 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import {
-  query,
-  where,
-  getFirestore,
-  collection,
-  getDocs,
-} from "firebase/firestore";
 
 const comparisonLinks = [
   "/comparison/automobiles",
@@ -75,7 +68,6 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
   if it does then move this inside the log in and sign up func */
   const auth = getAuth();
   const functions = getFunctions();
-  const db = getFirestore();
 
   const resetPassword = async () => {
     try {
@@ -385,7 +377,9 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
                                   }}
                                   onClick={async () => {
                                     const url = BuildURLFriendly(
-                                      savedProcesses[categoryIndex][0]
+                                      savedProcesses[categoryIndex][
+                                        comparisonIndex
+                                      ]
                                     );
 
                                     navigate(
