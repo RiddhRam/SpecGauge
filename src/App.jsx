@@ -1,20 +1,14 @@
-// Bootstrap design
-import "bootstrap/dist/css/bootstrap.css";
-import WebDefaultPage from "./Web/components/WebDefaultPage";
-import WebHome from "./Web/components/WebHome";
-import NoPage from "./Web/components/NoPage";
-import WebLogIn from "./Web/components/accounts/WebLogIn";
-import WebUserAccount from "./Web/components/accounts/WebUserAccount";
-import Compare from "./Web/components/compare/Compare";
-import PredictionAnalysis from "./Web/components/predict/PredictionAnalysis";
-import Information from "./Web/components/Information";
+import useWindowDimensions from "./useWindowDimensions";
+import WebDefaultPage from "./pages/WebDefaultPage";
+import NoPage from "./pages/NoPage";
+import WebHome from "./pages/WebHome";
+import WebLogIn from "./pages/WebLogIn";
+import WebUserAccount from "./pages/WebUserAccount";
+import Compare from "./pages/Compare";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Text } from "react-native-web";
-import { SGStyles } from "./styles/styles";
-
-import * as amplitude from "@amplitude/analytics-react-native";
+import * as amplitude from "@amplitude/analytics-browser";
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -30,7 +24,6 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
-import { useWindowDimensions } from "react-native";
 
 /*amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
@@ -61,32 +54,251 @@ const consoleProcess = ["a brand", "a console"];
 // This is used when filtering out items in the selection modal whenever user clicks something
 const consoleQueryProcess = ["Brand", "Name"];
 
-// Brands are preloaded
+// Brands and second steps are preloaded
 const consoleBrands = [
-  "Microsoft",
-  "Nintendo",
-  "Sony",
-  "Abxylute",
-  "Alienware",
-  "Analogue",
-  "Anbernic",
-  "Aokzoe",
-  "ASUS",
-  "Atari",
-  "Aya",
-  "Ayn",
-  "GPD",
-  "KTPocket",
-  "Lenovo",
-  "Logitech",
-  "MSI",
-  "Onexplayer",
-  "Powerkiddy",
-  "Retroid",
-  "Terrans",
-  "Valve",
+  {
+    Brand: "Microsoft",
+    SecondStep: [
+      "Xbox Series X",
+      "Xbox Series S",
+      "Xbox One X",
+      "Xbox One S",
+      "Xbox One",
+      "Xbox 360 S 4GB",
+      "Xbox 360 Premium 20GB",
+      "Xbox 360 Core",
+      "Xbox 360 Arcade",
+      "Xbox 360 Elite 120GB",
+      "Xbox",
+    ],
+  },
+  {
+    Brand: "Nintendo",
+    SecondStep: [
+      "Switch",
+      "Switch (OLED Model)",
+      "Wii U 8GB",
+      "3DS XL (2014)",
+      "3DS (2014)",
+      "Switch Lite",
+      "3DS XL",
+      "Wii",
+      "2DS XL",
+      "3DS",
+      "DSi",
+      "Wii Mini",
+      "DSi XL",
+      "DS Lite",
+      "2DS",
+      "DS",
+      "Game Boy Advance",
+      "Gamecube",
+      "SNES",
+      "Game Boy",
+      "N64",
+      "NES Classic Edition",
+      "SNES Classic Mini",
+    ],
+  },
+  {
+    Brand: "Sony",
+    SecondStep: [
+      "PlayStation 5 Slim",
+      "PlayStation 5 Slim (Digital Edition)",
+      "PlayStation 5",
+      "PlayStation 5 Digital Edition",
+      "PlayStation 4 Pro",
+      "PlayStation 4",
+      "PlayStation 4 Ultimate Player 1TB Edition",
+      "PlayStation 4 Slim",
+      "PlayStation 3 Super Slim 250GB",
+      "PlayStation 3 40GB",
+      "PlayStation 3 Slim 120GB",
+      "PlayStation 3 20GB",
+      "PlayStation Portal",
+      "Vita 2",
+      "Vita",
+      "Vita 3G",
+      "PlayStation 2",
+      "PSP Go",
+      "PS Vita TV",
+      "PSP 3000",
+      "PSP 1000",
+      "PSP 2000",
+      "PSP E1000",
+      "PlayStation Classic",
+      "PlayStation",
+    ],
+  },
+  { Brand: "Abxylute", SecondStep: ["64GB"] },
+  { Brand: "Alienware", SecondStep: ["Alpha (i3)"] },
+  { Brand: "Analogue", SecondStep: ["Pocket", "Duo", "Mega Sg", "Super Nt"] },
+  {
+    Brand: "Anbernic",
+    SecondStep: [
+      "RG353P 32GB + 16GB + 64GB",
+      "RG552 64GB + 16GB + 64GB",
+      "Win600 AMD Athlon Silver 3050e / 16GB RAM / 1TB SSD",
+      "Win600 AMD Athlon Silver 3020e 8GB RAM / 128GB SSD",
+      "RG35XX Plus 64GB + 128GB",
+      "RG405V 128GB + 256GB",
+      "RG353PS 16GB + 256GB",
+      "RG505 128GB + 256GB",
+      "RG353V 32GB + 16GB + 256GB",
+      "RG405M 128GB + 256GB",
+      "RG353M 16GB + 256GB",
+      "RG503 16GB + 64GB",
+      "RG353VS 16GB + 256GB",
+      "RG35XX 64GB + 128GB",
+      "RG350P 16GB + 32GB",
+      "RG300X 16GB + 64GB",
+      "RG351V 16GB + 64GB",
+      "RG350 16GB + 32GB",
+      "RG351MP 16GB + 64GB",
+      "RG Nano 128GB",
+      "RG351P 64GB",
+      "RG280M 16GB + 32GB",
+      "RG350M 16GB + 32GB",
+      "RG280V 16GB + 64GB",
+      "RG351M 64GB",
+    ],
+  },
+  {
+    Brand: "Aokzoe",
+    SecondStep: [
+      "A1 Pro AMD Ryzen 7 7840U / 64GB RAM / 2TB SSD",
+      "A1 AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
+    ],
+  },
+  { Brand: "Asus", SecondStep: ["ROG Ally"] },
+  { Brand: "Atari", SecondStep: ["VCS", "Lynx"] },
+  {
+    Brand: "Aya Neo",
+    SecondStep: [
+      "Flip DS AMD Ryzen 7 7840U / 64GB RAM / 2TB SSD",
+      "Flip DS AMD Ryzen 7 8840U / 64GB RAM / 2TB SSD",
+      "Kun AMD Ryzen 7 7840U / 64GB RAM / 4TB SSD",
+      "Flip KB AMD Ryzen 7 7840U / 64GB RAM / 2TB SSD",
+      "Flip KB AMD Ryzen 7 8840U / 64GB RAM / 2TB SSD",
+      "2S AMD Ryzen 7 7840U / 64GB RAM / 4TB SSD",
+      "Air Plus AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
+      "Air 1S AMD Ryzen 7 7840U / 32GB RAM / 4TB SSD",
+      "Pocket Air MediaTek Dimensity 1200 / 12GB RAM / 512GB SSD",
+      "Air Pro 5825U / 2TB SSD",
+      "2 AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
+      "Air Pro 5560U / 1TB SSD",
+      "2021 Pro",
+      "Air 512GB",
+      "Geek AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
+      "Air Lite",
+      "2021",
+      "Next Pro",
+      "Next",
+    ],
+  },
+  {
+    Brand: "Ayn",
+    SecondStep: [
+      "Loki Max",
+      "Loki 512GB",
+      "Odin 256GB",
+      "Odin Lite",
+      "Loki Mini Pro Intel",
+      "Loki Mini Pro AMD",
+      "Loki Mini Intel",
+      "Loki Mini AMD",
+      "Loki Zero",
+    ],
+  },
+  {
+    Brand: "GPD",
+    SecondStep: [
+      "Win 4 AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
+      "XP Plus / 6GB RAM / 256GB SSD",
+      "Win 3 Intel Core i7-1195G7 / 16GB RAM / 1TB SSD",
+      "XD Plus 4GB RAM / 32GB",
+    ],
+  },
+  { Brand: "KTPocket", SecondStep: ["KT R1 Wi-Fi + Cellular 8GB RAM / 256GB"] },
+  {
+    Brand: "Lenovo",
+    SecondStep: [
+      "Legion Go AMD Z1 Extreme / 16GB RAM / 1TB SSD",
+      "Legion Go AMD Z1 / 16GB RAM / 256GB SSD",
+    ],
+  },
+  { Brand: "Logitech", SecondStep: ["G Cloud"] },
+  {
+    Brand: "MSI",
+    SecondStep: [
+      "Claw A1M Intel Core Ultra 7 155H / 16GB RAM / 1TB SSD",
+      "Claw A1M Intel Core Ultra 5 135H / 16GB RAM / 512GB SSD",
+    ],
+  },
+  { Brand: "Nvidia", SecondStep: ["Shield"] },
+  {
+    Brand: "Onexplayer",
+    SecondStep: [
+      "2 AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
+      "Mini Pro AMD Ryzen 6800U / 32GB RAM / 2TB SSD",
+      "Mini Pro Intel Core i7-1260P / 16GB RAM / 2TB SSD",
+      "Mini Intel Pentium Gold 8505 / 16GB RAM / 512GB SSD",
+    ],
+  },
+  {
+    Brand: "Powkiddy",
+    SecondStep: [
+      "X28",
+      "X55 16GB + 128GB",
+      "RGB30 16GB + 128GB",
+      "RK2023 Wi-Fi 16GB + 128GB",
+      "RGB10 Max 3 Pro 16GB + 128GB",
+      "RK2023 16GB + 128GB",
+      "X18S 4GB RAM / 64GB",
+      "RGB10 Max2 128GB",
+      "Q90 64GB",
+      "V90 64GB",
+      "RGB20S 16GB + 128GB",
+      "RGB10 Max 128GB",
+      "Magicx XU10 256GB",
+      "A20",
+      "RGB20 128GB",
+    ],
+  },
+  {
+    Brand: "Retroid",
+    SecondStep: [
+      "Pocket Flip",
+      "Pocket 3 Plus / 4GB RAM / 128GB",
+      "Pocket 3 / 3GB RAM / 32GB",
+      "Pocket 2 Plus",
+    ],
+  },
+  {
+    Brand: "Sega",
+    SecondStep: [
+      "Dreamcast",
+      "Mega Drive Mini 2",
+      "Game Gear",
+      "Mega Drive Mini",
+      "Mega Drive",
+    ],
+  },
+  {
+    Brand: "Terrans Force",
+    SecondStep: ["Handle 5 AMD Ryzen 7 Pro 7840U / 32GB RAM / 1TB SSD"],
+  },
+  {
+    Brand: "Valve",
+    SecondStep: [
+      "Steam Deck (OLED Model) 1024GB",
+      "Steam Deck 512GB",
+      "Steam Machine",
+    ],
+  },
 ];
 
+// Default values and other data for each spec
 const consoleDefaultArray = [
   {
     Value: "--",
@@ -940,41 +1152,129 @@ const consoleDefaultArray = [
 // This determines how many rows to show in the table, each item is 1 column, each item within the item is a row.
 // To add a product, the specs are added to the '-Specs' array in the corresponding category. '-Specs' array is below
 const consoleCategories = [
-  [
-    "Brand",
-    "Name",
-    "Pros",
-    "CPU",
-    "GPU",
-    "RAM",
-    "Storage",
-    "Display",
-    "Controllers",
-    "Height",
-    "Width",
-    "Length",
-    "Size",
-    "Weight",
-    "Operating Temperature",
-    "Ports",
-    "Games",
-    "Connectivity",
-    "Audio",
-    "Power",
-    "Portability",
-  ],
+  { Category: "R", Values: [] },
+  { Category: "Brand", Values: [] },
+  { Category: "Name", Values: [] },
+  { Category: "Pros", Values: [] },
+  { Category: "CPU", Values: [] },
+  { Category: "GPU", Values: [] },
+  { Category: "RAM", Values: [] },
+  { Category: "Storage", Values: [] },
+  { Category: "Display", Values: [] },
+  { Category: "Controllers", Values: [] },
+  { Category: "Height", Values: [] },
+  { Category: "Width", Values: [] },
+  { Category: "Length", Values: [] },
+  { Category: "Size", Values: [] },
+  { Category: "Weight", Values: [] },
+  { Category: "Operating Temperature", Values: [] },
+  { Category: "Ports", Values: [] },
+  { Category: "Games", Values: [] },
+  { Category: "Connectivity", Values: [] },
+  { Category: "Audio", Values: [] },
+  { Category: "Power", Values: [] },
+  { Category: "Portability", Values: [] },
 ];
 
 const droneProcess = ["a brand", "a drone"];
 const droneQueryProcess = ["Brand", "Name"];
 const droneBrands = [
-  "Autel",
-  "DJI",
-  "Holy Stone",
-  "Parrot",
-  "Potensic",
-  "Ryze",
-  "Snaptain",
+  {
+    Brand: "Autel",
+    SecondStep: [
+      "Evo II",
+      "Evo Max 4T",
+      "Evo Nano Plus",
+      "Evo Lite Plus",
+      "Evo Lite",
+      "Evo II Dual",
+      "Evo II Pro",
+      "Evo II Enterprise",
+      "Evo Nano",
+      "Evo II Dual 640T",
+      "Evo II RTK Series",
+    ],
+  },
+  {
+    Brand: "DJI",
+    SecondStep: [
+      "Mavic Air 2",
+      "Phantom 4 Pro",
+      "Mini 4 Pro",
+      "Mavic 2 Pro",
+      "Mavic 3 Cine",
+      "Mavic 2 Zoom",
+      "Mini 3 Pro",
+      "Air 2S",
+      "Mavic Air",
+      "Phantom 4 Advanced",
+      "Mavic Pro",
+      "Phantom 4 Pro V2.0",
+      "Mavic 3 Classic",
+      "Mavic Pro Platinum",
+      "Mavic Mini",
+      "Phantom 3 SE",
+      "Mavic 3T",
+      "Mini 2 SE",
+      "Mavic 3",
+      "Mavic 3E",
+      "Avata FPV",
+      "Mavic Mini 2",
+      "Spark",
+      "Mini SE",
+    ],
+  },
+  {
+    Brand: "Holy Stone",
+    SecondStep: [
+      "HS720E",
+      "HS100",
+      "HS700E",
+      "HS700",
+      "HS120D",
+      "HS175",
+      "HS130D",
+      "HS100G",
+      "HS700D",
+      "HS720",
+      "HS270",
+      "HS240",
+      "HS165",
+      "HS350",
+      "F181W",
+      "HS175D",
+      "HS510",
+      "HS110G",
+      "HS161",
+      "HS650",
+      "HS110D",
+      "HS160",
+      "HS230",
+      "HS710",
+      "HS140",
+      "HS220",
+    ],
+  },
+  {
+    Brand: "Parrot",
+    SecondStep: ["Anafi Ai", "Anafi", "Bebop 2", "Mambo FPV"],
+  },
+  {
+    Brand: "Potensic",
+    SecondStep: [
+      "Atom SE",
+      "Atom",
+      "D80",
+      "T25",
+      "T18",
+      "D60",
+      "Dreamer Pro",
+      "D50",
+      "T35",
+    ],
+  },
+  { Brand: "Ryze", SecondStep: ["Tello"] },
+  { Brand: "Snaptain", SecondStep: ["SP500", "SP650", "SP700", "S5C"] },
 ];
 const droneDefaultArray = [
   {
@@ -1474,31 +1774,111 @@ const droneDefaultArray = [
   },
 ];
 const droneCategories = [
-  [
-    "Brand",
-    "Name",
-    "Pros",
-    "Weight",
-    "Operating Temperature",
-    "Size",
-    "Height",
-    "Width",
-    "Length",
-    "Flight Time (1 battery)",
-    "Maximum Flight Distance",
-    "Top Speed",
-    "Structural Features",
-    "Camera",
-    "Camera Features",
-    "Battery",
-    "Memory and Storage",
-    "Controls",
-  ],
+  { Category: "R", Values: [] },
+  { Category: "Brand", Values: [] },
+  { Category: "Name", Values: [] },
+  { Category: "Pros", Values: [] },
+  { Category: "Weight", Values: [] },
+  { Category: "Operating Temperature", Values: [] },
+  { Category: "Size", Values: [] },
+  { Category: "Height", Values: [] },
+  { Category: "Width", Values: [] },
+  { Category: "Length", Values: [] },
+  { Category: "Flight Time (1 battery)", Values: [] },
+  { Category: "Maximum Flight Distance", Values: [] },
+  { Category: "Top Speed", Values: [] },
+  { Category: "Structural Features", Values: [] },
+  { Category: "Camera", Values: [] },
+  { Category: "Camera Features", Values: [] },
+  { Category: "Battery", Values: [] },
+  { Category: "Memory and Storage", Values: [] },
+  { Category: "Controls", Values: [] },
 ];
 
 const graphicsCardsProcess = ["a brand", "a generation", "a graphics card"];
 const graphicsCardsQueryProcess = ["Brand", "Generation", "Card"];
-const graphicsCardsBrands = ["AMD", "Intel", "NVIDIA"];
+const graphicsCardsBrands = [
+  {
+    Brand: "AMD",
+    SecondStep: [
+      "Vega IGP",
+      "Radeon Pro Vega",
+      "Radeon Pro Mobile",
+      "Radeon Pro Mac",
+      "Vega II IGP",
+      "Navi",
+      "Navi Mobile",
+      "Navi III",
+      "Navi II IGP",
+      "Console GPU",
+      "Polaris",
+      "Vega II",
+      "Navi II",
+      "Navi III IGP",
+      "Radeon Pro Polaris",
+      "Vega",
+      "Polaris Mobile",
+    ],
+  },
+  {
+    Brand: "Intel",
+    SecondStep: [
+      "Data Center GPU",
+      "HD Graphics-WM",
+      "HD Graphics-T",
+      "H3C Graphics",
+      "Xe Graphics",
+      "HD Graphics-W",
+      "HD Graphics",
+      "HD Graphics-M",
+      "HD Graphics-E",
+      "Alchemist",
+      "Arc Graphics-M",
+    ],
+  },
+  {
+    Brand: "NVIDIA",
+    SecondStep: [
+      "GeForce 400M",
+      "GeForce 10",
+      "Tesla Pascal",
+      "GeForce 16 Mobile",
+      "Tesla Ada",
+      "Tesla Turing",
+      "Quadro Volta",
+      "GeForce 20",
+      "GeForce 40",
+      "GeForce 100",
+      "GeForce 700",
+      "GeForce 20 Mobile",
+      "Quadro Ampere",
+      "GeForce 900",
+      "GeForce 40 Mobile",
+      "GeForce 900M",
+      "GeForce 10 Mobile",
+      "GeForce 400",
+      "GeForce 30 Mobile",
+      "GeForce 700M",
+      "Tesla Ampere",
+      "GeForce 500M",
+      "Quadro Turing",
+      "GeForce 800M",
+      "GeForce 100M",
+      "GeForce 600M",
+      "GeForce 16",
+      "Quadro Pascal",
+      "GeForce 300",
+      "GeForce 500",
+      "Quadro Ada",
+      "Tesla Volta",
+      "GeForce 30",
+      "GeForce 300M",
+      "GeForce 600",
+      "GeForce 200M",
+      "GeForce 200",
+    ],
+  },
+];
 const graphicsCardsDefaultArray = [
   {
     Value: "--",
@@ -1898,24 +2278,85 @@ const graphicsCardsDefaultArray = [
   },
 ];
 const graphicsCardsCategories = [
-  [
-    "Brand",
-    "Generation",
-    "Card",
-    "Pros",
-    "GPU",
-    "Memory",
-    "Cache",
-    "Release Info",
-    "Board",
-    "Rendering",
-    "Performance",
-  ],
+  { Category: "R", Values: [] },
+  { Category: "Brand", Values: [] },
+  { Category: "Generation", Values: [] },
+  { Category: "Card", Values: [] },
+  { Category: "Pros", Values: [] },
+  { Category: "GPU", Values: [] },
+  { Category: "Memory", Values: [] },
+  { Category: "Cache", Values: [] },
+  { Category: "Release Info", Values: [] },
+  { Category: "Board", Values: [] },
+  { Category: "Rendering", Values: [] },
+  { Category: "Performance", Values: [] },
 ];
 
 const CPUsProcess = ["a brand", "a generation", "a processor"];
 const CPUsQueryProcess = ["Brand", "Generation", "CPU"];
-const CPUsBrands = ["AMD", "Intel"];
+const CPUsBrands = [
+  {
+    Brand: "AMD",
+    SecondStep: [
+      "Ryzen 3",
+      "Z",
+      "Ryzen 7",
+      "A10",
+      "Athlon",
+      "E1",
+      "A9",
+      "A12",
+      "EPYC Embedded",
+      "A8",
+      "A4",
+      "Ryzen Threadripper",
+      "Ryzen 9",
+      "A6",
+      "C",
+      "Ryzen Custom",
+      "Ryzen Embedded",
+      "Ryzen Z1",
+      "Ryzen 5",
+      "E2",
+      "EPYC",
+    ],
+  },
+  {
+    Brand: "Intel",
+    SecondStep: [
+      "Xeon Platinum",
+      "Xeon E7",
+      "Xeon E3",
+      "Intel Processor",
+      "Xeon Phi",
+      "Pentium Gold",
+      "Core i7 40th",
+      "Core i9",
+      "Core i9 Extreme",
+      "Core 5",
+      "Ultra 9",
+      "Xeon W",
+      "Pentium",
+      "Xeon D",
+      "Xeon Silver",
+      "Xeon E",
+      "Xeon Gold",
+      "Ultra 7",
+      "Core 3",
+      "Xeon Bronze",
+      "Core 7",
+      "Xeon Max",
+      "Ultra 5",
+      "Core i7 Extreme",
+      "Xeon E5",
+      "Core i3",
+      "Core i7",
+      "Core i5",
+      "Celeron",
+      "Xeon",
+    ],
+  },
+];
 const CPUsDefaultArray = [
   {
     Value: "--",
@@ -2601,104 +3042,1851 @@ const CPUsDefaultArray = [
   },
 ];
 const CPUsCategories = [
-  [
-    "Brand",
-    "Generation",
-    "CPU",
-    "Pros",
-    "Clock",
-    "Architecture",
-    "Thermal",
-    "Platform",
-    "Sub-Processors",
-    "Power",
-    "Memory",
-    "PCI",
-    "Cache",
-    "Performance",
-  ],
+  { Category: "R", Values: [] },
+  { Category: "Brand", Values: [] },
+  { Category: "Generation", Values: [] },
+  { Category: "CPU", Values: [] },
+  { Category: "Pros", Values: [] },
+  { Category: "Clock", Values: [] },
+  { Category: "Architecture", Values: [] },
+  { Category: "Thermal", Values: [] },
+  { Category: "Platform", Values: [] },
+  { Category: "Sub-Processors", Values: [] },
+  { Category: "Power", Values: [] },
+  { Category: "Memory", Values: [] },
+  { Category: "PCI", Values: [] },
+  { Category: "Cache", Values: [] },
+  { Category: "Performance", Values: [] },
 ];
 
 const carsProcess = ["a brand", "a model", "a year", "a trim"];
 const carsQueryProcess = ["Brand", "Model", "Year", "Trim"];
 const carsBrands = [
-  "Acura",
-  "Alfa Romeo",
-  "Aston Martin",
-  "Audi",
-  "Bentley",
-  "BMW",
-  "Bugatti",
-  "Buick",
-  "BYD",
-  "Cadillac",
-  "Chevrolet",
-  "Chrysler",
-  "Citroen",
-  "Daewoo",
-  "Dodge",
-  "Ferrari",
-  "Fiat",
-  "Fisker",
-  "Ford",
-  "Genesis",
-  "GMC",
-  "Hennessey",
-  "Honda",
-  "Hummer",
-  "Hyundai",
-  "INEOS",
-  "Infiniti",
-  "Isuzu",
-  "Jaguar",
-  "Jeep",
-  "Karma",
-  "Kia",
-  "Koenigsegg",
-  "KTM",
-  "Lamborghini",
-  "Land Rover",
-  "Lexus",
-  "Lincoln",
-  "Lotus",
-  "Lucid",
-  "Maserati",
-  "Maybach",
-  "Mazda",
-  "McLaren",
-  "Mercedes-Benz",
-  "Mercury",
-  "Mini",
-  "Mitsubishi",
-  "Nissan",
-  "Oldsmobile",
-  "Opel",
-  "Pagani",
-  "Panoz",
-  "Peugeot",
-  "Plymouth",
-  "Polestar",
-  "Pontiac",
-  "Porsche",
-  "RAM",
-  "Renault",
-  "Rimac",
-  "Rivian",
-  "Rolls-Royce",
-  "Saab",
-  "Saturn",
-  "Scion",
-  "Smart",
-  "Spyker",
-  "Subaru",
-  "Suzuki",
-  "Tata",
-  "Tesla",
-  "Toyota",
-  "VinFast",
-  "Volkswagen",
-  "Volvo",
-  "Xiaomi",
+  {
+    Brand: "Acura",
+    SecondStep: [
+      "CL",
+      "CSX",
+      "EL",
+      "ILX",
+      "Integra",
+      "MDX",
+      "NSX",
+      "RDX",
+      "RL",
+      "RLX",
+      "RSX",
+      "TL",
+      "TLX",
+      "TSX",
+      "ZDX",
+    ],
+  },
+  {
+    Brand: "Alfa Romeo",
+    SecondStep: [
+      "145",
+      "146",
+      "147",
+      "156",
+      "159",
+      "166",
+      "33 Stradale",
+      "4C",
+      "8C Competizione",
+      "Brera",
+      "Giulia",
+      "Giulietta",
+      "GT",
+      "GTV",
+      "Junior",
+      "MiTo",
+      "Spider",
+      "Stelvio",
+      "Tonale",
+    ],
+  },
+  {
+    Brand: "Aston Martin",
+    SecondStep: [
+      "Cygnet",
+      "DB11",
+      "DB12",
+      "DB7",
+      "DB9",
+      "DBS",
+      "DBX",
+      "One-77",
+      "Rapide",
+      "V12 Vantage",
+      "V8 Vantage",
+      "Vanquish",
+      "Virage",
+      "Zagato",
+    ],
+  },
+  {
+    Brand: "Audi",
+    SecondStep: [
+      "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "A6",
+      "A6 e-tron",
+      "A7",
+      "A8",
+      "Cabriolet",
+      "e-tron",
+      "e-tron GT",
+      "nanuk quattro concept",
+      "PB18",
+      "Q2",
+      "Q3",
+      "Q4 e-tron",
+      "Q5",
+      "Q6 e-tron",
+      "Q7",
+      "Q8",
+      "Q8 e-tron",
+      "R8",
+      "RS 3",
+      "RS 4",
+      "RS 5",
+      "RS 6",
+      "RS 7",
+      "RS e-tron GT",
+      "RS Q3",
+      "RS Q8",
+      "S1",
+      "S3",
+      "S4",
+      "S5",
+      "S6",
+      "S7",
+      "S8",
+      "SQ2",
+      "SQ5",
+      "SQ6 e-tron",
+      "SQ7",
+      "SQ8",
+      "SQ8 e-tron",
+      "TT",
+    ],
+  },
+  {
+    Brand: "Bentley",
+    SecondStep: [
+      "Arnage",
+      "Azure",
+      "Bentayga",
+      "Brooklands",
+      "Continental",
+      "Flying Spur",
+      "Mulsanne",
+    ],
+  },
+  {
+    Brand: "BMW",
+    SecondStep: [
+      "1 Series",
+      "2 Series",
+      "3 Series",
+      "3.0 CSL",
+      "4 Series",
+      "5 Series",
+      "6 Series",
+      "7 Series",
+      "8 Series",
+      "i3",
+      "i4",
+      "i5",
+      "i7",
+      "i8",
+      "iX",
+      "iX1",
+      "iX2",
+      "iX3",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M8",
+      "X1",
+      "X2",
+      "X3",
+      "X3 M",
+      "X4",
+      "X4 M",
+      "X5",
+      "X5 M",
+      "X6",
+      "X6 M",
+      "X7",
+      "XM",
+      "Z3",
+      "Z4",
+      "Z8",
+    ],
+  },
+  {
+    Brand: "Bugatti",
+    SecondStep: ["Bolide", "Centodieci", "Chiron", "Divo", "Veyron"],
+  },
+  {
+    Brand: "Buick",
+    SecondStep: [
+      "Cascada",
+      "Century",
+      "Electra E4",
+      "Electra E5",
+      "Enclave",
+      "Encore",
+      "Encore GX",
+      "Envision",
+      "Envista",
+      "Excelle",
+      "Excelle GT",
+      "GL6",
+      "GL8",
+      "HRV Excelle",
+      "LaCrosse",
+      "LE Sabre",
+      "Lucerne",
+      "Park Avenue",
+      "Rainier",
+      "Regal",
+      "Rendezvous",
+      "Riviera",
+      "Skylark",
+      "Terraza",
+      "Velite 6",
+      "Velite 7",
+    ],
+  },
+  {
+    Brand: "BYD",
+    SecondStep: [
+      "Atto 3",
+      "Dolphin",
+      "e2",
+      "e3",
+      "e6",
+      "F0",
+      "F3",
+      "F6",
+      "F8",
+      "FLYER II",
+      "Han",
+      "M3e",
+      "Seagull",
+      "Seal",
+      "Seal U",
+      "Song",
+      "Song Max",
+      "T3",
+      "Tang",
+      "Yuan",
+    ],
+  },
+  {
+    Brand: "Cadillac",
+    SecondStep: [
+      "ATS",
+      "BLS",
+      "Catera",
+      "CT4",
+      "CT5",
+      "CT6",
+      "CTS",
+      "DeVille",
+      "DTS",
+      "Eldorado",
+      "ELR",
+      "Escalade",
+      "GT4",
+      "LYRIQ",
+      "Seville",
+      "Sixteen",
+      "SRX",
+      "STS",
+      "XLR",
+      "XT4",
+      "XT5",
+      "XT6",
+      "XTS",
+    ],
+  },
+  {
+    Brand: "Chevrolet",
+    SecondStep: [
+      "Agile",
+      "Alero",
+      "Astra",
+      "Astro",
+      "Avalanche",
+      "Aveo",
+      "Blazer",
+      "Bolt EUV",
+      "Bolt EV",
+      "Camaro",
+      "Caprice",
+      "Captiva",
+      "Cavalier",
+      "Celta",
+      "Classic",
+      "Cobalt",
+      "Colorado",
+      "Corsa",
+      "Corvette",
+      "Cruze",
+      "Epica",
+      "Equinox",
+      "Evanda",
+      "Groove",
+      "HHR",
+      "Impala",
+      "Lacetti",
+      "Lanos",
+      "Lova",
+      "Lumina",
+      "LUV D-MAX",
+      "Malibu",
+      "Menlo",
+      "Metro",
+      "Montana",
+      "Monte Carlo",
+      "Monza",
+      "Niva",
+      "Nubira",
+      "Omega",
+      "Onix",
+      "Orlando",
+      "Prizm",
+      "Rezzo",
+      "S-10 Pickup",
+      "Sail/S-RV",
+      "Seeker",
+      "Silverado 1500",
+      "Silverado 2500 HD",
+      "Silverado 3500 HD",
+      "Sonic",
+      "Spark",
+      "Spin",
+      "SS",
+      "SSR",
+      "Suburban",
+      "Tahoe",
+      "Tavera",
+      "Tracker",
+      "Trailblazer",
+      "Trans Sport",
+      "Traverse",
+      "Trax",
+      "Uplander",
+      "Vectra",
+      "Venture",
+      "Viva",
+      "Volt",
+      "Zafira",
+    ],
+  },
+  {
+    Brand: "Chrysler",
+    SecondStep: [
+      "200",
+      "300",
+      "300M",
+      "Aspen",
+      "Cirrus",
+      "Concorde",
+      "Crossfire",
+      "Intrepid",
+      "LHS",
+      "Nassau",
+      "Neon",
+      "Pacifica (crossover)",
+      "Pacifica (minivan)",
+      "Prowler",
+      "PT Cruiser",
+      "Sebring",
+      "Stratus",
+      "Town & Country",
+      "Viper",
+      "Voyager",
+    ],
+  },
+  {
+    Brand: "Citroen",
+    SecondStep: [
+      "AMI electric",
+      "Berlingo",
+      "C-Crosser",
+      "C-Elysee",
+      "C-Zero",
+      "C1",
+      "C2",
+      "C3",
+      "C3 Aircross",
+      "C3-XR",
+      "C4",
+      "C4 X",
+      "C5",
+      "C5 Aircross",
+      "C5 X",
+      "C6",
+      "C8",
+      "DS3",
+      "DS4",
+      "DS5",
+      "e-Mehari",
+      "Evasion",
+      "Jumpy",
+      "Saxo",
+      "SpaceTourer",
+      "Xantia",
+      "XM",
+      "Xsara",
+    ],
+  },
+  {
+    Brand: "Daewoo",
+    SecondStep: [
+      "Chairman",
+      "Damas",
+      "Evanda",
+      "G2X",
+      "Gentra",
+      "Kalos",
+      "Korando",
+      "Lacetti",
+      "Lanos (Sens)",
+      "Leganza",
+      "Magnus",
+      "Matiz",
+      "Musso",
+      "Nexia",
+      "Nubira",
+      "Rezzo",
+      "Tacuma",
+      "Tico",
+      "Tosca",
+      "Winstorm",
+    ],
+  },
+  {
+    Brand: "Dodge",
+    SecondStep: [
+      "Avenger",
+      "Caliber",
+      "Caravan",
+      "Challenger",
+      "Charger",
+      "Dakota",
+      "Dart",
+      "Durango",
+      "Hornet",
+      "Intrepid",
+      "Journey",
+      "Magnum",
+      "Neon",
+      "Nitro",
+      "RAM",
+      "Stratus",
+      "Viper",
+    ],
+  },
+  {
+    Brand: "Ferrari",
+    SecondStep: [
+      "296",
+      "360",
+      "456",
+      "458",
+      "488",
+      "550",
+      "575M Maranello",
+      "599",
+      "612 Scaglietti",
+      "812",
+      "California",
+      "Daytona SP3",
+      "Enzo",
+      "F12",
+      "F430",
+      "F8",
+      "FF",
+      "FXX",
+      "GTC4Lusso",
+      "LaFerrari",
+      "Monza",
+      "Portofino",
+      "Purosangue",
+      "Roma",
+      "SF90",
+    ],
+  },
+  {
+    Brand: "Fiat",
+    SecondStep: [
+      "124",
+      "500",
+      "500L",
+      "500X",
+      "600",
+      "Albea",
+      "Argo",
+      "Barchetta",
+      "Brava",
+      "Bravo",
+      "Coupe",
+      "Croma",
+      "Cronos",
+      "Doblo",
+      "Egea",
+      "Fiorino",
+      "Freemont",
+      "Fullback",
+      "Idea",
+      "Linea",
+      "Marea",
+      "Multipla",
+      "Ottimo",
+      "Palio",
+      "Panda",
+      "Pulse",
+      "Punto",
+      "Qubo",
+      "Scudo",
+      "Sedici",
+      "Seicento",
+      "Siena",
+      "Stilo",
+      "Strada",
+      "Talento",
+      "Tipo",
+      "Topolino",
+      "Toro",
+      "Ulysse",
+      "UNO",
+      "Viaggio",
+    ],
+  },
+  { Brand: "Fisker", SecondStep: ["EMotion", "Karma", "Ocean"] },
+  {
+    Brand: "Ford",
+    SecondStep: [
+      "B-MAX",
+      "Bronco",
+      "Bronco Sport",
+      "C-MAX",
+      "Contour",
+      "Cougar",
+      "Crown Victoria",
+      "Econoline",
+      "EcoSport",
+      "Edge",
+      "Equator",
+      "Escape",
+      "Escort",
+      "Everest",
+      "Evos",
+      "Excursion",
+      "Expedition",
+      "Explorer",
+      "Explorer EV",
+      "F-250 Super Duty",
+      "F-350 Super Duty",
+      "F-450 Super Duty",
+      "F-Series F-100/F-150",
+      "Falcon",
+      "Fiesta",
+      "Figo",
+      "Five Hundred",
+      "Flex",
+      "Focus",
+      "Freestar",
+      "Freestyle",
+      "Fusion",
+      "Galaxy",
+      "GT",
+      "Ixion",
+      "KA",
+      "Kuga",
+      "Maverick",
+      "Mondeo",
+      "Mustang",
+      "Mustang Mach-E",
+      "Puma",
+      "Ranger",
+      "S-MAX",
+      "Shelby",
+      "Sport Trac",
+      "Streetka",
+      "Taurus",
+      "Taurus X",
+      "Territory",
+      "Thunderbird",
+      "Tourneo Connect",
+      "Tourneo Courier",
+      "Tourneo Custom",
+      "Windstar",
+    ],
+  },
+  {
+    Brand: "Genesis",
+    SecondStep: ["G70", "G80", "G90/EQ900", "GV60", "GV70", "GV80"],
+  },
+  {
+    Brand: "GMC",
+    SecondStep: [
+      "Acadia",
+      "Canyon",
+      "Envoy",
+      "Jimmy",
+      "Safari",
+      "Savana",
+      "Sierra 1500",
+      "Sierra 2500HD",
+      "Sierra 3500HD",
+      "Sonoma",
+      "Terrain",
+      "Yukon",
+    ],
+  },
+  { Brand: "Hennessey", SecondStep: ["Venom F5", "Venom GT"] },
+  {
+    Brand: "Honda",
+    SecondStep: [
+      "Accord",
+      "Airwave",
+      "Amaze",
+      "Avancier",
+      "BR-V",
+      "Breeze",
+      "Brio",
+      "Capa",
+      "City",
+      "Civic",
+      "Civic Type R",
+      "Clarity",
+      "CR-V",
+      "CR-Z",
+      "Crossroad",
+      "Crosstour",
+      "Domani",
+      "e",
+      "e:Ny1",
+      "Edix",
+      "Element",
+      "Elevate",
+      "Elysion",
+      "Envix",
+      "FIT",
+      "Fit Aria",
+      "FR-V",
+      "Freed",
+      "HR-V",
+      "Insight",
+      "Inspire",
+      "Integra",
+      "Jade",
+      "Jazz",
+      "Lagreat",
+      "Legend",
+      "Life",
+      "Logo",
+      "MDX",
+      "Mobilio",
+      "N-Box",
+      "N-One",
+      "N-WGN",
+      "NSX",
+      "Odyssey",
+      "Orthia",
+      "Partner",
+      "Passport",
+      "Pilot",
+      "Prelude",
+      "Ridgeline",
+      "S-MX",
+      "S2000",
+      "S660",
+      "Saber",
+      "Shuttle",
+      "Stepwgn",
+      "Stream",
+      "That S",
+      "Torneo",
+      "UR-V",
+      "Vamos",
+      "VE-1",
+      "Vezel",
+      "WR-V",
+      "Z",
+      "ZR-V",
+    ],
+  },
+  { Brand: "Hummer", SecondStep: ["H1", "H2", "H3"] },
+  {
+    Brand: "Hyundai",
+    SecondStep: [
+      "Accent",
+      "Alcazar",
+      "Atos",
+      "Aura",
+      "Avante",
+      "Bayon",
+      "Casper",
+      "Celesta",
+      "Centennial",
+      "Coupe",
+      "Dynasty",
+      "Elantra",
+      "EON",
+      "Equus",
+      "Exter",
+      "Galloper",
+      "Genesis",
+      "Getz",
+      "Grandeur/Azera",
+      "H-1",
+      "i10",
+      "i20",
+      "i30",
+      "i40",
+      "IONIQ",
+      "IONIQ 5",
+      "IONIQ 6",
+      "ix20",
+      "ix25/Creta",
+      "ix35",
+      "ix55",
+      "Kona",
+      "Lafesta",
+      "Lantra",
+      "Lavita",
+      "Matrix",
+      "Nexo",
+      "NF",
+      "Palisade",
+      "Reina",
+      "Santa Cruz",
+      "Santa Fe",
+      "Santamo",
+      "Santro",
+      "Solaris",
+      "Sonata",
+      "Staria",
+      "Terracan",
+      "Tiburon",
+      "Trajet",
+      "Tucson",
+      "Tuscani",
+      "Veloster",
+      "Venue",
+      "Veracruz",
+      "Verna",
+      "Xcent",
+      "XG",
+    ],
+  },
+  { Brand: "INEOS", SecondStep: ["Grenadier"] },
+  {
+    Brand: "Infiniti",
+    SecondStep: [
+      "EX",
+      "FX",
+      "G",
+      "I30",
+      "I35",
+      "JX",
+      "M",
+      "Project Black S",
+      "Q30",
+      "Q45",
+      "Q50",
+      "Q60",
+      "Q70",
+      "QX30",
+      "QX4",
+      "QX50",
+      "QX55",
+      "QX56",
+      "QX60",
+      "QX70",
+      "QX80",
+    ],
+  },
+  {
+    Brand: "Isuzu",
+    SecondStep: [
+      "Ascender",
+      "Aska",
+      "Axiom",
+      "Bighorn",
+      "D-Max",
+      "Gemini",
+      "MU-X",
+      "Rodeo",
+      "Trooper",
+      "VehiCross",
+      "Wizard",
+    ],
+  },
+  {
+    Brand: "Jaguar",
+    SecondStep: [
+      "C-X16",
+      "E-Pace",
+      "F-Pace",
+      "F-type",
+      "I-Pace",
+      "S-type",
+      "X-type",
+      "XE",
+      "XF",
+      "XJ",
+      "XK",
+    ],
+  },
+  {
+    Brand: "Jeep",
+    SecondStep: [
+      "Avenger",
+      "Cherokee",
+      "Commander",
+      "Compass",
+      "Gladiator",
+      "Grand Cherokee",
+      "Grand Commander",
+      "Liberty",
+      "Meridian",
+      "Patriot",
+      "Renegade",
+      "Wagoneer",
+      "Wrangler",
+    ],
+  },
+  { Brand: "Karma", SecondStep: ["Revero"] },
+  {
+    Brand: "Kia",
+    SecondStep: [
+      "Avella",
+      "Borrego",
+      "Cadenza",
+      "Carens",
+      "Carnival",
+      "Ceed",
+      "Cerato",
+      "Clarus",
+      "Elan Sport",
+      "Enterprise",
+      "EV6",
+      "EV9",
+      "Forte",
+      "Joice",
+      "K3",
+      "K4",
+      "K5",
+      "K7",
+      "K8",
+      "K9",
+      "KX3",
+      "Magentis",
+      "Mohave",
+      "Niro",
+      "Opirus",
+      "Optima",
+      "Picanto",
+      "Potentia",
+      "Pride",
+      "Pro Ceed",
+      "Quoris",
+      "Retona",
+      "Rio",
+      "Sedona",
+      "Seltos",
+      "Sephia",
+      "Shuma",
+      "Soluto",
+      "Sonet",
+      "Sorento",
+      "Soul",
+      "Spectra",
+      "Sportage",
+      "Stinger",
+      "Stonic",
+      "Telluride",
+      "Tonic",
+      "Venga",
+      "Visto",
+      "XCeed",
+    ],
+  },
+  {
+    Brand: "Koenigsegg",
+    SecondStep: ["Agera", "CC", "CC850", "Gemera", "Jesko", "One:1", "Regera"],
+  },
+  { Brand: "KTM", SecondStep: ["X-Bow"] },
+  {
+    Brand: "Lamborghini",
+    SecondStep: [
+      "Asterion",
+      "Aventador",
+      "Centenario",
+      "Countach",
+      "Diablo",
+      "Essenza SCV12",
+      "Gallardo",
+      "Huracan",
+      "Murcielago",
+      "Reventon",
+      "Revuelto",
+      "Sian",
+      "Urus",
+      "Veneno",
+    ],
+  },
+  {
+    Brand: "Land Rover",
+    SecondStep: [
+      "Defender",
+      "Discovery",
+      "Discovery Sport",
+      "Freelander",
+      "Range Rover",
+      "Range Rover Evoque",
+      "Range Rover Sport",
+      "Range Rover Velar",
+    ],
+  },
+  {
+    Brand: "Lexus",
+    SecondStep: [
+      "CT",
+      "ES",
+      "GS",
+      "GX",
+      "IS",
+      "LBX",
+      "LC",
+      "LF-Z",
+      "LFA",
+      "LM",
+      "LS",
+      "LX",
+      "NX",
+      "RC",
+      "RX",
+      "RZ",
+      "SC",
+      "TX",
+      "UX",
+    ],
+  },
+  {
+    Brand: "Lincoln",
+    SecondStep: [
+      "Aviator",
+      "Continental",
+      "Corsair",
+      "LS",
+      "Mark",
+      "Mark LT",
+      "MKC",
+      "MKS",
+      "MKT",
+      "MKX",
+      "MKZ",
+      "Nautilus",
+      "Navigator",
+      "Town Car",
+      "Zephyr",
+    ],
+  },
+  {
+    Brand: "Lotus",
+    SecondStep: [
+      "2-Eleven",
+      "3-Eleven",
+      "Eletre",
+      "Elise",
+      "Emira",
+      "Europa",
+      "Evija",
+      "Evora",
+      "Exige",
+    ],
+  },
+  { Brand: "Lucid", SecondStep: ["Air"] },
+  {
+    Brand: "Maserati",
+    SecondStep: [
+      "3200 GT",
+      "Coupe",
+      "Ghibli",
+      "GranCabrio",
+      "GranSport",
+      "GranTurismo",
+      "Grecale",
+      "Levante",
+      "MC12",
+      "MC20",
+      "Quattroporte",
+      "Spyder",
+    ],
+  },
+  { Brand: "Maybach", SecondStep: ["57", "57 S", "62", "62 S", "Landaulet"] },
+  {
+    Brand: "Mazda",
+    SecondStep: [
+      "121",
+      "2",
+      "3",
+      "323",
+      "5",
+      "6",
+      "626",
+      "Atenza",
+      "Axela",
+      "Az-offroad",
+      "Az-wagon",
+      "B-series",
+      "Biante",
+      "Bongo",
+      "BT-50",
+      "Capella",
+      "Carol",
+      "CX-3",
+      "CX-30",
+      "CX-4",
+      "CX-5",
+      "CX-50",
+      "CX-60",
+      "CX-7",
+      "CX-70",
+      "CX-8",
+      "CX-80",
+      "CX-9",
+      "CX-90",
+      "Demio",
+      "Familia",
+      "Laputa",
+      "Levante",
+      "Millenia",
+      "MPV",
+      "MX-3",
+      "MX-30",
+      "MX-5",
+      "MX-6",
+      "Premacy",
+      "Protege",
+      "Roadster",
+      "Rustler",
+      "RX-7",
+      "RX-8",
+      "Scrum",
+      "Sentia",
+      "Spiano",
+      "Tribute",
+      "Vantrend",
+      "Verisa",
+      "Xedos 6",
+      "Xedos 9",
+    ],
+  },
+  {
+    Brand: "McLaren",
+    SecondStep: [
+      "540C",
+      "570S",
+      "600LT",
+      "620R",
+      "625C",
+      "650S",
+      "675LT",
+      "720S",
+      "750S",
+      "765LT",
+      "Artura",
+      "Elva",
+      "GT",
+      "GTS",
+      "LM",
+      "MP4-12C",
+      "P1",
+      "Senna",
+      "Speedtail",
+    ],
+  },
+  {
+    Brand: "Mercedes-Benz",
+    SecondStep: [
+      "A-class",
+      "AMG GT",
+      "AMG GT 4-Door Coupe",
+      "AMG ONE",
+      "B-class",
+      "C-class",
+      "Citan",
+      "CL",
+      "CLA",
+      "CLC",
+      "CLE",
+      "CLK",
+      "CLS",
+      "E-class",
+      "EQA",
+      "EQB",
+      "EQC",
+      "EQE",
+      "EQE SUV",
+      "EQS",
+      "EQS SUV",
+      "EQV",
+      "G-class",
+      "GL",
+      "GLA",
+      "GLB",
+      "GLC",
+      "GLE",
+      "GLK",
+      "GLS",
+      "M-class",
+      "R-class",
+      "S-class",
+      "SL",
+      "SLC",
+      "SLK",
+      "SLR McLaren",
+      "SLS AMG",
+      "Sprinter",
+      "T-class",
+      "V-class",
+      "Vaneo",
+      "Viano",
+      "VISION EQXX",
+      "Vito",
+      "X-class",
+    ],
+  },
+  {
+    Brand: "Mercury",
+    SecondStep: [
+      "Cougar",
+      "Grand Marquis",
+      "Marauder",
+      "Mariner",
+      "Milan",
+      "Montego",
+      "Monterey",
+      "Mountaineer",
+      "Sable",
+      "Tracer",
+      "Villager",
+    ],
+  },
+  {
+    Brand: "Mini",
+    SecondStep: [
+      "Clubman",
+      "Convertible",
+      "Countryman",
+      "Coupe",
+      "Electric",
+      "Hatch",
+      "Paceman",
+      "Roadster",
+    ],
+  },
+  {
+    Brand: "Mitsubishi",
+    SecondStep: [
+      "3000 GT",
+      "Airtrek",
+      "Aspire",
+      "ASX",
+      "Attrage",
+      "Carisma",
+      "Challenger",
+      "Chariot",
+      "Colt",
+      "Delica",
+      "Diamante",
+      "Dingo",
+      "Dion",
+      "Eclipse",
+      "Eclipse Cross",
+      "eK",
+      "eK X",
+      "Endeavor",
+      "FTO",
+      "Galant",
+      "Grandis",
+      "GTO",
+      "i",
+      "i-MiEV",
+      "L200",
+      "Lancer",
+      "Lancer Evolution",
+      "Legnum",
+      "Libero",
+      "Minica",
+      "Mirage",
+      "Montero",
+      "Montero Sport",
+      "Outlander",
+      "Pajero",
+      "Pajero Sport",
+      "Pistachio",
+      "Proudia/dignity",
+      "Raider",
+      "RVR",
+      "Santamo",
+      "Shogun",
+      "Space Gear",
+      "Space Runner",
+      "Space Star",
+      "Space Wagon",
+      "Toppo",
+      "Town BOX",
+      "Triton",
+      "Xforce",
+      "Xpander",
+    ],
+  },
+  {
+    Brand: "Nissan",
+    SecondStep: [
+      "200 SX",
+      "350Z",
+      "370Z",
+      "AD",
+      "Almera",
+      "Altima",
+      "Ariya",
+      "Armada",
+      "Avenir",
+      "Bassara",
+      "Bluebird",
+      "Cedric",
+      "Cefiro",
+      "Cima",
+      "Cube",
+      "Datsun",
+      "Elgrand",
+      "Expert",
+      "Fairlady",
+      "Frontier",
+      "Fuga",
+      "Gloria",
+      "GT-R",
+      "Juke",
+      "Kicks",
+      "Lafesta",
+      "Largo",
+      "Laurel",
+      "Leaf",
+      "Liberty",
+      "Livina",
+      "Magnite",
+      "March",
+      "Maxima",
+      "Micra",
+      "Moco",
+      "Murano",
+      "Navara",
+      "Note",
+      "NP 300 Pick up",
+      "NV200",
+      "Pathfinder",
+      "Patrol",
+      "Pick UP",
+      "Pixo",
+      "Prairie",
+      "Presage",
+      "Presea",
+      "President",
+      "Primera",
+      "Pulsar",
+      "Qashqai",
+      "Quest",
+      "R Nessa",
+      "Rasheen",
+      "Rogue",
+      "Rogue Sport",
+      "Safari",
+      "Sakura",
+      "Sentra",
+      "Serena",
+      "Silvia",
+      "Skyline",
+      "Stagea",
+      "Sunny",
+      "Sylphy",
+      "Teana",
+      "Terra",
+      "Terrano",
+      "Tiida",
+      "Tino",
+      "Titan",
+      "Townstar",
+      "Vanette",
+      "Versa",
+      "Wingroad",
+      "X-Trail",
+      "Xterra",
+      "Z",
+    ],
+  },
+  {
+    Brand: "Oldsmobile",
+    SecondStep: [
+      "Alero",
+      "Aurora",
+      "Bravada",
+      "Cutlass",
+      "Intrigue",
+      "Silhouette",
+    ],
+  },
+  {
+    Brand: "Opel",
+    SecondStep: [
+      "Adam",
+      "Agila",
+      "Ampera",
+      "Antara",
+      "Astra",
+      "Campo",
+      "Cascada",
+      "Combo",
+      "Corsa",
+      "Crossland",
+      "Frontera",
+      "Grandland",
+      "GT",
+      "Insignia",
+      "Karl",
+      "Manta",
+      "Meriva",
+      "Mokka",
+      "Movano",
+      "Omega",
+      "Signum",
+      "Speedster",
+      "Tigra",
+      "Vectra",
+      "Vita",
+      "Vivaro",
+      "Zafira",
+      "Zafira Life",
+    ],
+  },
+  { Brand: "Pagani", SecondStep: ["Huayra", "Utopia", "Zonda"] },
+  { Brand: "Panoz", SecondStep: ["Abruzzi", "Esperante"] },
+  {
+    Brand: "Peugeot",
+    SecondStep: [
+      "1007",
+      "106",
+      "107",
+      "108",
+      "2008",
+      "206",
+      "207",
+      "208",
+      "3008",
+      "301",
+      "306",
+      "307",
+      "308",
+      "4007",
+      "4008",
+      "406",
+      "407",
+      "408",
+      "408 (crossover)",
+      "5008",
+      "508",
+      "605",
+      "607",
+      "806",
+      "807",
+      "9x8",
+      "Bipper",
+      "e-LEGEND",
+      "Hoggar",
+      "iOn",
+      "Landtrek",
+      "Partner",
+      "Pick Up",
+      "RCZ",
+      "Rifter",
+      "Traveller",
+    ],
+  },
+  {
+    Brand: "Plymouth",
+    SecondStep: ["Breeze", "Grand Voyager", "Prowler", "Voyager"],
+  },
+  { Brand: "Polestar", SecondStep: ["1", "2", "3", "4"] },
+  {
+    Brand: "Pontiac",
+    SecondStep: [
+      "Aztec",
+      "Bonneville",
+      "Firebird",
+      "G6",
+      "G8",
+      "Grand AM",
+      "Grand Prix",
+      "GTO",
+      "Montana",
+      "Solstice",
+      "Sunfire",
+      "Torrent",
+      "Vibe",
+    ],
+  },
+  {
+    Brand: "Porsche",
+    SecondStep: [
+      "718",
+      "911",
+      "918",
+      "Boxster",
+      "Carrera GT",
+      "Cayenne",
+      "Cayman",
+      "Macan",
+      "Mission E",
+      "Panamera",
+      "Taycan",
+    ],
+  },
+  { Brand: "RAM", SecondStep: ["1500", "2500/3500"] },
+  {
+    Brand: "Renault",
+    SecondStep: [
+      "19",
+      "5 E-Tech",
+      "Alaskan",
+      "Arkana",
+      "Austral",
+      "Avantime",
+      "Captur",
+      "City K-ZE",
+      "Clio",
+      "Duster",
+      "Espace",
+      "Express",
+      "Fluence",
+      "Kadjar",
+      "Kangoo",
+      "Kaptur",
+      "Kiger",
+      "Koleos",
+      "KWID",
+      "Laguna",
+      "Latitude",
+      "Lodgy",
+      "Logan",
+      "Master",
+      "Megane",
+      "Megane E-Tech Electric",
+      "Modus",
+      "Pulse",
+      "Rafale",
+      "Safrane",
+      "Sandero",
+      "Scala",
+      "Scenic",
+      "Symbol",
+      "Taliant",
+      "Talisman",
+      "Trafic",
+      "Triber",
+      "Twingo",
+      "Twizy",
+      "Vel Satis",
+      "Wind",
+      "Zoe",
+    ],
+  },
+  {
+    Brand: "Renault Samsung",
+    SecondStep: ["QM3", "QM6", "SM3", "SM5", "SM6", "SM7"],
+  },
+  { Brand: "Rimac", SecondStep: ["CTwo", "Nevera", "One"] },
+  { Brand: "Rivian", SecondStep: ["R1S", "R1T"] },
+  {
+    Brand: "Rolls-Royce",
+    SecondStep: [
+      "Corniche",
+      "Cullinan",
+      "Dawn",
+      "Ghost",
+      "Park Ward",
+      "Phantom",
+      "Silver Seraph",
+      "Spectre",
+      "Wraith",
+    ],
+  },
+  { Brand: "Saab", SecondStep: ["9-2X", "45538", "9-4X", "45540", "9-7X"] },
+  {
+    Brand: "Saturn",
+    SecondStep: [
+      "Astra",
+      "Aura",
+      "ION",
+      "LS",
+      "LW",
+      "Outlook",
+      "Relay",
+      "SC",
+      "Sky",
+      "SL",
+      "SW",
+      "VUE",
+    ],
+  },
+  {
+    Brand: "Scion",
+    SecondStep: ["FR-S", "iA", "iM", "iQ", "tC", "xA", "xB", "xD"],
+  },
+  {
+    Brand: "Smart",
+    SecondStep: [
+      "#1",
+      "#3",
+      "Crossblade",
+      "EQ fortwo",
+      "Forfour",
+      "Fortwo",
+      "Roadster",
+    ],
+  },
+  { Brand: "Spyker", SecondStep: ["C8"] },
+  {
+    Brand: "Subaru",
+    SecondStep: [
+      "Ascent",
+      "Baja",
+      "Bistro",
+      "BRZ",
+      "Crosstrek",
+      "Forester",
+      "Impreza",
+      "Justy",
+      "Legacy",
+      "Levorg",
+      "Outback",
+      "Pleo",
+      "R1",
+      "R2",
+      "Solterra",
+      "Stella",
+      "Traviq",
+      "Trezia",
+      "Tribeca",
+      "WRX",
+      "XV",
+    ],
+  },
+  {
+    Brand: "Suzuki",
+    SecondStep: [
+      "Across",
+      "Aerio",
+      "Alto",
+      "Baleno",
+      "Celerio",
+      "Ciaz",
+      "Cultus",
+      "Dzire",
+      "Ertiga",
+      "Escudo",
+      "Every Landy",
+      "Forenza",
+      "Fronx",
+      "Grand Escudo",
+      "Grand Vitara",
+      "Hustler",
+      "Ignis",
+      "Jimny",
+      "Kei",
+      "Kizashi",
+      "Liana",
+      "MR Wagon",
+      "Reno",
+      "S-Presso",
+      "Samurai",
+      "Splash",
+      "Swace",
+      "Swift",
+      "SX4 S-Cross",
+      "Verona",
+      "Vitara",
+      "Vitara Brezza",
+      "Wagon R",
+      "Wagon R+",
+      "Xbee",
+      "XL6",
+      "XL7",
+    ],
+  },
+  {
+    Brand: "Tata",
+    SecondStep: [
+      "Altroz",
+      "Aria",
+      "Bolt",
+      "Estate",
+      "Harrier",
+      "Hexa",
+      "Indica",
+      "Indigo",
+      "Mint",
+      "Nano",
+      "Nexon",
+      "Punch",
+      "Safari",
+      "Sierra",
+      "Sumo",
+      "Tiago",
+      "Tigor",
+      "Xenon",
+      "Zest",
+    ],
+  },
+  {
+    Brand: "Tesla",
+    SecondStep: [
+      "Cybertruck",
+      "Model 3",
+      "Model S",
+      "Model X",
+      "Model Y",
+      "Roadster",
+    ],
+  },
+  {
+    Brand: "Toyota",
+    SecondStep: [
+      "4runner",
+      "86",
+      "Allex",
+      "Alphard",
+      "Altezza",
+      "Aqua",
+      "Aristo",
+      "Aurion",
+      "Auris",
+      "Avalon",
+      "Avanza",
+      "Avensis",
+      "Avensis Verso",
+      "Aygo",
+      "Aygo X",
+      "bB",
+      "Belta",
+      "Blade",
+      "Brevis",
+      "bZ4X",
+      "C-HR",
+      "C+pod",
+      "Caldina",
+      "Calya",
+      "Cami",
+      "Camry",
+      "Celica",
+      "Century",
+      "Corolla",
+      "Corolla Cross",
+      "Corolla Rumion",
+      "Corolla Verso",
+      "Crown",
+      "Crown Majesta",
+      "Echo",
+      "Estima",
+      "Etios",
+      "FJ Cruiser",
+      "Fortuner",
+      "Frontlander",
+      "Funcargo",
+      "Glanza",
+      "Grand Highlander",
+      "Harrier",
+      "Highlander",
+      "Hilux",
+      "Innova",
+      "Ipsum",
+      "iQ",
+      "ISis",
+      "Ist",
+      "Izoa",
+      "Kluger",
+      "Land Cruiser",
+      "Land Cruiser Prado",
+      "Levin",
+      "Mark II",
+      "Mark X",
+      "Matrix",
+      "Mirai",
+      "MR 2",
+      "MR-S",
+      "Opa",
+      "Passo",
+      "Platz",
+      "Porte",
+      "Premio",
+      "Previa",
+      "Prius",
+      "Proace",
+      "Proace City",
+      "Probox",
+      "Progres",
+      "Ractis",
+      "Raize",
+      "Raum",
+      "RAV4",
+      "Regius",
+      "Rush",
+      "Sequoia",
+      "Sienna",
+      "Sienta",
+      "Succeed",
+      "Supra",
+      "Tacoma",
+      "Tundra",
+      "Urban Cruiser",
+      "Urban Cruiser Hyryder",
+      "Vanguard",
+      "Veloz",
+      "Venza",
+      "Verso",
+      "Verso-S",
+      "Vios",
+      "Vitz",
+      "Wigo",
+      "Wildlander",
+      "Will",
+      "Wish",
+      "Yaris",
+      "Yaris Cross",
+    ],
+  },
+  {
+    Brand: "VinFast",
+    SecondStep: [
+      "Fadil",
+      "LUX A",
+      "LUX SA",
+      "President",
+      "VF e34",
+      "VF5",
+      "VF6",
+      "VF7",
+      "VF8",
+      "VF9",
+    ],
+  },
+  {
+    Brand: "Volkswagen",
+    SecondStep: [
+      "Amarok",
+      "Ameo",
+      "Arteon",
+      "Atlas",
+      "Beetle",
+      "Bora",
+      "Caddy",
+      "Caravelle",
+      "Eos",
+      "Fox",
+      "Gol",
+      "Golf",
+      "ID. Buzz",
+      "ID. CROZZ",
+      "ID. VIZZION",
+      "ID.3",
+      "ID.4",
+      "ID.5",
+      "ID.6",
+      "ID.7",
+      "Jetta",
+      "Kaefer",
+      "Lamando",
+      "Lavida",
+      "Lupo",
+      "Multivan",
+      "Nivus",
+      "Passat",
+      "Passat CC",
+      "Phaeton",
+      "Phideon",
+      "Pointer",
+      "Polo",
+      "Polo Vivo",
+      "Rabbit",
+      "Routan",
+      "Saveiro",
+      "Scirocco",
+      "Sharan",
+      "T-Cross",
+      "T-Roc",
+      "Tacqua",
+      "Taigo",
+      "Taigun",
+      "Talagon",
+      "Taos",
+      "Tayron",
+      "Teramont",
+      "Tharu",
+      "Tiguan",
+      "Touareg",
+      "Touran",
+      "Transporter",
+      "Up!",
+      "Viloran",
+      "Virtus",
+      "W12",
+      "XL1",
+    ],
+  },
+  {
+    Brand: "Volvo",
+    SecondStep: [
+      "C30",
+      "C40",
+      "C70",
+      "EC40",
+      "EM90",
+      "EX30",
+      "EX40",
+      "EX90",
+      "S40",
+      "S60",
+      "S70",
+      "S80",
+      "S90",
+      "V40",
+      "V50",
+      "V60",
+      "V70",
+      "V90",
+      "XC40",
+      "XC60",
+      "XC70",
+      "XC90",
+    ],
+  },
+  { Brand: "Xiaomi", SecondStep: ["SU7"] },
 ];
 const carsDefaultArray = [
   {
@@ -3044,26 +5232,31 @@ const carsDefaultArray = [
   },
 ];
 const carsCategories = [
-  [
-    "Brand",
-    "Model",
-    "Year",
-    "Trim",
-    "Pros",
-    "Body",
-    "Motor",
-    "Design",
-    "Fuel/Battery",
-  ],
+  { Category: "R", Values: [] },
+  { Category: "Brand", Values: [] },
+  { Category: "Model", Values: [] },
+  { Category: "Year", Values: [] },
+  { Category: "Trim", Values: [] },
+  { Category: "Pros", Values: [] },
+  { Category: "Body", Values: [] },
+  { Category: "Motor", Values: [] },
+  { Category: "Design", Values: [] },
+  { Category: "Fuel/Battery", Values: [] },
 ];
 
-const fast = -0.14;
-const normal = -0.11;
+const fast = -0.12;
+const normal = -0.09;
+const reputable = -0.06;
 const reliable = -0.05;
-const expensiveSport = -0.04;
-const superCar = -0.03;
+const expensiveSport = -0.03;
+const superCar = -0.02;
 
-const automobilesAveragePrices = [
+const gpuFast = -0.16;
+const gpuNormal = -0.12;
+
+const cpuNormal = -0.12;
+
+const carsAveragePrices = [
   null,
   null,
   null,
@@ -3121,7 +5314,7 @@ const automobilesAveragePrices = [
   32166.10259,
   31718.85731,
 ];
-const automobilesDropdownData = [
+const carsDropdownData = [
   { label: "Acura", value: "Acura" },
   { label: "Alfa Romeo", value: "Alfa Romeo" },
   { label: "Aston Martin", value: "Aston Martin" },
@@ -3201,13 +5394,13 @@ const automobilesDropdownData = [
   { label: "Xiaomi", value: "Xiaomi" },
 ];
 
-const automobilesBrandValues = [
+const carsBrandValues = [
   { label: "Acura", value: reliable },
-  { label: "Alfa Romeo", value: normal },
+  { label: "Alfa Romeo", value: reputable },
   { label: "Aston Martin", value: expensiveSport },
-  { label: "Audi", value: normal },
+  { label: "Audi", value: reputable },
   { label: "Bentley", value: expensiveSport },
-  { label: "BMW", value: normal },
+  { label: "BMW", value: expensiveSport },
   { label: "Bugatti", value: superCar },
   { label: "Buick", value: normal },
   { label: "BYD", value: normal },
@@ -3220,13 +5413,13 @@ const automobilesBrandValues = [
   { label: "Ferrari", value: superCar },
   { label: "Fiat", value: fast },
   { label: "Fisker", value: fast },
-  { label: "Ford", value: normal },
+  { label: "Ford", value: reputable },
   { label: "Genesis", value: normal },
   { label: "GMC", value: normal },
   { label: "Hennessey", value: superCar },
   { label: "Honda", value: reliable },
   { label: "Hummer", value: fast },
-  { label: "Hyundai", value: normal },
+  { label: "Hyundai", value: reliable },
   { label: "INEOS", value: fast },
   { label: "Infiniti", value: normal },
   { label: "Isuzu", value: normal },
@@ -3236,7 +5429,7 @@ const automobilesBrandValues = [
   { label: "Kia", value: normal },
   { label: "Koenigsegg", value: superCar },
   { label: "KTM", value: expensiveSport },
-  { label: "Lamborghini", value: expensiveSport },
+  { label: "Lamborghini", value: superCar },
   { label: "Land Rover", value: normal },
   { label: "Lexus", value: reliable },
   { label: "Lincoln", value: normal },
@@ -3246,7 +5439,7 @@ const automobilesBrandValues = [
   { label: "Maybach", value: superCar },
   { label: "Mazda", value: reliable },
   { label: "McLaren", value: expensiveSport },
-  { label: "Mercedes-Benz", value: normal },
+  { label: "Mercedes-Benz", value: reputable },
   { label: "Mercury", value: normal },
   { label: "Mini", value: normal },
   { label: "Mitsubishi", value: reliable },
@@ -3259,7 +5452,7 @@ const automobilesBrandValues = [
   { label: "Plymouth", value: normal },
   { label: "Polestar", value: normal },
   { label: "Pontiac", value: normal },
-  { label: "Porsche", value: normal },
+  { label: "Porsche", value: expensiveSport },
   { label: "RAM", value: normal },
   { label: "Renault", value: normal },
   { label: "Rimac", value: superCar },
@@ -3273,7 +5466,7 @@ const automobilesBrandValues = [
   { label: "Subaru", value: reliable },
   { label: "Suzuki", value: normal },
   { label: "Tata", value: normal },
-  { label: "Tesla", value: normal },
+  { label: "Tesla", value: expensiveSport },
   { label: "Toyota", value: reliable },
   { label: "VinFast", value: fast },
   { label: "Volkswagen", value: normal },
@@ -3288,9 +5481,9 @@ const graphicsCardsDropdownData = [
 ];
 
 const graphicsCardsBrandValues = [
-  { label: "AMD", value: fast },
-  { label: "Intel", value: fast },
-  { label: "NVIDIA", value: normal },
+  { label: "AMD", value: gpuFast },
+  { label: "Intel", value: gpuFast },
+  { label: "NVIDIA", value: gpuNormal },
 ];
 
 const processorsDropdownData = [
@@ -3299,69 +5492,25 @@ const processorsDropdownData = [
 ];
 
 const processorsBrandValues = [
-  { label: "AMD", value: normal },
-  { label: "Intel", value: normal },
+  { label: "AMD", value: cpuNormal },
+  { label: "Intel", value: cpuNormal },
 ];
 
 export default function App() {
-  // userVal of firebase
   const [userVal, setUserVal] = useState(false);
-  const styles = SGStyles();
+  const isMobile = useWindowDimensions();
 
-  // Determines the height of the rows
-  let dronesHeight = [];
-  let dronesSetHeight = [];
-
-  // They are initalized as 52, which is also the minimum size, setHeight is used to change the height at the corresponding index in the height array
-  for (i = 0; i < droneCategories[0].length; i++) {
-    const [height, setHeight] = useState(52);
-    dronesHeight.push(height);
-    dronesSetHeight.push(setHeight);
-  }
-
-  let consolesHeight = [];
-  let consolesSetHeight = [];
-
-  for (i = 0; i < consoleCategories[0].length; i++) {
-    const [height, setHeight] = useState(52);
-    consolesHeight.push(height);
-    consolesSetHeight.push(setHeight);
-  }
-
-  let graphicsCardsHeight = [];
-  let graphicsCardsSetHeight = [];
-
-  for (i = 0; i < graphicsCardsCategories[0].length; i++) {
-    const [height, setHeight] = useState(52);
-    graphicsCardsHeight.push(height);
-    graphicsCardsSetHeight.push(setHeight);
-  }
-
-  let CPUsHeight = [];
-  let CPUsSetHeight = [];
-
-  for (i = 0; i < CPUsCategories[0].length; i++) {
-    const [height, setHeight] = useState(52);
-    CPUsHeight.push(height);
-    CPUsSetHeight.push(setHeight);
-  }
-
-  let carsHeight = [];
-  let carsSetHeight = [];
-
-  for (i = 0; i < CPUsCategories[0].length; i++) {
-    const [height, setHeight] = useState(52);
-    carsHeight.push(height);
-    carsSetHeight.push(setHeight);
-  }
-
-  const queryDronesFunction = async (product) => {
+  const queryDronesFunction = async (brand, name) => {
     const colRef = collection(db, "Drones");
-    const q = await query(colRef, where("Brand", "==", product));
+    const q = await query(
+      colRef,
+      where("Brand", "==", brand),
+      where("Name", "==", name)
+    );
 
     const snapshot = await getDocs(q);
 
-    dronesArray = [];
+    const dronesArray = [];
     snapshot.forEach((doc) => {
       dronesArray.push(doc.data());
     });
@@ -3369,13 +5518,35 @@ export default function App() {
     return dronesArray;
   };
 
-  const queryConsolesFunction = async (product) => {
+  const directQueryDronesFunction = async (product) => {
+    const colRef = collection(db, "Drones");
+    const q = query(
+      colRef,
+      where("Brand", "==", product[0]),
+      where("Name", "==", product[1])
+    );
+
+    const snapshot = await getDocs(q);
+    const dronesArray = [];
+    snapshot.forEach((doc) => {
+      dronesArray.push(doc.data());
+    });
+
+    // Should only be 1 item so return the first
+    return dronesArray[0];
+  };
+
+  const queryConsolesFunction = async (brand, name) => {
     const colRef = collection(db, "Consoles");
-    const q = await query(colRef, where("Brand", "==", product));
+    const q = await query(
+      colRef,
+      where("Brand", "==", brand),
+      where("Name", "==", name)
+    );
 
     const snapshot = await getDocs(q);
 
-    ConsolesArray = [];
+    const ConsolesArray = [];
     snapshot.forEach((doc) => {
       ConsolesArray.push(doc.data());
     });
@@ -3383,13 +5554,35 @@ export default function App() {
     return ConsolesArray;
   };
 
-  const queryGraphicsCardsFunction = async (product) => {
+  const directQueryConsolesFunction = async (product) => {
+    const colRef = collection(db, "Consoles");
+    const q = query(
+      colRef,
+      where("Brand", "==", product[0]),
+      where("Name", "==", product[1])
+    );
+
+    const snapshot = await getDocs(q);
+    const consolesArray = [];
+    snapshot.forEach((doc) => {
+      consolesArray.push(doc.data());
+    });
+
+    // Should only be 1 item so return the first
+    return consolesArray[0];
+  };
+
+  const queryGraphicsCardsFunction = async (brand, generation) => {
     const colRef = collection(db, "Graphics Cards");
-    const q = await query(colRef, where("Brand", "==", product));
+    const q = await query(
+      colRef,
+      where("Brand", "==", brand),
+      where("Generation", "==", generation)
+    );
 
     const snapshot = await getDocs(q);
 
-    GraphicsCardsArray = [];
+    const GraphicsCardsArray = [];
     snapshot.forEach((doc) => {
       GraphicsCardsArray.push(doc.data());
     });
@@ -3397,13 +5590,35 @@ export default function App() {
     return GraphicsCardsArray;
   };
 
-  const queryCPUsFunction = async (product) => {
+  const directQueryGraphicsCardsFunction = async (product) => {
+    const colRef = collection(db, "Graphics Card");
+    const q = query(
+      colRef,
+      where("Brand", "==", product[0]),
+      where("Generation", "==", product[1]),
+      where("Card", "==", product[2])
+    );
+
+    const snapshot = await getDocs(q);
+    const graphicsCardsArray = [];
+    snapshot.forEach((doc) => {
+      graphicsCardsArray.push(doc.data());
+    });
+    // Should only be 1 item so return the first
+    return graphicsCardsArray[0];
+  };
+
+  const queryCPUsFunction = async (brand, generation) => {
     const colRef = collection(db, "CPUs");
-    const q = await query(colRef, where("Brand", "==", product));
+    const q = await query(
+      colRef,
+      where("Brand", "==", brand),
+      where("Generation", "==", generation)
+    );
 
     const snapshot = await getDocs(q);
 
-    CPUsArray = [];
+    const CPUsArray = [];
     snapshot.forEach((doc) => {
       CPUsArray.push(doc.data());
     });
@@ -3411,13 +5626,36 @@ export default function App() {
     return CPUsArray;
   };
 
-  const queryAutomobilesFunction = async (product) => {
+  const directQueryCPUsFunction = async (product) => {
+    const colRef = collection(db, "CPUs");
+    const q = query(
+      colRef,
+      where("Brand", "==", product[0]),
+      where("Generation", "==", product[1]),
+      where("CPU", "==", product[2])
+    );
+
+    const snapshot = await getDocs(q);
+    const cpusArray = [];
+    snapshot.forEach((doc) => {
+      cpusArray.push(doc.data());
+    });
+
+    // Should only be 1 item so return the first
+    return cpusArray[0];
+  };
+
+  const queryAutomobilesFunction = async (brand, model) => {
     const colRef = collection(db, "Automobiles");
-    const q = await query(colRef, where("Brand", "==", product));
+    const q = await query(
+      colRef,
+      where("Brand", "==", brand),
+      where("Model", "==", model)
+    );
 
     const snapshot = await getDocs(q);
 
-    automobilesArray = [];
+    const automobilesArray = [];
     snapshot.forEach((doc) => {
       automobilesArray.push(doc.data());
     });
@@ -3425,18 +5663,25 @@ export default function App() {
     return automobilesArray;
   };
 
-  // The specs that are to be shown, initalized with the categories array
-  const [consoleSpecs, setConsoleSpecs] = useState(consoleCategories);
-  const [droneSpecs, setDroneSpecs] = useState(droneCategories);
-  const [graphicsCardsSpecs, setGraphicsCardsSpecs] = useState(
-    graphicsCardsCategories
-  );
-  const [CPUsSpecs, setCPUsSpecs] = useState(CPUsCategories);
-  const [carsSpecs, setCarsSpecs] = useState(carsCategories);
+  const directQueryAutomobilesFunction = async (product) => {
+    const colRef = collection(db, "Automobiles");
+    const q = query(
+      colRef,
+      where("Brand", "==", product[0]),
+      where("Model", "==", product[1]),
+      where("Year", "==", product[2]),
+      where("Trim", "==", product[3])
+    );
 
-  const window = useWindowDimensions();
+    const snapshot = await getDocs(q);
+    const automobilesArray = [];
+    snapshot.forEach((doc) => {
+      automobilesArray.push(doc.data());
+    });
 
-  const [isMobile, setIsMobile] = useState(false);
+    // Should only be 1 item so return the first
+    return automobilesArray[0];
+  };
 
   useEffect(() => {
     // listen for changes (sign in, sign out)
@@ -3444,12 +5689,6 @@ export default function App() {
       // update userVal upon any change
       setUserVal(user);
     });
-
-    if (window.width <= 768) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
 
     return () => {
       unsubscribe();
@@ -3469,9 +5708,35 @@ export default function App() {
             <WebHome amplitude={amplitude} isMobile={isMobile}></WebHome>
           }
         ></Route>
-        {/* the automobiles comparison page */}
+        {/* the login page */}
         <Route
-          path="comparison/automobiles"
+          index
+          path="/login"
+          element={
+            <WebLogIn amplitude={amplitude} isMobile={isMobile}></WebLogIn>
+          }
+        ></Route>
+        {/* the user account page */}
+        <Route
+          index
+          path="/account"
+          element={
+            <WebUserAccount
+              amplitude={amplitude}
+              isMobile={isMobile}
+              defaultArrays={[
+                carsDefaultArray,
+                consoleDefaultArray,
+                CPUsDefaultArray,
+                graphicsCardsDefaultArray,
+                droneDefaultArray,
+              ]}
+            ></WebUserAccount>
+          }
+        ></Route>
+        {/* the cars comparison page */}
+        <Route
+          path="comparison/automobiles/*"
           element={
             <Compare
               type={"Automobiles"}
@@ -3479,21 +5744,18 @@ export default function App() {
               Process={carsProcess}
               QueryProcess={carsQueryProcess}
               QueryFunction={queryAutomobilesFunction}
+              DirectQueryFunction={directQueryAutomobilesFunction}
               DefaultArray={carsDefaultArray}
               Categories={carsCategories}
-              Specs={carsSpecs}
-              setSpecs={setCarsSpecs}
-              Height={carsHeight}
-              SetHeight={carsSetHeight}
               amplitude={amplitude}
               isMobile={isMobile}
-              prosIndex={4}
+              prosIndex={5}
             ></Compare>
           }
         ></Route>
         {/* the consoles comparison page */}
         <Route
-          path="comparison/consoles"
+          path="comparison/consoles/*"
           element={
             <Compare
               type={"Consoles"}
@@ -3501,56 +5763,9 @@ export default function App() {
               Process={consoleProcess}
               QueryProcess={consoleQueryProcess}
               QueryFunction={queryConsolesFunction}
+              DirectQueryFunction={directQueryConsolesFunction}
               DefaultArray={consoleDefaultArray}
               Categories={consoleCategories}
-              Specs={consoleSpecs}
-              setSpecs={setConsoleSpecs}
-              Height={consolesHeight}
-              SetHeight={consolesSetHeight}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              prosIndex={2}
-            ></Compare>
-          }
-        ></Route>
-        {/* the drones comparison page */}
-        <Route
-          path="comparison/drones"
-          element={
-            <Compare
-              type={"Drones"}
-              Brands={droneBrands}
-              Process={droneProcess}
-              QueryProcess={droneQueryProcess}
-              QueryFunction={queryDronesFunction}
-              DefaultArray={droneDefaultArray}
-              Categories={droneCategories}
-              Specs={droneSpecs}
-              setSpecs={setDroneSpecs}
-              Height={dronesHeight}
-              SetHeight={dronesSetHeight}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              prosIndex={2}
-            ></Compare>
-          }
-        ></Route>
-        {/* the graphics cards comparison page */}
-        <Route
-          path="comparison/graphicsCards"
-          element={
-            <Compare
-              type={"Graphics Cards"}
-              Brands={graphicsCardsBrands}
-              Process={graphicsCardsProcess}
-              QueryProcess={graphicsCardsQueryProcess}
-              QueryFunction={queryGraphicsCardsFunction}
-              DefaultArray={graphicsCardsDefaultArray}
-              Categories={graphicsCardsCategories}
-              Specs={graphicsCardsSpecs}
-              setSpecs={setGraphicsCardsSpecs}
-              Height={graphicsCardsHeight}
-              SetHeight={graphicsCardsSetHeight}
               amplitude={amplitude}
               isMobile={isMobile}
               prosIndex={3}
@@ -3559,7 +5774,7 @@ export default function App() {
         ></Route>
         {/* the cpus comparison page */}
         <Route
-          path="comparison/cpus"
+          path="comparison/cpus/*"
           element={
             <Compare
               type={"CPUs"}
@@ -3567,250 +5782,55 @@ export default function App() {
               Process={CPUsProcess}
               QueryProcess={CPUsQueryProcess}
               QueryFunction={queryCPUsFunction}
+              DirectQueryFunction={directQueryCPUsFunction}
               DefaultArray={CPUsDefaultArray}
               Categories={CPUsCategories}
-              Specs={CPUsSpecs}
-              setSpecs={setCPUsSpecs}
-              Height={CPUsHeight}
-              SetHeight={CPUsSetHeight}
+              amplitude={amplitude}
+              isMobile={isMobile}
+              prosIndex={4}
+            ></Compare>
+          }
+        ></Route>
+        {/* the graphics cards comparison page */}
+        <Route
+          path="comparison/graphicsCards/*"
+          element={
+            <Compare
+              type={"Graphics Cards"}
+              Brands={graphicsCardsBrands}
+              Process={graphicsCardsProcess}
+              QueryProcess={graphicsCardsQueryProcess}
+              QueryFunction={queryGraphicsCardsFunction}
+              DirectQueryFunction={directQueryGraphicsCardsFunction}
+              DefaultArray={graphicsCardsDefaultArray}
+              Categories={graphicsCardsCategories}
+              amplitude={amplitude}
+              isMobile={isMobile}
+              prosIndex={4}
+            ></Compare>
+          }
+        ></Route>
+        {/* the drones comparison page */}
+        <Route
+          path="comparison/drones/*"
+          element={
+            <Compare
+              type={"Drones"}
+              Brands={droneBrands}
+              Process={droneProcess}
+              QueryProcess={droneQueryProcess}
+              QueryFunction={queryDronesFunction}
+              DirectQueryFunction={directQueryDronesFunction}
+              DefaultArray={droneDefaultArray}
+              Categories={droneCategories}
               amplitude={amplitude}
               isMobile={isMobile}
               prosIndex={3}
             ></Compare>
           }
         ></Route>
-        {/* the login/signup page */}
-        <Route
-          path="login"
-          element={
-            <WebLogIn amplitude={amplitude} isMobile={isMobile}></WebLogIn>
-          }
-        ></Route>
-        {/* User's account page */}
-        <Route
-          path="account"
-          element={
-            <WebUserAccount
-              amplitude={amplitude}
-              isMobile={isMobile}
-              defaultArrays={[
-                carsDefaultArray,
-                consoleDefaultArray,
-                droneDefaultArray,
-                graphicsCardsDefaultArray,
-                CPUsDefaultArray,
-              ]}
-            ></WebUserAccount>
-          }
-        ></Route>
-        {/* the automobiles prediction page */}
-        <Route
-          path="prediction/automobiles"
-          element={
-            <PredictionAnalysis
-              type={"Automobiles"}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              averagePrices={automobilesAveragePrices}
-              brandValues={automobilesBrandValues}
-              dropdownData={automobilesDropdownData}
-              minimumPrice={7500}
-            ></PredictionAnalysis>
-          }
-        ></Route>
-        {/* the graphicsCards prediction page */}
-        <Route
-          path="prediction/graphicsCards"
-          element={
-            <PredictionAnalysis
-              type={"Graphics Cards"}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              averagePrices={null}
-              brandValues={graphicsCardsBrandValues}
-              dropdownData={graphicsCardsDropdownData}
-              minimumPrice={200}
-            ></PredictionAnalysis>
-          }
-        ></Route>
-        {/* the cpus prediction page */}
-        <Route
-          path="prediction/cpus"
-          element={
-            <PredictionAnalysis
-              type={"Processors"}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              averagePrices={null}
-              brandValues={processorsBrandValues}
-              dropdownData={processorsDropdownData}
-              minimumPrice={150}
-            ></PredictionAnalysis>
-          }
-        ></Route>
-        {/* the about us page */}
-        <Route
-          path="aboutus"
-          element={
-            <Information
-              amplitude={amplitude}
-              isMobile={isMobile}
-              title={"About Us"}
-              text={
-                /* prettier-ignore */
-                <Text>
-
-<Text style={styles.textStyles.infoText}>Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons!</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-<Text style={styles.textStyles.infoText}>We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, gaming console, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence. </Text>
-
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>What We Do:</Text>
-
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>• Compare Products Side by Side: </Text><Text style={styles.textStyles.infoText}>Check out detailed comparisons of the latest and greatest cars, drones, consoles, GPUs, and CPUs. No more guessing games – see how your top picks stack up against each other in real-time.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>• Predict Future Prices: </Text><Text style={styles.textStyles.infoText}>Wondering how much that new tech or car will cost down the road? Our unique prediction feature lets you forecast prices all the way to 2055. Yep, you read that right. Get ahead of the game and plan your purchases like a pro.</Text>
-
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>Why SpecGauge?</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-<Text style={styles.textStyles.infoText}>We blend cutting-edge data analysis with a user-friendly interface to bring you accurate, reliable, and easy-to-understand insights. Our team is passionate about technology and cars, and we’re here to share that passion with you.</Text>
-
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>Whether you're a tech geek, a car enthusiast, or just someone looking to get the best bang for your buck, SpecGauge is designed with you in mind. We're all about making complex information simple and accessible.</Text>
-
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>So, dive in, explore, and let us help you find the perfect match for your needs. With SpecGauge, you're not just making a choice; you're making the right choice.</Text>
-
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>Thanks for stopping by. Let's navigate the future together!</Text>
-                </Text>
-              }
-            ></Information>
-          }
-        ></Route>
-        {/* the terms of service page */}
-        <Route
-          path="termsofservice"
-          element={
-            <Information
-              amplitude={amplitude}
-              isMobile={isMobile}
-              title={"Terms of Service"}
-              text={
-                /* prettier-ignore */
-                <Text>
-<Text style={styles.textStyles.infoText}>Welcome to SpecGauge! These Terms of Service ("Terms") outline the rules and regulations for using our website.</Text>
-
-<Text style={styles.textStyles.infoText}>By accessing this website, we assume you accept these Terms in full. Do not continue to use SpecGauge if you do not agree to all of the Terms stated on this page.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>1. Use of the Website</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>1.1. </Text><Text style={styles.textStyles.infoText}>You agree to use SpecGauge only for lawful purposes and in a way that does not infringe on the rights of others or restrict or inhibit anyone else’s use and enjoyment of the website.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>1.2. </Text><Text style={styles.textStyles.infoText}>We reserve the right to modify or discontinue, temporarily or permanently, the website (or any part of it) with or without notice.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>2. Predictions and Accuracy</Text>
-
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>2.1. </Text><Text style={styles.textStyles.infoText}>SpecGauge provides future price predictions for products. These predictions are based on historical data and trends and are intended for informational purposes only. We do not guarantee the accuracy or reliability of these predictions.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>3. Intellectual Property</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>3.1. </Text><Text style={styles.textStyles.infoText}>The content on SpecGauge, including text, graphics, logos, images, and software, is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, modify, display, perform, or otherwise use any part of SpecGauge without our prior written consent.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>4. Privacy</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>4.1. </Text><Text style={styles.textStyles.infoText}>Your privacy is important to us. Please refer to our Privacy Policy to understand how we collect, use, and disclose information about you.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>5. Limitation of Liability</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>5.1. </Text><Text style={styles.textStyles.infoText}>To the extent permitted by law, SpecGauge and its affiliates shall not be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in any way connected with your use of this website.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>6. Governing Law</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>6.1. </Text><Text style={styles.textStyles.infoText}>These Terms shall be governed by and construed in accordance with the laws of Canada, without regard to its conflict of law provisions.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoSubtitle}>7. Changes to the Terms</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-<Text style={[styles.textStyles.infoText, { fontWeight: 'bold' }]}>7.1. </Text><Text style={styles.textStyles.infoText}>We reserve the right to revise these Terms at any time without prior notice. By using SpecGauge after any such changes, you agree to be bound by the revised Terms.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>If you have any questions or concerns about these Terms of Service, please contact us at specgauge@gmail.com.</Text>
-              </Text>
-              }
-            ></Information>
-          }
-        ></Route>
-        {/* the privacy policy page */}
-        <Route
-          path="privacypolicy"
-          element={
-            <Information
-              amplitude={amplitude}
-              isMobile={isMobile}
-              title={"Privacy Policy"}
-              text={
-                /* prettier-ignore */
-                <Text>
-
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>We collect user activity data through Amplitude to understand how our app is used and improve it for you. This data helps us tweak features and make your experience better. The data is not linked to you or your email. We do not store any of your usage data on our servers. We don't sell this info to third parties — your privacy is our priority.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>When users visit our website, we utilize Google Ads to promote our services. Google Ads may place cookies on users' browsers and collect certain anonymous information for advertising purposes. This data helps us reach our audience effectively. Please note that Google Ads operates independently and has its own privacy policies regarding the data it collects.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>When users create accounts using their email and password, we collect and store this information securely. It's used solely for account management purposes, like resetting passwords or sending important updates related to their account.</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-<Text style={styles.textStyles.infoText}>{"\n"}</Text>
-
-<Text style={styles.textStyles.infoText}>If you have any questions or concerns about our Privacy Policy, please contact us at specgauge@gmail.com.</Text>
-
-                </Text>
-              }
-            ></Information>
-          }
-        ></Route>
         {/* any other page, error 404 */}
-        <Route
-          path="*"
-          element={<NoPage amplitude={amplitude} isMobile={isMobile}></NoPage>}
-        ></Route>
+        <Route path="*" element={<NoPage isMobile={isMobile}></NoPage>}></Route>
       </Routes>
     </BrowserRouter>
   );

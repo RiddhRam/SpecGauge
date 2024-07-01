@@ -1,17 +1,9 @@
-import { SGStyles } from "../../../styles/styles";
-
-import {
-  ActivityIndicator,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-  Modal,
-  Image,
-} from "react-native-web";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
+
+import SpecGaugeLogo from "../assets/SpecGauge SEO Logo.webp";
 
 import {
   getAuth,
@@ -21,12 +13,13 @@ import {
 } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
-export default function WebAccountHandler({ screenType, setModalView }) {
+export default function WebAccountHandler({
+  screenType,
+  setModalView,
+  isMobile,
+}) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
-
-  // Call SGStyles as styles
-  const styles = SGStyles();
 
   const [signUp, setSignUp] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -78,9 +71,7 @@ export default function WebAccountHandler({ screenType, setModalView }) {
       try {
         const InitializeAccount = httpsCallable(functions, "InitializeAccount");
         const result = await InitializeAccount(email); // returns a response
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
       // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
         navigate("/home");
@@ -160,231 +151,225 @@ export default function WebAccountHandler({ screenType, setModalView }) {
 
   return (
     // This is in a seperate component so it can be reused in a mini window too
-    <View>
+    <>
       {screenType == "modal" && (
-        <View
+        /* The title and logo */
+        <Link
           style={{
-            alignItems: "center",
+            textDecorationLine: "none",
             justifyContent: "center",
-            flexDirection: "row",
-            marginTop: 20,
+            alignItems: "center",
+            display: "flex",
+            height: "10vh",
           }}
         >
-          <Image
-            source={require("../../../assets/SpecGauge SEO Logo.webp")}
-            style={{ width: 35, height: 35 }}
+          <img
+            src={SpecGaugeLogo}
             alt="SpecGauge Logo"
-          ></Image>
-          <Text style={[styles.textStyles.text, { display: "block" }]}>
+            style={
+              isMobile ? { width: 25, height: 25 } : { width: 35, height: 35 }
+            }
+          ></img>
+          <p
+            style={{
+              color: "#4ca0d7",
+              fontSize: isMobile ? 25 : 40,
+              padding: 10,
+              textAlign: "center",
+              fontWeight: "bold",
+            }}
+          >
             SpecGauge
-          </Text>
-        </View>
+          </p>
+        </Link>
       )}
 
       {signUp ? (
         // Sign Up page
-        <>
-          <TextInput
+        <div className="WebAccountHandlerInputSection">
+          <input
+            type="text"
             value={email}
-            style={styles.inputStyles.textInput}
+            className="TextInput"
             placeholder="Email"
             id="email"
             onChange={(text) => setEmail(text.target.value)}
-          ></TextInput>
-          <TextInput
-            secureTextEntry={true}
+            style={{ marginTop: 30 }}
+          ></input>
+          <input
+            type="password"
             value={password}
-            style={styles.inputStyles.textInput}
+            className="TextInput"
             placeholder="Password"
             id="password"
             onChange={(text) => setPassword(text.target.value)}
-          ></TextInput>
-          <TextInput
-            secureTextEntry={true}
+            style={{ marginTop: 20 }}
+          ></input>
+          <input
+            type="password"
             value={confirmPassword}
-            style={styles.inputStyles.textInput}
+            className="TextInput"
             placeholder="Confirm Password"
             id="confirmpassword"
             onChange={(text) => setConfirmPassword(text.target.value)}
-          ></TextInput>
+            style={{ marginTop: 20 }}
+          ></input>
 
           {/* display errors that occur */}
-          {invalidInfo ? (
-            <Text style={styles.textStyles.errorText}>{invalidReason}</Text>
-          ) : (
-            <></>
-          )}
+          {invalidInfo ? <p className="ErrorText">{invalidReason}</p> : <></>}
 
           {/* show buttons or loading animation */}
           {loading ? (
-            <>
-              <ActivityIndicator size="large"></ActivityIndicator>
-            </>
+            <div className="ActivityIndicator" style={{ marginTop: 20 }}></div>
           ) : (
             <>
-              <Pressable
-                onPress={() => {
+              <button
+                onClick={() => {
                   SignUpFunc();
                 }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                  { marginTop: 10 },
-                ]}
+                className="NormalButton"
+                style={{ width: "100%", marginTop: 20 }}
               >
                 <p>Sign Up</p>
-              </Pressable>
+              </button>
 
-              <Pressable
-                onPress={() => {
+              <button
+                onClick={() => {
                   setSignUp(false);
                 }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                ]}
+                className="NormalButton"
+                style={{ width: "100%", marginTop: 20 }}
               >
                 <p>I already have an account</p>
-              </Pressable>
+              </button>
               {/*If user wants to switch to log in */}
             </>
           )}
-        </>
+        </div>
       ) : (
         // Log in page
-        <>
-          <TextInput
+        <div className="WebAccountHandlerInputSection">
+          <input
+            type="text"
             value={email}
-            style={styles.inputStyles.textInput}
+            className="TextInput"
             placeholder="Email"
             id="email"
             onChange={(text) => setEmail(text.target.value)}
-          ></TextInput>
-          <TextInput
-            secureTextEntry={true}
+            style={{ marginTop: 30 }}
+          ></input>
+          <input
+            type="password"
             value={password}
-            style={styles.inputStyles.textInput}
+            className="TextInput"
             placeholder="Password"
             id="password"
             onChange={(text) => setPassword(text.target.value)}
-          ></TextInput>
+            style={{ marginTop: 20 }}
+          ></input>
 
           {/* display errors that occur */}
-          {invalidInfo ? (
-            <Text style={styles.textStyles.errorText}>{invalidReason}</Text>
-          ) : (
-            <></>
-          )}
+          {invalidInfo ? <p className="ErrorText">{invalidReason}</p> : <></>}
 
           {passwordResetError ? (
-            <Text style={styles.textStyles.errorText}>
-              Error sending request.
-            </Text>
+            <p className="ErrorText">Error sending request.</p>
           ) : (
             <></>
           )}
 
           {/* Upon successful password reset link request */}
           {passwordResetSent ? (
-            <Text
-              style={[styles.textStyles.successText, { textAlign: "center" }]}
-            >
-              Request sent to your email.
-            </Text>
+            <p className="SuccessText">Request sent to your email.</p>
           ) : (
             <></>
           )}
 
           {/* show buttons or loading animation */}
           {loading ? (
-            <>
-              <ActivityIndicator size="large"></ActivityIndicator>
-            </>
+            <div className="ActivityIndicator" style={{ marginTop: 20 }}></div>
           ) : (
             <>
               {/* Log in button */}
-              <Pressable
-                onPress={() => {
+              <button
+                onClick={() => {
                   LogInFunc();
                 }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                ]}
+                className="NormalButton"
+                style={{ width: "100%", marginTop: 20 }}
               >
                 <p>Log In</p>
-              </Pressable>
+              </button>
 
               {/* Forgot password button */}
-              <Pressable
-                onPress={() => {
+              <button
+                onClick={() => {
                   setShowPasswordReset(true);
                 }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                ]}
+                className="NormalButton"
+                style={{ width: "100%", marginTop: 20 }}
               >
                 <p>Forgot my password</p>
-              </Pressable>
+              </button>
 
               {/* Back to sign up page button */}
-              <Pressable
-                onPress={() => {
+              <button
+                onClick={() => {
                   setSignUp(true);
                 }}
-                style={({ pressed }) => [
-                  styles.inputStyles.button,
-                  pressed && styles.inputStyles.buttonClicked,
-                ]}
+                className="NormalButton"
+                style={{ width: "100%", marginTop: 20 }}
               >
                 <p>I don't have an account</p>
-              </Pressable>
+              </button>
               {/*If user wants to switch to sign up */}
             </>
           )}
-        </>
+        </div>
       )}
 
       {/* Password reset modal */}
       <Modal
-        visible={showPasswordReset}
-        animationType="slide"
-        transparent="true"
+        isOpen={showPasswordReset}
+        contentLabel="Reset your password"
+        className={"ModalContainer"}
+        overlayClassName={"ModalOverlay"}
       >
-        <View style={styles.containerStyles.modalContainer}>
-          <Text style={styles.textStyles.text}>Reset your password</Text>
-          <TextInput
-            value={passwordResetEmail}
-            style={styles.inputStyles.textInput}
-            placeholder="Email"
-            id="resetPasswordEmail"
-            onChange={(text) => setPasswordResetEmail(text.target.value)}
-          ></TextInput>
-          <Pressable
-            style={({ pressed }) => [
-              styles.inputStyles.button,
-              pressed && styles.inputStyles.buttonClicked,
-            ]}
-            onPress={() => {
-              resetPassword(passwordResetEmail);
-            }}
-          >
-            <p>Send Reset Link</p>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.inputStyles.buttonNoBackground,
-              pressed && styles.inputStyles.buttonNoBackgroundClicked,
-            ]}
-            onPress={() => {
-              setShowPasswordReset(false);
-            }}
-          >
-            <p>Cancel</p>
-          </Pressable>
-        </View>
+        <p className="HeaderText">Reset your password</p>
+
+        <input
+          value={passwordResetEmail}
+          className="TextInput"
+          placeholder="Email"
+          id="resetPasswordEmail"
+          style={{
+            display: "block",
+            margin: "0 auto",
+          }}
+          onChange={(text) => setPasswordResetEmail(text.target.value)}
+        ></input>
+        <div style={{ margin: 10 }}></div>
+        <button
+          className="NormalButton"
+          onClick={() => {
+            resetPassword(passwordResetEmail);
+          }}
+          style={{
+            display: "block",
+            margin: "0 auto",
+          }}
+        >
+          <p>Send Reset Link</p>
+        </button>
+        <button
+          className="DangerButton"
+          onClick={() => {
+            setShowPasswordReset(false);
+          }}
+          style={{ marginTop: 20 }}
+        >
+          <p>Cancel</p>
+        </button>
       </Modal>
-    </View>
+    </>
   );
 }

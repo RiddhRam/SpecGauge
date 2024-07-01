@@ -1,9 +1,7 @@
-import { Navbar } from "../../Navbar";
-import { SGStyles } from "../../../styles/styles";
-import { Footer } from "../../Footer";
-import WebAccountHandler from "./WebAccountHandler";
-
-import { Pressable, View, ScrollView } from "react-native-web";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
+import WebAccountHandler from "../components/WebAccountHandler";
+import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -13,49 +11,54 @@ export default function WebLogIn({ amplitude, isMobile }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
 
-  // Call SGStyles as styles
-  const styles = SGStyles();
-
   const auth = getAuth();
 
   // send user to log in if not logged in
   useEffect(() => {
-    if (auth.currentUser) {
-      navigate("/account");
-    }
+    // Use a timeout, in case they are logged in but firebase needs to verify
+    setTimeout(() => {
+      if (auth.currentUser) {
+        navigate("/account");
+      }
+    }, 500);
   });
 
   useEffect(() => {
     amplitude.track("Screen", { Screen: "Log In" });
+    SetTitleAndDescription(
+      "SpecGauge | Sign up or Log in",
+      "Create an account to save comparisons across all your devices."
+    );
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.containerStyles.webContainer}>
+    <>
       {/* navbar */}
       <Navbar page={"login"} isMobile={isMobile} />
 
       {/* main body */}
-      <View style={styles.containerStyles.largeContainer}>
+      <div className="LargeContainer">
         {/* This is in a seperate component so it can be reused in a mini window too */}
-        <WebAccountHandler screenType={"tab"}></WebAccountHandler>
-        <Pressable
-          onPress={() => {
+        <WebAccountHandler
+          screenType={"tab"}
+          isMobile={isMobile}
+        ></WebAccountHandler>
+        <button
+          onClick={() => {
             navigate("/home");
             {
               /* Send user to the home page */
             }
           }}
-          style={({ pressed }) => [
-            styles.inputStyles.buttonNoBackground,
-            pressed && styles.inputStyles.buttonNoBackgroundClicked,
-          ]}
+          className="NormalButtonNoBackground"
+          style={{ marginTop: 20 }}
         >
           <p>Continue without an account</p>
-        </Pressable>
+        </button>
         {/* If user doesn't want to use an account, only available if on browser or if they don't want to save comparisons */}
-      </View>
+      </div>
 
       <Footer amplitude={amplitude} isMobile={isMobile} />
-    </ScrollView>
+    </>
   );
 }
