@@ -11,6 +11,7 @@ import Modal from "react-modal";
 
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import BuildURLFriendly from "../functions/BuildURLFriendly";
 import DeconstructURLFriendly from "../functions/DeconstructURLFriendly";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
 
@@ -26,10 +27,16 @@ export default function Compare({
   amplitude,
   isMobile,
   prosIndex,
+  comparisonLink,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
   const [accountModalVisible, setAccountModalVisible] = useState(false);
   const [savingComparison, setSavingComparison] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  const [copyReason, setCopyReason] = useState(
+    "Successfully copied link to clipboard"
+  );
 
   const [awaitingSavingComparison, setAwaitingSavingComparison] =
     useState(false);
@@ -238,13 +245,9 @@ export default function Compare({
   }, [pros]);
 
   // Load presets from the link
-  const loadPresets = async (fullURL) => {
-    // Split link up
-    const linkComponents = fullURL.split("/");
-    // Get the presets
-    const specificRequest = linkComponents[linkComponents.length - 1];
+  const loadPresets = async (presetURL) => {
     // Deconstruct the string into a process array
-    const processes = DeconstructURLFriendly(specificRequest);
+    const processes = DeconstructURLFriendly(presetURL);
 
     // necessary Update save comparisons
     setSaveComparisonProcesses(processes);
@@ -294,11 +297,15 @@ export default function Compare({
 
     // URL of the page
     const fullURL = window.location.href;
-    // If there's at least 1 %3B, then this is may be a preset comparison, unless someone tampered with the url string
-    const percent3BCount = (fullURL.match(/%3B/g) || []).length;
 
-    if (percent3BCount > 0) {
-      loadPresets(fullURL);
+    // Index of the prefix (/comparison/type/)
+    const startIndex = fullURL.indexOf(comparisonLink);
+    // The presets
+    const presetsURL = fullURL.substring(startIndex + comparisonLink.length);
+
+    // If greater than one, then there are presets
+    if (presetsURL.length > 1) {
+      loadPresets(presetsURL);
     }
   }, []);
 
@@ -348,6 +355,24 @@ export default function Compare({
     }
   };
 
+  const copyURLToClipboard = async (shareURL) => {
+    // Create a temporary textarea element
+    const textarea = document.createElement("textarea");
+    textarea.value = shareURL;
+    textarea.setAttribute("readonly", ""); // Prevent mobile devices from popping up the keyboard
+    textarea.style.position = "absolute";
+    textarea.style.left = "-9999px"; // Move the textarea off-screen
+    document.body.appendChild(textarea);
+
+    // Select and copy the URL from the textarea
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length); // For mobile devices
+    document.execCommand("copy");
+
+    // Clean up: remove the textarea from the DOM
+    document.body.removeChild(textarea);
+  };
+
   return (
     <>
       <Navbar page="compare" isMobile={isMobile}></Navbar>
@@ -364,6 +389,7 @@ export default function Compare({
             flexDirection: "row",
             alignItems: "center",
             flexWrap: "wrap",
+            borderBottom: "1px solid darkGrey",
           }}
         >
           {/* Back to home */}
@@ -380,6 +406,11 @@ export default function Compare({
               setDisplayPros([]);
             }}
             className="CompareTopButton"
+            style={
+              isMobile
+                ? { width: "15%", fontSize: "12px", padding: "0 15px" }
+                : {}
+            }
           >
             <p>{"< Back"}</p>
           </button>
@@ -394,6 +425,11 @@ export default function Compare({
               setProductModalVisible(true);
             }}
             className="CompareTopButton"
+            style={
+              isMobile
+                ? { width: "15%", fontSize: "12px", padding: "7px 15px" }
+                : {}
+            }
           >
             <p>Add</p>
           </button>
@@ -418,8 +454,43 @@ export default function Compare({
               }
             }}
             className="CompareTopButton"
+            style={
+              isMobile
+                ? { width: "15%", fontSize: "12px", padding: "7px 15px" }
+                : {}
+            }
           >
-            <p>Save Comparison</p>
+            <p>Save</p>
+          </button>
+
+          {/* Share comparison */}
+          <button
+            onClick={async () => {
+              const presetsURL = BuildURLFriendly(saveComparisonProcesses);
+
+              // The full URL
+              const shareURL = comparisonLink + presetsURL;
+
+              // Copy to user's clipboard
+              copyURLToClipboard(shareURL);
+              // Tell user copying to clipboard was successful
+              setCopiedLink(true);
+            }}
+            className="CompareTopButton"
+            style={
+              isMobile
+                ? {
+                    width: "20%",
+                    fontSize: "12px",
+                    paddingTop: "7px",
+                    paddingBottom: "7px",
+                    paddingLeft: "20px",
+                    backgroundColor: "#169928",
+                  }
+                : { backgroundColor: "#169928" }
+            }
+          >
+            <p>Share</p>
           </button>
 
           {/* Reset specs to just the categories and processes to empty array */}
@@ -435,7 +506,19 @@ export default function Compare({
               setDisplayPros([]);
             }}
             className="DangerButton"
-            style={{ marginLeft: "5px" }}
+            style={
+              isMobile
+                ? {
+                    width: "20%",
+                    fontSize: "12px",
+                    paddingTop: "7px",
+                    paddingBottom: "7px",
+                    paddingLeft: "20px",
+                    marginLeft: "5px",
+                    textAlign: "center",
+                  }
+                : { marginLeft: "5px" }
+            }
           >
             <p>Reset</p>
           </button>
@@ -444,7 +527,9 @@ export default function Compare({
         {/* For each product, show a column */}
         {/* For each category, show a row */}
         {products.length == 0 ? (
-          <h2 className="SimpleText">Click "Add" to get started</h2>
+          <div style={{ height: "400px" }}>
+            <h2 className="SimpleText">Click "Add" to get started</h2>
+          </div>
         ) : (
           <div
             className="ComparisonTable"
@@ -631,6 +716,31 @@ export default function Compare({
           setSaveComparisonProcesses={setSaveComparisonProcesses}
           amplitude={amplitude}
         ></SelectionModal>
+      </Modal>
+
+      {/* Shows up when user clicks the share button */}
+      <Modal
+        isOpen={copiedLink}
+        contentLabel="Copied link to clipboard"
+        className={"ModalContainer"}
+        overlayClassName={"ModalOverlay"}
+      >
+        <p className="HeaderText">Share Comparison</p>
+        <div
+          className="ModalButtonSection"
+          style={{ marginBottom: 30, display: "flex", alignItems: "center" }}
+        >
+          <p className="SuccessText">{copyReason}</p>
+        </div>
+
+        <button
+          className="NormalButtonNoBackground"
+          onClick={() => {
+            setCopiedLink(false);
+          }}
+        >
+          <p>Ok</p>
+        </button>
       </Modal>
     </>
   );

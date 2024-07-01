@@ -5750,6 +5750,9 @@ export default function App() {
               amplitude={amplitude}
               isMobile={isMobile}
               prosIndex={5}
+              comparisonLink={
+                window.location.origin + "/comparison/automobiles/"
+              }
             ></Compare>
           }
         ></Route>
@@ -5769,6 +5772,7 @@ export default function App() {
               amplitude={amplitude}
               isMobile={isMobile}
               prosIndex={3}
+              comparisonLink={window.location.origin + "/comparison/consoles/"}
             ></Compare>
           }
         ></Route>
@@ -5788,6 +5792,7 @@ export default function App() {
               amplitude={amplitude}
               isMobile={isMobile}
               prosIndex={4}
+              comparisonLink={window.location.origin + "/comparison/cpus/"}
             ></Compare>
           }
         ></Route>
@@ -5807,6 +5812,9 @@ export default function App() {
               amplitude={amplitude}
               isMobile={isMobile}
               prosIndex={4}
+              comparisonLink={
+                window.location.origin + "/comparison/graphicsCards/"
+              }
             ></Compare>
           }
         ></Route>
@@ -5826,6 +5834,7 @@ export default function App() {
               amplitude={amplitude}
               isMobile={isMobile}
               prosIndex={3}
+              comparisonLink={window.location.origin + "/comparison/drones/"}
             ></Compare>
           }
         ></Route>
