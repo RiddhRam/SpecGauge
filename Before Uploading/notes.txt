@@ -1,0 +1,23 @@
+Add _redirects to dist
+^^^
+Might be a way to streamline this
+
+Add directly below <head>
+<!-- Google tag (gtag.js) -->
+<script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=AW-16550385489"
+></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+
+  gtag("config", "AW-16550385489");
+</script>
+^^^^
+Add to index.html
+
+make sure amplitude was enabled

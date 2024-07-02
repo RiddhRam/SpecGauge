@@ -347,7 +347,7 @@ export default function PredictionAnalysis({
             style={{
               display: "flex",
               flexDirection: "column",
-              padding: "0 18px",
+              padding: "10px 18px",
               justifyContent: "center",
             }}
           >
@@ -425,6 +425,7 @@ export default function PredictionAnalysis({
                 gridTemplateRows: `65px 65px 65px 65px`,
                 rowGap: "6px",
                 columnGap: "10px",
+                minWidth: "350px",
               }}
             >
               {/* Initial Price Field */}
@@ -436,7 +437,7 @@ export default function PredictionAnalysis({
                 onChange={(event) =>
                   handleNumberInput(event.target.value, setInitialPrice)
                 }
-                style={{ fontSize: 16, maxWidth: "85%" }}
+                style={{ fontSize: 13, width: "73%" }}
               ></input>
 
               {/* Release Year Field */}
@@ -448,7 +449,7 @@ export default function PredictionAnalysis({
                 onChange={(event) =>
                   handleNumberInput(event.target.value, setReleaseYear)
                 }
-                style={{ fontSize: 16, maxWidth: "85%" }}
+                style={{ fontSize: 13, width: "73%" }}
               ></input>
 
               {/* Select Brand */}
@@ -456,7 +457,7 @@ export default function PredictionAnalysis({
                 onClick={() => {
                   setShowBrandModal(true);
                 }}
-                style={{ minWidth: "100%" }}
+                style={{ width: "90%", fontSize: 13 }}
                 className="NormalButton"
               >
                 <p>
@@ -484,7 +485,7 @@ export default function PredictionAnalysis({
                   }
                 }}
                 className="NormalButton"
-                style={{ minWidth: "100%" }}
+                style={{ width: "90%", fontSize: 13 }}
               >
                 <p>Add</p>
               </button>
@@ -495,7 +496,7 @@ export default function PredictionAnalysis({
                   setShowEditModal(true);
                 }}
                 className="NormalButton"
-                style={{ minWidth: "100%" }}
+                style={{ width: "90%", fontSize: 13 }}
               >
                 <p>Edit</p>
               </button>
@@ -543,15 +544,15 @@ export default function PredictionAnalysis({
                     }
                   }}
                   style={{
-                    minWidth: "100%",
+                    width: "90%",
                     display: "flex",
                     alignItems: "center",
+                    fontSize: 13,
+                    justifyContent: "center",
                   }}
                   className="NormalButton"
                 >
-                  <p style={{ textAlign: "center" }}>
-                    Add Average {type} Price
-                  </p>
+                  <p style={{ textAlign: "center" }}>Add Average Price</p>
                 </button>
               ) : (
                 /* Empty Cell */ <div></div>
@@ -605,7 +606,7 @@ export default function PredictionAnalysis({
                   link.click();
                   document.body.removeChild(link);
                 }}
-                style={{ marginLeft: 0, minWidth: "100%" }}
+                style={{ marginLeft: 0, width: "90%", fontSize: 13 }}
                 className="NormalButton"
               >
                 <p>Export CSV</p>
@@ -621,6 +622,7 @@ export default function PredictionAnalysis({
               flexDirection: "row",
               marginLeft: "20px",
               paddingBottom: "10px",
+              paddingRight: "10px",
             }}
           >
             {/* Graph and Scroll slider */}
@@ -652,7 +654,7 @@ export default function PredictionAnalysis({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: `250px 200px`,
+                gridTemplateColumns: `150px 100px`,
                 gridTemplateRows: `65px 65px 65px 65px 65px 65px`,
                 gridAutoFlow: "column",
                 marginLeft: "30px",
@@ -736,7 +738,7 @@ export default function PredictionAnalysis({
                 onClick={() => {
                   setShowBrandModal(true);
                 }}
-                style={{ width: "117%" }}
+                style={{ width: "130%" }}
                 className="NormalButton"
               >
                 <p>
@@ -764,7 +766,7 @@ export default function PredictionAnalysis({
                   }
                 }}
                 className="NormalButton"
-                style={{ width: "117%" }}
+                style={{ width: "130%" }}
               >
                 <p>Add</p>
               </button>
@@ -775,7 +777,7 @@ export default function PredictionAnalysis({
                   setShowEditModal(true);
                 }}
                 className="NormalButton"
-                style={{ width: "117%" }}
+                style={{ width: "130%" }}
               >
                 <p>Edit</p>
               </button>
@@ -834,11 +836,17 @@ export default function PredictionAnalysis({
                       }
                     }
                   }}
-                  style={{ padding: "0", paddingTop: "5px" }}
+                  style={{ padding: "0 2px" }}
                   className="NormalButton"
                 >
-                  <p style={{ textAlign: "center" }}>
-                    Add Average {type} Price
+                  <p
+                    style={{
+                      textAlign: "center",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    Add Average Price
                   </p>
                 </button>
               ) : (
@@ -895,6 +903,11 @@ export default function PredictionAnalysis({
                   document.body.removeChild(link);
                 }}
                 className="NormalButton"
+                style={{
+                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                }}
               >
                 <p>Export CSV</p>
               </button>

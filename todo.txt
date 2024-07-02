@@ -1,3 +1,7 @@
+Fix Mobile Prediction screens
+
+Change Select a brand button colour
+
 Update footer to use grid
 
 Update main page to use grid
@@ -5,6 +9,8 @@ Update main page to use grid
 Add trending items to main page
 
 Add navigation to comparison and prediction screens in the nav bar
+
+Lazy imports
 
 Compress json values
 
