@@ -1,5 +1,3 @@
-Fix Mobile Prediction screens
-
 Change Select a brand button colour
 
 Update footer to use grid

@@ -26,9 +26,9 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-/*amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
+amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
-});*/
+});
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -5503,7 +5503,7 @@ export default function App() {
   };
 
   const directQueryGraphicsCardsFunction = async (product) => {
-    const colRef = collection(db, "Graphics Card");
+    const colRef = collection(db, "Graphics Cards");
     const q = query(
       colRef,
       where("Brand", "==", product[0]),
@@ -5513,6 +5513,7 @@ export default function App() {
 
     const snapshot = await getDocs(q);
     const graphicsCardsArray = [];
+    console.log(snapshot);
     snapshot.forEach((doc) => {
       graphicsCardsArray.push(doc.data());
     });
@@ -5661,7 +5662,6 @@ export default function App() {
               Categories={carsCategories}
               amplitude={amplitude}
               isMobile={isMobile}
-              prosIndex={5}
               comparisonLink={
                 window.location.origin + "/comparison/automobiles/"
               }
@@ -5683,7 +5683,6 @@ export default function App() {
               Categories={consoleCategories}
               amplitude={amplitude}
               isMobile={isMobile}
-              prosIndex={3}
               comparisonLink={window.location.origin + "/comparison/consoles/"}
             ></Compare>
           }
@@ -5703,7 +5702,6 @@ export default function App() {
               Categories={CPUsCategories}
               amplitude={amplitude}
               isMobile={isMobile}
-              prosIndex={4}
               comparisonLink={window.location.origin + "/comparison/cpus/"}
             ></Compare>
           }
@@ -5723,7 +5721,6 @@ export default function App() {
               Categories={graphicsCardsCategories}
               amplitude={amplitude}
               isMobile={isMobile}
-              prosIndex={4}
               comparisonLink={
                 window.location.origin + "/comparison/graphicsCards/"
               }
@@ -5745,7 +5742,6 @@ export default function App() {
               Categories={droneCategories}
               amplitude={amplitude}
               isMobile={isMobile}
-              prosIndex={3}
               comparisonLink={window.location.origin + "/comparison/drones/"}
             ></Compare>
           }

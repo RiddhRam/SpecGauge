@@ -29,7 +29,6 @@ export default function Compare({
   Categories,
   amplitude,
   isMobile,
-  prosIndex,
   comparisonLink,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
@@ -553,7 +552,7 @@ export default function Compare({
             {/* This way, it won't put everything on the first row */}
             {products.flatMap((product, productIndex) =>
               product.map((category, categoryIndex) =>
-                categoryIndex != prosIndex ? (
+                categoryIndex != 1 ? (
                   // If not the pros index
                   categoryIndex != 0 ? (
                     // If not the first row
