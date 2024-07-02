@@ -6,11 +6,9 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("SpecGauge")).render(
   // Strict Mode
   // WARNING: WHEN ENABLING, PRESET LINKS MAY NOT WORK AS INTENDED
-  /*
-  <React.StrictMode>
+  /*<React.StrictMode>
     <App />
-  </React.StrictMode>
-  */
+  </React.StrictMode>*/
 
   // Production mode
   <App />

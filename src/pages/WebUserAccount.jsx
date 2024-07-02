@@ -234,12 +234,16 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
         {/* Sidebar */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
             borderRight: "2px solid #000",
             paddingRight: 20,
+            display: "grid",
+            gridTemplateColumns: `150px`,
+            gridTemplateRows: `65px 65px`,
+            rowGap: "6px",
+            columnGap: "10px",
           }}
         >
+          {/* Neccessary to put these as grids */}
           {/* Your Account */}
           {page == 0 ? (
             <button
@@ -247,7 +251,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
                 setPage(0);
               }}
               className="AccountButtonSelected"
-              style={{ width: isMobile ? "27vw" : "12vw" }}
+              style={{ width: "100%", alignItems: "center", padding: 0 }}
             >
               <p>Your Account</p>
             </button>
@@ -259,7 +263,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
                 setSavedProcesses(categories.map(() => []));
               }}
               className="AccountButton"
-              style={{ width: isMobile ? "27vw" : "12vw" }}
+              style={{ width: "100%", alignItems: "center", padding: 0 }}
             >
               <p>Your Account</p>
             </button>
@@ -271,7 +275,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
                 setPage(1);
               }}
               className="AccountButtonSelected"
-              style={{ width: isMobile ? "27vw" : "12vw" }}
+              style={{ width: "100%", alignItems: "center", padding: 0 }}
             >
               <p>Saved Comparisons</p>
             </button>
@@ -284,7 +288,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
                 });
               }}
               className="AccountButton"
-              style={{ width: isMobile ? "27vw" : "12vw" }}
+              style={{ width: "100%", alignItems: "center", padding: 0 }}
             >
               <p>Saved Comparisons</p>
             </button>

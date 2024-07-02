@@ -9,11 +9,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 
+Modal.setAppElement("#SpecGauge");
+
 import { getAuth } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import BuildURLFriendly from "../functions/BuildURLFriendly";
 import DeconstructURLFriendly from "../functions/DeconstructURLFriendly";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
+import BuildTitle from "../functions/BuildTitle";
 
 export default function Compare({
   type,
@@ -33,10 +36,6 @@ export default function Compare({
   const [accountModalVisible, setAccountModalVisible] = useState(false);
   const [savingComparison, setSavingComparison] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-
-  const [copyReason, setCopyReason] = useState(
-    "Successfully copied link to clipboard"
-  );
 
   const [awaitingSavingComparison, setAwaitingSavingComparison] =
     useState(false);
@@ -65,6 +64,10 @@ export default function Compare({
 
     return prosCategoriesTemp;
   };
+
+  // For SetTitleAndDescription
+  const defaultTitle = `Compare ${type}`;
+  const description = `Compare ${type} side by side. View pros of each product and research reliable information.`;
 
   useEffect(() => {
     // If at least 2 products
@@ -242,6 +245,14 @@ export default function Compare({
     } else {
       setDisplayPros(["Add at least 2 items to view the pros"]);
     }
+
+    if (pros.length == 0) {
+      SetTitleAndDescription(defaultTitle, description);
+    } else {
+      // Update the title
+      const newTitle = BuildTitle(saveComparisonProcesses, "Compare:");
+      SetTitleAndDescription(newTitle, description);
+    }
   }, [pros]);
 
   // Load presets from the link
@@ -249,7 +260,6 @@ export default function Compare({
     // Deconstruct the string into a process array
     const processes = DeconstructURLFriendly(presetURL);
 
-    // necessary Update save comparisons
     setSaveComparisonProcesses(processes);
 
     for (let processItem in processes) {
@@ -290,10 +300,6 @@ export default function Compare({
       Screen: type,
       Platform: isMobile ? "Mobile" : "Computer",
     });
-    SetTitleAndDescription(
-      `SpecGauge | Compare ${type}`,
-      `Compare ${type} side by side. View pros of each product and research reliable information.`
-    );
 
     // URL of the page
     const fullURL = window.location.href;
@@ -306,6 +312,8 @@ export default function Compare({
     // If greater than one, then there are presets
     if (presetsURL.length > 1) {
       loadPresets(presetsURL);
+    } else {
+      SetTitleAndDescription(defaultTitle, description);
     }
   }, []);
 
@@ -408,7 +416,7 @@ export default function Compare({
             className="CompareTopButton"
             style={
               isMobile
-                ? { width: "15%", fontSize: "12px", padding: "0 15px" }
+                ? { minWidth: "15%", fontSize: "12px", padding: "7px 15px" }
                 : {}
             }
           >
@@ -427,7 +435,7 @@ export default function Compare({
             className="CompareTopButton"
             style={
               isMobile
-                ? { width: "15%", fontSize: "12px", padding: "7px 15px" }
+                ? { minWidth: "15%", fontSize: "12px", padding: "7px 15px" }
                 : {}
             }
           >
@@ -456,7 +464,7 @@ export default function Compare({
             className="CompareTopButton"
             style={
               isMobile
-                ? { width: "15%", fontSize: "12px", padding: "7px 15px" }
+                ? { minWidth: "15%", fontSize: "12px", padding: "7px 15px" }
                 : {}
             }
           >
@@ -475,16 +483,16 @@ export default function Compare({
               copyURLToClipboard(shareURL);
               // Tell user copying to clipboard was successful
               setCopiedLink(true);
+              amplitude.track("Share", { type: type });
             }}
             className="CompareTopButton"
             style={
               isMobile
                 ? {
-                    width: "20%",
+                    minWidth: "10%",
                     fontSize: "12px",
                     paddingTop: "7px",
                     paddingBottom: "7px",
-                    paddingLeft: "20px",
                     backgroundColor: "#169928",
                   }
                 : { backgroundColor: "#169928" }
@@ -509,13 +517,12 @@ export default function Compare({
             style={
               isMobile
                 ? {
-                    width: "20%",
+                    minWidth: "10%",
                     fontSize: "12px",
                     paddingTop: "7px",
                     paddingBottom: "7px",
-                    paddingLeft: "20px",
                     marginLeft: "5px",
-                    textAlign: "center",
+                    paddingRight: "16px",
                   }
                 : { marginLeft: "5px" }
             }
@@ -730,7 +737,9 @@ export default function Compare({
           className="ModalButtonSection"
           style={{ marginBottom: 30, display: "flex", alignItems: "center" }}
         >
-          <p className="SuccessText">{copyReason}</p>
+          <p className="SuccessText">
+            Successfully copied link to your clipboard
+          </p>
         </div>
 
         <button

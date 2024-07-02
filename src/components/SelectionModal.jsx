@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
+import BuildTitle from "../functions/BuildTitle";
 
 export default function SelectionModal({
   type,

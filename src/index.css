@@ -19,6 +19,13 @@ body {
   padding-bottom: 50px;
 }
 
+.PredictionContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: #eee;
+  padding-bottom: 50px;
+}
+
 /* For the footer mainly, or anything that's just the opposite of the user color scheme */
 .ReverseBackground {
   background-color: #171827;
@@ -104,7 +111,7 @@ body {
 /* Displays all product columns */
 .ComparisonTable {
   max-width: 90vw;
-  overflow-x: scroll;
+  overflow-x: auto;
   column-gap: 20px;
   row-gap: 20px;
   padding-bottom: 15px;
@@ -144,6 +151,14 @@ body {
   text-align: center;
   color: #000;
   word-wrap: break-word;
+}
+
+.ScrollViewX {
+  overflow-x: auto;
+}
+
+.ScrollViewY {
+  overflow-y: auto;
 }
 
 .WebAccountHandlerInputSection {
@@ -376,13 +391,26 @@ body {
   outline-style: none;
 }
 
+.PredictionTextInput {
+  border-color: "#4ca0d7";
+  border-width: 2;
+  border-radius: 8px;
+  color: #999;
+  font-size: 24px;
+  margin: 10px 0;
+  padding: 0 5px;
+  user-select: "none";
+  outline-style: "none";
+  align-items: center;
+}
+
 /* Buttons on the user account page */
 .AccountButton {
   background-color: #fff;
   color: #000;
   font-size: 16px;
   margin-top: 10px;
-  padding: 10px 10px;
+  padding: 0 5px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -391,6 +419,7 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   user-select: none;
   text-align: center;
+  align-items: center;
 
   &:hover {
     background-color: #454444;
@@ -451,6 +480,9 @@ body {
   }
   /* For divs that take up the main part of the screen, the main content */
   .LargeContainer {
+    background-color: #171827;
+  }
+  .PredictionContainer {
     background-color: #171827;
   }
   /* For the footer mainly, or anything that's just the opposite of the user color scheme */

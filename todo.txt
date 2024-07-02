@@ -1,0 +1,11 @@
+Update footer to use grid
+
+Update main page to use grid
+
+Add trending items to main page
+
+Add navigation to comparison and prediction screens in the nav bar
+
+Compress json values
+
+Compress firestore data
