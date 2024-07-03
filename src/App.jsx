@@ -1155,9 +1155,9 @@ const consoleDefaultArray = [
 // To add a product, the specs are added to the '-Specs' array in the corresponding category. '-Specs' array is below
 const consoleCategories = [
   { Category: "R", Values: [] },
+  { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
   { Category: "Name", Values: [] },
-  { Category: "Pros", Values: [] },
   { Category: "CPU", Values: [] },
   { Category: "GPU", Values: [] },
   { Category: "RAM", Values: [] },
@@ -1777,9 +1777,9 @@ const droneDefaultArray = [
 ];
 const droneCategories = [
   { Category: "R", Values: [] },
+  { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
   { Category: "Name", Values: [] },
-  { Category: "Pros", Values: [] },
   { Category: "Weight", Values: [] },
   { Category: "Operating Temperature", Values: [] },
   { Category: "Size", Values: [] },
@@ -2281,10 +2281,10 @@ const graphicsCardsDefaultArray = [
 ];
 const graphicsCardsCategories = [
   { Category: "R", Values: [] },
+  { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
   { Category: "Generation", Values: [] },
   { Category: "Card", Values: [] },
-  { Category: "Pros", Values: [] },
   { Category: "GPU", Values: [] },
   { Category: "Memory", Values: [] },
   { Category: "Cache", Values: [] },
@@ -3045,10 +3045,10 @@ const CPUsDefaultArray = [
 ];
 const CPUsCategories = [
   { Category: "R", Values: [] },
+  { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
   { Category: "Generation", Values: [] },
   { Category: "CPU", Values: [] },
-  { Category: "Pros", Values: [] },
   { Category: "Clock", Values: [] },
   { Category: "Architecture", Values: [] },
   { Category: "Thermal", Values: [] },
@@ -5235,11 +5235,11 @@ const carsDefaultArray = [
 ];
 const carsCategories = [
   { Category: "R", Values: [] },
+  { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
   { Category: "Model", Values: [] },
   { Category: "Year", Values: [] },
   { Category: "Trim", Values: [] },
-  { Category: "Pros", Values: [] },
   { Category: "Body", Values: [] },
   { Category: "Motor", Values: [] },
   { Category: "Design", Values: [] },
