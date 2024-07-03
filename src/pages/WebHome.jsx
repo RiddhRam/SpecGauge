@@ -154,15 +154,16 @@ export default function WebHome({ amplitude, isMobile }) {
       <div className="LargeContainer">
         {/* Select tool type and view trending comparisons, default screen */}
         {/* Subtitle */}
-        <p
+        <h1
           className="SimpleText"
           style={{
             fontSize: isMobile ? 20 : 30,
             marginTop: 50,
+            marginBottom: 30,
           }}
         >
           Compare Today. Predict Tomorrow.
-        </p>
+        </h1>
 
         <>
           {isMobile ? (
@@ -222,9 +223,6 @@ export default function WebHome({ amplitude, isMobile }) {
 
                         <Link
                           to={comparisonItem.Path}
-                          onClick={() => {
-                            console.log("We Move");
-                          }}
                           className="TrendingComparisonButton"
                           style={{ fontSize: "10px" }}
                         >
@@ -289,9 +287,6 @@ export default function WebHome({ amplitude, isMobile }) {
 
                         <Link
                           to={comparisonItem.Path}
-                          onClick={() => {
-                            console.log("We Move");
-                          }}
                           className="TrendingComparisonButton"
                           style={{ fontSize: "10px" }}
                         >
@@ -355,9 +350,6 @@ export default function WebHome({ amplitude, isMobile }) {
 
                     <Link
                       to={comparisonItem.Path}
-                      onClick={() => {
-                        console.log("We Move");
-                      }}
                       className="TrendingComparisonButton"
                       style={{ fontSize: "13px" }}
                     >

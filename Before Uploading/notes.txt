@@ -1,7 +1,3 @@
-Add _redirects to dist
-^^^
-Might be a way to streamline this
-
 Add directly below <head>
 <!-- Google tag (gtag.js) -->
 <script

@@ -447,6 +447,8 @@ a {
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   text-decoration: none;
+  text-decoration: none;
+  color: #000;
 
   &:visited {
     color: #000;

@@ -3,9 +3,11 @@ Add search option when searching brands
 if a string is not a substring of a brand, don't display it with a ternary operator
 
 Let users request a product or category
-
 Let users suggest fixes to the website or database
 
+Add description for information pages
+
+5.5.0
 Make <Link> tags use client-side routing instead of server side
 
 6.0.0
