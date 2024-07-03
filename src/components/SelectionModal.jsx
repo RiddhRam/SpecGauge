@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
-import BuildTitle from "../functions/BuildTitle";
 
 export default function SelectionModal({
   type,
@@ -16,6 +15,8 @@ export default function SelectionModal({
   setSaveComparisonProcesses,
   amplitude,
 }) {
+  const containerRef = useRef(null);
+
   // Current step that the modal is displaying
   const [step, setStep] = useState(0);
   // All the specs that were retrieved from firebase, these are requested after the second step
@@ -50,7 +51,7 @@ export default function SelectionModal({
           style={{ marginTop: 30, marginBottom: 30 }}
         ></div>
       ) : (
-        <div className="ModalButtonSection">
+        <div className="ModalButtonSection" ref={containerRef}>
           {selectionOptions.map((item, index) => (
             <button
               className="NormalButtonNoBackground"
@@ -175,6 +176,24 @@ export default function SelectionModal({
                 }
 
                 setLoading(false);
+
+                // Scroll back up
+                try {
+                  // If instant, usually when data is on the device
+                  containerRef.current.scrollTop = 0;
+                } catch {
+                  // If not instant, usually only when requesting data from the server
+                  setTimeout(() => {
+                    try {
+                      containerRef.current.scrollTop = 0;
+                    } catch {
+                      // Another timer just in case slow wifi
+                      setTimeout(() => {
+                        containerRef.current.scrollTop = 0;
+                      }, 600);
+                    }
+                  }, 400);
+                }
               }}
             >
               <p>{item}</p>

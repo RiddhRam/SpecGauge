@@ -5,7 +5,7 @@ import SpecGaugeLogo from "../assets/SpecGauge SEO Logo.webp";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 
-export default function NoPage({ isMobile }) {
+export default function NoPage({ isMobile, amplitude }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ export default function NoPage({ isMobile }) {
 
   return (
     <>
-      <Navbar page="nopage" isMobile={isMobile}></Navbar>
+      <Navbar page="nopage" amplitude={amplitude}></Navbar>
       <div className="LargeContainer">
         {/* title and logo */}
         <div

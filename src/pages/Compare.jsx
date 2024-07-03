@@ -382,7 +382,7 @@ export default function Compare({
 
   return (
     <>
-      <Navbar page="compare" isMobile={isMobile}></Navbar>
+      <Navbar page="compare" amplitude={amplitude}></Navbar>
       {/* Main Body */}
       <div className="LargeContainer">
         <p style={{ fontSize: 25 }} className="HeaderText">
@@ -552,34 +552,48 @@ export default function Compare({
             {/* This way, it won't put everything on the first row */}
             {products.flatMap((product, productIndex) =>
               product.map((category, categoryIndex) =>
-                categoryIndex != 1 ? (
+                categoryIndex != 2 ? (
                   // If not the pros index
                   categoryIndex != 0 ? (
-                    // If not the first row
-                    <div
-                      key={`${productIndex}-${categoryIndex}`}
-                      className="ComparisonCell"
-                    >
-                      <p
-                        className="ComparisonRowName"
-                        style={{ fontSize: isMobile ? "13px" : "15px" }}
-                      >
-                        {category.Category}
-                      </p>
-
+                    // If not the second row
+                    categoryIndex != 1 ? (
+                      // If not the first row
                       <div
-                        className="ComparisonRowValue"
-                        style={{ fontSize: isMobile ? "13px" : "15px" }}
+                        key={`${productIndex}-${categoryIndex}`}
+                        className="ComparisonCell"
                       >
-                        {[]
-                          .concat(category.Values)
-                          .map((rowValue, rowIndex) => (
-                            <p key={rowIndex}>{rowValue}</p>
-                          ))}
+                        <p
+                          className="ComparisonRowName"
+                          style={{ fontSize: isMobile ? "13px" : "15px" }}
+                        >
+                          {category.Category}
+                        </p>
+
+                        <div
+                          className="ComparisonRowValue"
+                          style={{ fontSize: isMobile ? "13px" : "15px" }}
+                        >
+                          {[]
+                            .concat(category.Values)
+                            .map((rowValue, rowIndex) => (
+                              <p key={rowIndex}>{rowValue}</p>
+                            ))}
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <p
+                        className="SimpleText"
+                        key={`${productIndex}-${categoryIndex}`}
+                      >
+                        {saveComparisonProcesses[productIndex][0] +
+                          " " +
+                          saveComparisonProcesses[productIndex][
+                            saveComparisonProcesses[productIndex].length - 1
+                          ]}
+                      </p>
+                    )
                   ) : (
-                    // If it is the first row
+                    // If it is the second row
                     <div key={`${productIndex}-${categoryIndex}`}>
                       <button
                         className="DangerButton"

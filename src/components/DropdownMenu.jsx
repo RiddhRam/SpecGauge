@@ -15,7 +15,14 @@ export const DropdownMenu = ({ label, menuItems }) => {
         <ul className="dropdown-menu">
           {menuItems.map((item, index) => (
             <li key={index}>
-              <Link to={item.path}>{item.label}</Link>
+              <Link
+                to={item.path}
+                onClick={() => {
+                  amplitude.track("Navigation Button", { type: label });
+                }}
+              >
+                {item.label}
+              </Link>
             </li>
           ))}
         </ul>

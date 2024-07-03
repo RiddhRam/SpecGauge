@@ -10,7 +10,7 @@ export default function Information({ amplitude, isMobile, title, text }) {
   }, []);
   return (
     <>
-      <Navbar page="aboutus" isMobile={isMobile}></Navbar>
+      <Navbar page="aboutus" amplitude={amplitude}></Navbar>
       <div
         style={{ alignItems: "flex-start", paddingLeft: 20, paddingBottom: 40 }}
         className="LargeContainer"

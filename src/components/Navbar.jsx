@@ -6,7 +6,7 @@ import { DropdownMenu } from "./DropdownMenu";
 
 import { getAuth } from "firebase/auth";
 
-export const Navbar = ({ page, isMobile }) => {
+export const Navbar = ({ page, amplitude }) => {
   const auth = getAuth();
 
   return (
@@ -14,26 +14,23 @@ export const Navbar = ({ page, isMobile }) => {
       {/* The title and logo */}
       <Link
         style={{
+          display: "flex",
           textDecorationLine: "none",
           justifyContent: "center",
           alignItems: "center",
-          display: "flex",
-          width: "50%",
           margin: "0 auto",
         }}
-        to="/home"
+        to="/"
       >
         <img
           src={SpecGaugeLogo}
           alt="SpecGauge Logo"
-          style={
-            isMobile ? { width: 25, height: 25 } : { width: 35, height: 35 }
-          }
+          style={{ width: 35, height: 35 }}
         ></img>
         <p
           style={{
             color: "#4ca0d7",
-            fontSize: isMobile ? 25 : 40,
+            fontSize: 40,
             padding: 10,
             textAlign: "center",
             fontWeight: "bold",
@@ -59,11 +56,7 @@ export const Navbar = ({ page, isMobile }) => {
               <img
                 src={HomeIcon}
                 alt="Home Icon"
-                style={
-                  isMobile
-                    ? { width: 25, height: 27 }
-                    : { width: 35, height: 37 }
-                }
+                style={{ width: 22, height: 22 }}
               ></img>
 
               <p className="NavbarText">Home</p>
@@ -84,6 +77,7 @@ export const Navbar = ({ page, isMobile }) => {
             { label: "Graphics Cards", path: "/comparison/graphicsCards" },
             { label: "Drones", path: "/comparison/drones" },
           ]}
+          amplitude={amplitude}
         ></DropdownMenu>
 
         {/* Predict dropdown */}
@@ -94,6 +88,7 @@ export const Navbar = ({ page, isMobile }) => {
             { label: "CPUs", path: "/prediction/cpus" },
             { label: "Graphics Cards", path: "/prediction/graphicsCards" },
           ]}
+          amplitude={amplitude}
         ></DropdownMenu>
 
         {/* If not on an account handling page, give user the option to go to an account handling page */}
@@ -117,11 +112,7 @@ export const Navbar = ({ page, isMobile }) => {
                     <img
                       src={ProfileIcon}
                       alt="Profile Icon"
-                      style={
-                        isMobile
-                          ? { width: 25, height: 27 }
-                          : { width: 35, height: 37 }
-                      }
+                      style={{ width: 20, height: 20 }}
                     ></img>
                     <p className="NavbarText">My Account</p>
                   </div>
@@ -138,11 +129,7 @@ export const Navbar = ({ page, isMobile }) => {
                     <img
                       src={ProfileIcon}
                       alt="Profile Icon"
-                      style={
-                        isMobile
-                          ? { width: 25, height: 27 }
-                          : { width: 35, height: 37 }
-                      }
+                      style={{ width: 20, height: 22 }}
                     ></img>
                     <p className="NavbarText">Log In</p>
                   </div>

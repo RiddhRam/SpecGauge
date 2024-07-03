@@ -1,16 +1,16 @@
 import useWindowDimensions from "./useWindowDimensions";
-import WebDefaultPage from "./pages/WebDefaultPage";
-import NoPage from "./pages/NoPage";
-import WebHome from "./pages/WebHome";
-import WebLogIn from "./pages/WebLogIn";
-import WebUserAccount from "./pages/WebUserAccount";
-import Compare from "./pages/Compare";
-import Prediction from "./pages/Prediction";
-import Information from "./pages/Information";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import * as amplitude from "@amplitude/analytics-browser";
+
+const WebHome = lazy(() => import("./pages/WebHome"));
+const WebLogIn = lazy(() => import("./pages/WebLogIn"));
+const WebUserAccount = lazy(() => import("./pages/WebUserAccount"));
+const Compare = lazy(() => import("./pages/Compare"));
+const Prediction = lazy(() => import("./pages/Prediction"));
+const Information = lazy(() => import("./pages/Information"));
+const NoPage = lazy(() => import("./pages/NoPage"));
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -27,9 +27,9 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
+/*amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
   logLevel: amplitude.Types.LogLevel.None,
-});
+});*/
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -1154,6 +1154,7 @@ const consoleDefaultArray = [
 // This determines how many rows to show in the table, each item is 1 column, each item within the item is a row.
 // To add a product, the specs are added to the '-Specs' array in the corresponding category. '-Specs' array is below
 const consoleCategories = [
+  { Category: "N", Values: [] },
   { Category: "R", Values: [] },
   { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
@@ -1776,6 +1777,7 @@ const droneDefaultArray = [
   },
 ];
 const droneCategories = [
+  { Category: "N", Values: [] },
   { Category: "R", Values: [] },
   { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
@@ -2280,6 +2282,7 @@ const graphicsCardsDefaultArray = [
   },
 ];
 const graphicsCardsCategories = [
+  { Category: "N", Values: [] },
   { Category: "R", Values: [] },
   { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
@@ -3044,6 +3047,7 @@ const CPUsDefaultArray = [
   },
 ];
 const CPUsCategories = [
+  { Category: "N", Values: [] },
   { Category: "R", Values: [] },
   { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
@@ -5234,6 +5238,7 @@ const carsDefaultArray = [
   },
 ];
 const carsCategories = [
+  { Category: "N", Values: [] },
   { Category: "R", Values: [] },
   { Category: "Pros", Values: [] },
   { Category: "Brand", Values: [] },
@@ -5514,7 +5519,6 @@ export default function App() {
 
     const snapshot = await getDocs(q);
     const graphicsCardsArray = [];
-    console.log(snapshot);
     snapshot.forEach((doc) => {
       graphicsCardsArray.push(doc.data());
     });
@@ -5613,13 +5617,22 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
-        <Route path="/" element={<WebDefaultPage></WebDefaultPage>}></Route>
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <WebHome amplitude={amplitude} isMobile={isMobile}></WebHome>
+            </Suspense>
+          }
+        ></Route>
         {/* the home page */}
         <Route
           index
           path="/home"
           element={
-            <WebHome amplitude={amplitude} isMobile={isMobile}></WebHome>
+            <Suspense fallback={<div>Loading...</div>}>
+              <WebHome amplitude={amplitude} isMobile={isMobile}></WebHome>
+            </Suspense>
           }
         ></Route>
         {/* the login page */}
@@ -5627,7 +5640,9 @@ export default function App() {
           index
           path="/login"
           element={
-            <WebLogIn amplitude={amplitude} isMobile={isMobile}></WebLogIn>
+            <Suspense fallback={<div>Loading...</div>}>
+              <WebLogIn amplitude={amplitude} isMobile={isMobile}></WebLogIn>
+            </Suspense>
           }
         ></Route>
         {/* the user account page */}
@@ -5635,171 +5650,192 @@ export default function App() {
           index
           path="/account"
           element={
-            <WebUserAccount
-              amplitude={amplitude}
-              isMobile={isMobile}
-              defaultArrays={[
-                carsDefaultArray,
-                consoleDefaultArray,
-                CPUsDefaultArray,
-                graphicsCardsDefaultArray,
-                droneDefaultArray,
-              ]}
-            ></WebUserAccount>
+            <Suspense fallback={<div>Loading...</div>}>
+              <WebUserAccount
+                amplitude={amplitude}
+                isMobile={isMobile}
+                defaultArrays={[
+                  carsDefaultArray,
+                  consoleDefaultArray,
+                  CPUsDefaultArray,
+                  graphicsCardsDefaultArray,
+                  droneDefaultArray,
+                ]}
+              ></WebUserAccount>
+            </Suspense>
           }
         ></Route>
         {/* the cars comparison page */}
         <Route
           path="/comparison/automobiles/*"
           element={
-            <Compare
-              type={"Automobiles"}
-              Brands={carsBrands}
-              Process={carsProcess}
-              QueryProcess={carsQueryProcess}
-              QueryFunction={queryAutomobilesFunction}
-              DirectQueryFunction={directQueryAutomobilesFunction}
-              DefaultArray={carsDefaultArray}
-              Categories={carsCategories}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              comparisonLink={
-                window.location.origin + "/comparison/automobiles/"
-              }
-            ></Compare>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Compare
+                type={"Automobiles"}
+                Brands={carsBrands}
+                Process={carsProcess}
+                QueryProcess={carsQueryProcess}
+                QueryFunction={queryAutomobilesFunction}
+                DirectQueryFunction={directQueryAutomobilesFunction}
+                DefaultArray={carsDefaultArray}
+                Categories={carsCategories}
+                amplitude={amplitude}
+                isMobile={isMobile}
+                comparisonLink={
+                  window.location.origin + "/comparison/automobiles/"
+                }
+              ></Compare>
+            </Suspense>
           }
         ></Route>
         {/* the consoles comparison page */}
         <Route
           path="/comparison/consoles/*"
           element={
-            <Compare
-              type={"Consoles"}
-              Brands={consoleBrands}
-              Process={consoleProcess}
-              QueryProcess={consoleQueryProcess}
-              QueryFunction={queryConsolesFunction}
-              DirectQueryFunction={directQueryConsolesFunction}
-              DefaultArray={consoleDefaultArray}
-              Categories={consoleCategories}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              comparisonLink={window.location.origin + "/comparison/consoles/"}
-            ></Compare>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Compare
+                type={"Consoles"}
+                Brands={consoleBrands}
+                Process={consoleProcess}
+                QueryProcess={consoleQueryProcess}
+                QueryFunction={queryConsolesFunction}
+                DirectQueryFunction={directQueryConsolesFunction}
+                DefaultArray={consoleDefaultArray}
+                Categories={consoleCategories}
+                amplitude={amplitude}
+                isMobile={isMobile}
+                comparisonLink={
+                  window.location.origin + "/comparison/consoles/"
+                }
+              ></Compare>
+            </Suspense>
           }
         ></Route>
         {/* the cpus comparison page */}
         <Route
           path="/comparison/cpus/*"
           element={
-            <Compare
-              type={"CPUs"}
-              Brands={CPUsBrands}
-              Process={CPUsProcess}
-              QueryProcess={CPUsQueryProcess}
-              QueryFunction={queryCPUsFunction}
-              DirectQueryFunction={directQueryCPUsFunction}
-              DefaultArray={CPUsDefaultArray}
-              Categories={CPUsCategories}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              comparisonLink={window.location.origin + "/comparison/cpus/"}
-            ></Compare>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Compare
+                type={"CPUs"}
+                Brands={CPUsBrands}
+                Process={CPUsProcess}
+                QueryProcess={CPUsQueryProcess}
+                QueryFunction={queryCPUsFunction}
+                DirectQueryFunction={directQueryCPUsFunction}
+                DefaultArray={CPUsDefaultArray}
+                Categories={CPUsCategories}
+                amplitude={amplitude}
+                isMobile={isMobile}
+                comparisonLink={window.location.origin + "/comparison/cpus/"}
+              ></Compare>
+            </Suspense>
           }
         ></Route>
         {/* the graphics cards comparison page */}
         <Route
           path="/comparison/graphicsCards/*"
           element={
-            <Compare
-              type={"Graphics Cards"}
-              Brands={graphicsCardsBrands}
-              Process={graphicsCardsProcess}
-              QueryProcess={graphicsCardsQueryProcess}
-              QueryFunction={queryGraphicsCardsFunction}
-              DirectQueryFunction={directQueryGraphicsCardsFunction}
-              DefaultArray={graphicsCardsDefaultArray}
-              Categories={graphicsCardsCategories}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              comparisonLink={
-                window.location.origin + "/comparison/graphicsCards/"
-              }
-            ></Compare>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Compare
+                type={"Graphics Cards"}
+                Brands={graphicsCardsBrands}
+                Process={graphicsCardsProcess}
+                QueryProcess={graphicsCardsQueryProcess}
+                QueryFunction={queryGraphicsCardsFunction}
+                DirectQueryFunction={directQueryGraphicsCardsFunction}
+                DefaultArray={graphicsCardsDefaultArray}
+                Categories={graphicsCardsCategories}
+                amplitude={amplitude}
+                isMobile={isMobile}
+                comparisonLink={
+                  window.location.origin + "/comparison/graphicsCards/"
+                }
+              ></Compare>
+            </Suspense>
           }
         ></Route>
         {/* the drones comparison page */}
         <Route
           path="/comparison/drones/*"
           element={
-            <Compare
-              type={"Drones"}
-              Brands={droneBrands}
-              Process={droneProcess}
-              QueryProcess={droneQueryProcess}
-              QueryFunction={queryDronesFunction}
-              DirectQueryFunction={directQueryDronesFunction}
-              DefaultArray={droneDefaultArray}
-              Categories={droneCategories}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              comparisonLink={window.location.origin + "/comparison/drones/"}
-            ></Compare>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Compare
+                type={"Drones"}
+                Brands={droneBrands}
+                Process={droneProcess}
+                QueryProcess={droneQueryProcess}
+                QueryFunction={queryDronesFunction}
+                DirectQueryFunction={directQueryDronesFunction}
+                DefaultArray={droneDefaultArray}
+                Categories={droneCategories}
+                amplitude={amplitude}
+                isMobile={isMobile}
+                comparisonLink={window.location.origin + "/comparison/drones/"}
+              ></Compare>
+            </Suspense>
           }
         ></Route>
         {/* the automobiles prediction page */}
         <Route
           path="/prediction/automobiles/*"
           element={
-            <Prediction
-              type={"Automobiles"}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              averagePrices={carsAveragePrices}
-              brandValues={carsBrandValues}
-              minimumPrice={7500}
-            ></Prediction>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Prediction
+                type={"Automobiles"}
+                amplitude={amplitude}
+                isMobile={isMobile}
+                averagePrices={carsAveragePrices}
+                brandValues={carsBrandValues}
+                minimumPrice={7500}
+              ></Prediction>
+            </Suspense>
           }
         ></Route>
         {/* the graphics cards prediction page */}
         <Route
           path="/prediction/graphicsCards/*"
           element={
-            <Prediction
-              type={"Graphics Cards"}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              averagePrices={null}
-              brandValues={graphicsCardsBrandValues}
-              minimumPrice={200}
-            ></Prediction>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Prediction
+                type={"Graphics Cards"}
+                amplitude={amplitude}
+                isMobile={isMobile}
+                averagePrices={null}
+                brandValues={graphicsCardsBrandValues}
+                minimumPrice={200}
+              ></Prediction>
+            </Suspense>
           }
         ></Route>
         {/* the cpus prediction page */}
         <Route
           path="/prediction/cpus/*"
           element={
-            <Prediction
-              type={"CPUs"}
-              amplitude={amplitude}
-              isMobile={isMobile}
-              averagePrices={null}
-              brandValues={processorsBrandValues}
-              minimumPrice={150}
-            ></Prediction>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Prediction
+                type={"CPUs"}
+                amplitude={amplitude}
+                isMobile={isMobile}
+                averagePrices={null}
+                brandValues={processorsBrandValues}
+                minimumPrice={150}
+              ></Prediction>
+            </Suspense>
           }
         ></Route>
         {/* the about us page */}
         <Route
           path="/aboutus"
           element={
-            <Information
-              amplitude={amplitude}
-              isMobile={isMobile}
-              title={"About Us"}
-              text={
-                /* prettier-ignore */
-                <div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Information
+                amplitude={amplitude}
+                isMobile={isMobile}
+                title={"About Us"}
+                text={
+                  /* prettier-ignore */
+                  <div>
 
 <p className="InfoText">Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons!</p>
 <p className="InfoText">{"\n"}</p>
@@ -5839,21 +5875,23 @@ export default function App() {
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">Thanks for stopping by. Let's navigate the future together!</p>
                 </div>
-              }
-            ></Information>
+                }
+              ></Information>
+            </Suspense>
           }
         ></Route>
         {/* the terms of service page */}
         <Route
           path="/termsofservice"
           element={
-            <Information
-              amplitude={amplitude}
-              isMobile={isMobile}
-              title={"Terms of Service"}
-              text={
-                /* prettier-ignore */
-                <div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Information
+                amplitude={amplitude}
+                isMobile={isMobile}
+                title={"Terms of Service"}
+                text={
+                  /* prettier-ignore */
+                  <div>
 <p className="InfoText">Welcome to SpecGauge! These Terms of Service ("Terms") outline the rules and regulations for using our website.</p>
 
 <p className="InfoText">By accessing this website, we assume you accept these Terms in full. Do not continue to use SpecGauge if you do not agree to all of the Terms stated on this page.</p>
@@ -5913,21 +5951,23 @@ export default function App() {
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">If you have any questions or concerns about these Terms of Service, please contact us at specgauge@gmail.com.</p>
               </div>
-              }
-            ></Information>
+                }
+              ></Information>
+            </Suspense>
           }
         ></Route>
         {/* the privacy policy page */}
         <Route
           path="/privacypolicy"
           element={
-            <Information
-              amplitude={amplitude}
-              isMobile={isMobile}
-              title={"Privacy Policy"}
-              text={
-                /* prettier-ignore */
-                <div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Information
+                amplitude={amplitude}
+                isMobile={isMobile}
+                title={"Privacy Policy"}
+                text={
+                  /* prettier-ignore */
+                  <div>
 
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">We collect user activity data through Amplitude to understand how our app is used and improve it for you. This data helps us tweak features and make your experience better. The data is not linked to you or your email. We do not store any of your usage data on our servers. We don't sell this info to third parties — your privacy is our priority.</p>
@@ -5943,12 +5983,20 @@ export default function App() {
 <p className="InfoText">If you have any questions or concerns about our Privacy Policy, please contact us at specgauge@gmail.com.</p>
 
                 </div>
-              }
-            ></Information>
+                }
+              ></Information>
+            </Suspense>
           }
         ></Route>
         {/* any other page, error 404 */}
-        <Route path="*" element={<NoPage isMobile={isMobile}></NoPage>}></Route>
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <NoPage isMobile={isMobile} amplitude={amplitude}></NoPage>
+            </Suspense>
+          }
+        ></Route>
       </Routes>
     </BrowserRouter>
   );

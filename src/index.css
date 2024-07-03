@@ -3,6 +3,14 @@ body {
   margin: 0;
 }
 
+/* Removes the blue highlight that shows when tapping a button on mobile */
+input,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /*For the web navbar*/
 .NavbarContainer {
   background-color: #171827;
@@ -23,26 +31,13 @@ body {
 .PredictionContainer {
   display: flex;
   flex-direction: column;
-  background-color: #eee;
+  background-color: #fff;
   padding-bottom: 50px;
 }
 
 /* For the footer mainly, or anything that's just the opposite of the user color scheme */
 .ReverseBackground {
   background-color: #171827;
-}
-
-/* The two containers on the home page that tell you the Recently Added and Coming Soon features */
-.ComingSoonContainer {
-  background-color: #dd70e7;
-  border-width: 2px;
-  border-radius: 8px;
-  border-color: #000;
-  border-style: solid;
-  margin-top: 10px;
-  margin-bottom: 30px;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* All modals look like this */
@@ -172,6 +167,18 @@ body {
   margin: 0 auto;
 }
 
+/* Each trending comparison parent container */
+.TrendingComparison {
+  background-color: #f3f3f3;
+}
+
+/* The product names and VS text */
+.TrendingComparisonText {
+  color: #000;
+  text-align: center;
+  padding: 0 2px;
+}
+
 /* Completely unaltered text, just matches the appropriate color scheme */
 .PlainText {
   color: #000;
@@ -217,7 +224,7 @@ body {
 
 /* When displaying success messages */
 .SuccessText {
-  color: #0f0;
+  color: #39ff14;
   font-size: 15;
   padding: 10px;
   text-align: center;
@@ -253,7 +260,8 @@ body {
 .NavbarText {
   text-decoration: none;
   color: #fff;
-  padding: 10px;
+  padding: 8px;
+  font-size: 12px;
 }
 
 /* For displaying user settings and details */
@@ -426,6 +434,34 @@ body {
   align-items: center;
 }
 
+/* The button that takes the user to the trending comparison page */
+.TrendingComparisonButton {
+  background-color: #39ff14;
+  border-style: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  margin-left: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  text-decoration: none;
+
+  &:visited {
+    color: #000;
+  }
+
+  &:hover {
+    background-color: #38e21a;
+  }
+
+  &:active {
+    background-color: #2aa814;
+    color: #000;
+  }
+}
+
 /* Buttons on the user account page */
 .AccountButton {
   background-color: #fff;
@@ -578,11 +614,7 @@ body {
   }
   /* For the footer mainly, or anything that's just the opposite of the user color scheme */
   .ReverseBackground {
-    background-color: #eee;
-  }
-  /* The two containers on the home page that tell you the Recently Added and Coming Soon features */
-  .ComingSoonContainer {
-    background-color: #6b3687;
+    background-color: #fff;
   }
   /* All modals look like this */
   .ModalContainer {
@@ -609,6 +641,10 @@ body {
   .ComparisonRow {
     color: #fff;
   }
+  /* Each trending comparison parent container */
+  .TrendingComparison {
+    background-color: #030612;
+  }
   /* Completely unaltered text, just matches the appropriate color scheme */
   .PlainText {
     color: #fff;
@@ -628,6 +664,10 @@ body {
   }
   /* For paragraphs on the information screens */
   .InfoText {
+    color: #fff;
+  }
+  /* The product names and VS text */
+  .TrendingComparisonText {
     color: #fff;
   }
   /* For buttons that just look like text without hovering or clicking them */

@@ -1,17 +1,15 @@
-5.3.0
-Update main page to use grid
+5.4.0
+Add search option when searching brands
+if a string is not a substring of a brand, don't display it with a ternary operator
 
-Add trending items to main page
+Let users request a product or category
 
-Lazy imports
+Let users suggest fixes to the website or database
 
-For the first category in the comparison screen show the names of each product.
-The names can be constructed using the processes
+Make <Link> tags use client-side routing instead of server side
 
 6.0.0
 Compress json values
 
 Compress firestore data
 
-Add search option when searching brands
-if a string is not a substring of a brand, don't display it with a ternary operator
