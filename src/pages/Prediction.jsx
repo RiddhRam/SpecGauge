@@ -216,7 +216,7 @@ export default function Prediction({
         let newRandomPrice = rng() * 0.1 * lastPrice + newCalculatedPrice;
         if (newRandomPrice > lastPrice) {
           newRandomPrice =
-            newRandomPrice - newCalculatedPrice - (newCalculatedPrice / 2) * -1;
+            newRandomPrice - newCalculatedPrice - newCalculatedPrice * -1;
         }
         prices.push(newRandomPrice);
         lastPrice = newRandomPrice;

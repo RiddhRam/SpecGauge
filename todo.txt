@@ -5,8 +5,13 @@ Add trending items to main page
 
 Lazy imports
 
+For the first category in the comparison screen show the names of each product.
+The names can be constructed using the processes
 
 6.0.0
 Compress json values
 
 Compress firestore data
+
+Add search option when searching brands
+if a string is not a substring of a brand, don't display it with a ternary operator
