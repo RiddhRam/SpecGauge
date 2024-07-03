@@ -5,7 +5,8 @@ import WebHome from "./pages/WebHome";
 import WebLogIn from "./pages/WebLogIn";
 import WebUserAccount from "./pages/WebUserAccount";
 import Compare from "./pages/Compare";
-import PredictionAnalysis from "./pages/PredictionAnalysis";
+import Prediction from "./pages/Prediction";
+import Information from "./pages/Information";
 
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -5649,7 +5650,7 @@ export default function App() {
         ></Route>
         {/* the cars comparison page */}
         <Route
-          path="comparison/automobiles/*"
+          path="/comparison/automobiles/*"
           element={
             <Compare
               type={"Automobiles"}
@@ -5670,7 +5671,7 @@ export default function App() {
         ></Route>
         {/* the consoles comparison page */}
         <Route
-          path="comparison/consoles/*"
+          path="/comparison/consoles/*"
           element={
             <Compare
               type={"Consoles"}
@@ -5689,7 +5690,7 @@ export default function App() {
         ></Route>
         {/* the cpus comparison page */}
         <Route
-          path="comparison/cpus/*"
+          path="/comparison/cpus/*"
           element={
             <Compare
               type={"CPUs"}
@@ -5708,7 +5709,7 @@ export default function App() {
         ></Route>
         {/* the graphics cards comparison page */}
         <Route
-          path="comparison/graphicsCards/*"
+          path="/comparison/graphicsCards/*"
           element={
             <Compare
               type={"Graphics Cards"}
@@ -5729,7 +5730,7 @@ export default function App() {
         ></Route>
         {/* the drones comparison page */}
         <Route
-          path="comparison/drones/*"
+          path="/comparison/drones/*"
           element={
             <Compare
               type={"Drones"}
@@ -5748,44 +5749,202 @@ export default function App() {
         ></Route>
         {/* the automobiles prediction page */}
         <Route
-          path="prediction/automobiles/*"
+          path="/prediction/automobiles/*"
           element={
-            <PredictionAnalysis
+            <Prediction
               type={"Automobiles"}
               amplitude={amplitude}
               isMobile={isMobile}
               averagePrices={carsAveragePrices}
               brandValues={carsBrandValues}
               minimumPrice={7500}
-            ></PredictionAnalysis>
+            ></Prediction>
           }
         ></Route>
         {/* the graphics cards prediction page */}
         <Route
-          path="prediction/graphicsCards/*"
+          path="/prediction/graphicsCards/*"
           element={
-            <PredictionAnalysis
+            <Prediction
               type={"Graphics Cards"}
               amplitude={amplitude}
               isMobile={isMobile}
               averagePrices={null}
               brandValues={graphicsCardsBrandValues}
               minimumPrice={200}
-            ></PredictionAnalysis>
+            ></Prediction>
           }
         ></Route>
         {/* the cpus prediction page */}
         <Route
-          path="prediction/cpus/*"
+          path="/prediction/cpus/*"
           element={
-            <PredictionAnalysis
-              type={"Processors"}
+            <Prediction
+              type={"CPUs"}
               amplitude={amplitude}
               isMobile={isMobile}
               averagePrices={null}
               brandValues={processorsBrandValues}
               minimumPrice={150}
-            ></PredictionAnalysis>
+            ></Prediction>
+          }
+        ></Route>
+        {/* the about us page */}
+        <Route
+          path="/aboutus"
+          element={
+            <Information
+              amplitude={amplitude}
+              isMobile={isMobile}
+              title={"About Us"}
+              text={
+                /* prettier-ignore */
+                <div>
+
+<p className="InfoText">Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons!</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+<p className="InfoText">We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, gaming console, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence. </p>
+
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">What We Do:</p>
+
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+<p className="InfoText" style={{fontWeight: 'bold'}}>• Compare Products Side by Side: </p><p className="InfoText">Check out detailed comparisons of the latest and greatest cars, drones, consoles, GPUs, and CPUs. No more guessing games – see how your top picks stack up against each other in real-time.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText" style={{fontWeight: 'bold'}}>• Predict Future Prices: </p><p className="InfoText">Wondering how much that new tech or car will cost down the road? Our unique prediction feature lets you forecast prices all the way to 2055. Yep, you read that right. Get ahead of the game and plan your purchases like a pro.</p>
+
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">Why SpecGauge?</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+<p className="InfoText">We blend cutting-edge data analysis with a user-friendly interface to bring you accurate, reliable, and easy-to-understand insights. Our team is passionate about technology and cars, and we’re here to share that passion with you.</p>
+
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">Whether you're a tech geek, a car enthusiast, or just someone looking to get the best bang for your buck, SpecGauge is designed with you in mind. We're all about making complex information simple and accessible.</p>
+
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">So, dive in, explore, and let us help you find the perfect match for your needs. With SpecGauge, you're not just making a choice; you're making the right choice.</p>
+
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">Thanks for stopping by. Let's navigate the future together!</p>
+                </div>
+              }
+            ></Information>
+          }
+        ></Route>
+        {/* the terms of service page */}
+        <Route
+          path="/termsofservice"
+          element={
+            <Information
+              amplitude={amplitude}
+              isMobile={isMobile}
+              title={"Terms of Service"}
+              text={
+                /* prettier-ignore */
+                <div>
+<p className="InfoText">Welcome to SpecGauge! These Terms of Service ("Terms") outline the rules and regulations for using our website.</p>
+
+<p className="InfoText">By accessing this website, we assume you accept these Terms in full. Do not continue to use SpecGauge if you do not agree to all of the Terms stated on this page.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">1. Use of the Website</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText" style={{fontWeight: 'bold'}}>1.1. </p><p className="InfoText">You agree to use SpecGauge only for lawful purposes and in a way that does not infringe on the rights of others or restrict or inhibit anyone else’s use and enjoyment of the website.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText" style={{fontWeight: 'bold'}}>1.2. </p><p className="InfoText">We reserve the right to modify or discontinue, temporarily or permanently, the website (or any part of it) with or without notice.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">2. Predictions and Accuracy</p>
+
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText" style={{fontWeight: 'bold'}}>2.1. </p><p className="InfoText">SpecGauge provides future price predictions for products. These predictions are based on historical data and trends and are intended for informational purposes only. We do not guarantee the accuracy or reliability of these predictions.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">3. Intellectual Property</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+
+<p className="InfoText" style={{fontWeight: 'bold'}}>3.1. </p><p className="InfoText">The content on SpecGauge, including text, graphics, logos, images, and software, is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, modify, display, perform, or otherwise use any part of SpecGauge without our prior written consent.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">4. Privacy</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+<p className="InfoText" style={{fontWeight: 'bold'}}>4.1. </p><p className="InfoText">Your privacy is important to us. Please refer to our Privacy Policy to understand how we collect, use, and disclose information about you.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">5. Limitation of Liability</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+<p className="InfoText" style={{fontWeight: 'bold'}}>5.1. </p><p className="InfoText">To the extent permitted by law, SpecGauge and its affiliates shall not be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in any way connected with your use of this website.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">6. Governing Law</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+<p className="InfoText" style={{fontWeight: 'bold'}}>6.1. </p><p className="InfoText">These Terms shall be governed by and construed in accordance with the laws of Canada, without regard to its conflict of law provisions.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoSubtitle">7. Changes to the Terms</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+<p className="InfoText" style={{fontWeight: 'bold'}}>7.1. </p><p className="InfoText">We reserve the right to revise these Terms at any time without prior notice. By using SpecGauge after any such changes, you agree to be bound by the revised Terms.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">If you have any questions or concerns about these Terms of Service, please contact us at specgauge@gmail.com.</p>
+              </div>
+              }
+            ></Information>
+          }
+        ></Route>
+        {/* the privacy policy page */}
+        <Route
+          path="/privacypolicy"
+          element={
+            <Information
+              amplitude={amplitude}
+              isMobile={isMobile}
+              title={"Privacy Policy"}
+              text={
+                /* prettier-ignore */
+                <div>
+
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">We collect user activity data through Amplitude to understand how our app is used and improve it for you. This data helps us tweak features and make your experience better. The data is not linked to you or your email. We do not store any of your usage data on our servers. We don't sell this info to third parties — your privacy is our priority.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">When users visit our website, we utilize Google Ads to promote our services. Google Ads may place cookies on users' browsers and collect certain anonymous information for advertising purposes. This data helps us reach our audience effectively. Please note that Google Ads operates independently and has its own privacy policies regarding the data it collects.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">When users create accounts using their email and password, we collect and store this information securely. It's used solely for account management purposes, like resetting passwords or sending important updates related to their account.</p>
+<p className="InfoText">{"\n"}</p>
+<p className="InfoText">{"\n"}</p>
+
+<p className="InfoText">If you have any questions or concerns about our Privacy Policy, please contact us at specgauge@gmail.com.</p>
+
+                </div>
+              }
+            ></Information>
           }
         ></Route>
         {/* any other page, error 404 */}

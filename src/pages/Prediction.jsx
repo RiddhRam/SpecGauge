@@ -48,7 +48,7 @@ const years = [
 let startIndex = 24;
 let endIndex = 56;
 
-export default function PredictionAnalysis({
+export default function Prediction({
   type,
   amplitude,
   isMobile,
@@ -314,7 +314,7 @@ export default function PredictionAnalysis({
       {/* Main Body */}
       <div className="PredictionContainer">
         <p style={{ fontSize: 25 }} className="HeaderText">
-          {type} Prediction
+          {type} Price Prediction
         </p>
         {/* Top Buttons */}
         <div
@@ -458,7 +458,7 @@ export default function PredictionAnalysis({
                   setShowBrandModal(true);
                 }}
                 style={{ width: "90%", fontSize: 13 }}
-                className="NormalButton"
+                className="SelectABrandButton"
               >
                 <p>
                   {brand.length == 0
@@ -739,7 +739,7 @@ export default function PredictionAnalysis({
                   setShowBrandModal(true);
                 }}
                 style={{ width: "130%" }}
-                className="NormalButton"
+                className="SelectABrandButton"
               >
                 <p>
                   {brand.length == 0

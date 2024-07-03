@@ -240,7 +240,6 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
             gridTemplateColumns: `150px`,
             gridTemplateRows: `65px 65px`,
             rowGap: "6px",
-            columnGap: "10px",
           }}
         >
           {/* Neccessary to put these as grids */}

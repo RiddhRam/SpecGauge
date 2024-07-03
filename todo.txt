@@ -1,15 +1,12 @@
-Change Select a brand button colour
-
-Update footer to use grid
-
+5.3.0
 Update main page to use grid
 
 Add trending items to main page
 
-Add navigation to comparison and prediction screens in the nav bar
-
 Lazy imports
 
+
+6.0.0
 Compress json values
 
 Compress firestore data

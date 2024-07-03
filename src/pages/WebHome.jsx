@@ -22,7 +22,6 @@ const comparisonLinks = [
   "/comparison/automobiles",
   "/comparison/consoles",
   "/comparison/cpus",
-
   "/comparison/graphicsCards",
   "/comparison/drones",
 ];

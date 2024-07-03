@@ -12,13 +12,14 @@ body {
 /* For divs that take up the main part of the screen, the main content */
 .LargeContainer {
   display: flex;
-  background-color: #eee;
+  background-color: #fff;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   padding-bottom: 50px;
 }
 
+/* Container for the prediction screens, instead of using LargeContainer */
 .PredictionContainer {
   display: flex;
   flex-direction: column;
@@ -153,14 +154,17 @@ body {
   word-wrap: break-word;
 }
 
+/* Plain view that scrolls horizontally */
 .ScrollViewX {
   overflow-x: auto;
 }
 
+/* Plain view that scrolls vertically */
 .ScrollViewY {
   overflow-y: auto;
 }
 
+/* For the section on the account handler where all the input fields and buttons are */
 .WebAccountHandlerInputSection {
   width: 50vw;
   display: flex;
@@ -218,7 +222,7 @@ body {
   padding: 10px;
   text-align: center;
 }
-
+/* Buffer animation */
 .ActivityIndicator {
   margin: 0 auto;
   border: 8px solid #f3f3f3;
@@ -230,6 +234,7 @@ body {
   animation: spin 2s linear infinite;
 }
 
+/* Buffer animation */
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -272,6 +277,21 @@ body {
   background-color: #fff;
   flex-grow: 1;
   white-space: pre-wrap;
+}
+
+/* For paragraphs on the information screens */
+.InfoText {
+  color: #000;
+  font-size: 20;
+}
+
+/* For subtitles on the information screens */
+.InfoSubtitle {
+  color: #4ca0d7;
+  font-size: 27;
+  padding: 10;
+  padding-left: 0;
+  font-weight: bold;
 }
 
 /* for normal buttons */
@@ -344,6 +364,7 @@ body {
   }
 }
 
+/* For the buttons at the top of the compare screens */
 .CompareTopButton {
   background-color: #4ca0d7;
   color: #fff;
@@ -391,6 +412,7 @@ body {
   outline-style: none;
 }
 
+/* For the text input boxes on the prediction screens */
 .PredictionTextInput {
   border-color: "#4ca0d7";
   border-width: 2;
@@ -472,6 +494,72 @@ body {
   }
 }
 
+/* for the Select A Brand button on the prediction page*/
+.SelectABrandButton {
+  background-color: #f3c353;
+  color: #000;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  user-select: none;
+
+  &:hover {
+    background-color: #deb34c;
+  }
+
+  &:active {
+    background-color: #b18e3d;
+  }
+}
+
+/* DONT RENAME THE DROPDOWNS OR IT STOPS WORKING ??*/
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* DONT RENAME THE DROPDOWNS OR IT STOPS WORKING ??*/
+.dropdown-toggle {
+  background-color: #4ca0d7;
+  color: black;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* DONT RENAME THE DROPDOWNS OR IT STOPS WORKING ??*/
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* DONT RENAME THE DROPDOWNS OR IT STOPS WORKING ??*/
+.dropdown-menu li a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* DONT RENAME THE DROPDOWNS OR IT STOPS WORKING ??*/
+.dropdown-menu li a:hover {
+  background-color: #f1f1f1;
+}
+
 /* If dark mode */
 @media (prefers-color-scheme: dark) {
   /*For the web navbar*/
@@ -514,7 +602,7 @@ body {
   .UserAccountDetailsSection {
     background-color: #000;
   }
-
+  /* Displays specs for a category */
   .ComparisonRow {
     color: #fff;
   }
@@ -534,6 +622,10 @@ body {
   .ComparisonRowValue {
     color: #fff;
     background-color: #171827;
+  }
+  /* For paragraphs on the information screens */
+  .InfoText {
+    color: #fff;
   }
   /* For buttons that just look like text without hovering or clicking them */
   .NormalButtonNoBackground {
