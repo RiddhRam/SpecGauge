@@ -58,7 +58,11 @@ export const Navbar = ({ isMobile, page, amplitude }) => {
               <img
                 src={HomeIcon}
                 alt="Home Icon"
-                style={{ width: 22, height: 22 }}
+                style={
+                  isMobile
+                    ? { width: 20, height: 21 }
+                    : { width: 25, height: 26 }
+                }
               ></img>
 
               <p className="NavbarText">Home</p>
@@ -103,6 +107,7 @@ export const Navbar = ({ isMobile, page, amplitude }) => {
               }}
             >
               {auth.currentUser ? (
+                /* My Account */
                 <Link to="/account" className="NavbarText">
                   <div
                     style={{
@@ -114,12 +119,17 @@ export const Navbar = ({ isMobile, page, amplitude }) => {
                     <img
                       src={ProfileIcon}
                       alt="Profile Icon"
-                      style={{ width: 20, height: 20 }}
+                      style={
+                        isMobile
+                          ? { width: 20, height: 20 }
+                          : { width: 25, height: 25 }
+                      }
                     ></img>
                     <p className="NavbarText">My Account</p>
                   </div>
                 </Link>
               ) : (
+                /* Log In */
                 <Link to="/login" className="NavbarText">
                   <div
                     style={{
@@ -131,7 +141,11 @@ export const Navbar = ({ isMobile, page, amplitude }) => {
                     <img
                       src={ProfileIcon}
                       alt="Profile Icon"
-                      style={{ width: 20, height: 22 }}
+                      style={
+                        isMobile
+                          ? { width: 20, height: 20 }
+                          : { width: 25, height: 25 }
+                      }
                     ></img>
                     <p className="NavbarText">Log In</p>
                   </div>

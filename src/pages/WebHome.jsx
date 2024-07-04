@@ -35,58 +35,56 @@ const predictionLinks = [
   "/prediction/cpus",
 ];
 
-const currentDomain = window.location.origin;
-
 // The trending comparisons to display
 const trendingComparisons = [
   {
     Category: "Automobiles",
     Product1: "2018 Mercedes-Benz AMG C63S V8 (510 Hp)",
     Product2: "2018 BMW M3 Competition (450 Hp)",
-    Path: `${currentDomain}/comparison/automobiles/Mercedes-Benz%3BC-class%3B2018%3BAMG%20C%2063%20S%20V8%20(510%20Hp)%20SPEEDSHIFT%20MCT%20Station%20wagon%20(estate)%7Cvs%7CBMW%3BM3%3B2018%3BCompetition%203.0%20(450%20Hp)%20Sedan`,
+    Path: `/comparison/automobiles/Mercedes-Benz%3BC-class%3B2018%3BAMG%20C%2063%20S%20V8%20(510%20Hp)%20SPEEDSHIFT%20MCT%20Station%20wagon%20(estate)%7Cvs%7CBMW%3BM3%3B2018%3BCompetition%203.0%20(450%20Hp)%20Sedan`,
   },
   {
     Category: "Consoles",
     Product1: "Sony PlayStation 5 Slim",
     Product2: "Microsoft Xbox Series S",
-    Path: `${currentDomain}/comparison/consoles/Sony%3BPlayStation%205%20Slim%7Cvs%7CMicrosoft%3BXbox%20Series%20S`,
+    Path: `/comparison/consoles/Sony%3BPlayStation%205%20Slim%7Cvs%7CMicrosoft%3BXbox%20Series%20S`,
   },
   {
     Category: "CPUs",
     Product1: "AMD Ryzen 9 7900X",
     Product2: "Intel Core i9-14900K",
-    Path: `${currentDomain}/comparison/cpus/AMD%3BRyzen%209%3BRyzen%209%207900X%7Cvs%7CIntel%3BCore%20i9%3BCore%20i9-14900K`,
+    Path: `/comparison/cpus/AMD%3BRyzen%209%3BRyzen%209%207900X%7Cvs%7CIntel%3BCore%20i9%3BCore%20i9-14900K`,
   },
   {
     Category: "Graphics Cards",
     Product1: "NVIDIA GeForce RTX 4090",
     Product2: "AMD Radeon RX 7990 XTX",
-    Path: `${currentDomain}/comparison/graphicsCards/NVIDIA%3BGeForce%2040%3BGeForce%20RTX%204090%7Cvs%7CAMD%3BNavi%20III%3BRadeon%20RX%207990%20XTX`,
+    Path: `/comparison/graphicsCards/NVIDIA%3BGeForce%2040%3BGeForce%20RTX%204090%7Cvs%7CAMD%3BNavi%20III%3BRadeon%20RX%207990%20XTX`,
   },
   {
     Category: "Drones",
     Product1: "DJI Mini 4 Pro",
     Product2: "Autel Evo II",
-    Path: `${currentDomain}/comparison/drones/DJI%3BMini%204%20Pro%7Cvs%7CAutel%3BEvo%20II`,
+    Path: `/comparison/drones/DJI%3BMini%204%20Pro%7Cvs%7CAutel%3BEvo%20II`,
   },
   {},
   {
     Category: "Automobiles",
     Product1: "2020 Toyota Corolla Hybrid (122 Hp)",
     Product2: "2020 Honda Civic (205 Hp)",
-    Path: `${currentDomain}/comparison/automobiles/Toyota%3BCorolla%3B2020%3B1.8i%20(122%20Hp)%20Hybrid%20e-CVT%20Sedan%7Cvs%7CHonda%3BCivic%3B2020%3BSi%201.5T%20(205%20Hp)%20Sedan`,
+    Path: `/comparison/automobiles/Toyota%3BCorolla%3B2020%3B1.8i%20(122%20Hp)%20Hybrid%20e-CVT%20Sedan%7Cvs%7CHonda%3BCivic%3B2020%3BSi%201.5T%20(205%20Hp)%20Sedan`,
   },
   {
     Category: "CPUs",
     Product1: "AMD Ryzen 5 7600X",
     Product2: "Intel Core i5-14600K",
-    Path: `${currentDomain}/comparison/cpus/AMD%3BRyzen%205%3BRyzen%205%207600X%7Cvs%7CIntel%3BCore%20i5%3BCore%20i5-14600K`,
+    Path: `/comparison/cpus/AMD%3BRyzen%205%3BRyzen%205%207600X%7Cvs%7CIntel%3BCore%20i5%3BCore%20i5-14600K`,
   },
   {
     Category: "Graphics Cards",
     Product1: "NVIDIA GeForce RTX 3060 12GB",
     Product2: "Intel Arc A770 16GB",
-    Path: `${currentDomain}/comparison/graphicsCards/NVIDIA%3BGeForce%2030%3BGeForce%20RTX%203060%2012%20GB%20GA104%7Cvs%7CIntel%3BAlchemist%3BArc%20A770`,
+    Path: `/comparison/graphicsCards/NVIDIA%3BGeForce%2030%3BGeForce%20RTX%203060%2012%20GB%20GA104%7Cvs%7CIntel%3BAlchemist%3BArc%20A770`,
   },
 ];
 
@@ -97,31 +95,31 @@ const mobileTrendingComparisons = [
     Category: "Automobiles",
     Product1: "2018 Mercedes-Benz AMG C63S V8 (510 Hp)",
     Product2: "2018 BMW M3 Competition (450 Hp)",
-    Path: `${currentDomain}/comparison/automobiles/Mercedes-Benz%3BC-class%3B2018%3BAMG%20C%2063%20S%20V8%20(510%20Hp)%20SPEEDSHIFT%20MCT%20Station%20wagon%20(estate)%7Cvs%7CBMW%3BM3%3B2018%3BCompetition%203.0%20(450%20Hp)%20Sedan`,
+    Path: `/comparison/automobiles/Mercedes-Benz%3BC-class%3B2018%3BAMG%20C%2063%20S%20V8%20(510%20Hp)%20SPEEDSHIFT%20MCT%20Station%20wagon%20(estate)%7Cvs%7CBMW%3BM3%3B2018%3BCompetition%203.0%20(450%20Hp)%20Sedan`,
   },
   {
     Category: "Consoles",
     Product1: "Sony PlayStation 5 Slim",
     Product2: "Microsoft Xbox Series S",
-    Path: `${currentDomain}/comparison/consoles/Sony%3BPlayStation%205%20Slim%7Cvs%7CMicrosoft%3BXbox%20Series%20S`,
+    Path: `/comparison/consoles/Sony%3BPlayStation%205%20Slim%7Cvs%7CMicrosoft%3BXbox%20Series%20S`,
   },
   {
     Category: "CPUs",
     Product1: "AMD Ryzen 9 7900X",
     Product2: "Intel Core i9-14900K",
-    Path: `${currentDomain}/comparison/cpus/AMD%3BRyzen%209%3BRyzen%209%207900X%7Cvs%7CIntel%3BCore%20i9%3BCore%20i9-14900K`,
+    Path: `/comparison/cpus/AMD%3BRyzen%209%3BRyzen%209%207900X%7Cvs%7CIntel%3BCore%20i9%3BCore%20i9-14900K`,
   },
   {
     Category: "Graphics Cards",
     Product1: "NVIDIA GeForce RTX 4090",
     Product2: "AMD Radeon RX 7990 XTX",
-    Path: `${currentDomain}/comparison/graphicsCards/NVIDIA%3BGeForce%2040%3BGeForce%20RTX%204090%7Cvs%7CAMD%3BNavi%20III%3BRadeon%20RX%207990%20XTX`,
+    Path: `/comparison/graphicsCards/NVIDIA%3BGeForce%2040%3BGeForce%20RTX%204090%7Cvs%7CAMD%3BNavi%20III%3BRadeon%20RX%207990%20XTX`,
   },
   {
     Category: "Drones",
     Product1: "DJI Mini 4 Pro",
     Product2: "Autel Evo II",
-    Path: `${currentDomain}/comparison/drones/DJI%3BMini%204%20Pro%7Cvs%7CAutel%3BEvo%20II`,
+    Path: `/comparison/drones/DJI%3BMini%204%20Pro%7Cvs%7CAutel%3BEvo%20II`,
   },
 ];
 
@@ -165,6 +163,7 @@ export default function WebHome({ amplitude, isMobile }) {
           Compare Today. Predict Tomorrow.
         </h1>
 
+        {/* Trending Comparisons */}
         <>
           <h3 className="SimpleText">Trending Comparisons</h3>
           {isMobile ? (
@@ -226,6 +225,14 @@ export default function WebHome({ amplitude, isMobile }) {
                           to={comparisonItem.Path}
                           className="TrendingComparisonButton"
                           style={{ fontSize: "10px" }}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            amplitude.track("Trending Comparison", {
+                              // Screen type
+                              Category: comparisonItem.Category,
+                            });
+                            navigate(comparisonItem.Path);
+                          }}
                         >
                           Compare
                         </Link>
@@ -290,6 +297,14 @@ export default function WebHome({ amplitude, isMobile }) {
                           to={comparisonItem.Path}
                           className="TrendingComparisonButton"
                           style={{ fontSize: "10px" }}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            amplitude.track("Trending Comparison", {
+                              // Screen type
+                              Category: comparisonItem.Category,
+                            });
+                            navigate(comparisonItem.Path);
+                          }}
                         >
                           Compare
                         </Link>
@@ -353,6 +368,14 @@ export default function WebHome({ amplitude, isMobile }) {
                       to={comparisonItem.Path}
                       className="TrendingComparisonButton"
                       style={{ fontSize: "13px" }}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        amplitude.track("Trending Comparison", {
+                          // Screen type
+                          Category: comparisonItem.Category,
+                        });
+                        navigate(comparisonItem.Path);
+                      }}
                     >
                       Compare
                     </Link>

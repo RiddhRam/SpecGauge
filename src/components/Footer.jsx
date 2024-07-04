@@ -4,7 +4,6 @@ import XLogo from "../assets/x icon.webp";
 import { Link } from "react-router-dom";
 
 export const Footer = ({ isMobile }) => {
-  const currentDomain = window.location.origin;
   return (
     <div
       className="ReverseBackground"
