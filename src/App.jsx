@@ -5613,6 +5613,10 @@ export default function App() {
     };
   });
 
+  useEffect(() => {
+    console.log("App initialized");
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

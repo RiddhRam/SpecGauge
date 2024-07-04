@@ -6,7 +6,7 @@ import { DropdownMenu } from "./DropdownMenu";
 
 import { getAuth } from "firebase/auth";
 
-export const Navbar = ({ page, amplitude }) => {
+export const Navbar = ({ isMobile, page, amplitude }) => {
   const auth = getAuth();
 
   return (
@@ -25,12 +25,14 @@ export const Navbar = ({ page, amplitude }) => {
         <img
           src={SpecGaugeLogo}
           alt="SpecGauge Logo"
-          style={{ width: 35, height: 35 }}
+          style={
+            isMobile ? { width: 25, height: 25 } : { width: 35, height: 35 }
+          }
         ></img>
         <p
           style={{
             color: "#4ca0d7",
-            fontSize: 40,
+            fontSize: isMobile ? 20 : 40,
             padding: 10,
             textAlign: "center",
             fontWeight: "bold",

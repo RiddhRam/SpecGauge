@@ -310,7 +310,11 @@ export default function Prediction({
 
   return (
     <>
-      <Navbar page="prediction" amplitude={amplitude}></Navbar>
+      <Navbar
+        isMobile={isMobile}
+        page="prediction"
+        amplitude={amplitude}
+      ></Navbar>
       {/* Main Body */}
       <div className="PredictionContainer">
         <p style={{ fontSize: 25 }} className="HeaderText">

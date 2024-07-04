@@ -1,6 +1,7 @@
 import InstagramLogo from "../assets/instagram icon.webp";
 import TikTokLogo from "../assets/tiktok icon.webp";
 import XLogo from "../assets/x icon.webp";
+import { Link } from "react-router-dom";
 
 export const Footer = ({ isMobile }) => {
   const currentDomain = window.location.origin;
@@ -38,9 +39,8 @@ export const Footer = ({ isMobile }) => {
         </h3>
 
         {/* Instagram */}
-        <a
-          href={`https://www.instagram.com/specgauge`}
-          target="_blank"
+        <Link
+          to="https://www.instagram.com/specgauge"
           className="LinkWithImage"
         >
           <img
@@ -51,12 +51,12 @@ export const Footer = ({ isMobile }) => {
           <p className="ReversePlainText" style={{ fontSize: 12 }}>
             SpecGauge
           </p>
-        </a>
+        </Link>
 
         {/* TikTok */}
-        <a
-          href={`https://www.tiktok.com/@specgauge_official`}
-          target="_blank"
+
+        <Link
+          to="https://www.tiktok.com/@specgauge_official"
           className="LinkWithImage"
         >
           <img
@@ -67,19 +67,15 @@ export const Footer = ({ isMobile }) => {
           <p className="ReversePlainText" style={{ fontSize: 12 }}>
             SpecGauge_Official
           </p>
-        </a>
+        </Link>
 
         {/* X */}
-        <a
-          href={`https://twitter.com/SpecGauge`}
-          target="_blank"
-          className="LinkWithImage"
-        >
+        <Link to="https://twitter.com/SpecGauge" className="LinkWithImage">
           <img src={XLogo} alt="X Logo" style={{ width: 35, height: 35 }}></img>
           <p className="ReversePlainText" style={{ fontSize: 12 }}>
             SpecGauge
           </p>
-        </a>
+        </Link>
 
         {/* Information */}
         <h3
@@ -93,9 +89,8 @@ export const Footer = ({ isMobile }) => {
         </h3>
 
         {/* About us */}
-        <a
-          href={`${currentDomain}/aboutus`}
-          target="_self"
+        <Link
+          to="/aboutus"
           style={{
             marginLeft: 10,
           }}
@@ -103,12 +98,11 @@ export const Footer = ({ isMobile }) => {
           <p className="ReversePlainText" style={{ fontSize: 14 }}>
             About Us
           </p>
-        </a>
+        </Link>
 
         {/* Terms of Service */}
-        <a
-          href={`${currentDomain}/termsofservice`}
-          target="_self"
+        <Link
+          to="/termsofservice"
           style={{
             marginLeft: 10,
           }}
@@ -116,12 +110,11 @@ export const Footer = ({ isMobile }) => {
           <p className="ReversePlainText" style={{ fontSize: 14 }}>
             Terms of Service
           </p>
-        </a>
+        </Link>
 
         {/* Privacy Policy */}
-        <a
-          href={`${currentDomain}/privacypolicy`}
-          target="_self"
+        <Link
+          to="/privacypolicy"
           style={{
             marginLeft: 10,
           }}
@@ -129,7 +122,7 @@ export const Footer = ({ isMobile }) => {
           <p className="ReversePlainText" style={{ fontSize: 14 }}>
             Privacy Policy
           </p>
-        </a>
+        </Link>
 
         {/* Column 2*/}
 

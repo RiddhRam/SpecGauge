@@ -226,7 +226,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
     /* if logged in display user settings */
     <>
       {/* navbar */}
-      <Navbar page={"account"} amplitude={amplitude} />
+      <Navbar isMobile={isMobile} page={"account"} amplitude={amplitude} />
       {/* main body */}
       <div
         className={isMobile ? "UserAccountScreenMobile" : "UserAccountScreen"}

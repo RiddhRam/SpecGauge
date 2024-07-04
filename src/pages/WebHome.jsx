@@ -148,7 +148,7 @@ export default function WebHome({ amplitude, isMobile }) {
   return (
     <>
       {/* Navbar */}
-      <Navbar page={"home"} amplitude={amplitude} />
+      <Navbar isMobile={isMobile} page={"home"} amplitude={amplitude} />
 
       {/* Main div */}
       <div className="LargeContainer">
@@ -157,7 +157,7 @@ export default function WebHome({ amplitude, isMobile }) {
         <h1
           className="SimpleText"
           style={{
-            fontSize: isMobile ? 20 : 30,
+            fontSize: isMobile ? 25 : 35,
             marginTop: 50,
             marginBottom: 30,
           }}
@@ -166,6 +166,7 @@ export default function WebHome({ amplitude, isMobile }) {
         </h1>
 
         <>
+          <h3 className="SimpleText">Trending Comparisons</h3>
           {isMobile ? (
             <>
               <div
@@ -371,6 +372,7 @@ export default function WebHome({ amplitude, isMobile }) {
             flexDirection: "column",
             textAlign: "center",
             justifyContent: "center",
+            marginTop: 50,
           }}
         >
           {/* Compare */}
@@ -390,7 +392,9 @@ export default function WebHome({ amplitude, isMobile }) {
 
           {/* Prediction */}
           <>
-            <p className="PlainText">Predict future prices of products</p>
+            <p className="PlainText" style={{ marginTop: 50 }}>
+              Predict future prices of products
+            </p>
             <button
               className="NormalButton"
               onClick={() => {
@@ -459,7 +463,10 @@ export default function WebHome({ amplitude, isMobile }) {
               className="NormalButtonNoBackground"
               key={item}
               onClick={() => {
-                amplitude.track("Modal Button", { type: "Comparison" });
+                amplitude.track("Modal Button", {
+                  type: "Comparison",
+                  Category: item,
+                });
                 navigate(`${comparisonLinks[index]}`);
 
                 setCompareModalVisible(false);

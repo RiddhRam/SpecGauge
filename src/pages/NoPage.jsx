@@ -18,7 +18,7 @@ export default function NoPage({ isMobile, amplitude }) {
 
   return (
     <>
-      <Navbar page="nopage" amplitude={amplitude}></Navbar>
+      <Navbar isMobile={isMobile} page="nopage" amplitude={amplitude}></Navbar>
       <div className="LargeContainer">
         {/* title and logo */}
         <div

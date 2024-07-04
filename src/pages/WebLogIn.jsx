@@ -34,7 +34,7 @@ export default function WebLogIn({ amplitude, isMobile }) {
   return (
     <>
       {/* navbar */}
-      <Navbar page={"login"} amplitude={amplitude} />
+      <Navbar isMobile={isMobile} page={"login"} amplitude={amplitude} />
 
       {/* main body */}
       <div className="LargeContainer">

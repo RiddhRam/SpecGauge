@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export const DropdownMenu = ({ label, menuItems }) => {
+export const DropdownMenu = ({ label, menuItems, amplitude }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <div
@@ -17,8 +19,15 @@ export const DropdownMenu = ({ label, menuItems }) => {
             <li key={index}>
               <Link
                 to={item.path}
-                onClick={() => {
-                  amplitude.track("Navigation Button", { type: label });
+                onClick={(event) => {
+                  event.preventDefault();
+                  amplitude.track("Navigation Button", {
+                    // Screen type
+                    Type: label,
+                    // Category type
+                    Category: item.label,
+                  });
+                  navigate(item.path);
                 }}
               >
                 {item.label}

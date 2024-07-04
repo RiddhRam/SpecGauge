@@ -382,7 +382,7 @@ export default function Compare({
 
   return (
     <>
-      <Navbar page="compare" amplitude={amplitude}></Navbar>
+      <Navbar isMobile={isMobile} page="compare" amplitude={amplitude}></Navbar>
       {/* Main Body */}
       <div className="LargeContainer">
         <p style={{ fontSize: 25 }} className="HeaderText">
