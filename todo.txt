@@ -2,13 +2,14 @@
 Add search option when searching brands
 if a string is not a substring of a brand, don't display it with a ternary operator
 
-Let users request a product or category
-Let users suggest fixes to the website or database
-
 Add description for information pages
 
 5.5.0
-Amplitude Session Replay
+Let users request a product or category
+Let users suggest fixes to the website or database
+
+5.6.0
+Switch to firebase analytics
 
 6.0.0
 Compress json values

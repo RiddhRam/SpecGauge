@@ -5395,7 +5395,7 @@ const carsBrandValues = [
   { label: "Subaru", value: reliable },
   { label: "Suzuki", value: normal },
   { label: "Tata", value: normal },
-  { label: "Tesla", value: expensiveSport },
+  { label: "Tesla", value: reputable },
   { label: "Toyota", value: reliable },
   { label: "VinFast", value: fast },
   { label: "Volkswagen", value: normal },
