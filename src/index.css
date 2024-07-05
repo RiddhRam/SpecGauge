@@ -224,8 +224,9 @@ a {
 
 /* When displaying success messages */
 .SuccessText {
-  color: #00dd00;
+  color: rgb(60, 173, 25);
   font-size: 15;
+  font-weight: 600;
   padding: 10px;
   text-align: center;
 }
@@ -307,6 +308,8 @@ a {
   background-color: #4ca0d7;
   color: #fff;
   font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -315,6 +318,9 @@ a {
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: #3579a8;
@@ -330,6 +336,7 @@ a {
   background-color: #d6491a;
   color: #fff;
   font-size: 16px;
+  font-weight: 600;
   padding: 10px 20px;
   margin: 10px 0;
   border: none;
@@ -377,6 +384,7 @@ a {
   background-color: #4ca0d7;
   color: #fff;
   font-size: 16px;
+  font-weight: 600;
   padding: 10px 15px;
   margin: 0 5px; /* centers the buttons */
   border: none;
@@ -435,32 +443,36 @@ a {
 }
 
 /* The button that takes the user to the trending comparison page */
+/* #39ff14 */
 .TrendingComparisonButton {
-  background-color: #39ff14;
-  border-style: none;
-  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20px;
-  margin-left: 20px;
+  background-color: #2ea44f;
+  border-radius: 6px;
+  color: #fff;
   cursor: pointer;
+  font-family: system-ui, "Segoe UI", Helvetica, Arial, sans-serif,
+    "Segoe UI Emoji";
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  font-weight: 600;
+  line-height: 20px;
+  text-decoration: none;
+  user-select: none;
+  white-space: nowrap;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  text-decoration: none;
-  text-decoration: none;
-  color: #000;
+  margin: 0 10px;
 
   &:visited {
-    color: #000;
+    color: #fff;
   }
 
   &:hover {
-    background-color: #38e21a;
+    background-color: #24813e;
   }
 
   &:active {
-    background-color: #2aa814;
-    color: #000;
+    background-color: #1f6c35;
   }
 }
 
@@ -469,6 +481,7 @@ a {
   background-color: #fff;
   color: #000;
   font-size: 16px;
+  font-weight: 600;
   margin-top: 10px;
   padding: 0 5px;
   border: none;
@@ -478,7 +491,8 @@ a {
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   user-select: none;
-  text-align: center;
+  display: flex;
+  justify-content: center;
   align-items: center;
 
   &:hover {
@@ -496,6 +510,7 @@ a {
   background-color: #c6c6c6;
   color: #000;
   font-size: 16px;
+  font-weight: 600;
   margin-top: 10px;
   padding: 10px 10px;
   border: none;
@@ -505,7 +520,9 @@ a {
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   user-select: none;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* For danger buttons that just look like text without hovering or clicking them */
@@ -537,6 +554,7 @@ a {
   background-color: #f3c353;
   color: #000;
   font-size: 16px;
+  font-weight: 600;
   padding: 0 20px;
   border: none;
   border-radius: 5px;
@@ -567,9 +585,10 @@ a {
 /* DONT RENAME THE DROPDOWNS OR IT STOPS WORKING ??*/
 .dropdown-toggle {
   background-color: #4ca0d7;
-  color: black;
+  color: white;
   padding: 10px;
   font-size: 16px;
+  letter-spacing: 0.5px;
   border: none;
   cursor: pointer;
 }

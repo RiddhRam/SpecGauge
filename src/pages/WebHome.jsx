@@ -115,12 +115,6 @@ const mobileTrendingComparisons = [
     Product2: "AMD Radeon RX 7990 XTX",
     Path: `/comparison/graphicsCards/NVIDIA%3BGeForce%2040%3BGeForce%20RTX%204090%7Cvs%7CAMD%3BNavi%20III%3BRadeon%20RX%207990%20XTX`,
   },
-  {
-    Category: "Drones",
-    Product1: "DJI Mini 4 Pro",
-    Product2: "Autel Evo II",
-    Path: `/comparison/drones/DJI%3BMini%204%20Pro%7Cvs%7CAutel%3BEvo%20II`,
-  },
 ];
 
 export default function WebHome({ amplitude, isMobile }) {
@@ -171,145 +165,74 @@ export default function WebHome({ amplitude, isMobile }) {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: `repeat(3, 1fr)`,
-                  gridTemplateRows: `205px`,
-                  columnGap: "20px",
-                  marginBottom: "10px",
-                }}
-              >
-                {/* First 3 items on first row */}
-                {mobileTrendingComparisons.map(
-                  (comparisonItem, comparisonIndex) =>
-                    comparisonIndex != 3 &&
-                    comparisonIndex != 4 && (
-                      <div
-                        className="TrendingComparison"
-                        style={{
-                          borderStyle: "none",
-                          borderRadius: "10px",
-                          display: "grid",
-                          gridTemplateColumns: "120px",
-                          gridTemplateRows: "30px 40px 30px 50px 30px",
-                        }}
-                        key={comparisonIndex}
-                      >
-                        <p
-                          style={{
-                            color: "#4ca0d7",
-                            textAlign: "center",
-                            fontSize: "13px",
-                          }}
-                        >
-                          {comparisonItem.Category}
-                        </p>
-                        <p
-                          className="TrendingComparisonText"
-                          style={{ fontSize: "11px" }}
-                        >
-                          {comparisonItem.Product1}
-                        </p>
-                        <p
-                          className="TrendingComparisonText"
-                          style={{ fontSize: "10px" }}
-                        >
-                          VS
-                        </p>
-                        <p
-                          className="TrendingComparisonText"
-                          style={{ fontSize: "11px" }}
-                        >
-                          {comparisonItem.Product2}
-                        </p>
-
-                        <Link
-                          to={comparisonItem.Path}
-                          className="TrendingComparisonButton"
-                          style={{ fontSize: "10px" }}
-                          onClick={(event) => {
-                            event.preventDefault();
-                            amplitude.track("Trending Comparison", {
-                              // Screen type
-                              Category: comparisonItem.Category,
-                            });
-                            navigate(comparisonItem.Path);
-                          }}
-                        >
-                          Compare
-                        </Link>
-                      </div>
-                    )
-                )}
-              </div>
-              <div
-                style={{
-                  display: "grid",
                   gridTemplateColumns: `repeat(2, 1fr)`,
-                  gridTemplateRows: `205px`,
-                  columnGap: "20px",
+                  gridTemplateRows: `205px 205px`,
+                  columnGap: "10px",
+                  rowGap: "10px",
+                  margin: "10px 50px",
                 }}
               >
                 {/* First 3 items on first row */}
                 {mobileTrendingComparisons.map(
-                  (comparisonItem, comparisonIndex) =>
-                    comparisonIndex != 0 &&
-                    comparisonIndex != 1 &&
-                    comparisonIndex != 2 && (
-                      <div
-                        className="TrendingComparison"
+                  (comparisonItem, comparisonIndex) => (
+                    <div
+                      className="TrendingComparison"
+                      style={{
+                        borderStyle: "none",
+                        borderRadius: "10px",
+                        display: "grid",
+                        gridTemplateColumns: "1fr",
+                        gridTemplateRows: "30px 40px 30px 50px 30px",
+                        padding: "0 2px",
+                        minWidth: "134px",
+                      }}
+                      key={comparisonIndex}
+                    >
+                      <p
                         style={{
-                          borderStyle: "none",
-                          borderRadius: "10px",
-                          display: "grid",
-                          gridTemplateColumns: "120px",
-                          gridTemplateRows: "30px 40px 30px 50px 30px",
+                          color: "#4ca0d7",
+                          textAlign: "center",
+                          fontSize: "15px",
                         }}
-                        key={comparisonIndex}
                       >
-                        <p
-                          style={{
-                            color: "#4ca0d7",
-                            textAlign: "center",
-                            fontSize: "13px",
-                          }}
-                        >
-                          {comparisonItem.Category}
-                        </p>
-                        <p
-                          className="TrendingComparisonText"
-                          style={{ fontSize: "11px" }}
-                        >
-                          {comparisonItem.Product1}
-                        </p>
-                        <p
-                          className="TrendingComparisonText"
-                          style={{ fontSize: "10px" }}
-                        >
-                          VS
-                        </p>
-                        <p
-                          className="TrendingComparisonText"
-                          style={{ fontSize: "11px" }}
-                        >
-                          {comparisonItem.Product2}
-                        </p>
+                        {comparisonItem.Category}
+                      </p>
+                      <p
+                        className="TrendingComparisonText"
+                        style={{ fontSize: "12px" }}
+                      >
+                        {comparisonItem.Product1}
+                      </p>
+                      <p
+                        className="TrendingComparisonText"
+                        style={{ fontSize: "11px" }}
+                      >
+                        VS
+                      </p>
+                      <p
+                        className="TrendingComparisonText"
+                        style={{ fontSize: "12px" }}
+                      >
+                        {comparisonItem.Product2}
+                      </p>
 
-                        <Link
-                          to={comparisonItem.Path}
-                          className="TrendingComparisonButton"
-                          style={{ fontSize: "10px" }}
-                          onClick={(event) => {
-                            event.preventDefault();
-                            amplitude.track("Trending Comparison", {
-                              // Screen type
-                              Category: comparisonItem.Category,
-                            });
-                            navigate(comparisonItem.Path);
-                          }}
-                        >
-                          Compare
-                        </Link>
-                      </div>
-                    )
+                      <Link
+                        to={comparisonItem.Path}
+                        className="TrendingComparisonButton"
+                        style={{ fontSize: "12px" }}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          amplitude.track("Trending Comparison", {
+                            // Screen type
+                            Category: comparisonItem.Category,
+                          });
+                          navigate(comparisonItem.Path);
+                        }}
+                      >
+                        Compare
+                      </Link>
+                    </div>
+                  )
                 )}
               </div>
             </>
@@ -319,8 +242,9 @@ export default function WebHome({ amplitude, isMobile }) {
                 display: "grid",
                 gridTemplateColumns: `repeat(5, 1fr)`,
                 gridTemplateRows: `205px 205px`,
-                columnGap: "20px",
+                columnGap: "7px",
                 rowGap: "10px",
+                margin: "0 100px",
               }}
             >
               {trendingComparisons.map((comparisonItem, comparisonIndex) =>
@@ -331,8 +255,9 @@ export default function WebHome({ amplitude, isMobile }) {
                       borderStyle: "none",
                       borderRadius: "10px",
                       display: "grid",
-                      gridTemplateColumns: "155px",
+                      gridTemplateColumns: "1fr",
                       gridTemplateRows: "30px 40px 30px 60px 30px",
+                      minWidth: "145px",
                     }}
                     key={comparisonIndex}
                   >

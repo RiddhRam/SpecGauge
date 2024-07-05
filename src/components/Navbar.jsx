@@ -26,13 +26,13 @@ export const Navbar = ({ isMobile, page, amplitude }) => {
           src={SpecGaugeLogo}
           alt="SpecGauge Logo"
           style={
-            isMobile ? { width: 25, height: 25 } : { width: 35, height: 35 }
+            isMobile ? { width: 25, height: 25 } : { width: 30, height: 30 }
           }
         ></img>
         <p
           style={{
             color: "#4ca0d7",
-            fontSize: isMobile ? 20 : 40,
+            fontSize: isMobile ? 20 : 30,
             padding: 10,
             textAlign: "center",
             fontWeight: "bold",

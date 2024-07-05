@@ -337,7 +337,7 @@ export default function Prediction({
               navigate("/home");
             }}
             className="NormalButton"
-            style={{ height: "47px", padding: "0 5px", paddingBottom: "5px" }}
+            style={{ height: "47px" }}
           >
             <p>{"< Go Back"}</p>
           </button>
@@ -461,7 +461,7 @@ export default function Prediction({
                 onClick={() => {
                   setShowBrandModal(true);
                 }}
-                style={{ width: "90%", fontSize: 13 }}
+                style={{ width: "90%" }}
                 className="SelectABrandButton"
               >
                 <p>
@@ -489,7 +489,7 @@ export default function Prediction({
                   }
                 }}
                 className="NormalButton"
-                style={{ width: "90%", fontSize: 13 }}
+                style={{ width: "90%" }}
               >
                 <p>Add</p>
               </button>
@@ -500,7 +500,7 @@ export default function Prediction({
                   setShowEditModal(true);
                 }}
                 className="NormalButton"
-                style={{ width: "90%", fontSize: 13 }}
+                style={{ width: "90%" }}
               >
                 <p>Edit</p>
               </button>
@@ -551,7 +551,6 @@ export default function Prediction({
                     width: "90%",
                     display: "flex",
                     alignItems: "center",
-                    fontSize: 13,
                     justifyContent: "center",
                   }}
                   className="NormalButton"
@@ -610,7 +609,7 @@ export default function Prediction({
                   link.click();
                   document.body.removeChild(link);
                 }}
-                style={{ marginLeft: 0, width: "90%", fontSize: 13 }}
+                style={{ marginLeft: 0, width: "90%" }}
                 className="NormalButton"
               >
                 <p>Export CSV</p>
@@ -959,7 +958,7 @@ export default function Prediction({
             // Hide the modal
             setShowBrandModal(false);
           }}
-          className="NormalButton"
+          className="DangerButton"
         >
           <p>Cancel</p>
         </button>
@@ -1055,7 +1054,7 @@ export default function Prediction({
             // Hide the modal
             setShowEditModal(false);
           }}
-          className="NormalButton"
+          className="DangerButton"
         >
           <p>Close</p>
         </button>
