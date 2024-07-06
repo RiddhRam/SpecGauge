@@ -5326,7 +5326,7 @@ const carsBrandValues = [
   { label: "Aston Martin", value: expensiveSport },
   { label: "Audi", value: reputable },
   { label: "Bentley", value: expensiveSport },
-  { label: "BMW", value: expensiveSport },
+  { label: "BMW", value: reputable },
   { label: "Bugatti", value: superCar },
   { label: "Buick", value: normal },
   { label: "BYD", value: normal },

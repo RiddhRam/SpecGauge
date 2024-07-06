@@ -211,6 +211,8 @@ export default function Prediction({
     // This is used for the seed
     let lastPrice = price;
 
+    let originalPrice = null;
+
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
       // If vehicle wasn't manufactured yet, then don't display price for that year
@@ -218,17 +220,36 @@ export default function Prediction({
         prices.push(null);
       } // For each year it was released, calculate the price for that year
       else {
+        // Get the rng value
         const seed = `${price}${brand}${year}${lastPrice}`;
         const rng = seedrandom(seed);
-        const newCalculatedPrice =
+        // Get the new price
+        let newCalculatedPrice =
           price * Math.E ** ((rate + rng() * 0.02) * (i - year));
-        let newRandomPrice = rng() * 0.1 * lastPrice + newCalculatedPrice;
-        if (newRandomPrice > lastPrice) {
-          newRandomPrice =
-            newRandomPrice - newCalculatedPrice - newCalculatedPrice * -1;
+
+        // Difference between price of last iteration and this one
+        let difference = newCalculatedPrice - lastPrice;
+
+        if (i == year) {
+          originalPrice = newCalculatedPrice;
+        } else {
+          // If difference between new and last price is greater than an 8% of the original price
+          if (difference > originalPrice * 0.08) {
+            // Reduce difference to 10%
+            difference = difference * 0.1;
+          }
+          // If new price is a decrease from last price
+          else if (difference < 0) {
+            // If the absolute value of the decrease is more than double of 8% of the original price
+            if (difference * -1 > 2 * originalPrice * 0.08) {
+              // Cut the difference in half
+              difference = difference * 0.5;
+            }
+          }
         }
-        prices.push(newRandomPrice);
-        lastPrice = newRandomPrice;
+
+        prices.push(lastPrice + difference);
+        lastPrice = lastPrice + difference;
       }
     }
 
