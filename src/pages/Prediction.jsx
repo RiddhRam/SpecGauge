@@ -72,19 +72,27 @@ export default function Prediction({
   // Maximum scroll length according to current zoom level
   const [scrollLimit, setScrollLimit] = useState(24);
 
+  // For the input fields
   const [initialPrice, setInitialPrice] = useState("");
   const [releaseYear, setReleaseYear] = useState("");
-  const [colorChangeIndex, setColorChangeIndex] = useState(0);
 
+  // The orignal reference array of all the lines currently selected by the user
   const [originalPoints, setOriginalPoints] = useState([]);
   const [initalizedAveragePrices, setInitializedAveragePrices] =
     useState(false);
 
+  // For the modals
   const [showBrandModal, setShowBrandModal] = useState(false);
   const [brand, setBrand] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
+  const [colorChangeIndex, setColorChangeIndex] = useState(0);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [error, setError] = useState("");
+
+  // Neccessary to track this if not empty
+  // For the search input
+  const [searchString, setSearchString] = useState("");
+  const [noResultsFound, setNoResultsFound] = useState(false);
 
   const [lineValueDataset, setLineValueDataset] = useState([]);
   const lineOptions = {
@@ -267,6 +275,23 @@ export default function Prediction({
     setLineValueDataset(newDataset);
   };
 
+  const checkNoResults = (text) => {
+    let matchFound = false;
+    for (let item in brandValues) {
+      if (brandValues[item].label.toUpperCase().includes(text.toUpperCase())) {
+        matchFound = true;
+        break;
+      }
+    }
+
+    if (matchFound) {
+      setNoResultsFound(false);
+    } else {
+      setNoResultsFound(true);
+    }
+    setSearchString(text);
+  };
+
   useEffect(() => {
     if (updateGraph) {
       setUpdateGraph(false);
@@ -302,11 +327,14 @@ export default function Prediction({
       Screen: type,
       Platform: isMobile ? "Mobile" : "Computer",
     });
+  }, []);
+
+  useEffect(() => {
     SetTitleAndDescription(
       `Predict ${type} Prices`,
       `View future prices of ${type} over time`
     );
-  }, []);
+  }, [type]);
 
   return (
     <>
@@ -432,18 +460,6 @@ export default function Prediction({
                 minWidth: "350px",
               }}
             >
-              {/* Initial Price Field */}
-              <input
-                type="number"
-                value={initialPrice}
-                className="TextInput"
-                placeholder="Initial New Price"
-                onChange={(event) =>
-                  handleNumberInput(event.target.value, setInitialPrice)
-                }
-                style={{ fontSize: 13, width: "73%" }}
-              ></input>
-
               {/* Release Year Field */}
               <input
                 type="number"
@@ -452,6 +468,18 @@ export default function Prediction({
                 placeholder="Release Year"
                 onChange={(event) =>
                   handleNumberInput(event.target.value, setReleaseYear)
+                }
+                style={{ fontSize: 13, width: "73%" }}
+              ></input>
+
+              {/* Initial Price Field */}
+              <input
+                type="number"
+                value={initialPrice}
+                className="TextInput"
+                placeholder="Initial New Price"
+                onChange={(event) =>
+                  handleNumberInput(event.target.value, setInitialPrice)
                 }
                 style={{ fontSize: 13, width: "73%" }}
               ></input>
@@ -712,18 +740,6 @@ export default function Prediction({
                 </p>
               </div>
 
-              {/* Initial Price Field */}
-              <input
-                type="number"
-                value={initialPrice}
-                className="TextInput"
-                placeholder="Initial New Price"
-                onChange={(event) =>
-                  handleNumberInput(event.target.value, setInitialPrice)
-                }
-                style={{ fontSize: 16, width: "100%" }}
-              ></input>
-
               {/* Release Year Field */}
               <input
                 type="number"
@@ -732,6 +748,18 @@ export default function Prediction({
                 placeholder="Release Year"
                 onChange={(event) =>
                   handleNumberInput(event.target.value, setReleaseYear)
+                }
+                style={{ fontSize: 16, width: "100%" }}
+              ></input>
+
+              {/* Initial Price Field */}
+              <input
+                type="number"
+                value={initialPrice}
+                className="TextInput"
+                placeholder="Initial New Price"
+                onChange={(event) =>
+                  handleNumberInput(event.target.value, setInitialPrice)
                 }
                 style={{ fontSize: 16, width: "100%" }}
               ></input>
@@ -935,22 +963,36 @@ export default function Prediction({
         }}
       >
         <p className="HeaderText">Select a brand</p>
+
+        <input
+          type="text"
+          value={searchString}
+          className="TextInput"
+          placeholder="Search"
+          id="SearchString"
+          onChange={(text) => checkNoResults(text.target.value)}
+          style={{ margin: "15px 0" }}
+        ></input>
+
         <div className="ModalButtonSection">
-          {brandValues.map((item, index) => (
-            <div key={index}>
-              {/* Brand button */}
-              <button
-                className="NormalButtonNoBackground"
-                style={{ padding: "15px 8px" }}
-                onClick={() => {
-                  setBrand(item.label);
-                  setShowBrandModal(false);
-                }}
-              >
-                {item.label}
-              </button>
-            </div>
-          ))}
+          {brandValues.map(
+            (item, index) =>
+              /* Brand button */
+              item.label.toUpperCase().includes(searchString.toUpperCase()) && (
+                <button
+                  className="NormalButtonNoBackground"
+                  style={{ padding: "15px 8px" }}
+                  onClick={() => {
+                    setBrand(item.label);
+                    setShowBrandModal(false);
+                  }}
+                  key={index}
+                >
+                  {item.label}
+                </button>
+              )
+          )}
+          {noResultsFound && <p className="SimpleText">No Results Found</p>}
         </div>
         {/* Cancel button */}
         <button
@@ -978,75 +1020,160 @@ export default function Prediction({
       >
         <p className="HeaderText">Edit Graph</p>
         <div className="ModalButtonSection" style={{ width: "70%" }}>
-          {lineValueDataset.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                borderStyle: "solid",
-                borderWidth: 3,
-                borderColor: item.borderColor,
-                padding: "15px 7px",
-                margin: "5px 0",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              {/* Label name */}
-              <p style={{ fontSize: 20, marginRight: 5 }} className="PlainText">
-                {item.label}
-              </p>
-
-              {/* Change color */}
-              {colorChangeIndex == index ? (
-                // Color picker
-                <HexColorPicker
-                  color={item.borderColor}
-                  onChange={updateColor}
-                ></HexColorPicker>
-              ) : (
-                // Enable Color Picker
-                <button
-                  style={{
-                    width: 20,
-                    height: 20,
-                    backgroundColor: item.borderColor,
-                    marginLeft: 15,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setColorChangeIndex(index);
-                  }}
-                ></button>
-              )}
-
-              {/* Delete Button */}
-              <button
-                className="DangerButtonNoBackground"
+          {lineValueDataset.map((item, index) =>
+            isMobile ? (
+              /* Mobile display */
+              <div
+                key={index}
                 style={{
-                  marginLeft: 10,
-                }}
-                onClick={async () => {
-                  amplitude.track("Delete Graph Item", {
-                    item: lineValueDataset[index].label,
-                  });
-                  // Remove this item and set the color change index to 0 to minimize errors
-                  const newOriginalPoints = originalPoints.filter(
-                    (array) => array !== originalPoints[index]
-                  );
-                  setOriginalPoints(newOriginalPoints);
-                  const newLineValueDataset = lineValueDataset.filter(
-                    (array) => array !== lineValueDataset[index]
-                  );
-                  setLineValueDataset(newLineValueDataset);
-
-                  setColorChangeIndex(0);
+                  display: "flex",
+                  borderStyle: "solid",
+                  borderWidth: 3,
+                  borderColor: item.borderColor,
+                  padding: "15px 7px",
+                  margin: "5px 0",
+                  flexDirection: "column",
+                  justifyContent: "center",
                 }}
               >
-                <p>Delete</p>
-              </button>
-            </div>
-          ))}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  {/* Label name */}
+                  <p
+                    style={{ fontSize: 14, marginRight: 5 }}
+                    className="PlainText"
+                  >
+                    {item.label}
+                  </p>
+
+                  {/* Change color */}
+                  {colorChangeIndex == index ? (
+                    // Color picker
+                    <HexColorPicker
+                      color={item.borderColor}
+                      onChange={updateColor}
+                      style={{ height: 150, width: 250 }}
+                    ></HexColorPicker>
+                  ) : (
+                    // Enable Color Picker
+                    <button
+                      style={{
+                        width: 20,
+                        height: 20,
+                        backgroundColor: item.borderColor,
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        setColorChangeIndex(index);
+                      }}
+                    ></button>
+                  )}
+                </div>
+
+                {/* Delete Button */}
+                <button
+                  className="DangerButtonNoBackground"
+                  style={{
+                    fontSize: 12,
+                  }}
+                  onClick={async () => {
+                    amplitude.track("Delete Graph Item", {
+                      item: lineValueDataset[index].label,
+                    });
+                    // Remove this item and set the color change index to 0 to minimize errors
+                    const newOriginalPoints = originalPoints.filter(
+                      (array) => array !== originalPoints[index]
+                    );
+                    setOriginalPoints(newOriginalPoints);
+                    const newLineValueDataset = lineValueDataset.filter(
+                      (array) => array !== lineValueDataset[index]
+                    );
+                    setLineValueDataset(newLineValueDataset);
+
+                    setColorChangeIndex(0);
+                  }}
+                >
+                  <p>Delete</p>
+                </button>
+              </div>
+            ) : (
+              /* Computer display */
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  borderStyle: "solid",
+                  borderWidth: 3,
+                  borderColor: item.borderColor,
+                  padding: "15px 7px",
+                  margin: "5px 0",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                {/* Label name */}
+                <p
+                  style={{ fontSize: 20, marginRight: 5 }}
+                  className="PlainText"
+                >
+                  {item.label}
+                </p>
+
+                {/* Change color */}
+                {colorChangeIndex == index ? (
+                  // Color picker
+                  <HexColorPicker
+                    color={item.borderColor}
+                    onChange={updateColor}
+                  ></HexColorPicker>
+                ) : (
+                  // Enable Color Picker
+                  <button
+                    style={{
+                      width: 20,
+                      height: 20,
+                      backgroundColor: item.borderColor,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      setColorChangeIndex(index);
+                    }}
+                  ></button>
+                )}
+
+                {/* Delete Button */}
+                <button
+                  className="DangerButtonNoBackground"
+                  style={{
+                    fontSize: 14,
+                  }}
+                  onClick={async () => {
+                    amplitude.track("Delete Graph Item", {
+                      item: lineValueDataset[index].label,
+                    });
+                    // Remove this item and set the color change index to 0 to minimize errors
+                    const newOriginalPoints = originalPoints.filter(
+                      (array) => array !== originalPoints[index]
+                    );
+                    setOriginalPoints(newOriginalPoints);
+                    const newLineValueDataset = lineValueDataset.filter(
+                      (array) => array !== lineValueDataset[index]
+                    );
+                    setLineValueDataset(newLineValueDataset);
+
+                    setColorChangeIndex(0);
+                  }}
+                >
+                  <p>Delete</p>
+                </button>
+              </div>
+            )
+          )}
         </div>
         {/* Close button */}
         <button

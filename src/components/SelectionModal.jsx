@@ -31,6 +31,11 @@ export default function SelectionModal({
   const [selectedBrand, setSelectedBrand] = useState("");
   const [tempSaveProcesses, setTempSaveProcesses] = useState([]);
 
+  // Neccessary to track this if not empty
+  // For the search input
+  const [searchString, setSearchString] = useState("");
+  const [noResultsFound, setNoResultsFound] = useState(false);
+
   useEffect(() => {
     const tempBrandNames = [];
     for (let item in brands) {
@@ -40,10 +45,37 @@ export default function SelectionModal({
     setBrandNames(tempBrandNames);
   }, []);
 
+  const checkNoResults = (text) => {
+    let matchFound = false;
+    for (let item in selectionOptions) {
+      if (selectionOptions[item].toUpperCase().includes(text.toUpperCase())) {
+        matchFound = true;
+        break;
+      }
+    }
+
+    if (matchFound) {
+      setNoResultsFound(false);
+    } else {
+      setNoResultsFound(true);
+    }
+    setSearchString(text);
+  };
+
   return (
     <>
       {/* Brands */}
       <p className="HeaderText">Select {process[step]}</p>
+
+      <input
+        type="text"
+        value={searchString}
+        className="TextInput"
+        placeholder="Search"
+        id="SearchString"
+        onChange={(text) => checkNoResults(text.target.value)}
+        style={{ margin: "15px 0" }}
+      ></input>
 
       {loading ? (
         <div
@@ -52,153 +84,163 @@ export default function SelectionModal({
         ></div>
       ) : (
         <div className="ModalButtonSection" ref={containerRef}>
-          {selectionOptions.map((item, index) => (
-            <button
-              className="NormalButtonNoBackground"
-              key={item + index}
-              onClick={async () => {
-                // Start the spec loading animation
-                setLoading(true);
-                // For next step
-                let tempArray = [];
-                let nextSelection = [];
-                const nextStep = step + 1;
+          {selectionOptions.map(
+            (item, index) =>
+              item.toUpperCase().includes(searchString.toUpperCase()) && (
+                <button
+                  className="NormalButtonNoBackground"
+                  key={item + index}
+                  onClick={async () => {
+                    // Start the spec loading animation
+                    setLoading(true);
+                    // For next step
+                    let tempArray = [];
+                    let nextSelection = [];
+                    const nextStep = step + 1;
 
-                let result = [];
-                // If it's the first step, go off to the SecondStep selection screen
-                if (step == 0) {
-                  amplitude.track("Begin Request", {
-                    Brand: item,
-                    Category: type,
-                  });
-                  tempArray = brands[index].SecondStep;
-                  nextSelection = brands[index].SecondStep;
-                  setSelectedBrand(item);
-                } else if (step == 1) {
-                  // Query the products after the second step
-                  amplitude.track("Fetch Request", {
-                    SecondStep: item,
-                    Category: type,
-                  });
-                  result = await queryFunction(selectedBrand, item);
-                } else {
-                  // If we have queried them, then just pick off from the last step
-                  result = requestedSpecs;
-                }
+                    let result = [];
+                    // If it's the first step, go off to the SecondStep selection screen
+                    if (step == 0) {
+                      amplitude.track("Begin Request", {
+                        Brand: item,
+                        Category: type,
+                      });
+                      tempArray = brands[index].SecondStep;
+                      nextSelection = brands[index].SecondStep;
+                      setSelectedBrand(item);
+                    } else if (step == 1) {
+                      // Query the products after the second step
+                      amplitude.track("Fetch Request", {
+                        SecondStep: item,
+                        Category: type,
+                      });
+                      result = await queryFunction(selectedBrand, item);
+                    } else {
+                      // If we have queried them, then just pick off from the last step
+                      result = requestedSpecs;
+                    }
 
-                // Iterate through all result keys
-                for (let resultKey in result) {
-                  const currentResult = result[resultKey];
-                  // Check for a match between the clicked value and the key value of the key that matches the current process in queryProcess
-                  if (
-                    selectionOptions[index] == currentResult[queryProcess[step]]
-                  ) {
-                    tempArray.push(currentResult);
-
-                    // Check for duplicates
-                    let duplicate = false;
-                    for (let selectionIndex in nextSelection) {
+                    // Iterate through all result keys
+                    for (let resultKey in result) {
+                      const currentResult = result[resultKey];
+                      // Check for a match between the clicked value and the key value of the key that matches the current process in queryProcess
                       if (
-                        currentResult[queryProcess[nextStep]] ==
-                        nextSelection[selectionIndex]
+                        selectionOptions[index] ==
+                        currentResult[queryProcess[step]]
                       ) {
-                        duplicate = true;
-                        break;
+                        tempArray.push(currentResult);
+
+                        // Check for duplicates
+                        let duplicate = false;
+                        for (let selectionIndex in nextSelection) {
+                          if (
+                            currentResult[queryProcess[nextStep]] ==
+                            nextSelection[selectionIndex]
+                          ) {
+                            duplicate = true;
+                            break;
+                          }
+                        }
+                        // If no duplicates then add it to the array that we will use for the next selection screen
+                        if (!duplicate) {
+                          nextSelection.push(
+                            currentResult[queryProcess[nextStep]]
+                          );
+                        }
                       }
                     }
-                    // If no duplicates then add it to the array that we will use for the next selection screen
-                    if (!duplicate) {
-                      nextSelection.push(currentResult[queryProcess[nextStep]]);
+
+                    // If its not the last step
+                    if (nextStep != queryProcess.length) {
+                      // Increment the step, and filter out the requestedSpecs with the above array, also change the selection options
+                      setStep(nextStep);
+                      setSelectionOptions(nextSelection.sort());
+                      setRequestedSpecs(tempArray);
+                      setTempSaveProcesses((prevProcess) => [
+                        ...prevProcess,
+                        item,
+                      ]);
+                    } else {
+                      // If its the last step
+                      // Add the last item to this new array then add it to the total array in Compare.js
+                      const tempComparisonProcess = tempSaveProcesses;
+                      tempComparisonProcess.push(item);
+                      setSaveComparisonProcesses((prevProcesses) => [
+                        ...prevProcesses,
+                        tempComparisonProcess,
+                      ]);
+                      setTempSaveProcesses([]);
+
+                      let parameterArray = [];
+
+                      // Deep Copy defaultArray into parameterArray then we will pass it into GetProsAndSpecs
+                      for (let i = 0; i < defaultArray.length; i++) {
+                        const defaultArrayItem = defaultArray[i];
+
+                        let newJSON = {};
+                        newJSON["Value"] = defaultArrayItem.Value;
+                        newJSON["Display"] = defaultArrayItem.Display;
+                        newJSON["Category"] = defaultArrayItem.Category;
+                        newJSON["Matching"] = defaultArrayItem.Matching;
+                        newJSON["Mandatory"] = defaultArrayItem.Mandatory;
+                        newJSON["Type"] = defaultArrayItem.Type;
+                        newJSON["Preference"] = defaultArrayItem.Preference;
+                        newJSON["Important"] = defaultArrayItem.Important;
+                        newJSON["HigherNumber"] = defaultArrayItem.HigherNumber;
+                        parameterArray.push(newJSON);
+                      }
+
+                      amplitude.track("Complete Request", {
+                        Brand: tempComparisonProcess[0],
+                        Category: type,
+                        Product: tempComparisonProcess[1],
+                      });
+
+                      // returns [tempProsArray, tempNewProduct]
+                      // prettier-ignore
+                      const prosAndSpecs = GetProsAndSpecs(parameterArray, tempArray[0], categories);
+
+                      // prettier-ignore
+                      setPros((prevPros) => [...prevPros, prosAndSpecs[0]]);
+                      setProducts((prevProducts) => [
+                        ...prevProducts,
+                        prosAndSpecs[1],
+                      ]);
+
+                      // Reset the modal
+                      setProductModalVisible(false);
+                      setStep(0);
+                      setSelectionOptions(brandNames);
+                      setRequestedSpecs([]);
+                      setSelectedBrand("");
                     }
-                  }
-                }
 
-                // If its not the last step
-                if (nextStep != queryProcess.length) {
-                  // Increment the step, and filter out the requestedSpecs with the above array, also change the selection options
-                  setStep(nextStep);
-                  setSelectionOptions(nextSelection.sort());
-                  setRequestedSpecs(tempArray);
-                  setTempSaveProcesses((prevProcess) => [...prevProcess, item]);
-                } else {
-                  // If its the last step
-                  // Add the last item to this new array then add it to the total array in Compare.js
-                  const tempComparisonProcess = tempSaveProcesses;
-                  tempComparisonProcess.push(item);
-                  setSaveComparisonProcesses((prevProcesses) => [
-                    ...prevProcesses,
-                    tempComparisonProcess,
-                  ]);
-                  setTempSaveProcesses([]);
+                    setLoading(false);
 
-                  let parameterArray = [];
-
-                  // Deep Copy defaultArray into parameterArray then we will pass it into GetProsAndSpecs
-                  for (let i = 0; i < defaultArray.length; i++) {
-                    const defaultArrayItem = defaultArray[i];
-
-                    let newJSON = {};
-                    newJSON["Value"] = defaultArrayItem.Value;
-                    newJSON["Display"] = defaultArrayItem.Display;
-                    newJSON["Category"] = defaultArrayItem.Category;
-                    newJSON["Matching"] = defaultArrayItem.Matching;
-                    newJSON["Mandatory"] = defaultArrayItem.Mandatory;
-                    newJSON["Type"] = defaultArrayItem.Type;
-                    newJSON["Preference"] = defaultArrayItem.Preference;
-                    newJSON["Important"] = defaultArrayItem.Important;
-                    newJSON["HigherNumber"] = defaultArrayItem.HigherNumber;
-                    parameterArray.push(newJSON);
-                  }
-
-                  amplitude.track("Complete Request", {
-                    Brand: tempComparisonProcess[0],
-                    Category: type,
-                    Product: tempComparisonProcess[1],
-                  });
-
-                  // returns [tempProsArray, tempNewProduct]
-                  // prettier-ignore
-                  const prosAndSpecs = GetProsAndSpecs(parameterArray, tempArray[0], categories);
-
-                  // prettier-ignore
-                  setPros((prevPros) => [...prevPros, prosAndSpecs[0]]);
-                  setProducts((prevProducts) => [
-                    ...prevProducts,
-                    prosAndSpecs[1],
-                  ]);
-
-                  // Reset the modal
-                  setProductModalVisible(false);
-                  setStep(0);
-                  setSelectionOptions(brandNames);
-                  setRequestedSpecs([]);
-                  setSelectedBrand("");
-                }
-
-                setLoading(false);
-
-                // Scroll back up
-                try {
-                  // If instant, usually when data is on the device
-                  containerRef.current.scrollTop = 0;
-                } catch {
-                  // If not instant, usually only when requesting data from the server
-                  setTimeout(() => {
+                    // Scroll back up
                     try {
+                      // If instant, usually when data is on the device
                       containerRef.current.scrollTop = 0;
                     } catch {
-                      // Another timer just in case slow wifi
+                      // If not instant, usually only when requesting data from the server
                       setTimeout(() => {
-                        containerRef.current.scrollTop = 0;
-                      }, 600);
+                        try {
+                          containerRef.current.scrollTop = 0;
+                        } catch {
+                          // Another timer just in case slow wifi
+                          setTimeout(() => {
+                            containerRef.current.scrollTop = 0;
+                          }, 600);
+                        }
+                      }, 400);
                     }
-                  }, 400);
-                }
-              }}
-            >
-              <p>{item}</p>
-            </button>
-          ))}
+                  }}
+                >
+                  <p>{item}</p>
+                </button>
+              )
+          )}
+          {noResultsFound && <p className="SimpleText">No Results Found</p>}
         </div>
       )}
 

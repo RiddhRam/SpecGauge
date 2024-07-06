@@ -1,12 +1,7 @@
-5.4.0
-Add search option when searching brands
-if a string is not a substring of a brand, don't display it with a ternary operator
-
-Add description for information pages
-
 5.5.0
 Let users request a product or category
 Let users suggest fixes to the website or database
+Fix edit modal for mobile
 
 5.6.0
 Switch to firebase analytics
@@ -15,4 +10,3 @@ Switch to firebase analytics
 Compress json values
 
 Compress firestore data
-

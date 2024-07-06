@@ -5876,6 +5876,9 @@ export default function App() {
 <p className="InfoText">Thanks for stopping by. Let's navigate the future together!</p>
                 </div>
                 }
+                description={
+                  "Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons. We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, gaming console, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence."
+                }
               ></Information>
             </Suspense>
           }
@@ -5952,6 +5955,9 @@ export default function App() {
 <p className="InfoText">If you have any questions or concerns about these Terms of Service, please contact us at specgauge@gmail.com.</p>
               </div>
                 }
+                description={
+                  "Read the Terms of Service for SpecGauge. Understand the rules, guidelines, and policies that govern your use of our services and website. Stay informed about your rights and responsibilities as a user."
+                }
               ></Information>
             </Suspense>
           }
@@ -5985,6 +5991,9 @@ export default function App() {
 <p className="InfoText">If you have any questions or concerns about our Privacy Policy, please contact us at specgauge@gmail.com.</p>
 
                 </div>
+                }
+                description={
+                  "Review the Privacy Policy of SpecGauge. Learn how we collect, use, and protect your personal information. Understand your privacy rights and our commitment to safeguarding your data."
                 }
               ></Information>
             </Suspense>

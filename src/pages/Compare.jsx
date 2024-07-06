@@ -299,7 +299,9 @@ export default function Compare({
       Screen: type,
       Platform: isMobile ? "Mobile" : "Computer",
     });
+  }, []);
 
+  useEffect(() => {
     // URL of the page
     const fullURL = window.location.href;
 
@@ -314,7 +316,7 @@ export default function Compare({
     } else {
       SetTitleAndDescription(defaultTitle, description);
     }
-  }, []);
+  }, [type]);
 
   const CallSaveComparisonCloudFunction = async () => {
     // The processes that get saved

@@ -3,11 +3,17 @@ import { Navbar } from "../components/Navbar";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 
-export default function Information({ amplitude, isMobile, title, text }) {
+export default function Information({
+  amplitude,
+  isMobile,
+  title,
+  text,
+  description,
+}) {
   useEffect(() => {
     amplitude.track("Screen", { Screen: title });
-    SetTitleAndDescription(title, "");
-  }, []);
+    SetTitleAndDescription(title, description);
+  }, [title]);
   return (
     <>
       <Navbar isMobile={isMobile} page="aboutus" amplitude={amplitude}></Navbar>
