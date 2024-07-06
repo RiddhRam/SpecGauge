@@ -2,21 +2,21 @@ import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
-export default function Information({
-  amplitude,
-  isMobile,
-  title,
-  text,
-  description,
-}) {
+const analytics = getAnalytics();
+
+export default function Information({ isMobile, title, text, description }) {
   useEffect(() => {
-    amplitude.track("Screen", { Screen: title });
+    logEvent(analytics, "Screen", {
+      Screen: title,
+      Platform: isMobile ? "Mobile" : "Computer",
+    });
     SetTitleAndDescription(title, description);
   }, [title]);
   return (
     <>
-      <Navbar isMobile={isMobile} page="aboutus" amplitude={amplitude}></Navbar>
+      <Navbar isMobile={isMobile} page="aboutus"></Navbar>
       <div
         style={{ alignItems: "flex-start", paddingLeft: 20, paddingBottom: 40 }}
         className="LargeContainer"
@@ -31,7 +31,7 @@ export default function Information({
         </p>
         <div>{text}</div>
       </div>
-      <Footer amplitude={amplitude} isMobile={isMobile}></Footer>
+      <Footer isMobile={isMobile}></Footer>
     </>
   );
 }

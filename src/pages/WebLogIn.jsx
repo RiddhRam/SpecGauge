@@ -6,8 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import { getAuth } from "firebase/auth";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
-export default function WebLogIn({ amplitude, isMobile }) {
+const analytics = getAnalytics();
+
+export default function WebLogIn({ isMobile }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
 
@@ -24,7 +27,10 @@ export default function WebLogIn({ amplitude, isMobile }) {
   });
 
   useEffect(() => {
-    amplitude.track("Screen", { Screen: "Log In" });
+    logEvent(analytics, "Screen", {
+      Screen: "Log In",
+      Platform: isMobile ? "Mobile" : "Computer",
+    });
     SetTitleAndDescription(
       "SpecGauge | Sign up or Log in",
       "Create an account to save comparisons across all your devices."
@@ -34,7 +40,7 @@ export default function WebLogIn({ amplitude, isMobile }) {
   return (
     <>
       {/* navbar */}
-      <Navbar isMobile={isMobile} page={"login"} amplitude={amplitude} />
+      <Navbar isMobile={isMobile} page={"login"} />
 
       {/* main body */}
       <div className="LargeContainer">
@@ -58,7 +64,7 @@ export default function WebLogIn({ amplitude, isMobile }) {
         {/* If user doesn't want to use an account, only available if on browser or if they don't want to save comparisons */}
       </div>
 
-      <Footer amplitude={amplitude} isMobile={isMobile} />
+      <Footer isMobile={isMobile} />
     </>
   );
 }

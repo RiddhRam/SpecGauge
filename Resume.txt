@@ -1,1 +1,1 @@
-Reduced server firebase indexes by at least 90% by adding additional data (SecondStep in the brands array) to the client side app.
+Reduced server firebase indexes by at least 90% by adding additional data (RequestStep in the brands array) to the client side app.

@@ -6,7 +6,7 @@ import { DropdownMenu } from "./DropdownMenu";
 
 import { getAuth } from "firebase/auth";
 
-export const Navbar = ({ isMobile, page, amplitude }) => {
+export const Navbar = ({ isMobile, page }) => {
   const auth = getAuth();
 
   return (
@@ -83,7 +83,6 @@ export const Navbar = ({ isMobile, page, amplitude }) => {
             { label: "Graphics Cards", path: "/comparison/graphicsCards" },
             { label: "Drones", path: "/comparison/drones" },
           ]}
-          amplitude={amplitude}
         ></DropdownMenu>
 
         {/* Predict dropdown */}
@@ -94,7 +93,6 @@ export const Navbar = ({ isMobile, page, amplitude }) => {
             { label: "CPUs", path: "/prediction/cpus" },
             { label: "Graphics Cards", path: "/prediction/graphicsCards" },
           ]}
-          amplitude={amplitude}
         ></DropdownMenu>
 
         {/* If not on an account handling page, give user the option to go to an account handling page */}

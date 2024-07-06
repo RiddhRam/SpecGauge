@@ -1,7 +1,7 @@
 {
   "name": "specgauge",
   "private": true,
-  "version": "5.4.0",
+  "version": "5.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,6 @@
     "serve": "serve -s dist"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^2.8.1",
     "chart.js": "^4.4.3",
     "firebase": "^10.12.2",
     "rc-slider": "^10.6.2",

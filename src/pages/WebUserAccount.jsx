@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { getAnalytics, logEvent } from "firebase/analytics";
+
+const analytics = getAnalytics();
 
 const comparisonLinks = [
   "/comparison/automobiles",
@@ -28,7 +31,7 @@ const categories = [
   "Drones",
 ];
 
-export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
+export default function WebUserAccount({ isMobile }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -89,7 +92,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
   };
 
   const callSavedComparisonsCloudFunction = async (email) => {
-    amplitude.track("Get saved comparisons");
+    logEvent(analytics, "Get saved comparisons");
     try {
       const GetSavedComparisons = httpsCallable(
         functions,
@@ -106,7 +109,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
     saveComparisonProcess,
     type
   ) => {
-    amplitude.track("Delete saved comparison");
+    logEvent(analytics, "Delete saved comparison");
     // The processes, which is used to form the name of the comparison to delete
     const arrayToSave = [];
     for (let item in saveComparisonProcess) {
@@ -212,8 +215,9 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
   });
 
   useEffect(() => {
-    amplitude.track("Screen", {
+    logEvent(analytics, "Screen", {
       Screen: "My Account",
+      Platform: isMobile ? "Mobile" : "Computer",
     });
 
     SetTitleAndDescription(
@@ -226,7 +230,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
     /* if logged in display user settings */
     <>
       {/* navbar */}
-      <Navbar isMobile={isMobile} page={"account"} amplitude={amplitude} />
+      <Navbar isMobile={isMobile} page={"account"} />
       {/* main body */}
       <div
         className={isMobile ? "UserAccountScreenMobile" : "UserAccountScreen"}
@@ -242,7 +246,6 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
             rowGap: "6px",
           }}
         >
-          {/* Neccessary to put these as grids */}
           {/* Your Account */}
           {page == 0 ? (
             <button
@@ -282,8 +285,9 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
             <button
               onClick={async () => {
                 callLocalSavedComparisonsFunc();
-                amplitude.track("Screen", {
+                logEvent(analytics, "Screen", {
                   Screen: "Saved Comparisons",
+                  Platform: isMobile ? "Mobile" : "Computer",
                 });
               }}
               className="AccountButton"
@@ -429,7 +433,7 @@ export default function WebUserAccount({ amplitude, isMobile, defaultArrays }) {
           )}
         </div>
       </div>
-      <Footer amplitude={amplitude} isMobile={isMobile} />
+      <Footer isMobile={isMobile} />
       {/* Show status of deleted comparison */}
       <Modal
         isOpen={deletingSavedComparison}

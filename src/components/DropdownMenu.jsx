@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
-export const DropdownMenu = ({ label, menuItems, amplitude }) => {
+const analytics = getAnalytics();
+
+export const DropdownMenu = ({ label, menuItems }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -21,7 +24,7 @@ export const DropdownMenu = ({ label, menuItems, amplitude }) => {
                 to={item.path}
                 onClick={(event) => {
                   event.preventDefault();
-                  amplitude.track("Navigation Button", {
+                  logEvent(analytics, "Navigation Button", {
                     // Screen type
                     Type: label,
                     // Category type

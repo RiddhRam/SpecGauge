@@ -1,10 +1,7 @@
-5.5.0
+5.6.0
+Add compression to the comparison links
 Let users request a product or category
 Let users suggest fixes to the website or database
-Fix edit modal for mobile
-
-5.6.0
-Switch to firebase analytics
 
 6.0.0
 Compress json values

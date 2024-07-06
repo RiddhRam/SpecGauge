@@ -9,6 +9,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 
+import { getAnalytics, logEvent } from "firebase/analytics";
+
+const analytics = getAnalytics();
+
 Modal.setAppElement("#SpecGauge");
 
 import { getAuth } from "firebase/auth";
@@ -27,7 +31,6 @@ export default function Compare({
   DirectQueryFunction,
   DefaultArray,
   Categories,
-  amplitude,
   isMobile,
   comparisonLink,
 }) {
@@ -292,10 +295,12 @@ export default function Compare({
       setPros((prevPros) => [...prevPros, prosAndSpecs[0]]);
       setProducts((prevProducts) => [...prevProducts, prosAndSpecs[1]]);
     }
+
+    logEvent(analytics, "Load Comparison Presets", { Processes: processes });
   };
 
   useEffect(() => {
-    amplitude.track("Comparison Screen", {
+    logEvent(analytics, "Screen", {
       Screen: type,
       Platform: isMobile ? "Mobile" : "Computer",
     });
@@ -384,7 +389,7 @@ export default function Compare({
 
   return (
     <>
-      <Navbar isMobile={isMobile} page="compare" amplitude={amplitude}></Navbar>
+      <Navbar isMobile={isMobile} page="compare"></Navbar>
       {/* Main Body */}
       <div className="LargeContainer">
         <p style={{ fontSize: 25 }} className="HeaderText">
@@ -427,7 +432,7 @@ export default function Compare({
           {/* Add a new product */}
           <button
             onClick={async () => {
-              amplitude.track("Add Item");
+              logEvent(analytics, "Add Comparison Item", { Category: type });
               {
                 /* Show product selection modal */
               }
@@ -446,7 +451,7 @@ export default function Compare({
           {/* Save comparison */}
           <button
             onClick={async () => {
-              amplitude.track("Save Comparison", {
+              logEvent(analytics, "Save Comparison", {
                 Category: type,
               });
 
@@ -484,7 +489,7 @@ export default function Compare({
               copyURLToClipboard(shareURL);
               // Tell user copying to clipboard was successful
               setCopiedLink(true);
-              amplitude.track("Share", { type: type });
+              logEvent(analytics, "Share Comparison", { Type: type });
             }}
             className="CompareTopButton"
             style={
@@ -505,7 +510,7 @@ export default function Compare({
           {/* Reset specs to just the categories and processes to empty array */}
           <button
             onClick={async () => {
-              amplitude.track("Reset", {
+              logEvent(analytics, "Reset Comparison", {
                 Category: type,
               });
 
@@ -655,7 +660,7 @@ export default function Compare({
         )}
       </div>
 
-      <Footer amplitude={amplitude} isMobile={isMobile} />
+      <Footer isMobile={isMobile} />
 
       {/* Shows up if user needs to be logged in to complete action */}
       <Modal
@@ -736,7 +741,6 @@ export default function Compare({
           setPros={setPros}
           setProducts={setProducts}
           setSaveComparisonProcesses={setSaveComparisonProcesses}
-          amplitude={amplitude}
         ></SelectionModal>
       </Modal>
 

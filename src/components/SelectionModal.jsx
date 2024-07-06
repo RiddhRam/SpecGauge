@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
+import { getAnalytics, logEvent } from "firebase/analytics";
+
+const analytics = getAnalytics();
 
 export default function SelectionModal({
   type,
@@ -13,7 +16,6 @@ export default function SelectionModal({
   setPros,
   setProducts,
   setSaveComparisonProcesses,
-  amplitude,
 }) {
   const containerRef = useRef(null);
 
@@ -31,7 +33,6 @@ export default function SelectionModal({
   const [selectedBrand, setSelectedBrand] = useState("");
   const [tempSaveProcesses, setTempSaveProcesses] = useState([]);
 
-  // Neccessary to track this if not empty
   // For the search input
   const [searchString, setSearchString] = useState("");
   const [noResultsFound, setNoResultsFound] = useState(false);
@@ -72,7 +73,7 @@ export default function SelectionModal({
         value={searchString}
         className="TextInput"
         placeholder="Search"
-        id="SearchString"
+        id={"SearchString" + type + step}
         onChange={(text) => checkNoResults(text.target.value)}
         style={{ margin: "15px 0" }}
       ></input>
@@ -97,21 +98,22 @@ export default function SelectionModal({
                     let tempArray = [];
                     let nextSelection = [];
                     const nextStep = step + 1;
+                    setSearchString("");
 
                     let result = [];
-                    // If it's the first step, go off to the SecondStep selection screen
+                    // If it's the first step, go off to the RequestStep selection screen
                     if (step == 0) {
-                      amplitude.track("Begin Request", {
+                      logEvent(analytics, "Begin Product Request", {
                         Brand: item,
                         Category: type,
                       });
-                      tempArray = brands[index].SecondStep;
-                      nextSelection = brands[index].SecondStep;
+                      tempArray = brands[index].RequestStep;
+                      nextSelection = brands[index].RequestStep;
                       setSelectedBrand(item);
                     } else if (step == 1) {
                       // Query the products after the second step
-                      amplitude.track("Fetch Request", {
-                        SecondStep: item,
+                      logEvent(analytics, "Fetch Product Request", {
+                        RequestStep: item,
                         Category: type,
                       });
                       result = await queryFunction(selectedBrand, item);
@@ -190,7 +192,7 @@ export default function SelectionModal({
                         parameterArray.push(newJSON);
                       }
 
-                      amplitude.track("Complete Request", {
+                      logEvent(analytics, "Complete Product Request", {
                         Brand: tempComparisonProcess[0],
                         Category: type,
                         Product: tempComparisonProcess[1],
@@ -253,6 +255,7 @@ export default function SelectionModal({
           setTempSaveProcesses([]);
           setStep(0);
           setSelectedBrand("");
+          setSearchString("");
         }}
         className="DangerButtonNoBackground"
       >

@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import Modal from "react-modal";
+import { getAnalytics, logEvent } from "firebase/analytics";
+
+const analytics = getAnalytics();
 
 Modal.setAppElement("#SpecGauge");
 
@@ -117,7 +120,7 @@ const mobileTrendingComparisons = [
   },
 ];
 
-export default function WebHome({ amplitude, isMobile }) {
+export default function WebHome({ isMobile }) {
   {
     /* This is for the modal that determines the comparison type */
   }
@@ -130,7 +133,10 @@ export default function WebHome({ amplitude, isMobile }) {
     /* Records the initial load of the website */
   }
   useEffect(() => {
-    amplitude.track("Screen", { Screen: "Home" });
+    logEvent(analytics, "Screen", {
+      Screen: "Home",
+      Platform: isMobile ? "Mobile" : "Computer",
+    });
     SetTitleAndDescription(
       "SpecGauge | Compare products and predict prices",
       "Explore SpecGauge: Easily compare vehicles and electronics side by side. Predict future prices to make informed decisions before you buy. All the tools in one place."
@@ -140,7 +146,7 @@ export default function WebHome({ amplitude, isMobile }) {
   return (
     <>
       {/* Navbar */}
-      <Navbar isMobile={isMobile} page={"home"} amplitude={amplitude} />
+      <Navbar isMobile={isMobile} page={"home"} />
 
       {/* Main div */}
       <div className="LargeContainer">
@@ -222,9 +228,10 @@ export default function WebHome({ amplitude, isMobile }) {
                         style={{ fontSize: "12px" }}
                         onClick={(event) => {
                           event.preventDefault();
-                          amplitude.track("Trending Comparison", {
+                          logEvent(analytics, "Trending Comparison", {
                             // Screen type
                             Category: comparisonItem.Category,
+                            Platform: "Mobile",
                           });
                           navigate(comparisonItem.Path);
                         }}
@@ -295,9 +302,10 @@ export default function WebHome({ amplitude, isMobile }) {
                       style={{ fontSize: "13px" }}
                       onClick={(event) => {
                         event.preventDefault();
-                        amplitude.track("Trending Comparison", {
+                        logEvent(analytics, "Trending Comparison", {
                           // Screen type
                           Category: comparisonItem.Category,
+                          Platform: "Mobile",
                         });
                         navigate(comparisonItem.Path);
                       }}
@@ -356,7 +364,7 @@ export default function WebHome({ amplitude, isMobile }) {
       </div>
 
       {/* Footer */}
-      <Footer amplitude={amplitude} isMobile={isMobile} />
+      <Footer isMobile={isMobile} />
 
       {/* Prediction Category selection modal */}
       <Modal
@@ -374,7 +382,11 @@ export default function WebHome({ amplitude, isMobile }) {
               className="NormalButtonNoBackground"
               key={item}
               onClick={() => {
-                amplitude.track("Modal Button", { type: "Prediction" });
+                logEvent(analytics, "Modal Button", {
+                  Type: "Prediction",
+                  Category: item,
+                  Platform: isMobile ? "Mobile" : "Computer",
+                });
 
                 navigate(`${predictionLinks[index]}`);
 
@@ -411,9 +423,10 @@ export default function WebHome({ amplitude, isMobile }) {
               className="NormalButtonNoBackground"
               key={item}
               onClick={() => {
-                amplitude.track("Modal Button", {
-                  type: "Comparison",
+                logEvent(analytics, "Modal Button", {
+                  Type: "Comparison",
                   Category: item,
+                  Platform: isMobile ? "Mobile" : "Computer",
                 });
                 navigate(`${comparisonLinks[index]}`);
 

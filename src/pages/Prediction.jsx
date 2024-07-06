@@ -15,7 +15,6 @@ import { Line } from "react-chartjs-2";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import seedrandom from "seedrandom";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,6 +25,10 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+
+import { getAnalytics, logEvent } from "firebase/analytics";
+
+const analytics = getAnalytics();
 
 ChartJS.register(
   CategoryScale,
@@ -50,7 +53,6 @@ let endIndex = 56;
 
 export default function Prediction({
   type,
-  amplitude,
   isMobile,
   averagePrices,
   brandValues,
@@ -89,7 +91,6 @@ export default function Prediction({
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [error, setError] = useState("");
 
-  // Neccessary to track this if not empty
   // For the search input
   const [searchString, setSearchString] = useState("");
   const [noResultsFound, setNoResultsFound] = useState(false);
@@ -263,7 +264,7 @@ export default function Prediction({
   }
 
   const updateColor = (newColor) => {
-    amplitude.track("Update Line Color", { color: newColor });
+    logEvent(analytics, "Update Line Color", { Color: newColor });
     // Update the points being displayed
     const newDataset = [];
     for (let item in lineValueDataset) {
@@ -323,7 +324,7 @@ export default function Prediction({
   }, [isMobile, updateGraph]);
 
   useEffect(() => {
-    amplitude.track("Prediction Screen", {
+    logEvent(analytics, "Screen", {
       Screen: type,
       Platform: isMobile ? "Mobile" : "Computer",
     });
@@ -338,11 +339,7 @@ export default function Prediction({
 
   return (
     <>
-      <Navbar
-        isMobile={isMobile}
-        page="prediction"
-        amplitude={amplitude}
-      ></Navbar>
+      <Navbar isMobile={isMobile} page="prediction"></Navbar>
       {/* Main Body */}
       <div className="PredictionContainer">
         <p style={{ fontSize: 25 }} className="HeaderText">
@@ -506,13 +503,13 @@ export default function Prediction({
                   if (result != 0) {
                     setError(result);
                     setShowErrorModal(true);
-                    amplitude.track("Error adding item", { error: result });
+                    logEvent(analytics, "Error adding item", { Error: result });
                   } else {
-                    amplitude.track("Add Prediction Item", {
-                      type: type,
-                      initialPrice: initialPrice,
-                      releaseYear: releaseYear,
-                      brand: brand,
+                    logEvent(analytics, "Add Prediction Item", {
+                      Type: type,
+                      InitialPrice: initialPrice,
+                      ReleaseYear: releaseYear,
+                      Brand: brand,
                     });
                   }
                 }}
@@ -537,7 +534,7 @@ export default function Prediction({
               {averagePrices ? (
                 <button
                   onClick={() => {
-                    amplitude.track("Add Average Price", { type: type });
+                    logEvent(analytics, "Add Average Price", { Type: type });
                     while (true) {
                       let matchFound = false;
                       const red = Math.random() * 255;
@@ -594,7 +591,7 @@ export default function Prediction({
                 onClick={() => {
                   // This data will be converted to a csv
                   let exportData = [];
-                  amplitude.track("Export CSV");
+                  logEvent(analytics, "Export CSV");
                   // The first row, and in the first column is the years
                   let firstJSON = {};
                   firstJSON["Year"] = "Year";
@@ -786,13 +783,13 @@ export default function Prediction({
                   if (result != 0) {
                     setError(result);
                     setShowErrorModal(true);
-                    amplitude.track("Error adding item", { error: result });
+                    logEvent(analytics, "Error adding item", { Error: result });
                   } else {
-                    amplitude.track("Add Prediction Item", {
-                      type: type,
-                      initialPrice: initialPrice,
-                      releaseYear: releaseYear,
-                      brand: brand,
+                    logEvent(analytics, "Add Prediction Item", {
+                      Type: type,
+                      InitialPrice: initialPrice,
+                      ReleaseYear: releaseYear,
+                      Brand: brand,
                     });
                   }
                 }}
@@ -829,7 +826,7 @@ export default function Prediction({
               {averagePrices ? (
                 <button
                   onClick={() => {
-                    amplitude.track("Add Average Price", { type: type });
+                    logEvent(analytics, "Add Average Price", { Type: type });
                     while (true) {
                       let matchFound = false;
                       const red = Math.random() * 255;
@@ -889,7 +886,7 @@ export default function Prediction({
                 onClick={() => {
                   // This data will be converted to a csv
                   let exportData = [];
-                  amplitude.track("Export CSV");
+                  logEvent(analytics, "Export CSV");
                   // The first row, and in the first column is the years
                   let firstJSON = {};
                   firstJSON["Year"] = "Year";
@@ -947,7 +944,7 @@ export default function Prediction({
         )}
       </div>
 
-      <Footer amplitude={amplitude} isMobile={isMobile} />
+      <Footer isMobile={isMobile} />
 
       {/* Brand Modal */}
       <Modal
@@ -969,7 +966,7 @@ export default function Prediction({
           value={searchString}
           className="TextInput"
           placeholder="Search"
-          id="SearchString"
+          id={"SearchString" + type}
           onChange={(text) => checkNoResults(text.target.value)}
           style={{ margin: "15px 0" }}
         ></input>
@@ -1082,8 +1079,8 @@ export default function Prediction({
                     fontSize: 12,
                   }}
                   onClick={async () => {
-                    amplitude.track("Delete Graph Item", {
-                      item: lineValueDataset[index].label,
+                    logEvent(analytics, "Delete Graph Item", {
+                      Item: lineValueDataset[index].label,
                     });
                     // Remove this item and set the color change index to 0 to minimize errors
                     const newOriginalPoints = originalPoints.filter(
@@ -1153,8 +1150,8 @@ export default function Prediction({
                     fontSize: 14,
                   }}
                   onClick={async () => {
-                    amplitude.track("Delete Graph Item", {
-                      item: lineValueDataset[index].label,
+                    logEvent(analytics, "Delete Graph Item", {
+                      Item: lineValueDataset[index].label,
                     });
                     // Remove this item and set the color change index to 0 to minimize errors
                     const newOriginalPoints = originalPoints.filter(

@@ -2,7 +2,6 @@ import useWindowDimensions from "./useWindowDimensions";
 
 import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import * as amplitude from "@amplitude/analytics-browser";
 
 const WebHome = lazy(() => import("./pages/WebHome"));
 const WebLogIn = lazy(() => import("./pages/WebLogIn"));
@@ -26,10 +25,6 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
-
-amplitude.init("2f7a0b5502e80160174b1723e01a117d", null, {
-  logLevel: amplitude.Types.LogLevel.None,
-});
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -60,7 +55,7 @@ const consoleQueryProcess = ["Brand", "Name"];
 const consoleBrands = [
   {
     Brand: "Microsoft",
-    SecondStep: [
+    RequestStep: [
       "Xbox Series X",
       "Xbox Series S",
       "Xbox One X",
@@ -76,7 +71,7 @@ const consoleBrands = [
   },
   {
     Brand: "Nintendo",
-    SecondStep: [
+    RequestStep: [
       "Switch",
       "Switch (OLED Model)",
       "Wii U 8GB",
@@ -104,7 +99,7 @@ const consoleBrands = [
   },
   {
     Brand: "Sony",
-    SecondStep: [
+    RequestStep: [
       "PlayStation 5 Slim",
       "PlayStation 5 Slim (Digital Edition)",
       "PlayStation 5",
@@ -132,12 +127,12 @@ const consoleBrands = [
       "PlayStation",
     ],
   },
-  { Brand: "Abxylute", SecondStep: ["64GB"] },
-  { Brand: "Alienware", SecondStep: ["Alpha (i3)"] },
-  { Brand: "Analogue", SecondStep: ["Pocket", "Duo", "Mega Sg", "Super Nt"] },
+  { Brand: "Abxylute", RequestStep: ["64GB"] },
+  { Brand: "Alienware", RequestStep: ["Alpha (i3)"] },
+  { Brand: "Analogue", RequestStep: ["Pocket", "Duo", "Mega Sg", "Super Nt"] },
   {
     Brand: "Anbernic",
-    SecondStep: [
+    RequestStep: [
       "RG353P 32GB + 16GB + 64GB",
       "RG552 64GB + 16GB + 64GB",
       "Win600 AMD Athlon Silver 3050e / 16GB RAM / 1TB SSD",
@@ -167,16 +162,16 @@ const consoleBrands = [
   },
   {
     Brand: "Aokzoe",
-    SecondStep: [
+    RequestStep: [
       "A1 Pro AMD Ryzen 7 7840U / 64GB RAM / 2TB SSD",
       "A1 AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
     ],
   },
-  { Brand: "Asus", SecondStep: ["ROG Ally"] },
-  { Brand: "Atari", SecondStep: ["VCS", "Lynx"] },
+  { Brand: "Asus", RequestStep: ["ROG Ally"] },
+  { Brand: "Atari", RequestStep: ["VCS", "Lynx"] },
   {
     Brand: "Aya Neo",
-    SecondStep: [
+    RequestStep: [
       "Flip DS AMD Ryzen 7 7840U / 64GB RAM / 2TB SSD",
       "Flip DS AMD Ryzen 7 8840U / 64GB RAM / 2TB SSD",
       "Kun AMD Ryzen 7 7840U / 64GB RAM / 4TB SSD",
@@ -200,7 +195,7 @@ const consoleBrands = [
   },
   {
     Brand: "Ayn",
-    SecondStep: [
+    RequestStep: [
       "Loki Max",
       "Loki 512GB",
       "Odin 256GB",
@@ -214,33 +209,36 @@ const consoleBrands = [
   },
   {
     Brand: "GPD",
-    SecondStep: [
+    RequestStep: [
       "Win 4 AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
       "XP Plus / 6GB RAM / 256GB SSD",
       "Win 3 Intel Core i7-1195G7 / 16GB RAM / 1TB SSD",
       "XD Plus 4GB RAM / 32GB",
     ],
   },
-  { Brand: "KTPocket", SecondStep: ["KT R1 Wi-Fi + Cellular 8GB RAM / 256GB"] },
+  {
+    Brand: "KTPocket",
+    RequestStep: ["KT R1 Wi-Fi + Cellular 8GB RAM / 256GB"],
+  },
   {
     Brand: "Lenovo",
-    SecondStep: [
+    RequestStep: [
       "Legion Go AMD Z1 Extreme / 16GB RAM / 1TB SSD",
       "Legion Go AMD Z1 / 16GB RAM / 256GB SSD",
     ],
   },
-  { Brand: "Logitech", SecondStep: ["G Cloud"] },
+  { Brand: "Logitech", RequestStep: ["G Cloud"] },
   {
     Brand: "MSI",
-    SecondStep: [
+    RequestStep: [
       "Claw A1M Intel Core Ultra 7 155H / 16GB RAM / 1TB SSD",
       "Claw A1M Intel Core Ultra 5 135H / 16GB RAM / 512GB SSD",
     ],
   },
-  { Brand: "Nvidia", SecondStep: ["Shield"] },
+  { Brand: "Nvidia", RequestStep: ["Shield"] },
   {
     Brand: "Onexplayer",
-    SecondStep: [
+    RequestStep: [
       "2 AMD Ryzen 7 6800U / 32GB RAM / 2TB SSD",
       "Mini Pro AMD Ryzen 6800U / 32GB RAM / 2TB SSD",
       "Mini Pro Intel Core i7-1260P / 16GB RAM / 2TB SSD",
@@ -249,7 +247,7 @@ const consoleBrands = [
   },
   {
     Brand: "Powkiddy",
-    SecondStep: [
+    RequestStep: [
       "X28",
       "X55 16GB + 128GB",
       "RGB30 16GB + 128GB",
@@ -269,7 +267,7 @@ const consoleBrands = [
   },
   {
     Brand: "Retroid",
-    SecondStep: [
+    RequestStep: [
       "Pocket Flip",
       "Pocket 3 Plus / 4GB RAM / 128GB",
       "Pocket 3 / 3GB RAM / 32GB",
@@ -278,7 +276,7 @@ const consoleBrands = [
   },
   {
     Brand: "Sega",
-    SecondStep: [
+    RequestStep: [
       "Dreamcast",
       "Mega Drive Mini 2",
       "Game Gear",
@@ -288,11 +286,11 @@ const consoleBrands = [
   },
   {
     Brand: "Terrans Force",
-    SecondStep: ["Handle 5 AMD Ryzen 7 Pro 7840U / 32GB RAM / 1TB SSD"],
+    RequestStep: ["Handle 5 AMD Ryzen 7 Pro 7840U / 32GB RAM / 1TB SSD"],
   },
   {
     Brand: "Valve",
-    SecondStep: [
+    RequestStep: [
       "Steam Deck (OLED Model) 1024GB",
       "Steam Deck 512GB",
       "Steam Machine",
@@ -1184,7 +1182,7 @@ const droneQueryProcess = ["Brand", "Name"];
 const droneBrands = [
   {
     Brand: "Autel",
-    SecondStep: [
+    RequestStep: [
       "Evo II",
       "Evo Max 4T",
       "Evo Nano Plus",
@@ -1200,7 +1198,7 @@ const droneBrands = [
   },
   {
     Brand: "DJI",
-    SecondStep: [
+    RequestStep: [
       "Mavic Air 2",
       "Phantom 4 Pro",
       "Mini 4 Pro",
@@ -1229,7 +1227,7 @@ const droneBrands = [
   },
   {
     Brand: "Holy Stone",
-    SecondStep: [
+    RequestStep: [
       "HS720E",
       "HS100",
       "HS700E",
@@ -1260,11 +1258,11 @@ const droneBrands = [
   },
   {
     Brand: "Parrot",
-    SecondStep: ["Anafi Ai", "Anafi", "Bebop 2", "Mambo FPV"],
+    RequestStep: ["Anafi Ai", "Anafi", "Bebop 2", "Mambo FPV"],
   },
   {
     Brand: "Potensic",
-    SecondStep: [
+    RequestStep: [
       "Atom SE",
       "Atom",
       "D80",
@@ -1276,8 +1274,8 @@ const droneBrands = [
       "T35",
     ],
   },
-  { Brand: "Ryze", SecondStep: ["Tello"] },
-  { Brand: "Snaptain", SecondStep: ["SP500", "SP650", "SP700", "S5C"] },
+  { Brand: "Ryze", RequestStep: ["Tello"] },
+  { Brand: "Snaptain", RequestStep: ["SP500", "SP650", "SP700", "S5C"] },
 ];
 const droneDefaultArray = [
   {
@@ -1804,7 +1802,7 @@ const graphicsCardsQueryProcess = ["Brand", "Generation", "Card"];
 const graphicsCardsBrands = [
   {
     Brand: "AMD",
-    SecondStep: [
+    RequestStep: [
       "Vega IGP",
       "Radeon Pro Vega",
       "Radeon Pro Mobile",
@@ -1826,7 +1824,7 @@ const graphicsCardsBrands = [
   },
   {
     Brand: "Intel",
-    SecondStep: [
+    RequestStep: [
       "Data Center GPU",
       "HD Graphics-WM",
       "HD Graphics-T",
@@ -1842,7 +1840,7 @@ const graphicsCardsBrands = [
   },
   {
     Brand: "NVIDIA",
-    SecondStep: [
+    RequestStep: [
       "GeForce 400M",
       "GeForce 10",
       "Tesla Pascal",
@@ -2302,7 +2300,7 @@ const CPUsQueryProcess = ["Brand", "Generation", "CPU"];
 const CPUsBrands = [
   {
     Brand: "AMD",
-    SecondStep: [
+    RequestStep: [
       "Ryzen 3",
       "Z",
       "Ryzen 7",
@@ -2328,7 +2326,7 @@ const CPUsBrands = [
   },
   {
     Brand: "Intel",
-    SecondStep: [
+    RequestStep: [
       "Xeon Platinum",
       "Xeon E7",
       "Xeon E3",
@@ -3070,7 +3068,7 @@ const carsQueryProcess = ["Brand", "Model", "Year", "Trim"];
 const carsBrands = [
   {
     Brand: "Acura",
-    SecondStep: [
+    RequestStep: [
       "CL",
       "CSX",
       "EL",
@@ -3090,7 +3088,7 @@ const carsBrands = [
   },
   {
     Brand: "Alfa Romeo",
-    SecondStep: [
+    RequestStep: [
       "145",
       "146",
       "147",
@@ -3114,7 +3112,7 @@ const carsBrands = [
   },
   {
     Brand: "Aston Martin",
-    SecondStep: [
+    RequestStep: [
       "Cygnet",
       "DB11",
       "DB12",
@@ -3133,7 +3131,7 @@ const carsBrands = [
   },
   {
     Brand: "Audi",
-    SecondStep: [
+    RequestStep: [
       "A1",
       "A2",
       "A3",
@@ -3183,7 +3181,7 @@ const carsBrands = [
   },
   {
     Brand: "Bentley",
-    SecondStep: [
+    RequestStep: [
       "Arnage",
       "Azure",
       "Bentayga",
@@ -3195,7 +3193,7 @@ const carsBrands = [
   },
   {
     Brand: "BMW",
-    SecondStep: [
+    RequestStep: [
       "1 Series",
       "2 Series",
       "3 Series",
@@ -3239,11 +3237,11 @@ const carsBrands = [
   },
   {
     Brand: "Bugatti",
-    SecondStep: ["Bolide", "Centodieci", "Chiron", "Divo", "Veyron"],
+    RequestStep: ["Bolide", "Centodieci", "Chiron", "Divo", "Veyron"],
   },
   {
     Brand: "Buick",
-    SecondStep: [
+    RequestStep: [
       "Cascada",
       "Century",
       "Electra E4",
@@ -3274,7 +3272,7 @@ const carsBrands = [
   },
   {
     Brand: "BYD",
-    SecondStep: [
+    RequestStep: [
       "Atto 3",
       "Dolphin",
       "e2",
@@ -3299,7 +3297,7 @@ const carsBrands = [
   },
   {
     Brand: "Cadillac",
-    SecondStep: [
+    RequestStep: [
       "ATS",
       "BLS",
       "Catera",
@@ -3327,7 +3325,7 @@ const carsBrands = [
   },
   {
     Brand: "Chevrolet",
-    SecondStep: [
+    RequestStep: [
       "Agile",
       "Alero",
       "Astra",
@@ -3401,7 +3399,7 @@ const carsBrands = [
   },
   {
     Brand: "Chrysler",
-    SecondStep: [
+    RequestStep: [
       "200",
       "300",
       "300M",
@@ -3426,7 +3424,7 @@ const carsBrands = [
   },
   {
     Brand: "Citroen",
-    SecondStep: [
+    RequestStep: [
       "AMI electric",
       "Berlingo",
       "C-Crosser",
@@ -3459,7 +3457,7 @@ const carsBrands = [
   },
   {
     Brand: "Daewoo",
-    SecondStep: [
+    RequestStep: [
       "Chairman",
       "Damas",
       "Evanda",
@@ -3484,7 +3482,7 @@ const carsBrands = [
   },
   {
     Brand: "Dodge",
-    SecondStep: [
+    RequestStep: [
       "Avenger",
       "Caliber",
       "Caravan",
@@ -3506,7 +3504,7 @@ const carsBrands = [
   },
   {
     Brand: "Ferrari",
-    SecondStep: [
+    RequestStep: [
       "296",
       "360",
       "456",
@@ -3536,7 +3534,7 @@ const carsBrands = [
   },
   {
     Brand: "Fiat",
-    SecondStep: [
+    RequestStep: [
       "124",
       "500",
       "500L",
@@ -3580,10 +3578,10 @@ const carsBrands = [
       "Viaggio",
     ],
   },
-  { Brand: "Fisker", SecondStep: ["EMotion", "Karma", "Ocean"] },
+  { Brand: "Fisker", RequestStep: ["EMotion", "Karma", "Ocean"] },
   {
     Brand: "Ford",
-    SecondStep: [
+    RequestStep: [
       "B-MAX",
       "Bronco",
       "Bronco Sport",
@@ -3643,11 +3641,11 @@ const carsBrands = [
   },
   {
     Brand: "Genesis",
-    SecondStep: ["G70", "G80", "G90/EQ900", "GV60", "GV70", "GV80"],
+    RequestStep: ["G70", "G80", "G90/EQ900", "GV60", "GV70", "GV80"],
   },
   {
     Brand: "GMC",
-    SecondStep: [
+    RequestStep: [
       "Acadia",
       "Canyon",
       "Envoy",
@@ -3662,10 +3660,10 @@ const carsBrands = [
       "Yukon",
     ],
   },
-  { Brand: "Hennessey", SecondStep: ["Venom F5", "Venom GT"] },
+  { Brand: "Hennessey", RequestStep: ["Venom F5", "Venom GT"] },
   {
     Brand: "Honda",
-    SecondStep: [
+    RequestStep: [
       "Accord",
       "Airwave",
       "Amaze",
@@ -3735,10 +3733,10 @@ const carsBrands = [
       "ZR-V",
     ],
   },
-  { Brand: "Hummer", SecondStep: ["H1", "H2", "H3"] },
+  { Brand: "Hummer", RequestStep: ["H1", "H2", "H3"] },
   {
     Brand: "Hyundai",
-    SecondStep: [
+    RequestStep: [
       "Accent",
       "Alcazar",
       "Atos",
@@ -3799,10 +3797,10 @@ const carsBrands = [
       "XG",
     ],
   },
-  { Brand: "INEOS", SecondStep: ["Grenadier"] },
+  { Brand: "INEOS", RequestStep: ["Grenadier"] },
   {
     Brand: "Infiniti",
-    SecondStep: [
+    RequestStep: [
       "EX",
       "FX",
       "G",
@@ -3828,7 +3826,7 @@ const carsBrands = [
   },
   {
     Brand: "Isuzu",
-    SecondStep: [
+    RequestStep: [
       "Ascender",
       "Aska",
       "Axiom",
@@ -3844,7 +3842,7 @@ const carsBrands = [
   },
   {
     Brand: "Jaguar",
-    SecondStep: [
+    RequestStep: [
       "C-X16",
       "E-Pace",
       "F-Pace",
@@ -3860,7 +3858,7 @@ const carsBrands = [
   },
   {
     Brand: "Jeep",
-    SecondStep: [
+    RequestStep: [
       "Avenger",
       "Cherokee",
       "Commander",
@@ -3876,10 +3874,10 @@ const carsBrands = [
       "Wrangler",
     ],
   },
-  { Brand: "Karma", SecondStep: ["Revero"] },
+  { Brand: "Karma", RequestStep: ["Revero"] },
   {
     Brand: "Kia",
-    SecondStep: [
+    RequestStep: [
       "Avella",
       "Borrego",
       "Cadenza",
@@ -3934,12 +3932,12 @@ const carsBrands = [
   },
   {
     Brand: "Koenigsegg",
-    SecondStep: ["Agera", "CC", "CC850", "Gemera", "Jesko", "One:1", "Regera"],
+    RequestStep: ["Agera", "CC", "CC850", "Gemera", "Jesko", "One:1", "Regera"],
   },
-  { Brand: "KTM", SecondStep: ["X-Bow"] },
+  { Brand: "KTM", RequestStep: ["X-Bow"] },
   {
     Brand: "Lamborghini",
-    SecondStep: [
+    RequestStep: [
       "Asterion",
       "Aventador",
       "Centenario",
@@ -3958,7 +3956,7 @@ const carsBrands = [
   },
   {
     Brand: "Land Rover",
-    SecondStep: [
+    RequestStep: [
       "Defender",
       "Discovery",
       "Discovery Sport",
@@ -3971,7 +3969,7 @@ const carsBrands = [
   },
   {
     Brand: "Lexus",
-    SecondStep: [
+    RequestStep: [
       "CT",
       "ES",
       "GS",
@@ -3995,7 +3993,7 @@ const carsBrands = [
   },
   {
     Brand: "Lincoln",
-    SecondStep: [
+    RequestStep: [
       "Aviator",
       "Continental",
       "Corsair",
@@ -4015,7 +4013,7 @@ const carsBrands = [
   },
   {
     Brand: "Lotus",
-    SecondStep: [
+    RequestStep: [
       "2-Eleven",
       "3-Eleven",
       "Eletre",
@@ -4027,10 +4025,10 @@ const carsBrands = [
       "Exige",
     ],
   },
-  { Brand: "Lucid", SecondStep: ["Air"] },
+  { Brand: "Lucid", RequestStep: ["Air"] },
   {
     Brand: "Maserati",
-    SecondStep: [
+    RequestStep: [
       "3200 GT",
       "Coupe",
       "Ghibli",
@@ -4045,10 +4043,10 @@ const carsBrands = [
       "Spyder",
     ],
   },
-  { Brand: "Maybach", SecondStep: ["57", "57 S", "62", "62 S", "Landaulet"] },
+  { Brand: "Maybach", RequestStep: ["57", "57 S", "62", "62 S", "Landaulet"] },
   {
     Brand: "Mazda",
-    SecondStep: [
+    RequestStep: [
       "121",
       "2",
       "3",
@@ -4106,7 +4104,7 @@ const carsBrands = [
   },
   {
     Brand: "McLaren",
-    SecondStep: [
+    RequestStep: [
       "540C",
       "570S",
       "600LT",
@@ -4130,7 +4128,7 @@ const carsBrands = [
   },
   {
     Brand: "Mercedes-Benz",
-    SecondStep: [
+    RequestStep: [
       "A-class",
       "AMG GT",
       "AMG GT 4-Door Coupe",
@@ -4181,7 +4179,7 @@ const carsBrands = [
   },
   {
     Brand: "Mercury",
-    SecondStep: [
+    RequestStep: [
       "Cougar",
       "Grand Marquis",
       "Marauder",
@@ -4197,7 +4195,7 @@ const carsBrands = [
   },
   {
     Brand: "Mini",
-    SecondStep: [
+    RequestStep: [
       "Clubman",
       "Convertible",
       "Countryman",
@@ -4210,7 +4208,7 @@ const carsBrands = [
   },
   {
     Brand: "Mitsubishi",
-    SecondStep: [
+    RequestStep: [
       "3000 GT",
       "Airtrek",
       "Aspire",
@@ -4266,7 +4264,7 @@ const carsBrands = [
   },
   {
     Brand: "Nissan",
-    SecondStep: [
+    RequestStep: [
       "200 SX",
       "350Z",
       "370Z",
@@ -4350,7 +4348,7 @@ const carsBrands = [
   },
   {
     Brand: "Oldsmobile",
-    SecondStep: [
+    RequestStep: [
       "Alero",
       "Aurora",
       "Bravada",
@@ -4361,7 +4359,7 @@ const carsBrands = [
   },
   {
     Brand: "Opel",
-    SecondStep: [
+    RequestStep: [
       "Adam",
       "Agila",
       "Ampera",
@@ -4392,11 +4390,11 @@ const carsBrands = [
       "Zafira Life",
     ],
   },
-  { Brand: "Pagani", SecondStep: ["Huayra", "Utopia", "Zonda"] },
-  { Brand: "Panoz", SecondStep: ["Abruzzi", "Esperante"] },
+  { Brand: "Pagani", RequestStep: ["Huayra", "Utopia", "Zonda"] },
+  { Brand: "Panoz", RequestStep: ["Abruzzi", "Esperante"] },
   {
     Brand: "Peugeot",
-    SecondStep: [
+    RequestStep: [
       "1007",
       "106",
       "107",
@@ -4437,12 +4435,12 @@ const carsBrands = [
   },
   {
     Brand: "Plymouth",
-    SecondStep: ["Breeze", "Grand Voyager", "Prowler", "Voyager"],
+    RequestStep: ["Breeze", "Grand Voyager", "Prowler", "Voyager"],
   },
-  { Brand: "Polestar", SecondStep: ["1", "2", "3", "4"] },
+  { Brand: "Polestar", RequestStep: ["1", "2", "3", "4"] },
   {
     Brand: "Pontiac",
-    SecondStep: [
+    RequestStep: [
       "Aztec",
       "Bonneville",
       "Firebird",
@@ -4460,7 +4458,7 @@ const carsBrands = [
   },
   {
     Brand: "Porsche",
-    SecondStep: [
+    RequestStep: [
       "718",
       "911",
       "918",
@@ -4474,10 +4472,10 @@ const carsBrands = [
       "Taycan",
     ],
   },
-  { Brand: "RAM", SecondStep: ["1500", "2500/3500"] },
+  { Brand: "RAM", RequestStep: ["1500", "2500/3500"] },
   {
     Brand: "Renault",
-    SecondStep: [
+    RequestStep: [
       "19",
       "5 E-Tech",
       "Alaskan",
@@ -4525,13 +4523,13 @@ const carsBrands = [
   },
   {
     Brand: "Renault Samsung",
-    SecondStep: ["QM3", "QM6", "SM3", "SM5", "SM6", "SM7"],
+    RequestStep: ["QM3", "QM6", "SM3", "SM5", "SM6", "SM7"],
   },
-  { Brand: "Rimac", SecondStep: ["CTwo", "Nevera", "One"] },
-  { Brand: "Rivian", SecondStep: ["R1S", "R1T"] },
+  { Brand: "Rimac", RequestStep: ["CTwo", "Nevera", "One"] },
+  { Brand: "Rivian", RequestStep: ["R1S", "R1T"] },
   {
     Brand: "Rolls-Royce",
-    SecondStep: [
+    RequestStep: [
       "Corniche",
       "Cullinan",
       "Dawn",
@@ -4543,10 +4541,10 @@ const carsBrands = [
       "Wraith",
     ],
   },
-  { Brand: "Saab", SecondStep: ["9-2X", "45538", "9-4X", "45540", "9-7X"] },
+  { Brand: "Saab", RequestStep: ["9-2X", "45538", "9-4X", "45540", "9-7X"] },
   {
     Brand: "Saturn",
-    SecondStep: [
+    RequestStep: [
       "Astra",
       "Aura",
       "ION",
@@ -4563,11 +4561,11 @@ const carsBrands = [
   },
   {
     Brand: "Scion",
-    SecondStep: ["FR-S", "iA", "iM", "iQ", "tC", "xA", "xB", "xD"],
+    RequestStep: ["FR-S", "iA", "iM", "iQ", "tC", "xA", "xB", "xD"],
   },
   {
     Brand: "Smart",
-    SecondStep: [
+    RequestStep: [
       "#1",
       "#3",
       "Crossblade",
@@ -4577,10 +4575,10 @@ const carsBrands = [
       "Roadster",
     ],
   },
-  { Brand: "Spyker", SecondStep: ["C8"] },
+  { Brand: "Spyker", RequestStep: ["C8"] },
   {
     Brand: "Subaru",
-    SecondStep: [
+    RequestStep: [
       "Ascent",
       "Baja",
       "Bistro",
@@ -4606,7 +4604,7 @@ const carsBrands = [
   },
   {
     Brand: "Suzuki",
-    SecondStep: [
+    RequestStep: [
       "Across",
       "Aerio",
       "Alto",
@@ -4648,7 +4646,7 @@ const carsBrands = [
   },
   {
     Brand: "Tata",
-    SecondStep: [
+    RequestStep: [
       "Altroz",
       "Aria",
       "Bolt",
@@ -4672,7 +4670,7 @@ const carsBrands = [
   },
   {
     Brand: "Tesla",
-    SecondStep: [
+    RequestStep: [
       "Cybertruck",
       "Model 3",
       "Model S",
@@ -4683,7 +4681,7 @@ const carsBrands = [
   },
   {
     Brand: "Toyota",
-    SecondStep: [
+    RequestStep: [
       "4runner",
       "86",
       "Allex",
@@ -4789,7 +4787,7 @@ const carsBrands = [
   },
   {
     Brand: "VinFast",
-    SecondStep: [
+    RequestStep: [
       "Fadil",
       "LUX A",
       "LUX SA",
@@ -4804,7 +4802,7 @@ const carsBrands = [
   },
   {
     Brand: "Volkswagen",
-    SecondStep: [
+    RequestStep: [
       "Amarok",
       "Ameo",
       "Arteon",
@@ -4867,7 +4865,7 @@ const carsBrands = [
   },
   {
     Brand: "Volvo",
-    SecondStep: [
+    RequestStep: [
       "C30",
       "C40",
       "C70",
@@ -4892,7 +4890,7 @@ const carsBrands = [
       "XC90",
     ],
   },
-  { Brand: "Xiaomi", SecondStep: ["SU7"] },
+  { Brand: "Xiaomi", RequestStep: ["SU7"] },
 ];
 const carsDefaultArray = [
   {
@@ -5621,7 +5619,7 @@ export default function App() {
           path="/"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <WebHome amplitude={amplitude} isMobile={isMobile}></WebHome>
+              <WebHome isMobile={isMobile}></WebHome>
             </Suspense>
           }
         ></Route>
@@ -5631,7 +5629,7 @@ export default function App() {
           path="/home"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <WebHome amplitude={amplitude} isMobile={isMobile}></WebHome>
+              <WebHome isMobile={isMobile}></WebHome>
             </Suspense>
           }
         ></Route>
@@ -5641,7 +5639,7 @@ export default function App() {
           path="/login"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <WebLogIn amplitude={amplitude} isMobile={isMobile}></WebLogIn>
+              <WebLogIn isMobile={isMobile}></WebLogIn>
             </Suspense>
           }
         ></Route>
@@ -5652,7 +5650,6 @@ export default function App() {
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <WebUserAccount
-                amplitude={amplitude}
                 isMobile={isMobile}
                 defaultArrays={[
                   carsDefaultArray,
@@ -5679,7 +5676,6 @@ export default function App() {
                 DirectQueryFunction={directQueryAutomobilesFunction}
                 DefaultArray={carsDefaultArray}
                 Categories={carsCategories}
-                amplitude={amplitude}
                 isMobile={isMobile}
                 comparisonLink={
                   window.location.origin + "/comparison/automobiles/"
@@ -5702,7 +5698,6 @@ export default function App() {
                 DirectQueryFunction={directQueryConsolesFunction}
                 DefaultArray={consoleDefaultArray}
                 Categories={consoleCategories}
-                amplitude={amplitude}
                 isMobile={isMobile}
                 comparisonLink={
                   window.location.origin + "/comparison/consoles/"
@@ -5725,7 +5720,6 @@ export default function App() {
                 DirectQueryFunction={directQueryCPUsFunction}
                 DefaultArray={CPUsDefaultArray}
                 Categories={CPUsCategories}
-                amplitude={amplitude}
                 isMobile={isMobile}
                 comparisonLink={window.location.origin + "/comparison/cpus/"}
               ></Compare>
@@ -5746,7 +5740,6 @@ export default function App() {
                 DirectQueryFunction={directQueryGraphicsCardsFunction}
                 DefaultArray={graphicsCardsDefaultArray}
                 Categories={graphicsCardsCategories}
-                amplitude={amplitude}
                 isMobile={isMobile}
                 comparisonLink={
                   window.location.origin + "/comparison/graphicsCards/"
@@ -5769,7 +5762,6 @@ export default function App() {
                 DirectQueryFunction={directQueryDronesFunction}
                 DefaultArray={droneDefaultArray}
                 Categories={droneCategories}
-                amplitude={amplitude}
                 isMobile={isMobile}
                 comparisonLink={window.location.origin + "/comparison/drones/"}
               ></Compare>
@@ -5783,7 +5775,6 @@ export default function App() {
             <Suspense fallback={<div>Loading...</div>}>
               <Prediction
                 type={"Automobiles"}
-                amplitude={amplitude}
                 isMobile={isMobile}
                 averagePrices={carsAveragePrices}
                 brandValues={carsBrandValues}
@@ -5799,7 +5790,6 @@ export default function App() {
             <Suspense fallback={<div>Loading...</div>}>
               <Prediction
                 type={"Graphics Cards"}
-                amplitude={amplitude}
                 isMobile={isMobile}
                 averagePrices={null}
                 brandValues={graphicsCardsBrandValues}
@@ -5815,7 +5805,6 @@ export default function App() {
             <Suspense fallback={<div>Loading...</div>}>
               <Prediction
                 type={"CPUs"}
-                amplitude={amplitude}
                 isMobile={isMobile}
                 averagePrices={null}
                 brandValues={processorsBrandValues}
@@ -5830,7 +5819,6 @@ export default function App() {
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Information
-                amplitude={amplitude}
                 isMobile={isMobile}
                 title={"About Us"}
                 text={
@@ -5889,7 +5877,6 @@ export default function App() {
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Information
-                amplitude={amplitude}
                 isMobile={isMobile}
                 title={"Terms of Service"}
                 text={
@@ -5968,7 +5955,6 @@ export default function App() {
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Information
-                amplitude={amplitude}
                 isMobile={isMobile}
                 title={"Privacy Policy"}
                 text={
@@ -5976,7 +5962,7 @@ export default function App() {
                   <div>
 
 <p className="InfoText">{"\n"}</p>
-<p className="InfoText">We collect user activity data through Amplitude to understand how our app is used and improve it for you. This data helps us tweak features and make your experience better. The data is not linked to you or your email. We do not store any of your usage data on our servers. We don't sell this info to third parties — your privacy is our priority.</p>
+<p className="InfoText">We collect user activity data through Google Analytics to understand how our app is used and improve it for you. This data helps us tweak features and make your experience better. The data is not linked to you or your email. We do not store any of your usage data on our servers. We don't sell this info to third parties — your privacy is our priority.</p>
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">When users visit our website, we utilize Google Ads to promote our services. Google Ads may place cookies on users' browsers and collect certain anonymous information for advertising purposes. This data helps us reach our audience effectively.</p>
@@ -6004,7 +5990,7 @@ export default function App() {
           path="*"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <NoPage isMobile={isMobile} amplitude={amplitude}></NoPage>
+              <NoPage isMobile={isMobile}></NoPage>
             </Suspense>
           }
         ></Route>
