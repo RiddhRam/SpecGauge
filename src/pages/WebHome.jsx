@@ -1,11 +1,12 @@
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
+import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import SetTitleAndDescription from "../functions/SetTitleAndDescription";
+import { useNavigate, Link } from "react-router-dom";
 import Modal from "react-modal";
+import { Helmet } from "react-helmet";
+
 import { getAnalytics, logEvent } from "firebase/analytics";
 
 const analytics = getAnalytics();
@@ -128,7 +129,6 @@ export default function WebHome({ isMobile }) {
   const [predictModalVisible, setPredictModalVisible] = useState(false);
 
   const navigate = useNavigate();
-
   {
     /* Records the initial load of the website */
   }
@@ -145,6 +145,9 @@ export default function WebHome({ isMobile }) {
 
   return (
     <>
+      <Helmet>
+        <link rel="canonical" href={"https://specgauge.com/"} />
+      </Helmet>
       {/* Navbar */}
       <Navbar isMobile={isMobile} page={"home"} />
 

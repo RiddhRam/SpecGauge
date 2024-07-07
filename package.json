@@ -1,7 +1,7 @@
 {
   "name": "specgauge",
   "private": true,
-  "version": "5.5.1",
+  "version": "5.5.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +19,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-colorful": "^5.6.1",
     "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.23.1",
     "seedrandom": "^3.0.5"

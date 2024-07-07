@@ -1,1 +1,16 @@
-/* /index.html 200
+/ /index.html 200
+/home /index.html 200
+/login /index.html 200
+/account /index.html 200
+/comparison/automobiles/* /index.html 200
+/comparison/consoles/* /index.html 200
+/comparison/cpus/* /index.html 200
+/comparison/graphicscards/* /index.html 200
+/comparison/drones/* /index.html 200
+/prediction/automobiles/* /index.html 200
+/prediction/graphicscards/* /index.html 200
+/prediction/cpus/* /index.html 200
+/aboutus /index.html 200
+/termsofservice /index.html 200
+/privacypolicy /index.html 200
+/* /index.html 404
