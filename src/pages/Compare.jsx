@@ -303,6 +303,7 @@ export default function Compare({
     logEvent(analytics, "Screen", {
       Screen: type,
       Platform: isMobile ? "Mobile" : "Computer",
+      Tool: "Comparison",
     });
   }, []);
 

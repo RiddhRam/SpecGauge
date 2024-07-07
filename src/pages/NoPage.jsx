@@ -30,7 +30,11 @@ export default function NoPage({ isMobile }) {
           <img
             src={SpecGaugeLogo}
             alt="SpecGauge Logo"
-            style={{ width: 35, height: 35 }}
+            style={{
+              imageRendering: "crisp-edges",
+              objectFit: "contain",
+              width: "50px",
+            }}
           ></img>
 
           <h1 id="LogoText">SpecGauge</h1>

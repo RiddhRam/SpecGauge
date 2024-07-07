@@ -348,6 +348,7 @@ export default function Prediction({
     logEvent(analytics, "Screen", {
       Screen: type,
       Platform: isMobile ? "Mobile" : "Computer",
+      Tool: "Prediction",
     });
   }, []);
 

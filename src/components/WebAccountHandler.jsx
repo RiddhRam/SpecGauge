@@ -166,9 +166,11 @@ export default function WebAccountHandler({
           <img
             src={SpecGaugeLogo}
             alt="SpecGauge Logo"
-            style={
-              isMobile ? { width: 25, height: 25 } : { width: 35, height: 35 }
-            }
+            style={{
+              imageRendering: "crisp-edges",
+              objectFit: "contain",
+              width: isMobile ? "30px" : "50px",
+            }}
           ></img>
           <p
             style={{

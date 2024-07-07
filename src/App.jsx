@@ -5253,6 +5253,7 @@ const fast = -0.12;
 const normal = -0.09;
 const reputable = -0.06;
 const reliable = -0.05;
+const superReliable = -0.03;
 const expensiveSport = -0.03;
 const superCar = -0.02;
 
@@ -5394,7 +5395,7 @@ const carsBrandValues = [
   { label: "Suzuki", value: normal },
   { label: "Tata", value: normal },
   { label: "Tesla", value: reputable },
-  { label: "Toyota", value: reliable },
+  { label: "Toyota", value: superReliable },
   { label: "VinFast", value: fast },
   { label: "Volkswagen", value: normal },
   { label: "Volvo", value: reliable },
