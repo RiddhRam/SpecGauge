@@ -3,7 +3,7 @@ import useWindowDimensions from "./useWindowDimensions";
 import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-const WebHome = lazy(() => import("./pages/WebHome"));
+import WebHome from "./pages/WebHome";
 const WebLogIn = lazy(() => import("./pages/WebLogIn"));
 const WebUserAccount = lazy(() => import("./pages/WebUserAccount"));
 const Compare = lazy(() => import("./pages/Compare"));
@@ -5592,21 +5592,13 @@ export default function App() {
         {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
         <Route
           path="/"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <WebHome isMobile={isMobile}></WebHome>
-            </Suspense>
-          }
+          element={<WebHome isMobile={isMobile}></WebHome>}
         ></Route>
         {/* the home page */}
         <Route
           index
           path="/home"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <WebHome isMobile={isMobile}></WebHome>
-            </Suspense>
-          }
+          element={<WebHome isMobile={isMobile}></WebHome>}
         ></Route>
         {/* the login page */}
         <Route

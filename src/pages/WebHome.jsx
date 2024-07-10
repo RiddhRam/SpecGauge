@@ -157,20 +157,22 @@ export default function WebHome({ isMobile }) {
       <div className="LargeContainer">
         {/* Select tool type and view trending comparisons, default screen */}
         {/* Subtitle */}
-        <h1
+        <h2
           className="SimpleText"
           style={{
-            fontSize: isMobile ? 25 : 35,
+            fontSize: isMobile ? 16 : 25,
             marginTop: 50,
             marginBottom: 30,
           }}
         >
           Compare Today. Predict Tomorrow.
-        </h1>
+        </h2>
 
         {/* Trending Comparisons */}
         <>
-          <h3 className="SimpleText">Trending Comparisons</h3>
+          <h3 className="SimpleText" style={{ fontSize: isMobile ? 15 : 20 }}>
+            Trending Comparisons
+          </h3>
           {isMobile ? (
             <>
               <div
@@ -342,7 +344,7 @@ export default function WebHome({ isMobile }) {
         >
           {/* Compare */}
           <>
-            <p className="PlainText">
+            <p className="PlainText" style={{ fontSize: isMobile ? 14 : 25 }}>
               Compare thousands of different products side by side
             </p>
             <button
@@ -357,7 +359,10 @@ export default function WebHome({ isMobile }) {
 
           {/* Prediction */}
           <>
-            <p className="PlainText" style={{ marginTop: 50 }}>
+            <p
+              className="PlainText"
+              style={{ marginTop: 50, fontSize: isMobile ? 14 : 25 }}
+            >
               Predict future prices of products
             </p>
             <button

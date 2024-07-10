@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import SpecGaugeLogo from "../assets/SpecGauge SEO Logo.webp";
 import { DropdownMenu } from "./DropdownMenu";
 
@@ -30,10 +31,9 @@ export const Navbar = ({ isMobile, page }) => {
         <p
           style={{
             color: "#4ca0d7",
-            fontSize: isMobile ? 20 : 30,
+            fontSize: isMobile ? 30 : 40,
             padding: 10,
             textAlign: "center",
-            fontWeight: "bold",
           }}
         >
           SpecGauge
@@ -67,7 +67,6 @@ export const Navbar = ({ isMobile, page }) => {
           <div></div>
         )}
 
-        {/* Compare dropdown */}
         <DropdownMenu
           label="Compare"
           menuItems={[
@@ -79,7 +78,6 @@ export const Navbar = ({ isMobile, page }) => {
           ]}
         ></DropdownMenu>
 
-        {/* Predict dropdown */}
         <DropdownMenu
           label="Predict"
           menuItems={[
@@ -88,6 +86,7 @@ export const Navbar = ({ isMobile, page }) => {
             { label: "Graphics Cards", path: "/prediction/graphicsCards" },
           ]}
         ></DropdownMenu>
+        {/* Compare dropdown */}
 
         {/* If not on an account handling page, give user the option to go to an account handling page */}
         <div style={{ justifySelf: "end" }}>
