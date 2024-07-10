@@ -140,7 +140,8 @@ export default function WebHome({ isMobile }) {
     }
     SetTitleAndDescription(
       "SpecGauge | Compare products and predict prices",
-      "Explore SpecGauge: Easily compare vehicles and electronics side by side. Predict future prices to make informed decisions before you buy. All the tools in one place."
+      "Explore SpecGauge: Easily compare vehicles and electronics side by side. Predict future prices to make informed decisions before you buy. All the tools in one place.",
+      window.location.href
     );
   }, []);
 

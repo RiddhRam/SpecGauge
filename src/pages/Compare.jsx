@@ -243,11 +243,11 @@ export default function Compare({
     }
 
     if (pros.length == 0) {
-      SetTitleAndDescription(defaultTitle, description);
+      SetTitleAndDescription(defaultTitle, description, window.location.href);
     } else {
       // Update the title
       const newTitle = BuildTitle(saveComparisonProcesses, "Compare:");
-      SetTitleAndDescription(newTitle, description);
+      SetTitleAndDescription(newTitle, description, window.location.href);
     }
   }, [pros]);
 
@@ -324,7 +324,7 @@ export default function Compare({
     if (presetsURL.length > 1) {
       loadPresets(presetsURL);
     } else {
-      SetTitleAndDescription(defaultTitle, description);
+      SetTitleAndDescription(defaultTitle, description, window.location.href);
     }
   }, [type]);
 

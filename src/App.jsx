@@ -99,6 +99,14 @@ const consoleBrands = [
       "PlayStation",
     ],
   },
+  {
+    Brand: "Valve",
+    RequestStep: [
+      "Steam Deck (OLED Model) 1024GB",
+      "Steam Deck 512GB",
+      "Steam Machine",
+    ],
+  },
   { Brand: "Abxylute", RequestStep: ["64GB"] },
   { Brand: "Alienware", RequestStep: ["Alpha (i3)"] },
   { Brand: "Analogue", RequestStep: ["Pocket", "Duo", "Mega Sg", "Super Nt"] },
@@ -259,14 +267,6 @@ const consoleBrands = [
   {
     Brand: "Terrans Force",
     RequestStep: ["Handle 5 AMD Ryzen 7 Pro 7840U / 32GB RAM / 1TB SSD"],
-  },
-  {
-    Brand: "Valve",
-    RequestStep: [
-      "Steam Deck (OLED Model) 1024GB",
-      "Steam Deck 512GB",
-      "Steam Machine",
-    ],
   },
 ];
 
@@ -5655,7 +5655,7 @@ export default function App() {
                 comparisonLink={
                   window.location.origin + "/comparison/automobiles/"
                 }
-                description={`Compare multiple new and used Cars, SUVs, Trucks and Electric (EVs) and more side-by-side. View pros of each vehicle and research reliable information.`}
+                description={`Compare multiple new and used Cars, SUVs, Trucks and Electric Vehicle (EVs) and more side-by-side. The ultimate automobile comparison tool.`}
               ></Compare>
             </Suspense>
           }
@@ -5678,7 +5678,7 @@ export default function App() {
                 comparisonLink={
                   window.location.origin + "/comparison/consoles/"
                 }
-                description={`Compare multiple gaming consoles side-by-side. View pros of each product and research reliable information.`}
+                description={`Compare Xbox vs Nintendo vs PlayStation vs Steam Deck and more consoles side-by-side. The ultimate gaming console comparison tool`}
               ></Compare>
             </Suspense>
           }
@@ -5699,7 +5699,7 @@ export default function App() {
                 Categories={CPUsCategories}
                 isMobile={isMobile}
                 comparisonLink={window.location.origin + "/comparison/cpus/"}
-                description={`Compare multiple processors side-by-side. View pros of each product and research reliable information.`}
+                description={`Compare AMD Ryzen vs Intel Core processors side-by-side. View real-world benchmark performance in the ultimate CPU comparison tool.`}
               ></Compare>
             </Suspense>
           }
@@ -5722,7 +5722,7 @@ export default function App() {
                 comparisonLink={
                   window.location.origin + "/comparison/graphicsCards/"
                 }
-                description={`Compare multiple GPUs side-by-side. View pros of each product and research reliable information.`}
+                description={`Compare NVIDIA GeForce vs AMD Radeon vs Intel Alchemist GPUs side-by-side. Including GTX 10, RTX 20, RTX 30, RTX 40 series and RX 5000 - RX 7000 GPUs.`}
               ></Compare>
             </Suspense>
           }
@@ -5743,7 +5743,7 @@ export default function App() {
                 Categories={droneCategories}
                 isMobile={isMobile}
                 comparisonLink={window.location.origin + "/comparison/drones/"}
-                description={`Compare multiple UAVs side-by-side. View pros of each product and research reliable information.`}
+                description={`Compare DJI, Autel, Parrot, Holy Stone and more drones side-by-side. View the DJI Mini, Autel Evo, Parrot Anafi in the ultimate drone comparison tool.`}
               ></Compare>
             </Suspense>
           }

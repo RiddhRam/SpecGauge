@@ -13,7 +13,7 @@ export default function Information({ isMobile, title, text, description }) {
         Platform: isMobile ? "Mobile" : "Computer",
       });
     }
-    SetTitleAndDescription(title, description);
+    SetTitleAndDescription(title, description, window.location.href);
   }, [title]);
   return (
     <>

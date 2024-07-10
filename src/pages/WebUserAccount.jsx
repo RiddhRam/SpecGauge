@@ -222,7 +222,8 @@ export default function WebUserAccount({ isMobile }) {
 
     SetTitleAndDescription(
       "SpecGauge | My Account",
-      "Your account details and saved comparisons."
+      "Your account details and saved comparisons.",
+      window.location.href
     );
   }, []);
 

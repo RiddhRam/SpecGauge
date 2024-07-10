@@ -12,7 +12,8 @@ export default function NoPage({ isMobile }) {
   useEffect(() => {
     SetTitleAndDescription(
       "Error 404: Page not found",
-      "Error 404: Page not found."
+      "Error 404: Page not found.",
+      window.location.href
     );
   });
 
