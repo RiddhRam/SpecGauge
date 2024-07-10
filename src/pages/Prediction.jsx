@@ -56,6 +56,7 @@ export default function Prediction({
   averagePrices,
   brandValues,
   minimumPrice,
+  description,
 }) {
   const navigate = useNavigate();
   // Years being displayed
@@ -359,10 +360,7 @@ export default function Prediction({
   }, []);
 
   useEffect(() => {
-    SetTitleAndDescription(
-      `Predict ${type} Prices`,
-      `View future prices of ${type} over time`
-    );
+    SetTitleAndDescription(`Predict ${type} Prices`, description);
 
     if (!firstLoad) {
       // Have to manually reset, in case user uses navigation buttons to switch to another prediction page

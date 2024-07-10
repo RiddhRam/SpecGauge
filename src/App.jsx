@@ -5655,6 +5655,7 @@ export default function App() {
                 comparisonLink={
                   window.location.origin + "/comparison/automobiles/"
                 }
+                description={`Compare multiple new and used Cars, SUVs, Trucks and Electric (EVs) and more side-by-side. View pros of each vehicle and research reliable information.`}
               ></Compare>
             </Suspense>
           }
@@ -5677,6 +5678,7 @@ export default function App() {
                 comparisonLink={
                   window.location.origin + "/comparison/consoles/"
                 }
+                description={`Compare multiple gaming consoles side-by-side. View pros of each product and research reliable information.`}
               ></Compare>
             </Suspense>
           }
@@ -5697,6 +5699,7 @@ export default function App() {
                 Categories={CPUsCategories}
                 isMobile={isMobile}
                 comparisonLink={window.location.origin + "/comparison/cpus/"}
+                description={`Compare multiple processors side-by-side. View pros of each product and research reliable information.`}
               ></Compare>
             </Suspense>
           }
@@ -5719,6 +5722,7 @@ export default function App() {
                 comparisonLink={
                   window.location.origin + "/comparison/graphicsCards/"
                 }
+                description={`Compare multiple GPUs side-by-side. View pros of each product and research reliable information.`}
               ></Compare>
             </Suspense>
           }
@@ -5739,6 +5743,7 @@ export default function App() {
                 Categories={droneCategories}
                 isMobile={isMobile}
                 comparisonLink={window.location.origin + "/comparison/drones/"}
+                description={`Compare multiple UAVs side-by-side. View pros of each product and research reliable information.`}
               ></Compare>
             </Suspense>
           }
@@ -5754,6 +5759,7 @@ export default function App() {
                 averagePrices={carsAveragePrices}
                 brandValues={carsBrandValues}
                 minimumPrice={7500}
+                description={`View future prices of Cars, SUVs, Trucks, Electric (EVs) and more over time and into the future. View new and used vehicle depreciation and value.`}
               ></Prediction>
             </Suspense>
           }
@@ -5769,6 +5775,7 @@ export default function App() {
                 averagePrices={null}
                 brandValues={graphicsCardsBrandValues}
                 minimumPrice={200}
+                description={`View future prices of GPUs over time and into the future. Predict future costs and view past prices.`}
               ></Prediction>
             </Suspense>
           }
@@ -5784,6 +5791,7 @@ export default function App() {
                 averagePrices={null}
                 brandValues={processorsBrandValues}
                 minimumPrice={150}
+                description={`View future prices of processors over time and into the future. Predict future costs and view past prices.`}
               ></Prediction>
             </Suspense>
           }
