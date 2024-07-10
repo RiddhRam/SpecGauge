@@ -9,11 +9,10 @@ Modal.setAppElement("#SpecGauge");
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getAuth, signOut, sendPasswordResetEmail } from "firebase/auth";
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { getAnalytics, logEvent } from "firebase/analytics";
-
-const analytics = getAnalytics();
+import { signOut, sendPasswordResetEmail } from "firebase/auth";
+import { logEvent } from "firebase/analytics";
+import { httpsCallable } from "firebase/functions";
+import { auth, analytics, functions } from "../firebaseConfig";
 
 const comparisonLinks = [
   "/comparison/automobiles",
@@ -67,11 +66,6 @@ export default function WebUserAccount({ isMobile }) {
     setSavedProcesses.push(setNewSavedProcesses);
   }
 
-  /* get auth that was initalized in WebApp.js, this may timeout after a while, 
-  if it does then move this inside the log in and sign up func */
-  const auth = getAuth();
-  const functions = getFunctions();
-
   const resetPassword = async () => {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -92,7 +86,9 @@ export default function WebUserAccount({ isMobile }) {
   };
 
   const callSavedComparisonsCloudFunction = async (email) => {
-    logEvent(analytics, "Get saved comparisons");
+    if (analytics != null) {
+      logEvent(analytics, "Get saved comparisons");
+    }
     try {
       const GetSavedComparisons = httpsCallable(
         functions,
@@ -109,7 +105,9 @@ export default function WebUserAccount({ isMobile }) {
     saveComparisonProcess,
     type
   ) => {
-    logEvent(analytics, "Delete saved comparison");
+    if (analytics != null) {
+      logEvent(analytics, "Delete saved comparison");
+    }
     // The processes, which is used to form the name of the comparison to delete
     const arrayToSave = [];
     for (let item in saveComparisonProcess) {
@@ -215,10 +213,12 @@ export default function WebUserAccount({ isMobile }) {
   });
 
   useEffect(() => {
-    logEvent(analytics, "Screen", {
-      Screen: "My Account",
-      Platform: isMobile ? "Mobile" : "Computer",
-    });
+    if (analytics != null) {
+      logEvent(analytics, "Screen", {
+        Screen: "My Account",
+        Platform: isMobile ? "Mobile" : "Computer",
+      });
+    }
 
     SetTitleAndDescription(
       "SpecGauge | My Account",
@@ -285,10 +285,12 @@ export default function WebUserAccount({ isMobile }) {
             <button
               onClick={async () => {
                 callLocalSavedComparisonsFunc();
-                logEvent(analytics, "Screen", {
-                  Screen: "Saved Comparisons",
-                  Platform: isMobile ? "Mobile" : "Computer",
-                });
+                if (analytics != null) {
+                  logEvent(analytics, "Screen", {
+                    Screen: "Saved Comparisons",
+                    Platform: isMobile ? "Mobile" : "Computer",
+                  });
+                }
               }}
               className="AccountButton"
               style={{ width: "100%", alignItems: "center", padding: 0 }}

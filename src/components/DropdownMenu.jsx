@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAnalytics, logEvent } from "firebase/analytics";
-
-const analytics = getAnalytics();
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebaseConfig";
 
 export const DropdownMenu = ({ label, menuItems }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,12 +23,14 @@ export const DropdownMenu = ({ label, menuItems }) => {
                 to={item.path}
                 onClick={(event) => {
                   event.preventDefault();
-                  logEvent(analytics, "Navigation Button", {
-                    // Screen type
-                    Type: label,
-                    // Category type
-                    Category: item.label,
-                  });
+                  if (analytics != null) {
+                    logEvent(analytics, "Navigation Button", {
+                      // Screen type
+                      Type: label,
+                      // Category type
+                      Category: item.label,
+                    });
+                  }
                   navigate(item.path);
                 }}
               >

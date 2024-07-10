@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
-import { getAnalytics, logEvent } from "firebase/analytics";
-
-const analytics = getAnalytics();
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebaseConfig";
 
 export default function SelectionModal({
   type,
@@ -103,19 +102,23 @@ export default function SelectionModal({
                     let result = [];
                     // If it's the first step, go off to the RequestStep selection screen
                     if (step == 0) {
-                      logEvent(analytics, "Begin Product Request", {
-                        Brand: item,
-                        Category: type,
-                      });
+                      if (analytics != null) {
+                        logEvent(analytics, "Begin Product Request", {
+                          Brand: item,
+                          Category: type,
+                        });
+                      }
                       tempArray = brands[index].RequestStep;
                       nextSelection = brands[index].RequestStep;
                       setSelectedBrand(item);
                     } else if (step == 1) {
                       // Query the products after the second step
-                      logEvent(analytics, "Fetch Product Request", {
-                        RequestStep: item,
-                        Category: type,
-                      });
+                      if (analytics != null) {
+                        logEvent(analytics, "Fetch Product Request", {
+                          RequestStep: item,
+                          Category: type,
+                        });
+                      }
                       result = await queryFunction(selectedBrand, item);
                     } else {
                       // If we have queried them, then just pick off from the last step
@@ -192,11 +195,13 @@ export default function SelectionModal({
                         parameterArray.push(newJSON);
                       }
 
-                      logEvent(analytics, "Complete Product Request", {
-                        Brand: tempComparisonProcess[0],
-                        Category: type,
-                        Product: tempComparisonProcess[1],
-                      });
+                      if (analytics != null) {
+                        logEvent(analytics, "Complete Product Request", {
+                          Brand: tempComparisonProcess[0],
+                          Category: type,
+                          Product: tempComparisonProcess[1],
+                        });
+                      }
 
                       // returns [tempProsArray, tempNewProduct]
                       // prettier-ignore
@@ -225,16 +230,11 @@ export default function SelectionModal({
                       containerRef.current.scrollTop = 0;
                     } catch {
                       // If not instant, usually only when requesting data from the server
-                      setTimeout(() => {
-                        try {
+                      // If it's not the last step
+                      if (nextStep != queryProcess.length)
+                        setTimeout(() => {
                           containerRef.current.scrollTop = 0;
-                        } catch {
-                          // Another timer just in case slow wifi
-                          setTimeout(() => {
-                            containerRef.current.scrollTop = 0;
-                          }, 600);
-                        }
-                      }, 400);
+                        }, 50);
                     }
                   }}
                 >

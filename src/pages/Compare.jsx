@@ -9,14 +9,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 
-import { getAnalytics, logEvent } from "firebase/analytics";
-
-const analytics = getAnalytics();
+import { logEvent } from "firebase/analytics";
+import { httpsCallable } from "firebase/functions";
+import { auth, analytics, functions } from "../firebaseConfig";
 
 Modal.setAppElement("#SpecGauge");
 
-import { getAuth } from "firebase/auth";
-import { getFunctions, httpsCallable } from "firebase/functions";
 import BuildURLFriendly from "../functions/BuildURLFriendly";
 import DeconstructURLFriendly from "../functions/DeconstructURLFriendly";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
@@ -50,10 +48,6 @@ export default function Compare({
   const [displayPros, setDisplayPros] = useState([]);
 
   const navigate = useNavigate();
-
-  // Used for checking if user can use logged in features like saved comparison or preferences
-  const auth = getAuth();
-  const functions = getFunctions();
 
   // This returns an array that is just the base of the pros string array, It's just empty categories with \n
   const defaultProCategories = () => {
@@ -296,15 +290,19 @@ export default function Compare({
       setProducts((prevProducts) => [...prevProducts, prosAndSpecs[1]]);
     }
 
-    logEvent(analytics, "Load Comparison Presets", { Processes: processes });
+    if (analytics != null) {
+      logEvent(analytics, "Load Comparison Presets", { Processes: processes });
+    }
   };
 
   useEffect(() => {
-    logEvent(analytics, "Screen", {
-      Screen: type,
-      Platform: isMobile ? "Mobile" : "Computer",
-      Tool: "Comparison",
-    });
+    if (analytics != null) {
+      logEvent(analytics, "Screen", {
+        Screen: type,
+        Platform: isMobile ? "Mobile" : "Computer",
+        Tool: "Comparison",
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -322,6 +320,12 @@ export default function Compare({
     } else {
       SetTitleAndDescription(defaultTitle, description);
     }
+
+    // Have to manually reset, in case user uses navigation buttons to switch to another compare page
+    setProducts([]);
+    setSaveComparisonProcesses([]);
+    setPros([]);
+    setDisplayPros([]);
   }, [type]);
 
   const CallSaveComparisonCloudFunction = async () => {
@@ -433,7 +437,9 @@ export default function Compare({
           {/* Add a new product */}
           <button
             onClick={async () => {
-              logEvent(analytics, "Add Comparison Item", { Category: type });
+              if (analytics != null) {
+                logEvent(analytics, "Add Comparison Item", { Category: type });
+              }
               {
                 /* Show product selection modal */
               }
@@ -452,9 +458,11 @@ export default function Compare({
           {/* Save comparison */}
           <button
             onClick={async () => {
-              logEvent(analytics, "Save Comparison", {
-                Category: type,
-              });
+              if (analytics != null) {
+                logEvent(analytics, "Save Comparison", {
+                  Category: type,
+                });
+              }
 
               if (auth.currentUser != null) {
                 setAwaitingSavingComparison(true);
@@ -490,7 +498,9 @@ export default function Compare({
               copyURLToClipboard(shareURL);
               // Tell user copying to clipboard was successful
               setCopiedLink(true);
-              logEvent(analytics, "Share Comparison", { Type: type });
+              if (analytics != null) {
+                logEvent(analytics, "Share Comparison", { Type: type });
+              }
             }}
             className="CompareTopButton"
             style={
@@ -511,9 +521,11 @@ export default function Compare({
           {/* Reset specs to just the categories and processes to empty array */}
           <button
             onClick={async () => {
-              logEvent(analytics, "Reset Comparison", {
-                Category: type,
-              });
+              if (analytics != null) {
+                logEvent(analytics, "Reset Comparison", {
+                  Category: type,
+                });
+              }
 
               setProducts([]);
               setSaveComparisonProcesses([]);

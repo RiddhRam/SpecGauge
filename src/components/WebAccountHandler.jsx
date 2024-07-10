@@ -6,12 +6,12 @@ Modal.setAppElement("#SpecGauge");
 import SpecGaugeLogo from "../assets/SpecGauge SEO Logo.webp";
 
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { httpsCallable } from "firebase/functions";
+import { auth, functions } from "../firebaseConfig";
 
 export default function WebAccountHandler({
   screenType,
@@ -34,11 +34,6 @@ export default function WebAccountHandler({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  /* get auth that was initalized in WebApp.js, this may timeout after a while, 
-  if it does then move this inside the log in and sign up func */
-  const auth = getAuth();
-  const functions = getFunctions();
 
   const resetPassword = async (email) => {
     try {

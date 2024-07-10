@@ -1,14 +1,10 @@
 import { Link } from "react-router-dom";
 import SpecGaugeLogo from "../assets/SpecGauge SEO Logo.webp";
-import HomeIcon from "../assets/Home Icon.webp";
-import ProfileIcon from "../assets/Profile Icon.webp";
 import { DropdownMenu } from "./DropdownMenu";
 
-import { getAuth } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 
 export const Navbar = ({ isMobile, page }) => {
-  const auth = getAuth();
-
   return (
     <div className="NavbarContainer">
       {/* The title and logo */}
@@ -56,17 +52,13 @@ export const Navbar = ({ isMobile, page }) => {
         {/* If not on the home page, give user the option to go to home page */}
         {page != "home" ? (
           <Link to="/home" className="NavbarText">
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={HomeIcon}
-                alt="Home Icon"
-                style={
-                  isMobile
-                    ? { width: 20, height: 21 }
-                    : { width: 25, height: 26 }
-                }
-              ></img>
-
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: isMobile ? "10.5px" : "14px",
+              }}
+            >
               <p className="NavbarText">Home</p>
             </div>
           </Link>
@@ -104,6 +96,7 @@ export const Navbar = ({ isMobile, page }) => {
               style={{
                 display: "flex",
                 alignItems: "center",
+                fontSize: isMobile ? "10.5px" : "14px",
               }}
             >
               {auth.currentUser ? (
@@ -114,17 +107,9 @@ export const Navbar = ({ isMobile, page }) => {
                       display: "flex",
                       alignItems: "center",
                       textAlign: "center",
+                      fontSize: isMobile ? "10.5px" : "14px",
                     }}
                   >
-                    <img
-                      src={ProfileIcon}
-                      alt="Profile Icon"
-                      style={
-                        isMobile
-                          ? { width: 20, height: 20 }
-                          : { width: 25, height: 25 }
-                      }
-                    ></img>
                     <p className="NavbarText">My Account</p>
                   </div>
                 </Link>
@@ -138,15 +123,6 @@ export const Navbar = ({ isMobile, page }) => {
                       textAlign: "center",
                     }}
                   >
-                    <img
-                      src={ProfileIcon}
-                      alt="Profile Icon"
-                      style={
-                        isMobile
-                          ? { width: 20, height: 20 }
-                          : { width: 25, height: 25 }
-                      }
-                    ></img>
                     <p className="NavbarText">Log In</p>
                   </div>
                 </Link>

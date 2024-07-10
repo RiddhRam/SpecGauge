@@ -12,38 +12,10 @@ const Information = lazy(() => import("./pages/Information"));
 const NoPage = lazy(() => import("./pages/NoPage"));
 
 // Firebase
-import { initializeApp } from "firebase/app";
-import {
-  browserLocalPersistence,
-  initializeAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
-import {
-  query,
-  where,
-  getFirestore,
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { query, where, collection, getDocs } from "firebase/firestore";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
-  authDomain: "specgauge-6226e.firebaseapp.com",
-  projectId: "specgauge-6226e",
-  storageBucket: "specgauge-6226e.appspot.com",
-  messagingSenderId: "497900705831",
-  appId: "1:497900705831:web:632c2bfe74cb3f98ea9602",
-  measurementId: "G-HERKE02P50",
-};
-
-// Initialize firebase
-const app = initializeApp(firebaseConfig);
-//connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-const db = getFirestore();
-
-const auth = initializeAuth(app, {
-  persistence: browserLocalPersistence,
-});
+import { db, auth } from "./firebaseConfig";
 
 // This determines how many steps the user has to go through when adding a product
 const consoleProcess = ["a brand", "a console"];
@@ -5328,11 +5300,13 @@ const carsBrandValues = [
   { label: "Audi", value: reputable },
   { label: "Bentley", value: expensiveSport },
   { label: "BMW", value: reputable },
+  { label: "BMW M", value: expensiveSport },
   { label: "Bugatti", value: superCar },
   { label: "Buick", value: normal },
   { label: "BYD", value: normal },
   { label: "Cadillac", value: normal },
-  { label: "Chevrolet", value: fast },
+  { label: "Chevrolet", value: normal },
+  { label: "Chevrolet Corvette", value: reputable },
   { label: "Chrysler", value: normal },
   { label: "Citroen", value: fast },
   { label: "Daewoo", value: normal },

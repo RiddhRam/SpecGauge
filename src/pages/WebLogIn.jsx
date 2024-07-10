@@ -5,16 +5,12 @@ import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-import { getAuth } from "firebase/auth";
-import { getAnalytics, logEvent } from "firebase/analytics";
-
-const analytics = getAnalytics();
+import { logEvent } from "firebase/analytics";
+import { auth, analytics } from "../firebaseConfig";
 
 export default function WebLogIn({ isMobile }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
-
-  const auth = getAuth();
 
   // send user to log in if not logged in
   useEffect(() => {
@@ -27,10 +23,12 @@ export default function WebLogIn({ isMobile }) {
   });
 
   useEffect(() => {
-    logEvent(analytics, "Screen", {
-      Screen: "Log In",
-      Platform: isMobile ? "Mobile" : "Computer",
-    });
+    if (analytics != null) {
+      logEvent(analytics, "Screen", {
+        Screen: "Log In",
+        Platform: isMobile ? "Mobile" : "Computer",
+      });
+    }
     SetTitleAndDescription(
       "SpecGauge | Sign up or Log in",
       "Create an account to save comparisons across all your devices."

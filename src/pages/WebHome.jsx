@@ -7,9 +7,8 @@ import { useNavigate, Link } from "react-router-dom";
 import Modal from "react-modal";
 import { Helmet } from "react-helmet";
 
-import { getAnalytics, logEvent } from "firebase/analytics";
-
-const analytics = getAnalytics();
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebaseConfig";
 
 Modal.setAppElement("#SpecGauge");
 
@@ -133,10 +132,12 @@ export default function WebHome({ isMobile }) {
     /* Records the initial load of the website */
   }
   useEffect(() => {
-    logEvent(analytics, "Screen", {
-      Screen: "Home",
-      Platform: isMobile ? "Mobile" : "Computer",
-    });
+    if (analytics != null) {
+      logEvent(analytics, "Screen", {
+        Screen: "Home",
+        Platform: isMobile ? "Mobile" : "Computer",
+      });
+    }
     SetTitleAndDescription(
       "SpecGauge | Compare products and predict prices",
       "Explore SpecGauge: Easily compare vehicles and electronics side by side. Predict future prices to make informed decisions before you buy. All the tools in one place."
@@ -231,11 +232,13 @@ export default function WebHome({ isMobile }) {
                         style={{ fontSize: "12px" }}
                         onClick={(event) => {
                           event.preventDefault();
-                          logEvent(analytics, "Trending Comparison", {
-                            // Screen type
-                            Category: comparisonItem.Category,
-                            Platform: "Mobile",
-                          });
+                          if (analytics != null) {
+                            logEvent(analytics, "Trending Comparison", {
+                              // Screen type
+                              Category: comparisonItem.Category,
+                              Platform: "Mobile",
+                            });
+                          }
                           navigate(comparisonItem.Path);
                         }}
                       >
@@ -305,11 +308,13 @@ export default function WebHome({ isMobile }) {
                       style={{ fontSize: "13px" }}
                       onClick={(event) => {
                         event.preventDefault();
-                        logEvent(analytics, "Trending Comparison", {
-                          // Screen type
-                          Category: comparisonItem.Category,
-                          Platform: "Mobile",
-                        });
+                        if (analytics != null) {
+                          logEvent(analytics, "Trending Comparison", {
+                            // Screen type
+                            Category: comparisonItem.Category,
+                            Platform: "Mobile",
+                          });
+                        }
                         navigate(comparisonItem.Path);
                       }}
                     >
@@ -385,11 +390,13 @@ export default function WebHome({ isMobile }) {
               className="NormalButtonNoBackground"
               key={item}
               onClick={() => {
-                logEvent(analytics, "Modal Button", {
-                  Type: "Prediction",
-                  Category: item,
-                  Platform: isMobile ? "Mobile" : "Computer",
-                });
+                if (analytics != null) {
+                  logEvent(analytics, "Modal Button", {
+                    Type: "Prediction",
+                    Category: item,
+                    Platform: isMobile ? "Mobile" : "Computer",
+                  });
+                }
 
                 navigate(`${predictionLinks[index]}`);
 
@@ -426,11 +433,13 @@ export default function WebHome({ isMobile }) {
               className="NormalButtonNoBackground"
               key={item}
               onClick={() => {
-                logEvent(analytics, "Modal Button", {
-                  Type: "Comparison",
-                  Category: item,
-                  Platform: isMobile ? "Mobile" : "Computer",
-                });
+                if (analytics != null) {
+                  logEvent(analytics, "Modal Button", {
+                    Type: "Comparison",
+                    Category: item,
+                    Platform: isMobile ? "Mobile" : "Computer",
+                  });
+                }
                 navigate(`${comparisonLinks[index]}`);
 
                 setCompareModalVisible(false);

@@ -10,7 +10,7 @@ export const Footer = ({ isMobile }) => {
       style={{
         display: "flex",
         justifyContent: "center",
-        padding: "10px 0",
+        padding: "10px 10px",
       }}
     >
       <div
@@ -141,7 +141,7 @@ export const Footer = ({ isMobile }) => {
           href="mailto:SpecGauge@gmail.com?subject=Hello&body=I%20wanted%20to%20reach%20out%20because..."
           style={{
             textDecoration: "none",
-            fontSize: isMobile ? 15 : 20,
+            fontSize: isMobile ? 14 : 20,
             userSelect: "none",
             marginTop: 15,
           }}

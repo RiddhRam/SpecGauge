@@ -2,16 +2,17 @@ import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
-import { getAnalytics, logEvent } from "firebase/analytics";
-
-const analytics = getAnalytics();
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebaseConfig";
 
 export default function Information({ isMobile, title, text, description }) {
   useEffect(() => {
-    logEvent(analytics, "Screen", {
-      Screen: title,
-      Platform: isMobile ? "Mobile" : "Computer",
-    });
+    if (analytics != null) {
+      logEvent(analytics, "Screen", {
+        Screen: title,
+        Platform: isMobile ? "Mobile" : "Computer",
+      });
+    }
     SetTitleAndDescription(title, description);
   }, [title]);
   return (

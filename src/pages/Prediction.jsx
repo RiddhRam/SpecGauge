@@ -26,9 +26,8 @@ import {
   Legend,
 } from "chart.js";
 
-import { getAnalytics, logEvent } from "firebase/analytics";
-
-const analytics = getAnalytics();
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebaseConfig";
 
 ChartJS.register(
   CategoryScale,
@@ -94,6 +93,9 @@ export default function Prediction({
   // For the search input
   const [searchString, setSearchString] = useState("");
   const [noResultsFound, setNoResultsFound] = useState(false);
+
+  // This is used in case the user uses navigation buttons to switch types, in which case, the values of the old graph type need to be reset
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const [lineValueDataset, setLineValueDataset] = useState([]);
   const lineOptions = {
@@ -285,7 +287,9 @@ export default function Prediction({
   }
 
   const updateColor = (newColor) => {
-    logEvent(analytics, "Update Line Color", { Color: newColor });
+    if (analytics != null) {
+      logEvent(analytics, "Update Line Color", { Color: newColor });
+    }
     // Update the points being displayed
     const newDataset = [];
     for (let item in lineValueDataset) {
@@ -345,11 +349,13 @@ export default function Prediction({
   }, [isMobile, updateGraph]);
 
   useEffect(() => {
-    logEvent(analytics, "Screen", {
-      Screen: type,
-      Platform: isMobile ? "Mobile" : "Computer",
-      Tool: "Prediction",
-    });
+    if (analytics != null) {
+      logEvent(analytics, "Screen", {
+        Screen: type,
+        Platform: isMobile ? "Mobile" : "Computer",
+        Tool: "Prediction",
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -357,6 +363,25 @@ export default function Prediction({
       `Predict ${type} Prices`,
       `View future prices of ${type} over time`
     );
+
+    if (!firstLoad) {
+      // Have to manually reset, in case user uses navigation buttons to switch to another prediction page
+      setBrand("");
+      setColorChangeIndex(0);
+      setOriginalPoints([]);
+      setInitialPrice("");
+      setReleaseYear("");
+      setScrollLimit(24);
+      setPosition(24);
+      setYearsCount(22);
+      setDisplayYears(years.slice(24, 56));
+      startIndex = 24;
+      endIndex = 56;
+      setInitializedAveragePrices(false);
+      setLineValueDataset([]);
+      setUpdateGraph(true);
+    }
+    setFirstLoad(false);
   }, [type]);
 
   return (
@@ -403,7 +428,11 @@ export default function Prediction({
             }}
           >
             {/* Graph */}
-            <Line options={lineOptions} data={lineData} />
+            <Line
+              options={lineOptions}
+              data={lineData}
+              style={{ minHeight: "120px" }}
+            />
             {/* Scroll */}
             <p
               style={{ marginRight: 10, userSelect: "none" }}
@@ -475,8 +504,7 @@ export default function Prediction({
                 gridTemplateColumns: `repeat(2, 1fr)`,
                 gridTemplateRows: `65px 65px 65px 65px`,
                 rowGap: "6px",
-                columnGap: "10px",
-                minWidth: "350px",
+                minWidth: "340px",
               }}
             >
               {/* Release Year Field */}
@@ -488,7 +516,7 @@ export default function Prediction({
                 onChange={(event) =>
                   handleNumberInput(event.target.value, setReleaseYear)
                 }
-                style={{ fontSize: 13, width: "73%" }}
+                style={{ fontSize: 13, width: "67%" }}
               ></input>
 
               {/* Initial Price Field */}
@@ -500,7 +528,7 @@ export default function Prediction({
                 onChange={(event) =>
                   handleNumberInput(event.target.value, setInitialPrice)
                 }
-                style={{ fontSize: 13, width: "73%" }}
+                style={{ fontSize: 13, width: "67%" }}
               ></input>
 
               {/* Select Brand */}
@@ -525,14 +553,20 @@ export default function Prediction({
                   if (result != 0) {
                     setError(result);
                     setShowErrorModal(true);
-                    logEvent(analytics, "Error adding item", { Error: result });
+                    if (analytics != null) {
+                      logEvent(analytics, "Error adding item", {
+                        Error: result,
+                      });
+                    }
                   } else {
-                    logEvent(analytics, "Add Prediction Item", {
-                      Type: type,
-                      InitialPrice: initialPrice,
-                      ReleaseYear: releaseYear,
-                      Brand: brand,
-                    });
+                    if (analytics != null) {
+                      logEvent(analytics, "Add Prediction Item", {
+                        Type: type,
+                        InitialPrice: initialPrice,
+                        ReleaseYear: releaseYear,
+                        Brand: brand,
+                      });
+                    }
                   }
                 }}
                 className="NormalButton"
@@ -556,7 +590,9 @@ export default function Prediction({
               {averagePrices ? (
                 <button
                   onClick={() => {
-                    logEvent(analytics, "Add Average Price", { Type: type });
+                    if (analytics != null) {
+                      logEvent(analytics, "Add Average Price", { Type: type });
+                    }
                     while (true) {
                       let matchFound = false;
                       const red = Math.random() * 255;
@@ -613,7 +649,9 @@ export default function Prediction({
                 onClick={() => {
                   // This data will be converted to a csv
                   let exportData = [];
-                  logEvent(analytics, "Export CSV");
+                  if (analytics != null) {
+                    logEvent(analytics, "Export CSV");
+                  }
                   // The first row, and in the first column is the years
                   let firstJSON = {};
                   firstJSON["Year"] = "Year";
@@ -805,14 +843,20 @@ export default function Prediction({
                   if (result != 0) {
                     setError(result);
                     setShowErrorModal(true);
-                    logEvent(analytics, "Error adding item", { Error: result });
+                    if (analytics != null) {
+                      logEvent(analytics, "Error adding item", {
+                        Error: result,
+                      });
+                    }
                   } else {
-                    logEvent(analytics, "Add Prediction Item", {
-                      Type: type,
-                      InitialPrice: initialPrice,
-                      ReleaseYear: releaseYear,
-                      Brand: brand,
-                    });
+                    if (analytics != null) {
+                      logEvent(analytics, "Add Prediction Item", {
+                        Type: type,
+                        InitialPrice: initialPrice,
+                        ReleaseYear: releaseYear,
+                        Brand: brand,
+                      });
+                    }
                   }
                 }}
                 className="NormalButton"
@@ -848,7 +892,9 @@ export default function Prediction({
               {averagePrices ? (
                 <button
                   onClick={() => {
-                    logEvent(analytics, "Add Average Price", { Type: type });
+                    if (analytics != null) {
+                      logEvent(analytics, "Add Average Price", { Type: type });
+                    }
                     while (true) {
                       let matchFound = false;
                       const red = Math.random() * 255;
@@ -908,7 +954,9 @@ export default function Prediction({
                 onClick={() => {
                   // This data will be converted to a csv
                   let exportData = [];
-                  logEvent(analytics, "Export CSV");
+                  if (analytics != null) {
+                    logEvent(analytics, "Export CSV");
+                  }
                   // The first row, and in the first column is the years
                   let firstJSON = {};
                   firstJSON["Year"] = "Year";
@@ -1004,6 +1052,7 @@ export default function Prediction({
                   onClick={() => {
                     setBrand(item.label);
                     setShowBrandModal(false);
+                    setSearchString("");
                   }}
                   key={index}
                 >
@@ -1101,14 +1150,17 @@ export default function Prediction({
                     fontSize: 12,
                   }}
                   onClick={async () => {
-                    logEvent(analytics, "Delete Graph Item", {
-                      Item: lineValueDataset[index].label,
-                    });
+                    if (analytics != null) {
+                      logEvent(analytics, "Delete Graph Item", {
+                        Item: lineValueDataset[index].label,
+                      });
+                    }
                     // Remove this item and set the color change index to 0 to minimize errors
                     const newOriginalPoints = originalPoints.filter(
                       (array) => array !== originalPoints[index]
                     );
                     setOriginalPoints(newOriginalPoints);
+
                     const newLineValueDataset = lineValueDataset.filter(
                       (array) => array !== lineValueDataset[index]
                     );
@@ -1172,9 +1224,11 @@ export default function Prediction({
                     fontSize: 14,
                   }}
                   onClick={async () => {
-                    logEvent(analytics, "Delete Graph Item", {
-                      Item: lineValueDataset[index].label,
-                    });
+                    if (analytics != null) {
+                      logEvent(analytics, "Delete Graph Item", {
+                        Item: lineValueDataset[index].label,
+                      });
+                    }
                     // Remove this item and set the color change index to 0 to minimize errors
                     const newOriginalPoints = originalPoints.filter(
                       (array) => array !== originalPoints[index]
