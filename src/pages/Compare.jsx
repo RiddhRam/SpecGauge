@@ -314,18 +314,18 @@ export default function Compare({
     // The presets
     const presetsURL = fullURL.substring(startIndex + comparisonLink.length);
 
+    // Have to manually reset, in case user uses navigation buttons to switch to another compare page
+    setProducts([]);
+    setSaveComparisonProcesses([]);
+    setPros([]);
+    setDisplayPros([]);
+
     // If greater than one, then there are presets
     if (presetsURL.length > 1) {
       loadPresets(presetsURL);
     } else {
       SetTitleAndDescription(defaultTitle, description);
     }
-
-    // Have to manually reset, in case user uses navigation buttons to switch to another compare page
-    setProducts([]);
-    setSaveComparisonProcesses([]);
-    setPros([]);
-    setDisplayPros([]);
   }, [type]);
 
   const CallSaveComparisonCloudFunction = async () => {
