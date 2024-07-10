@@ -32,6 +32,7 @@ export default function Compare({
   isMobile,
   comparisonLink,
   description,
+  defaultTitle,
 }) {
   const [productModalVisible, setProductModalVisible] = useState(false);
   const [accountModalVisible, setAccountModalVisible] = useState(false);
@@ -61,9 +62,6 @@ export default function Compare({
 
     return prosCategoriesTemp;
   };
-
-  // For SetTitleAndDescription
-  let defaultTitle = `Compare Multiple ${type} Side-by-Side`;
 
   useEffect(() => {
     // If at least 2 products

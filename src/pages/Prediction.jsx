@@ -361,7 +361,7 @@ export default function Prediction({
 
   useEffect(() => {
     SetTitleAndDescription(
-      `Predict ${type} Prices`,
+      `Predict Future ${type} Prices`,
       description,
       window.location.href
     );

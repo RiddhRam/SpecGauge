@@ -5656,6 +5656,7 @@ export default function App() {
                   window.location.origin + "/comparison/automobiles/"
                 }
                 description={`Compare multiple new and used Cars, SUVs, Trucks and Electric Vehicle (EVs) and more side-by-side. The ultimate automobile comparison tool.`}
+                defaultTitle={`Compare Multiple Vehicles Side-by-Side - Car Comparison Tool`}
               ></Compare>
             </Suspense>
           }
@@ -5679,6 +5680,7 @@ export default function App() {
                   window.location.origin + "/comparison/consoles/"
                 }
                 description={`Compare Xbox vs Nintendo vs PlayStation vs Steam Deck and more consoles side-by-side. The ultimate gaming console comparison tool`}
+                defaultTitle={`Compare Multiple Consoles Side-by-Side - Console Comparison Tool`}
               ></Compare>
             </Suspense>
           }
@@ -5700,6 +5702,7 @@ export default function App() {
                 isMobile={isMobile}
                 comparisonLink={window.location.origin + "/comparison/cpus/"}
                 description={`Compare AMD Ryzen vs Intel Core processors side-by-side. View real-world benchmark performance in the ultimate CPU comparison tool.`}
+                defaultTitle={`Compare Multiple Processors Side-by-Side - CPUs Comparison Tool`}
               ></Compare>
             </Suspense>
           }
@@ -5723,6 +5726,7 @@ export default function App() {
                   window.location.origin + "/comparison/graphicsCards/"
                 }
                 description={`Compare NVIDIA GeForce vs AMD Radeon vs Intel Alchemist GPUs side-by-side. Including GTX 10, RTX 20, RTX 30, RTX 40 series and RX 5000 - RX 7000 GPUs.`}
+                defaultTitle={`Compare Multiple GPUs Side-by-Side - Graphics Cards Comparison Tool`}
               ></Compare>
             </Suspense>
           }
@@ -5744,6 +5748,7 @@ export default function App() {
                 isMobile={isMobile}
                 comparisonLink={window.location.origin + "/comparison/drones/"}
                 description={`Compare DJI, Autel, Parrot, Holy Stone and more drones side-by-side. View the DJI Mini, Autel Evo, Parrot Anafi in the ultimate drone comparison tool.`}
+                defaultTitle={`Compare Multiple Drones Side-by-Side - Drone Comparison Tool`}
               ></Compare>
             </Suspense>
           }
