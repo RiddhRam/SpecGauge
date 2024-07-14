@@ -147,9 +147,11 @@ export default function WebHome({ isMobile }) {
 
   return (
     <>
+      {/* Set canonical for search engines */}
       <Helmet>
-        <link rel="canonical" href={"https://specgauge.com/"} />
+        <link rel="canonical" href={window.location.origin} />
       </Helmet>
+
       {/* Navbar */}
       <Navbar isMobile={isMobile} page={"home"} />
 

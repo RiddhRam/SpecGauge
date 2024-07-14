@@ -8,6 +8,7 @@ import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
+import { Helmet } from "react-helmet";
 
 import { logEvent } from "firebase/analytics";
 import { httpsCallable } from "firebase/functions";
@@ -392,6 +393,11 @@ export default function Compare({
 
   return (
     <>
+      {/* Set canonical for search engines */}
+      <Helmet>
+        <link rel="canonical" href={comparisonLink} />
+      </Helmet>
+
       <Navbar isMobile={isMobile} page="compare"></Navbar>
       {/* Main Body */}
       <div className="LargeContainer">

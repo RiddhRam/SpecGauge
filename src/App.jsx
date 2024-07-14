@@ -5224,7 +5224,7 @@ const carsCategories = [
 const fast = -0.12;
 const normal = -0.09;
 const reputable = -0.06;
-const reliable = -0.05;
+const reliable = -0.06;
 const superReliable = -0.03;
 const expensiveSport = -0.03;
 const superCar = -0.02;
@@ -5320,7 +5320,7 @@ const carsBrandValues = [
   { label: "Hennessey", value: superCar },
   { label: "Honda", value: reliable },
   { label: "Hummer", value: fast },
-  { label: "Hyundai", value: reliable },
+  { label: "Hyundai", value: normal },
   { label: "INEOS", value: fast },
   { label: "Infiniti", value: normal },
   { label: "Isuzu", value: normal },
@@ -5343,7 +5343,7 @@ const carsBrandValues = [
   { label: "Mercedes-AMG", value: expensiveSport },
   { label: "Mercedes-Benz", value: reputable },
   { label: "Mercury", value: normal },
-  { label: "Mini", value: normal },
+  { label: "Mini", value: fast },
   { label: "Mitsubishi", value: reliable },
   { label: "Nissan", value: reliable },
   { label: "Oldsmobile", value: normal },
@@ -5645,7 +5645,7 @@ export default function App() {
                 Categories={carsCategories}
                 isMobile={isMobile}
                 comparisonLink={
-                  window.location.origin + "/comparison/automobiles/"
+                  window.location.origin + "/comparison/automobiles"
                 }
                 description={`Compare multiple new and used Cars, SUVs, Trucks and Electric Vehicle (EVs) and more side-by-side. The ultimate automobile comparison tool.`}
                 defaultTitle={`Compare Multiple Vehicles Side-by-Side - Car Comparison Tool`}
@@ -5668,9 +5668,7 @@ export default function App() {
                 DefaultArray={consoleDefaultArray}
                 Categories={consoleCategories}
                 isMobile={isMobile}
-                comparisonLink={
-                  window.location.origin + "/comparison/consoles/"
-                }
+                comparisonLink={window.location.origin + "/comparison/consoles"}
                 description={`Compare Xbox vs Nintendo vs PlayStation vs Steam Deck and more consoles side-by-side. The ultimate gaming console comparison tool`}
                 defaultTitle={`Compare Multiple Consoles Side-by-Side - Console Comparison Tool`}
               ></Compare>
@@ -5692,7 +5690,7 @@ export default function App() {
                 DefaultArray={CPUsDefaultArray}
                 Categories={CPUsCategories}
                 isMobile={isMobile}
-                comparisonLink={window.location.origin + "/comparison/cpus/"}
+                comparisonLink={window.location.origin + "/comparison/cpus"}
                 description={`Compare AMD Ryzen vs Intel Core processors side-by-side. View real-world benchmark performance in the ultimate CPU comparison tool.`}
                 defaultTitle={`Compare Multiple Processors Side-by-Side - CPUs Comparison Tool`}
               ></Compare>
@@ -5715,7 +5713,7 @@ export default function App() {
                 Categories={graphicsCardsCategories}
                 isMobile={isMobile}
                 comparisonLink={
-                  window.location.origin + "/comparison/graphicsCards/"
+                  window.location.origin + "/comparison/graphicsCards"
                 }
                 description={`Compare NVIDIA GeForce vs AMD Radeon vs Intel Alchemist GPUs side-by-side. Including GTX 10, RTX 20, RTX 30, RTX 40 series and RX 5000 - RX 7000 GPUs.`}
                 defaultTitle={`Compare Multiple GPUs Side-by-Side - Graphics Cards Comparison Tool`}
@@ -5738,7 +5736,7 @@ export default function App() {
                 DefaultArray={droneDefaultArray}
                 Categories={droneCategories}
                 isMobile={isMobile}
-                comparisonLink={window.location.origin + "/comparison/drones/"}
+                comparisonLink={window.location.origin + "/comparison/drones"}
                 description={`Compare DJI, Autel, Parrot, Holy Stone and more drones side-by-side. View the DJI Mini, Autel Evo, Parrot Anafi in the ultimate drone comparison tool.`}
                 defaultTitle={`Compare Multiple Drones Side-by-Side - Drone Comparison Tool`}
               ></Compare>
@@ -5757,22 +5755,9 @@ export default function App() {
                 brandValues={carsBrandValues}
                 minimumPrice={7500}
                 description={`View future prices of Cars, SUVs, Trucks, Electric (EVs) and more over time and into the future. View new and used vehicle depreciation and value.`}
-              ></Prediction>
-            </Suspense>
-          }
-        ></Route>
-        {/* the graphics cards prediction page */}
-        <Route
-          path="/prediction/graphicsCards/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Prediction
-                type={"Graphics Cards"}
-                isMobile={isMobile}
-                averagePrices={null}
-                brandValues={graphicsCardsBrandValues}
-                minimumPrice={200}
-                description={`View future prices of GPUs over time and into the future. Predict future costs and view past prices.`}
+                predictionLink={
+                  window.location.origin + "/prediction/automobiles"
+                }
               ></Prediction>
             </Suspense>
           }
@@ -5789,6 +5774,26 @@ export default function App() {
                 brandValues={processorsBrandValues}
                 minimumPrice={150}
                 description={`View future prices of processors over time and into the future. Predict future costs and view past prices.`}
+                predictionLink={window.location.origin + "/prediction/cpus"}
+              ></Prediction>
+            </Suspense>
+          }
+        ></Route>
+        {/* the graphics cards prediction page */}
+        <Route
+          path="/prediction/graphicsCards/*"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Prediction
+                type={"Graphics Cards"}
+                isMobile={isMobile}
+                averagePrices={null}
+                brandValues={graphicsCardsBrandValues}
+                minimumPrice={200}
+                description={`View future prices of GPUs over time and into the future. Predict future costs and view past prices.`}
+                predictionLink={
+                  window.location.origin + "/prediction/graphicsCards"
+                }
               ></Prediction>
             </Suspense>
           }

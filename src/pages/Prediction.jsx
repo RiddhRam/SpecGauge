@@ -3,11 +3,10 @@ import { Navbar } from "../components/Navbar";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 
 import { useState, useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { HexColorPicker } from "react-colorful";
-
 import Modal from "react-modal";
+import { Helmet } from "react-helmet";
 
 Modal.setAppElement("#SpecGauge");
 
@@ -57,6 +56,7 @@ export default function Prediction({
   brandValues,
   minimumPrice,
   description,
+  predictionLink,
 }) {
   const navigate = useNavigate();
   // Years being displayed
@@ -388,6 +388,10 @@ export default function Prediction({
 
   return (
     <>
+      {/* Set canonical for search engines */}
+      <Helmet>
+        <link rel="canonical" href={predictionLink} />
+      </Helmet>
       <Navbar isMobile={isMobile} page="prediction"></Navbar>
       {/* Main Body */}
       <div className="PredictionContainer">
