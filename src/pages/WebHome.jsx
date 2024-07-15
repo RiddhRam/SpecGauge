@@ -132,12 +132,15 @@ export default function WebHome({ isMobile }) {
     /* Records the initial load of the website */
   }
   useEffect(() => {
-    if (analytics != null) {
-      logEvent(analytics, "Screen", {
-        Screen: "Home",
-        Platform: isMobile ? "Mobile" : "Computer",
-      });
-    }
+    setTimeout(() => {
+      if (analytics != null) {
+        logEvent(analytics, "Screen", {
+          Screen: "Home",
+          Platform: isMobile ? "Mobile" : "Computer",
+        });
+      }
+    }, 1500);
+
     SetTitleAndDescription(
       "SpecGauge | Compare products and predict prices",
       "Explore SpecGauge: Easily compare vehicles and electronics side by side. Predict future prices to make informed decisions before you buy. All the tools in one place.",
