@@ -4,6 +4,9 @@ Lazy import button functions
 Add progress bar to comparison product selection screen
 
 5.7.0
+Add top, side and back view of vehicle sizes
+
+5.8.0
 Let users request a product or category
 Let users suggest fixes to the website or database
 Compress json values
