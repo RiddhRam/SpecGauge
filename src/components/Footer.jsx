@@ -1,6 +1,6 @@
 import InstagramLogo from "../assets/instagram icon.webp";
 import TikTokLogo from "../assets/tiktok icon.webp";
-import XLogo from "../assets/x icon.webp";
+import YouTubeLogo from "../assets/youtube icon.webp";
 import { Link } from "react-router-dom";
 
 export const Footer = ({ isMobile }) => {
@@ -53,7 +53,6 @@ export const Footer = ({ isMobile }) => {
         </Link>
 
         {/* TikTok */}
-
         <Link
           to="https://www.tiktok.com/@specgauge_official"
           className="LinkWithImage"
@@ -68,9 +67,13 @@ export const Footer = ({ isMobile }) => {
           </p>
         </Link>
 
-        {/* X */}
-        <Link to="https://twitter.com/SpecGauge" className="LinkWithImage">
-          <img src={XLogo} alt="X Logo" style={{ width: 35, height: 35 }}></img>
+        {/* YouTube */}
+        <Link to="https://www.youtube.com/@SpecGauge" className="LinkWithImage">
+          <img
+            src={YouTubeLogo}
+            alt="YouTube Logo"
+            style={{ width: 35, height: 35 }}
+          ></img>
           <p className="ReversePlainText" style={{ fontSize: 12 }}>
             SpecGauge
           </p>
