@@ -146,6 +146,9 @@ export default function WebHome({ isMobile }) {
       "Explore SpecGauge: Easily compare vehicles and electronics side by side. Predict future prices to make informed decisions before you buy. All the tools in one place.",
       window.location.href
     );
+
+    //const userLanguage = navigator.language || navigator.userLanguage;
+    //alert(userLanguage);
   }, []);
 
   return (

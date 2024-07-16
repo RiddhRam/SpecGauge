@@ -255,42 +255,46 @@ export default function Compare({
     // Deconstruct the string into a process array
     const processes = DeconstructURLFriendly(presetURL);
 
-    setSaveComparisonProcesses(processes);
+    if (processes[0].length == QueryProcess.length) {
+      setSaveComparisonProcesses(processes);
 
-    for (let processItem in processes) {
-      // Directly get the product
-      const result = await DirectQueryFunction(processes[processItem]);
+      for (let processItem in processes) {
+        // Directly get the product
+        const result = await DirectQueryFunction(processes[processItem]);
 
-      let parameterArray = [];
+        let parameterArray = [];
 
-      // Deep Copy DefaultArray into parameterArray then we will use parameterArray from here on
-      for (let i = 0; i < DefaultArray.length; i++) {
-        const defaultArrayItem = DefaultArray[i];
+        // Deep Copy DefaultArray into parameterArray then we will use parameterArray from here on
+        for (let i = 0; i < DefaultArray.length; i++) {
+          const defaultArrayItem = DefaultArray[i];
 
-        let newJSON = {};
-        newJSON["Value"] = defaultArrayItem.Value;
-        newJSON["Display"] = defaultArrayItem.Display;
-        newJSON["Category"] = defaultArrayItem.Category;
-        newJSON["Matching"] = defaultArrayItem.Matching;
-        newJSON["Mandatory"] = defaultArrayItem.Mandatory;
-        newJSON["Type"] = defaultArrayItem.Type;
-        newJSON["Preference"] = defaultArrayItem.Preference;
-        newJSON["Important"] = defaultArrayItem.Important;
-        newJSON["HigherNumber"] = defaultArrayItem.HigherNumber;
-        parameterArray.push(newJSON);
+          let newJSON = {};
+          newJSON["Value"] = defaultArrayItem.Value;
+          newJSON["Display"] = defaultArrayItem.Display;
+          newJSON["Category"] = defaultArrayItem.Category;
+          newJSON["Matching"] = defaultArrayItem.Matching;
+          newJSON["Mandatory"] = defaultArrayItem.Mandatory;
+          newJSON["Type"] = defaultArrayItem.Type;
+          newJSON["Preference"] = defaultArrayItem.Preference;
+          newJSON["Important"] = defaultArrayItem.Important;
+          newJSON["HigherNumber"] = defaultArrayItem.HigherNumber;
+          parameterArray.push(newJSON);
+        }
+
+        // returns [tempProsArray, tempNewProduct]
+        // prettier-ignore
+        const prosAndSpecs = GetProsAndSpecs(parameterArray, result, Categories);
+
+        // prettier-ignore
+        setPros((prevPros) => [...prevPros, prosAndSpecs[0]]);
+        setProducts((prevProducts) => [...prevProducts, prosAndSpecs[1]]);
       }
 
-      // returns [tempProsArray, tempNewProduct]
-      // prettier-ignore
-      const prosAndSpecs = GetProsAndSpecs(parameterArray, result, Categories);
-
-      // prettier-ignore
-      setPros((prevPros) => [...prevPros, prosAndSpecs[0]]);
-      setProducts((prevProducts) => [...prevProducts, prosAndSpecs[1]]);
-    }
-
-    if (analytics != null) {
-      logEvent(analytics, "Load Comparison Presets", { Processes: processes });
+      if (analytics != null) {
+        logEvent(analytics, "Load Comparison Presets", {
+          Processes: processes,
+        });
+      }
     }
   };
 

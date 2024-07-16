@@ -1,10 +1,11 @@
 5.6.0
 Add compression to the comparison links
-Lazy import button functions
 Add progress bar to comparison product selection screen
+Add regional languages, fallback language is english
 
 5.7.0
 Add top, side and back view of vehicle sizes
+Lazy import button functions
 
 5.8.0
 Let users request a product or category
