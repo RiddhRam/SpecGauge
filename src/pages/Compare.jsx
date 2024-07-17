@@ -410,11 +410,11 @@ export default function Compare({
         {/* Top buttons */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            flexWrap: "wrap",
+            display: "grid",
+            gridTemplateColumns: `repeat(5, 1fr)`,
+            gridTemplateRows: `65px`,
             borderBottom: "1px solid darkGrey",
+            paddingBottom: "10px",
           }}
         >
           {/* Back to home */}
@@ -431,11 +431,7 @@ export default function Compare({
               setDisplayPros([]);
             }}
             className="CompareTopButton"
-            style={
-              isMobile
-                ? { minWidth: "15%", fontSize: "12px", padding: "7px 15px" }
-                : {}
-            }
+            style={isMobile ? { fontSize: "12px" } : {}}
           >
             <p>{"< Back"}</p>
           </button>
@@ -452,11 +448,7 @@ export default function Compare({
               setProductModalVisible(true);
             }}
             className="CompareTopButton"
-            style={
-              isMobile
-                ? { minWidth: "15%", fontSize: "12px", padding: "7px 15px" }
-                : {}
-            }
+            style={isMobile ? { fontSize: "12px" } : {}}
           >
             <p>Add</p>
           </button>
@@ -483,11 +475,7 @@ export default function Compare({
               }
             }}
             className="CompareTopButton"
-            style={
-              isMobile
-                ? { minWidth: "15%", fontSize: "12px", padding: "7px 15px" }
-                : {}
-            }
+            style={isMobile ? { fontSize: "12px" } : {}}
           >
             <p>Save</p>
           </button>
@@ -511,17 +499,13 @@ export default function Compare({
                 logEvent(analytics, "Share Comparison", { Type: type });
               }
             }}
-            className="CompareTopButton"
+            className="ShareTopButton"
             style={
               isMobile
                 ? {
-                    minWidth: "10%",
                     fontSize: "12px",
-                    paddingTop: "7px",
-                    paddingBottom: "7px",
-                    backgroundColor: "#169928",
                   }
-                : { backgroundColor: "#169928" }
+                : {}
             }
           >
             <p>Share</p>
@@ -541,18 +525,13 @@ export default function Compare({
               setPros([]);
               setDisplayPros([]);
             }}
-            className="DangerButton"
+            className="ResetTopButton"
             style={
               isMobile
                 ? {
-                    minWidth: "10%",
                     fontSize: "12px",
-                    paddingTop: "7px",
-                    paddingBottom: "7px",
-                    marginLeft: "5px",
-                    paddingRight: "16px",
                   }
-                : { marginLeft: "5px" }
+                : {}
             }
           >
             <p>Reset</p>

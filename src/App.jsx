@@ -5310,7 +5310,7 @@ const carsBrandValues = [
   { label: "Chrysler", value: normal },
   { label: "Citroen", value: fast },
   { label: "Daewoo", value: normal },
-  { label: "Dodge", value: normal },
+  { label: "Dodge", value: reputable },
   { label: "Ferrari", value: superCar },
   { label: "Fiat", value: fast },
   { label: "Fisker", value: fast },

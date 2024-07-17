@@ -1,12 +1,12 @@
 5.7.0
-Add top, side and back view of vehicle sizes
 Lazy import button functions
-Add regional languages, fallback language is english
-
-5.8.0
 Let users request a product or category
 Let users suggest fixes to the website or database
 Compress json values
+
+5.8.0
+Add regional languages, fallback language is english
+Add top, side and back view of vehicle sizes
 
 6.0.0
 Add performance calculator for cars and computers
