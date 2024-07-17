@@ -431,7 +431,13 @@ export default function Compare({
               setDisplayPros([]);
             }}
             className="CompareTopButton"
-            style={isMobile ? { fontSize: "12px" } : {}}
+            style={
+              isMobile
+                ? {
+                    fontSize: "13px",
+                  }
+                : {}
+            }
           >
             <p>{"< Back"}</p>
           </button>
@@ -448,7 +454,13 @@ export default function Compare({
               setProductModalVisible(true);
             }}
             className="CompareTopButton"
-            style={isMobile ? { fontSize: "12px" } : {}}
+            style={
+              isMobile
+                ? {
+                    fontSize: "13px",
+                  }
+                : {}
+            }
           >
             <p>Add</p>
           </button>
@@ -475,7 +487,13 @@ export default function Compare({
               }
             }}
             className="CompareTopButton"
-            style={isMobile ? { fontSize: "12px" } : {}}
+            style={
+              isMobile
+                ? {
+                    fontSize: "13px",
+                  }
+                : {}
+            }
           >
             <p>Save</p>
           </button>
@@ -503,7 +521,7 @@ export default function Compare({
             style={
               isMobile
                 ? {
-                    fontSize: "12px",
+                    fontSize: "13px",
                   }
                 : {}
             }
@@ -529,7 +547,7 @@ export default function Compare({
             style={
               isMobile
                 ? {
-                    fontSize: "12px",
+                    fontSize: "13px",
                   }
                 : {}
             }
