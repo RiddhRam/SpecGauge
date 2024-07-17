@@ -1,9 +1,12 @@
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-
 import SelectionModal from "../components/SelectionModal";
 import WebAccountHandler from "../components/WebAccountHandler";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
+import BuildURLFriendlyCompare from "../functions/BuildURLFriendlyCompare";
+import DeconstructURLFriendlyCompare from "../functions/DeconstructURLFriendlyCompare";
+import GetProsAndSpecs from "../functions/GetProsAndSpecs";
+import BuildTitle from "../functions/BuildTitle";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,11 +18,6 @@ import { httpsCallable } from "firebase/functions";
 import { auth, analytics, functions } from "../firebaseConfig";
 
 Modal.setAppElement("#SpecGauge");
-
-import BuildURLFriendly from "../functions/BuildURLFriendly";
-import DeconstructURLFriendly from "../functions/DeconstructURLFriendly";
-import GetProsAndSpecs from "../functions/GetProsAndSpecs";
-import BuildTitle from "../functions/BuildTitle";
 
 export default function Compare({
   type,
@@ -253,7 +251,7 @@ export default function Compare({
   // Load presets from the link
   const loadPresets = async (presetURL) => {
     // Deconstruct the string into a process array
-    const processes = DeconstructURLFriendly(presetURL);
+    const processes = DeconstructURLFriendlyCompare(presetURL, Brands);
 
     if (processes[0].length == QueryProcess.length) {
       setSaveComparisonProcesses(processes);
@@ -497,7 +495,10 @@ export default function Compare({
           {/* Share comparison */}
           <button
             onClick={async () => {
-              const presetsURL = BuildURLFriendly(saveComparisonProcesses);
+              const presetsURL = await BuildURLFriendlyCompare(
+                saveComparisonProcesses,
+                Brands
+              );
 
               // The full URL
               const shareURL = comparisonLink + presetsURL;

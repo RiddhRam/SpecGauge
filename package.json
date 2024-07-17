@@ -1,7 +1,7 @@
 {
   "name": "specgauge",
   "private": true,
-  "version": "5.5.9",
+  "version": "5.6.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,11 +10,13 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "serve": "serve -s dist",
-    "build dev": "vite build --mode development"
+    "build dev": "vite build --mode development",
+    "compress": "node compress.js"
   },
   "dependencies": {
     "chart.js": "^4.4.3",
     "firebase": "^10.12.2",
+    "pako": "^2.1.0",
     "rc-slider": "^10.6.2",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",

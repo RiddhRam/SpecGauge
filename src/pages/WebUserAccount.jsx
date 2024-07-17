@@ -1,6 +1,6 @@
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import BuildURLFriendly from "../functions/BuildURLFriendly";
+import BuildURLFriendlyCompare from "../functions/BuildURLFriendlyCompare";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import Modal from "react-modal";
 
@@ -30,7 +30,7 @@ const categories = [
   "Drones",
 ];
 
-export default function WebUserAccount({ isMobile }) {
+export default function WebUserAccount({ isMobile, brands }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -262,8 +262,8 @@ export default function WebUserAccount({ isMobile }) {
             <button
               onClick={() => {
                 setPage(0);
-                setSavedComparisons(categories.map(() => []));
-                setSavedProcesses(categories.map(() => []));
+                setSavedComparisons = categories.map(() => []);
+                setSavedProcesses = categories.map(() => []);
               }}
               className="AccountButton"
               style={{ width: "100%", alignItems: "center", padding: 0 }}
@@ -386,10 +386,11 @@ export default function WebUserAccount({ isMobile }) {
                                     display: "block",
                                   }}
                                   onClick={async () => {
-                                    const url = BuildURLFriendly(
+                                    const url = await BuildURLFriendlyCompare(
                                       savedProcesses[categoryIndex][
                                         comparisonIndex
-                                      ]
+                                      ],
+                                      brands[categoryIndex]
                                     );
 
                                     navigate(

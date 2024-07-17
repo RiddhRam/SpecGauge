@@ -5618,12 +5618,12 @@ export default function App() {
             <Suspense fallback={<div>Loading...</div>}>
               <WebUserAccount
                 isMobile={isMobile}
-                defaultArrays={[
-                  carsDefaultArray,
-                  consoleDefaultArray,
-                  CPUsDefaultArray,
-                  graphicsCardsDefaultArray,
-                  droneDefaultArray,
+                brands={[
+                  carsBrands,
+                  consoleBrands,
+                  CPUsBrands,
+                  graphicsCardsBrands,
+                  droneBrands,
                 ]}
               ></WebUserAccount>
             </Suspense>

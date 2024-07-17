@@ -64,6 +64,14 @@ export default function SelectionModal({
 
   return (
     <>
+      {/* Progress bar */}
+      <div className="progress">
+        <div
+          className="progress-bar"
+          // Percentage of the width is determined by the current step
+          style={{ width: `${(step / queryProcess.length) * 100}%` }}
+        ></div>
+      </div>
       {/* Brands */}
       <p className="HeaderText">Select {process[step]}</p>
 

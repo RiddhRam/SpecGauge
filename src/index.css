@@ -252,6 +252,21 @@ a {
   }
 }
 
+/* Progress bar */
+.progress {
+  width: 80%;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #4ca0d7; /* Change to your preferred color */
+  transition: width 0.3s ease;
+}
+
 /* For the footer mainly, or anything that's just the opposite of the user color scheme */
 .ReversePlainText {
   color: #fff;
