@@ -3,12 +3,7 @@ import pako from "pako";
 export default function DeconstructURLFriendlyCompare(url, brands) {
   const processes = [];
 
-  // Replace any %3A with colons
-  let tempURL = url.replace(/%3A/g, ":");
-  // Replace any %20 with spaces
-  tempURL = tempURL.replace(/%20/g, " ");
-  // Replace any %2F that aren't use for navigation with extra slashes
-  tempURL = tempURL.replace(/%2F/g, "/");
+  let tempURL = url;
 
   const shortIndex = tempURL.indexOf("short/");
 
@@ -26,6 +21,13 @@ export default function DeconstructURLFriendlyCompare(url, brands) {
     // Convert the decompressed data Uint8Array back to a string
     tempURL = new TextDecoder().decode(decompressed);
   }
+
+  // Replace any %3A with colons
+  tempURL = tempURL.replace(/%3A/g, ":");
+  // Replace any %20 with spaces
+  tempURL = tempURL.replace(/%20/g, " ");
+  // Replace any %2F that aren't use for navigation with extra slashes
+  tempURL = tempURL.replace(/%2F/g, "/");
 
   // Split major string up into seperate strings, 1 for each product
   const products = tempURL.split("%7Cvs%7C");
