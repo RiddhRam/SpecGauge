@@ -25,17 +25,17 @@ const predictionCategories = ["Automobiles", "Graphics Cards", "CPUs"];
 
 // The available links to navigate to from the modals
 const comparisonLinks = [
-  "/comparison/automobiles",
-  "/comparison/consoles",
-  "/comparison/cpus",
-  "/comparison/graphicsCards",
-  "/comparison/drones",
+  "/comparison/automobiles/",
+  "/comparison/consoles/",
+  "/comparison/cpus/",
+  "/comparison/graphicsCards/",
+  "/comparison/drones/",
 ];
 
 const predictionLinks = [
-  "/prediction/automobiles",
-  "/prediction/graphicsCards",
-  "/prediction/cpus",
+  "/prediction/automobiles/",
+  "/prediction/graphicsCards/",
+  "/prediction/cpus/",
 ];
 
 // The trending comparisons to display
@@ -126,11 +126,11 @@ export default function WebHome({ isMobile }) {
   }
   const [compareModalVisible, setCompareModalVisible] = useState(false);
   const [predictModalVisible, setPredictModalVisible] = useState(false);
-
   const navigate = useNavigate();
   {
     /* Records the initial load of the website */
   }
+
   useEffect(() => {
     setTimeout(() => {
       if (analytics != null) {

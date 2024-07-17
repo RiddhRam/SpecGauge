@@ -5597,13 +5597,13 @@ export default function App() {
         {/* the home page */}
         <Route
           index
-          path="/home"
+          path="/home/"
           element={<WebHome isMobile={isMobile}></WebHome>}
         ></Route>
         {/* the login page */}
         <Route
           index
-          path="/login"
+          path="/login/"
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <WebLogIn isMobile={isMobile}></WebLogIn>
@@ -5613,7 +5613,7 @@ export default function App() {
         {/* the user account page */}
         <Route
           index
-          path="/account"
+          path="/account/"
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <WebUserAccount
@@ -5802,7 +5802,7 @@ export default function App() {
         ></Route>
         {/* the about us page */}
         <Route
-          path="/aboutus"
+          path="/aboutus/"
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Information
@@ -5860,7 +5860,7 @@ export default function App() {
         ></Route>
         {/* the terms of service page */}
         <Route
-          path="/termsofservice"
+          path="/termsofservice/"
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Information
@@ -5938,7 +5938,7 @@ export default function App() {
         ></Route>
         {/* the privacy policy page */}
         <Route
-          path="/privacypolicy"
+          path="/privacypolicy/"
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Information
