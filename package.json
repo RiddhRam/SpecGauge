@@ -1,7 +1,7 @@
 {
   "name": "specgauge",
   "private": true,
-  "version": "5.6.4",
+  "version": "5.7.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,8 +10,9 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "serve": "serve -s dist",
-    "build dev": "vite build --mode development",
-    "compress": "node compress.js"
+    "build-dev": "vite build --mode development",
+    "compress": "node CompressJS.js",
+    "jsonFile": "node JSONtoFile.js"
   },
   "dependencies": {
     "chart.js": "^4.4.3",

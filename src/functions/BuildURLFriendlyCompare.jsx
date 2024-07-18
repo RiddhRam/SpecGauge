@@ -1,6 +1,6 @@
 import pako from "pako";
 
-export default async function BuildURLFriendlyCompare(processes, brands) {
+export default function BuildURLFriendlyCompare(processes, brands) {
   // Start with 'short/' so the DeconstructURLFriendlyCompare function knows that it's the updated version.
   let url = "";
 

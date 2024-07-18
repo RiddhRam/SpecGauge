@@ -1,1 +1,2 @@
 Reduced server firebase indexes by at least 90% by adding additional data (RequestStep in the brands array) to the client side app.
+Reduced website size by 60% by using smart importing and code splitting techniques

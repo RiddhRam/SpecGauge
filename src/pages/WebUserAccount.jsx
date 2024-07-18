@@ -1,6 +1,5 @@
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import BuildURLFriendlyCompare from "../functions/BuildURLFriendlyCompare";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import Modal from "react-modal";
 
@@ -386,12 +385,20 @@ export default function WebUserAccount({ isMobile, brands }) {
                                     display: "block",
                                   }}
                                   onClick={async () => {
-                                    const url = await BuildURLFriendlyCompare(
-                                      savedProcesses[categoryIndex][
-                                        comparisonIndex
-                                      ],
-                                      brands[categoryIndex]
-                                    );
+                                    let url = "";
+
+                                    // Lazy import this, becaues it includes pako
+                                    await import(
+                                      "../functions/BuildURLFriendlyCompare"
+                                    ).then((module) => {
+                                      // Construct the process array into a string
+                                      url = module.default(
+                                        savedProcesses[categoryIndex][
+                                          comparisonIndex
+                                        ],
+                                        brands[categoryIndex]
+                                      );
+                                    });
 
                                     navigate(
                                       comparisonLinks[categoryIndex] + "/" + url

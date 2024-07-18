@@ -1,8 +1,6 @@
 5.7.0
-Lazy import button functions
 Let users request a product or category
 Let users suggest fixes to the website or database
-Compress json values
 
 5.8.0
 Add regional languages, fallback language is english

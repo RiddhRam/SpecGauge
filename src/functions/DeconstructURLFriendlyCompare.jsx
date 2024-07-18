@@ -1,4 +1,4 @@
-import pako from "pako";
+import PakoInflate from "./PakoInflate";
 
 export default function DeconstructURLFriendlyCompare(url, brands) {
   const processes = [];
@@ -7,19 +7,12 @@ export default function DeconstructURLFriendlyCompare(url, brands) {
 
   const shortIndex = tempURL.indexOf("short/");
 
+  // If its a short (compressed) string
   if (shortIndex != -1) {
     tempURL = tempURL.slice(6);
 
-    // Convert tempURL to a Uint8Array
-    const compressedData = Uint8Array.from(atob(tempURL), (c) =>
-      c.charCodeAt(0)
-    );
-
-    // Decompress the url
-    const decompressed = pako.inflate(compressedData);
-
-    // Convert the decompressed data Uint8Array back to a string
-    tempURL = new TextDecoder().decode(decompressed);
+    // Decompress the short string
+    tempURL = PakoInflate(tempURL);
   }
 
   // Replace any %3A with colons

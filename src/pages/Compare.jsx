@@ -1,17 +1,16 @@
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
-import SelectionModal from "../components/SelectionModal";
-import WebAccountHandler from "../components/WebAccountHandler";
-import SetTitleAndDescription from "../functions/SetTitleAndDescription";
-import BuildURLFriendlyCompare from "../functions/BuildURLFriendlyCompare";
-import DeconstructURLFriendlyCompare from "../functions/DeconstructURLFriendlyCompare";
-import GetProsAndSpecs from "../functions/GetProsAndSpecs";
-import BuildTitle from "../functions/BuildTitle";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import { Helmet } from "react-helmet";
+
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
+import SetTitleAndDescription from "../functions/SetTitleAndDescription";
+import GetProsAndSpecs from "../functions/GetProsAndSpecs";
+import BuildTitle from "../functions/BuildTitle";
+
+const SelectionModal = lazy(() => import("../components/SelectionModal"));
+const WebAccountHandler = lazy(() => import("../components/WebAccountHandler"));
 
 import { logEvent } from "firebase/analytics";
 import { httpsCallable } from "firebase/functions";
@@ -250,8 +249,14 @@ export default function Compare({
 
   // Load presets from the link
   const loadPresets = async (presetURL) => {
-    // Deconstruct the string into a process array
-    const processes = DeconstructURLFriendlyCompare(presetURL, Brands);
+    let processes = [];
+    // Lazy import this, becaues it includes pako
+    await import("../functions/DeconstructURLFriendlyCompare").then(
+      (module) => {
+        // Deconstruct the string into a process array
+        processes = module.default(presetURL, Brands);
+      }
+    );
 
     if (processes[0].length == QueryProcess.length) {
       setSaveComparisonProcesses(processes);
@@ -501,9 +506,14 @@ export default function Compare({
           {/* Share comparison */}
           <button
             onClick={async () => {
-              const presetsURL = await BuildURLFriendlyCompare(
-                saveComparisonProcesses,
-                Brands
+              let presetsURL = "";
+
+              // Lazy import this, becaues it includes pako
+              await import("../functions/BuildURLFriendlyCompare").then(
+                (module) => {
+                  // Construct the process array into a string
+                  presetsURL = module.default(saveComparisonProcesses, Brands);
+                }
               );
 
               // The full URL
@@ -688,10 +698,13 @@ export default function Compare({
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <WebAccountHandler
-          screenType={"modal"}
-          setModaldiv={setAccountModalVisible}
-        ></WebAccountHandler>
+        <Suspense fallback={<div>Loading...</div>}>
+          <WebAccountHandler
+            screenType={"modal"}
+            setModaldiv={setAccountModalVisible}
+          ></WebAccountHandler>
+        </Suspense>
+
         <button
           className="NormalButtonNoBackground"
           onClick={() => {
@@ -748,19 +761,21 @@ export default function Compare({
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <SelectionModal
-          type={type}
-          setProductModalVisible={setProductModalVisible}
-          brands={Brands}
-          queryFunction={QueryFunction}
-          queryProcess={QueryProcess}
-          process={Process}
-          defaultArray={DefaultArray}
-          categories={Categories}
-          setPros={setPros}
-          setProducts={setProducts}
-          setSaveComparisonProcesses={setSaveComparisonProcesses}
-        ></SelectionModal>
+        <Suspense fallback={<div>Loading...</div>}>
+          <SelectionModal
+            type={type}
+            setProductModalVisible={setProductModalVisible}
+            brands={Brands}
+            queryFunction={QueryFunction}
+            queryProcess={QueryProcess}
+            process={Process}
+            defaultArray={DefaultArray}
+            categories={Categories}
+            setPros={setPros}
+            setProducts={setProducts}
+            setSaveComparisonProcesses={setSaveComparisonProcesses}
+          ></SelectionModal>
+        </Suspense>
       </Modal>
 
       {/* Shows up when user clicks the share button */}
