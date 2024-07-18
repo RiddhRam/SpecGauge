@@ -13,14 +13,14 @@ a {
 
 /*For the web navbar*/
 .NavbarContainer {
-  background-color: #171827;
+  background-color: #030612;
   font-weight: bold;
 }
 
 /* For divs that take up the main part of the screen, the main content */
 .LargeContainer {
   display: flex;
-  background-color: #fff;
+  background-color: #171827;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -31,20 +31,20 @@ a {
 .PredictionContainer {
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: #171827;
   padding-bottom: 50px;
 }
 
 /* For the footer mainly, or anything that's just the opposite of the user color scheme */
 .ReverseBackground {
-  background-color: #171827;
+  background-color: #fff;
 }
 
 /* All modals look like this */
 .ModalContainer {
-  background-color: #fff;
+  background-color: #030612;
   border-style: solid;
-  border-color: #fff;
+  border-color: #000;
   display: flex;
   flex-direction: column;
   width: 70%; /* Adjust width as per your design */
@@ -71,12 +71,12 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(200, 200, 200, 0.3);
 }
 
 /* The whole user account screen */
 .UserAccountScreen {
-  background-color: #fff;
+  background-color: #171827;
   display: flex;
   flex-direction: row;
   padding-bottom: 50px;
@@ -85,7 +85,7 @@ a {
 
 /* The whole user account screen for mobile */
 .UserAccountScreenMobile {
-  background-color: #fff;
+  background-color: #171827;
   display: flex;
   flex-direction: row;
   padding-bottom: 50px;
@@ -96,7 +96,7 @@ a {
 .UserAccountDetailsSection {
   padding-left: 15px;
   border-radius: 10px;
-  background-color: #e6e6e6;
+  background-color: #000;
   margin-top: 12px;
   display: flex;
   flex-direction: column;
@@ -133,20 +133,13 @@ a {
 .ProCell {
   border-style: solid;
   border-width: thin;
-  border-color: #39ff14;
+  background-color: #39ff14;
   border-radius: 3px;
   background-color: #39ff14;
-  box-shadow: 0px 0px 4px 3px rgba(45, 156, 20, 0.6);
+  box-shadow: 0px 0px 4px 3px rgba(60, 216, 25, 0.6);
   text-align: center;
   display: flex;
   flex-direction: column;
-}
-
-/* Displays specs for a category */
-.ComparisonRow {
-  text-align: center;
-  color: #000;
-  word-wrap: break-word;
 }
 
 /* Plain view that scrolls horizontally */
@@ -169,24 +162,24 @@ a {
 
 /* Each trending comparison parent container */
 .TrendingComparison {
-  background-color: #f0f0f0;
+  background-color: #030612;
 }
 
 /* The product names and VS text */
 .TrendingComparisonText {
-  color: #000;
+  color: #fff;
   text-align: center;
   padding: 0 2px;
 }
 
 /* Completely unaltered text, just matches the appropriate color scheme */
 .PlainText {
-  color: #000;
+  color: #fff;
 }
 
 /* Same as plain text, but text aligned to the center */
 .SimpleText {
-  color: #000;
+  color: #fff;
   text-align: center;
 }
 
@@ -271,7 +264,7 @@ a {
 
 /* For the footer mainly, or anything that's just the opposite of the user color scheme */
 .ReversePlainText {
-  color: #fff;
+  color: #000;
 }
 
 /* Links in the navbar */
@@ -302,19 +295,19 @@ a {
 
 /* Category specs */
 .ComparisonRowValue {
-  background-color: #000;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 15px;
   padding-right: 15px;
-  background-color: #fff;
+  color: #fff;
+  background-color: #171827;
   flex-grow: 1;
   white-space: pre-wrap;
 }
 
 /* For paragraphs on the information screens */
 .InfoText {
-  color: #000;
+  color: #fff;
   font-size: 20;
 }
 
@@ -383,7 +376,7 @@ a {
 /* For buttons that just look like text without hovering or clicking them */
 .NormalButtonNoBackground {
   background-color: transparent;
-  color: #000;
+  color: #fff;
   font-size: 16px;
   padding: 0px 15px;
   margin: 10px auto; /* centers the buttons */
@@ -558,8 +551,8 @@ a {
 
 /* Buttons on the user account page */
 .AccountButton {
-  background-color: #fff;
-  color: #000;
+  background-color: #171827;
+  color: #fff;
   font-size: 16px;
   font-weight: 600;
   margin-top: 10px;
@@ -582,13 +575,14 @@ a {
 
   &:active {
     background-color: #c6c6c6;
+    color: #000;
   }
 }
 
 /* Button is highlighted when user is on it's respective screen */
 .AccountButtonSelected {
-  background-color: #c6c6c6;
-  color: #000;
+  background-color: #3d3d54;
+  color: #fff;
   font-size: 16px;
   font-weight: 600;
   margin-top: 10px;
@@ -698,95 +692,4 @@ a {
 /* DONT RENAME THE DROPDOWNS OR IT STOPS WORKING ??*/
 .dropdown-menu li a:hover {
   background-color: #f1f1f1;
-}
-
-/* If dark mode */
-@media (prefers-color-scheme: dark) {
-  /*For the web navbar*/
-  .NavbarContainer {
-    background-color: #030612;
-  }
-  /* For divs that take up the main part of the screen, the main content */
-  .LargeContainer {
-    background-color: #171827;
-  }
-  .PredictionContainer {
-    background-color: #171827;
-  }
-  /* For the footer mainly, or anything that's just the opposite of the user color scheme */
-  .ReverseBackground {
-    background-color: #fff;
-  }
-  /* All modals look like this */
-  .ModalContainer {
-    background-color: #030612;
-    border-color: #000;
-  }
-  /* The background blur of the modal */
-  .ModalOverlay {
-    background-color: rgba(200, 200, 200, 0.3);
-  }
-  /* The whole user account screen */
-  .UserAccountScreen {
-    background-color: #171827;
-  }
-  /* The whole user account screen for mobile */
-  .UserAccountScreenMobile {
-    background-color: #171827;
-  }
-  /* For the user account screen */
-  .UserAccountDetailsSection {
-    background-color: #000;
-  }
-  /* Displays specs for a category */
-  .ComparisonRow {
-    color: #fff;
-  }
-  /* Each trending comparison parent container */
-  .TrendingComparison {
-    background-color: #030612;
-  }
-  /* Completely unaltered text, just matches the appropriate color scheme */
-  .PlainText {
-    color: #fff;
-  }
-  /* Same as plain text, but text aligned to the center */
-  .SimpleText {
-    color: #fff;
-  }
-  /* For the footer mainly, or anything that's just the opposite of the user color scheme */
-  .ReversePlainText {
-    color: #000;
-  }
-  /* Category specs */
-  .ComparisonRowValue {
-    color: #fff;
-    background-color: #171827;
-  }
-  /* For paragraphs on the information screens */
-  .InfoText {
-    color: #fff;
-  }
-  /* The product names and VS text */
-  .TrendingComparisonText {
-    color: #fff;
-  }
-  /* For buttons that just look like text without hovering or clicking them */
-  .NormalButtonNoBackground {
-    color: #fff;
-  }
-  /* Buttons on the user account page */
-  .AccountButton {
-    background-color: #171827;
-    color: #fff;
-
-    &:active {
-      color: #000;
-    }
-  }
-  /* Button is highlighted when user is on it's respective screen */
-  .AccountButtonSelected {
-    background-color: #3d3d54;
-    color: #fff;
-  }
 }

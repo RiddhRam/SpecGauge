@@ -112,7 +112,7 @@ const data = [
     HigherNumber: true,
   },
   {
-    Value: "Fuel Consumption (City): --",
+    Value: "City Fuel Use: --",
     Display: false,
     Category: "Fuel/Battery",
     Matching: "Fuel Consumption (City)",
@@ -123,7 +123,7 @@ const data = [
     HigherNumber: false,
   },
   {
-    Value: "Fuel Consumption (Highway): --",
+    Value: "Highway Fuel Use: --",
     Display: false,
     Category: "Fuel/Battery",
     Matching: "Fuel Consumption (Highway)",
@@ -134,7 +134,7 @@ const data = [
     HigherNumber: false,
   },
   {
-    Value: "Fuel Consumption (Combined): --",
+    Value: "Combined Fuel Use: --",
     Display: false,
     Category: "Fuel/Battery",
     Matching: "Fuel Consumption (Combined)",

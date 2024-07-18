@@ -1,4 +1,7 @@
 5.9.0
+Forcing all users to dark mode
+
+5.10.0
 (REHAUL HOMEPAGE)
 Let users request a product or category
 Let users suggest fixes to the website or database
