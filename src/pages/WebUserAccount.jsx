@@ -21,13 +21,7 @@ const comparisonLinks = [
   "/comparison/drones",
 ];
 
-const categories = [
-  "Automobiles",
-  "Consoles",
-  "CPUs",
-  "Graphics Cards",
-  "Drones",
-];
+const categories = ["Vehicles", "Consoles", "CPUs", "Graphics Cards", "Drones"];
 
 export default function WebUserAccount({ isMobile, brands }) {
   // Initialize useNavigate as navigate

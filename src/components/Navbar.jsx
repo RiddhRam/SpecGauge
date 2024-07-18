@@ -70,7 +70,7 @@ export const Navbar = ({ isMobile, page }) => {
         <DropdownMenu
           label="Compare"
           menuItems={[
-            { label: "Automobiles", path: "/comparison/automobiles/" },
+            { label: "Vehicles", path: "/comparison/automobiles/" },
             { label: "Consoles", path: "/comparison/consoles/" },
             { label: "CPUs", path: "/comparison/cpus/" },
             { label: "Graphics Cards", path: "/comparison/graphicsCards/" },
@@ -81,7 +81,7 @@ export const Navbar = ({ isMobile, page }) => {
         <DropdownMenu
           label="Predict"
           menuItems={[
-            { label: "Automobiles", path: "/prediction/automobiles/" },
+            { label: "Vehicles", path: "/prediction/automobiles/" },
             { label: "CPUs", path: "/prediction/cpus/" },
             { label: "Graphics Cards", path: "/prediction/graphicsCards/" },
           ]}

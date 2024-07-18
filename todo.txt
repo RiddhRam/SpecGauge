@@ -1,9 +1,10 @@
-5.8.0
+5.9.0
 (REHAUL HOMEPAGE)
 Let users request a product or category
 Let users suggest fixes to the website or database
 
 Asynchronously unzip JSON Values
+Improve price prediction algorithm
 
 6.0.0
 Add regional languages, fallback language is english
