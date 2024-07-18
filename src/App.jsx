@@ -29,15 +29,14 @@ const compressedConsoleBrands =
 const compressedConsoleDefaultArray =
   "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";
 
-// Decompressed String Values
-const consoleBrandsString = PakoInflate(compressedConsoleBrands);
-const consoleDefaultArrayString = PakoInflate(compressedConsoleDefaultArray);
-
+// Decompressed (inflated) String Values into JSON values
 // Brands and second steps are preloaded
-const consoleBrands = JSON.parse(consoleBrandsString);
+const consoleBrands = JSON.parse(PakoInflate(compressedConsoleBrands));
 
 // Default values and other data for each spec
-const consoleDefaultArray = JSON.parse(consoleDefaultArrayString);
+const consoleDefaultArray = JSON.parse(
+  PakoInflate(compressedConsoleDefaultArray)
+);
 
 // This determines how many rows to show in the table, each item is 1 column, each item within the item is a row.
 // To add a product, the specs are added to the '-Specs' array in the corresponding category. '-Specs' array is below
@@ -75,11 +74,8 @@ const compressedDroneBrands =
 const compressedDroneDefaultArray =
   "eJzFmc9T6zYQx/+VnZxghhz6piduJJQHMw2kmMLhTQ+KvIk1lSWNJBPSTv/3rn/i5IU4OFG4gSx99Vlpd6VVfvw7eGYyw8HlYDgcXAyuhTOSrQaX3mZ4MRgzjwtt6f/ByDIVU48J8zwRarHWpGLmi25zJh2Ne1qZXDKij1OLc7SoODZf71KjrWfKNy23YpGgvc/SGdpy7v8u9ia7ZymugzUtYbmu4hiYB4nMefgGwmPqwGt4FbgEnyAYq91O9GnZoYXetBwXvWhss78gI0I7jJBJjNuQ1fgWZUTc3GeWSbihYZnFDWjhYFnpuUIPznIxl9AC6Pn5LntGnfaUi9ZhznXmfDEZ0ETwQux2+IhOuELjYOviNfllIW9b8i3zStzjWtcRAJH4ZyMAXrXMNkNgDez+JGAvSMP9OtryvW07WvTncdgmQok0S0EbtMzT5EDxWfxNW3wJHegPzain91Hrlki9RAp8oz0qL8h9ts4UfhMm7C2soemuCY5u3yez/+0WH0u6fOxE7i9in6yT+UTwvxU69+Vwv6NabNItG+CvJLuR+e7Bk0gRzn6BGfOUblfn231yXnb2IkC6+6Qn1nFY8V8XpwP/IJYq7rjd6QvZn7SByCDGO2ld0yMk6sOM1oRLhGv0yL3QavcBPtbKWy03Tm1dq8QtlcDn9J3yKGmp6DyovWCiY3R9+EVLq1r+tNIKbMUjUl5XQ6+Ht7qIqk+z20IhvwonOg9i65Pz8NwTXDAj3lC6zkNvTAWCZRu+3gyHs5QJBbzotAv8OP5e54276KEfeDVeOB2c9fHqBaaJ9rrLpwvODy7ULtHaO7BsGd4pnkWMGkbC022l+zK0dXk11XMwKxWCL3DJ+0fGpPCrXryvhYJFrm2c39X2debuynIf/huBMgYqlJ6pCO7FP68V8jI6OO/t9WORVw9w54Q5YDDLhPRDWukktrViYN+O0OZlR0TxeBwbXCnoWoKBTRhPHiKIUDlt96HfBs1T7Yi8kgjMO2VKW5YKfuiCc0YxaekTgik1yRihhvzdzqCGfPvVwFgoTNlxXCfX42t6gQ0YZZaK78b390w1H+0GXWOEynTmoDic8rzJPCSEQJnUaZl1XCCPk/xvps/QOPong2FuXuFUzlMGLOTvTr1SfBmt4Op3q5AJflSWj7SuhnE6U9slZSd8NXidvhoNRi9xV8o5jk+ME2YX+FM13A+dl2JBquUtdQRdndhMdiSXraBlUrG1Qm12eNf+7Y3mUXQITmhu2uRI6o7346pj/jAcERdb4BZTFGAtnJb9XSkc2Jzv06hPAZczL8wJas3vK6sd16ZXmVk6yaIlcYL6vtjDaqM7g7DLN0Qt6Fpfe//ys1cBR0R054hSZr1JtEKo1rbPBrjM5JPXoUq6rtE9wd1Rp4a5Xo8r1c2xEQhMesU5SrQ6RY9d99yPeRWwDZ3QDyrVw8JG6jrY6+sHC5bqTPm81PspOZaOtfnYGDAgDoiC97OKdHijE/z+W9WbNW9v8rgRCIH81//pBQ1e";
 
-const droneBrandsString = PakoInflate(compressedDroneBrands);
-const droneDefaultArrayString = PakoInflate(compressedDroneDefaultArray);
-
-const droneBrands = JSON.parse(droneBrandsString);
-const droneDefaultArray = JSON.parse(droneDefaultArrayString);
+const droneBrands = JSON.parse(PakoInflate(compressedDroneBrands));
+const droneDefaultArray = JSON.parse(PakoInflate(compressedDroneDefaultArray));
 const droneCategories = [
   { Category: "N", Values: [] },
   { Category: "R", Values: [] },
@@ -111,13 +107,12 @@ const compressedGraphicsCardsBrands =
 const compressedGraphicsCardsDefaultArray =
   "eJzFl0Fv2jAUx7+KldMmUWmFG7cS1BaptBaB9TDt4CYPYi2xI8dpy6Z999mEIAwUpwnObvDi/9+/vBc/2z/+eN9JUoA39K6uvJ43pnmWkLU3lKKAnucTCSsu1H9vJAiL1IgpkWFM2coIsYjIzbAlSXKlm68zbRmoh1jAEgSwEHZPJ2nGhSRM7iL3dBWDeCzSFxDb4N9ebbQ7YCCIpJyZfAfx/wvpE3GQvl3EMdhNFCEiUQIkl6iPqIQ0R5KjVwpvSMaAMsHzs+y4HLDHvos4Zr/DiyGylR8vDuq+DThmm6vPP6e5mgLl9Dd8nvPAwGQu5VvkRytyObw2cd6GNr84qY59kNoxqF9y3Sq7Ww/n2GMKKGj0KVRK54gz0H0A0FjBWDGrwRO25Cbvvg36cvNKaEJeaKKS/LWLpTcNZnjT00jBwrjFe5hG7lcg9icoSLi0Io/40X5Rac9Q2vNbizKISaTmRAWj0t4pZsAiEJrRwDVM3HeM6aIxqda6X3hPuDGg1joH9HmaFWo1L2oV/aiDGXL35VYdXTV2nwtoXvY9D/fln7eDrfTOQR++IZ+EsX1z2IwyISute8jrFpDXXUH2W0D2rZDB4jKUgxaUg1OU5pZ/mVyO9PbtJzz89fnOtNGGWuu85CPO1R2rKedG3A3oFFJlXZO0HHxwcNoz6IpWH5CRmghp8zbUhlFX9KPC3vzPMCt5Z6RqkjcaSfvB+hxvZeK+hT0VUh097Nk9cabeSts1sHp3lgdgqxopPQFZKi/fZI8Qn2sV/QTh83GhnQDeg3re6PJUKjtAnI9xEz4l6wAO03dI0KzO3R+DWHKREj2deQ3deXRwyn+XhYCWwPsuzpFv8aCP5iDIbcIze0v6ENr0cYP98x9MgAM3";
 
-const graphicsCardsBrandsString = PakoInflate(compressedGraphicsCardsBrands);
-const graphicsCardsDefaultArrayString = PakoInflate(
-  compressedGraphicsCardsDefaultArray
+const graphicsCardsBrands = JSON.parse(
+  PakoInflate(compressedGraphicsCardsBrands)
 );
-
-const graphicsCardsBrands = JSON.parse(graphicsCardsBrandsString);
-const graphicsCardsDefaultArray = JSON.parse(graphicsCardsDefaultArrayString);
+const graphicsCardsDefaultArray = JSON.parse(
+  PakoInflate(compressedGraphicsCardsDefaultArray)
+);
 const graphicsCardsCategories = [
   { Category: "N", Values: [] },
   { Category: "R", Values: [] },
@@ -142,11 +137,8 @@ const compressedCPUsBrands =
 const compressedCPUsDefaultArray =
   "eJy9mV1v2jAUhv+KRW/LpkJ707sS+kEFNCJ0qjTtwiSHYi3EmeO0sGn/fQ6BkAQWhxj7ksTv60cnx/bx4fuf1jfsx9C6bbXbrctWn0Shj9etW85iuGxZmMM7ZeJ3q8dw4IkRI8zdBQneC48CD/PNsDn2I6GbrsPE0hEvbQZzYBC4kL0dLEPKOA549uSJvC+AjePlDFg699/L2mSPEADDnNCgiFd6rpfRsl9vkQRUjCkS7h7oRbvzPIQ58gFHHHUQ4bCMEKfog8An4gtAIaNRJbidDsiRZ0/Oi755mGd3qPsTuDSyto/5nLJlETIVG4iwiIYLUYQc8hukrHdM8HFweczgIKiZTZE6NdlCj6XQ6XBJaKdi9UYkEhNECsw5l7Mjl8PcJ6Aa4p2FdtbB1xd0prQoW+lPjWTG86RHyclI2M+QJnkb7czcwhGM8ErKOxUmS+wXUXfqCkz5LlcL87k547MJwBFmzc+KVHzKWZEan7q0JpCcw4D6Aqghat7CxBl8gegcWZSBfCM4qHD2Wu3LaDPVdMEAe01Bt2rtqE/rGSPe8ZhuHatY83ITCTC00X27KexerD2szshGF0gQNPj+e63+MyoQGOJiAh56ZDhcEFfO68Sz9rYG2B2j+8Pq0M9EVjww+BULi7U82L4oxIvMmbjqVHg9S7inMZtRtGFoQpqTaz/Besm23ph0r9aewumKRv9NgRr7QtlCO3O2EaEepdFBnXDKVpY6aCcexT4noU+ANUmHvVp73r58AHMTAjzzQRLUKlD0GiSvwasg7p2FeFyjXVO1594N0hxA43ILR0MeTPt2s7pbCPVfFkVpT5bxEtn0s0aibkaVS++cgQFeWApv5MRhopMCp8NLxAWLsy+vw0vD5nB3QgBPvm0dA84ZVJUG8gjXKw36/cmVCu5er0Zbq6nUn3QUWTsGWbuKrF2DrNeKrNcGWW8UWW9MsQ5t1dWVdzDEq7TC8g6GeJVWWd7BEK/SSss7mOJ9Uwd+M0qstD/kHUzxqkf4ZmWKWFSAKMVoVo7h1ReUe6H1TpaWfr1Y3rOpqByFXH/VeG9Z+6icmAAFrWZO2xq071chE/cs+fXBGhRBc2L9pA64VEwgPqCYtkb7vgxb1OvnnQLjpDluQa7/YmZhdwFoeCVvdiQDi6g7rfb1v52oowDZ0d/z3M7UVaDs6t/2t820Zl88E5tqdjb75plY/8nkTORtouP/KA5xHLgLZDPiGtiVRpSL1zOKWY0/6o4DWwsSRsAr/+do2Mwoh9WukZ5Hmlq2gcS0a6TkUTT9yfhgd2uwAUs+LQ7c0qJJ1NoRe3Hg+ZD8jUr9Go3Low3WooempfPjH5KQ1Js=";
 
-const cpusBrandsString = PakoInflate(compressedCPUsBrands);
-const cpusDefaultArrayString = PakoInflate(compressedCPUsDefaultArray);
-
-const CPUsBrands = JSON.parse(cpusBrandsString);
-const CPUsDefaultArray = JSON.parse(cpusDefaultArrayString);
+const CPUsBrands = JSON.parse(PakoInflate(compressedCPUsBrands));
+const CPUsDefaultArray = JSON.parse(PakoInflate(compressedCPUsDefaultArray));
 const CPUsCategories = [
   { Category: "N", Values: [] },
   { Category: "R", Values: [] },
@@ -174,11 +166,8 @@ const compressedCarsBrands =
 const compressedCarsDefaultArray =
   "eJzFl9tu2kAQhl9l5atGIqrUS+6CSUulEqGAGlVVLwY8MSvZu+7sOohWfff6AManYLPxhivEeP/xt4f5Pfvzr/MdghidsXN764ycKVdRAHtnrCnGkeOCRl9S8t+ZEAgvGTEHvdly4VdCwgOdDXuGQCW61T5KUy6ThwvCZyQUGyyefg0jSRqELiIz7m+RHuJwjZS/+9+oN9lcehhUyU6hq5L9QKAqWBG5KteKeFjlKiJ2ue48j4FmAYLS7BPjGkPFtGQvHHdMb5FFJNVZ9EU+oIReRIZFz4Jl9on09izNOWZdpZKMrFXKUXsJaJ63xJkHOjAXcoekCbjo5JzLBKO2mIXaPumU+Asak57U9kmXCFp1Qk5RcV9UKTNlFTDXHfgeTPjqVTWVkszwMqVtvM8xBsyVQsVhpLkU7IPL9f6mDnzYuBJxKvw4Aa2RavX0SsoLZtJ0gV4nofniVLCDoadzzHqNGbkyXHOB3tA7dEx7rl6HnFQvr+6YwTt6trFdD35G6gW8kvQ77l7KFr5caR0w+X3lS9I8si2UJ/ngW91K2vDq/pSXmLXZWrr7gAsPmx+UXpCF+gxnd0PWh/Ne+ImbMFARJ0gdxoi3kcV+sbsxrdkTJoO0QSdZUtv/NnxD4eutAWUuvMTozdbyiXtGfJnOPt7MdJdnLRtsZf22iMEalMmdptDax1xxQrbkf7ox25rcQv22xqPXBfeRh+agqVi9D+cXhB5XhhbDzIT2Ow4CoUKuVIuv9+o7Snr7jn5oH5kLEWySe8hb+uZ6LutLfR/gRhPfsEcQfuPcXoJezWSnAfj1H1jr9VE=";
 
-const carsBrandsString = PakoInflate(compressedCarsBrands);
-const carsDefaultArrayString = PakoInflate(compressedCarsDefaultArray);
-
-const carsBrands = JSON.parse(carsBrandsString);
-const carsDefaultArray = JSON.parse(carsDefaultArrayString);
+const carsBrands = JSON.parse(PakoInflate(compressedCarsBrands));
+const carsDefaultArray = JSON.parse(PakoInflate(compressedCarsDefaultArray));
 const carsCategories = [
   { Category: "N", Values: [] },
   { Category: "R", Values: [] },
@@ -607,7 +596,7 @@ export default function App() {
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Compare
-                type={"Automobiles"}
+                type={"Vehicles"}
                 Brands={carsBrands}
                 Process={carsProcess}
                 QueryProcess={carsQueryProcess}
@@ -723,7 +712,7 @@ export default function App() {
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Prediction
-                type={"Automobiles"}
+                type={"Vehicles"}
                 isMobile={isMobile}
                 averagePrices={carsAveragePrices}
                 brandValues={carsBrandValues}

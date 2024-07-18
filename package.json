@@ -1,7 +1,7 @@
 {
   "name": "specgauge",
   "private": true,
-  "version": "5.7.0",
+  "version": "5.7.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,8 +11,7 @@
     "preview": "vite preview",
     "serve": "serve -s dist",
     "build-dev": "vite build --mode development",
-    "compress": "node CompressJS.js",
-    "jsonFile": "node JSONtoFile.js"
+    "compress": "node CompressJS.js"
   },
   "dependencies": {
     "chart.js": "^4.4.3",

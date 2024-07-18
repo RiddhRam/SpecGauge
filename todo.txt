@@ -1,12 +1,15 @@
-5.7.0
+5.8.0
+(REHAUL HOMEPAGE)
 Let users request a product or category
 Let users suggest fixes to the website or database
 
-5.8.0
+Asynchronously unzip JSON Values
+
+6.0.0
 Add regional languages, fallback language is english
 Add top, side and back view of vehicle sizes
 
-6.0.0
+7.0.0
 Add performance calculator for cars and computers
 
 For cars, let users select an existing vehicle from the database.
@@ -17,5 +20,5 @@ Then calculate peformance in a variety of tests that the user can select.
 For computers, let users change cpu, gpu, ram, resolution and program, then 
 let them choose a game/program to calculate peformance in
 
-7.0.0
+8.0.0
 Compress firestore data

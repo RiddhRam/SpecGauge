@@ -14,14 +14,14 @@ Modal.setAppElement("#SpecGauge");
 
 // The categories to select from the modals
 const comparisonCategories = [
-  "Automobiles",
+  "Vehicles",
   "Consoles",
   "CPUs",
   "Graphics Cards",
   "Drones",
 ];
 
-const predictionCategories = ["Automobiles", "Graphics Cards", "CPUs"];
+const predictionCategories = ["Vehicles", "Graphics Cards", "CPUs"];
 
 // The available links to navigate to from the modals
 const comparisonLinks = [
@@ -142,7 +142,7 @@ export default function WebHome({ isMobile }) {
     }, 1500);
 
     SetTitleAndDescription(
-      "SpecGauge | Compare products and predict prices",
+      "SpecGauge | Compare Products and Predict Prices",
       "Explore SpecGauge: Easily compare vehicles and electronics side by side. Predict future prices to make informed decisions before you buy. All the tools in one place.",
       window.location.href
     );
@@ -352,7 +352,7 @@ export default function WebHome({ isMobile }) {
         >
           {/* Compare */}
           <>
-            <p className="PlainText" style={{ fontSize: isMobile ? 14 : 25 }}>
+            <p className="PlainText" style={{ fontSize: isMobile ? 14 : 20 }}>
               Compare thousands of different products side by side
             </p>
             <button
@@ -369,7 +369,7 @@ export default function WebHome({ isMobile }) {
           <>
             <p
               className="PlainText"
-              style={{ marginTop: 50, fontSize: isMobile ? 14 : 25 }}
+              style={{ marginTop: 50, fontSize: isMobile ? 14 : 20 }}
             >
               Predict future prices of products
             </p>

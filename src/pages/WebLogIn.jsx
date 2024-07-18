@@ -30,7 +30,7 @@ export default function WebLogIn({ isMobile }) {
       });
     }
     SetTitleAndDescription(
-      "SpecGauge | Sign up or Log in",
+      "SpecGauge | Sign Up or Log In",
       "Create an account to save comparisons across all your devices.",
       window.location.href
     );
