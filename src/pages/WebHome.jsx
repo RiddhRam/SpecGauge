@@ -1,16 +1,17 @@
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
-import SetTitleAndDescription from "../functions/SetTitleAndDescription";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Modal from "react-modal";
 import { Helmet } from "react-helmet";
+Modal.setAppElement("#SpecGauge");
+
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
+import SetTitleAndDescription from "../functions/SetTitleAndDescription";
+import CompareIcon from "../assets/Comparison Icon.svg";
+import PredictIcon from "../assets/Prediction Icon.svg";
 
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
-
-Modal.setAppElement("#SpecGauge");
 
 // The categories to select from the modals
 const comparisonCategories = [
@@ -121,11 +122,26 @@ const mobileTrendingComparisons = [
 ];
 
 export default function WebHome({ isMobile }) {
+  const dropdownRef = useRef(null);
   {
     /* This is for the modal that determines the comparison type */
   }
+  // Show select compare category modal
   const [compareModalVisible, setCompareModalVisible] = useState(false);
+  // Show select predict category modal
   const [predictModalVisible, setPredictModalVisible] = useState(false);
+  // Show request data modal
+  const [dataModalVisible, setDataModalVisible] = useState(false);
+  // Data being requested
+  const [requestData, setRequestData] = useState("");
+  // In case user doesn't select a type or requests no data
+  const [invalidData, setInvalidData] = useState(false);
+  // Tell user reason data was invalid
+  const [invalidDataReason, setInvalidDataReason] = useState("");
+  // To simulate a loading time when user requests data, so user feels more satisfied, also prevents spam
+  const [requestingData, setRequestingData] = useState(false);
+  // Show this when user is done, to confirm, and to prevent spam
+  const [doneRequest, setDoneRequest] = useState(false);
   const navigate = useNavigate();
   {
     /* Records the initial load of the website */
@@ -176,11 +192,47 @@ export default function WebHome({ isMobile }) {
           Compare Today. Predict Tomorrow.
         </h2>
 
+        {/* COMPARE THOUSANDS OF PRODUCTS SIDE BY SIDE */}
+        <h3
+          className="ReversePlainText"
+          style={{
+            fontSize: isMobile ? 15 : 20,
+            backgroundColor: "#39FF14",
+            padding: "10px",
+            textAlign: "center",
+            margin: "0 5px",
+          }}
+        >
+          {"COMPARE THOUSANDS OF PRODUCTS"}
+          <br />
+          {"SIDE BY SIDE"}
+        </h3>
+
+        {/* Compare Icon goes here */}
+        <img
+          src={CompareIcon}
+          alt="Compare Icon"
+          style={{ margin: "30px 0" }}
+        ></img>
+
+        {/* Start Comparing button */}
+        <button
+          className="NormalButton"
+          onClick={() => {
+            setCompareModalVisible(true);
+          }}
+        >
+          <p>Start Comparing</p>
+        </button>
+
         {/* Trending Comparisons */}
         <>
-          <h3 className="SimpleText" style={{ fontSize: isMobile ? 15 : 20 }}>
+          <h4
+            className="SimpleText"
+            style={{ fontSize: isMobile ? 15 : 20, marginTop: 50 }}
+          >
             Trending Comparisons
-          </h3>
+          </h4>
           {isMobile ? (
             <>
               <div
@@ -340,53 +392,108 @@ export default function WebHome({ isMobile }) {
           )}
         </>
 
-        {/* Navigation */}
-        <div
+        {/* Prediction */}
+        {/* PREDICT FUTURE PRICES */}
+        <h3
+          className="ReversePlainText"
           style={{
-            display: "flex",
-            flexDirection: "column",
+            margin: "40px 5px 0px 5px",
+            fontSize: isMobile ? 15 : 20,
+            backgroundColor: "#A855F7",
+            padding: "10px",
             textAlign: "center",
-            justifyContent: "center",
-            marginTop: 50,
           }}
         >
-          {/* Compare */}
-          <>
-            <p className="PlainText" style={{ fontSize: isMobile ? 14 : 20 }}>
-              Compare thousands of different products side by side
-            </p>
-            <button
-              className="NormalButton"
-              onClick={() => {
-                setCompareModalVisible(true);
-              }}
-            >
-              <p>Start Comparing</p>
-            </button>
-          </>
+          PREDICT FUTURE PRICES
+        </h3>
 
-          {/* Prediction */}
-          <>
-            <p
-              className="PlainText"
-              style={{ marginTop: 50, fontSize: isMobile ? 14 : 20 }}
-            >
-              Predict future prices of products
-            </p>
-            <button
-              className="NormalButton"
-              onClick={() => {
-                setPredictModalVisible(true);
-              }}
-            >
-              <p>Price Prediction</p>
-            </button>
-          </>
-        </div>
+        {/* Predict Icon goes here */}
+        <img
+          src={PredictIcon}
+          alt="Predict Icon"
+          style={{ margin: "30px 0" }}
+        ></img>
+
+        {/* Price Prediction button */}
+        <button
+          className="NormalButton"
+          onClick={() => {
+            setPredictModalVisible(true);
+          }}
+        >
+          <p>Price Prediction</p>
+        </button>
+
+        {/* User request or submit data */}
+        {/* SUBMIT OR REQUEST DATA */}
+        <h3
+          className="ReversePlainText"
+          style={{
+            margin: "80px 0px 30px 0px",
+            fontSize: isMobile ? 15 : 20,
+            backgroundColor: "#F8FF00",
+            padding: "10px",
+            textAlign: "center",
+          }}
+        >
+          SUBMIT OR REQUEST DATA
+        </h3>
+
+        <button
+          className="NormalButton"
+          onClick={() => {
+            setDataModalVisible(true);
+          }}
+        >
+          <p>Submit or Request Data</p>
+        </button>
       </div>
 
       {/* Footer */}
       <Footer isMobile={isMobile} />
+
+      {/* Comparison Category selection modal */}
+      <Modal
+        isOpen={compareModalVisible}
+        contentLabel="Select a comparison"
+        className={"ModalContainer"}
+        overlayClassName={"ModalOverlay"}
+      >
+        <p className="HeaderText">Select a category</p>
+        {/* Buttons */}
+        <div className="ModalButtonSection">
+          {/* Buttons to select a category */}
+          {comparisonCategories.map((item, index) => (
+            <button
+              className="NormalButtonNoBackground"
+              key={item}
+              onClick={() => {
+                if (analytics != null) {
+                  logEvent(analytics, "Modal Button", {
+                    Type: "Comparison",
+                    Category: item,
+                    Platform: isMobile ? "Mobile" : "Computer",
+                  });
+                }
+                navigate(`${comparisonLinks[index]}`);
+
+                setCompareModalVisible(false);
+              }}
+            >
+              <p>{item}</p>
+            </button>
+          ))}
+        </div>
+        {/* Cancel Button */}
+        <button
+          className="DangerButton"
+          onClick={() => {
+            setCompareModalVisible(false);
+          }}
+        >
+          Cancel
+        </button>
+      </Modal>
 
       {/* Prediction Category selection modal */}
       <Modal
@@ -431,47 +538,124 @@ export default function WebHome({ isMobile }) {
           Cancel
         </button>
       </Modal>
-      {/* Comparison Category selection modal */}
+
+      {/* Data Request modal */}
       <Modal
-        isOpen={compareModalVisible}
-        contentLabel="Select a comparison"
+        isOpen={dataModalVisible}
+        contentLabel="Select a request type"
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <p className="HeaderText">Select a category</p>
-        {/* Buttons */}
-        <div className="ModalButtonSection">
-          {/* Buttons to select a category */}
-          {comparisonCategories.map((item, index) => (
-            <button
-              className="NormalButtonNoBackground"
-              key={item}
-              onClick={() => {
-                if (analytics != null) {
-                  logEvent(analytics, "Modal Button", {
-                    Type: "Comparison",
-                    Category: item,
-                    Platform: isMobile ? "Mobile" : "Computer",
-                  });
-                }
-                navigate(`${comparisonLinks[index]}`);
+        <p className="HeaderText">Submit or Request Data</p>
 
-                setCompareModalVisible(false);
+        {!requestingData && !doneRequest && (
+          <>
+            {/* Dropdown Menu */}
+            <select
+              name="type"
+              id="type"
+              ref={dropdownRef}
+              style={{ marginBottom: "30px" }}
+            >
+              <option value="">Please choose a type</option>
+              <option value="Request-Product">Request Product</option>
+              <option value="Request-Category">Request Category</option>
+              <option value="Submit-Data">Submit Data</option>
+              <option value="Submit-Fix">Submit Fix</option>
+            </select>
+
+            <textarea
+              value={requestData}
+              className="RequestDataTextInput"
+              placeholder="What would you like us to do?"
+              onChange={(event) => setRequestData(event.target.value)}
+            ></textarea>
+
+            {invalidData && <p className="ErrorText">{invalidDataReason}</p>}
+
+            {/* Buttons */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                height: "50px",
+                padding: "10px",
               }}
             >
-              <p>{item}</p>
+              {/* Cancel button */}
+              <button
+                onClick={() => {
+                  setDataModalVisible(false);
+                  setInvalidData(false);
+                }}
+                className="DangerButton"
+                style={{ marginRight: "10px" }}
+              >
+                <p>Cancel</p>
+              </button>
+
+              {/* Submit or Request button */}
+              <button
+                onClick={() => {
+                  if (dropdownRef.current.value.split("-")[0] == "") {
+                    setInvalidData(true);
+                    setInvalidDataReason("Please choose a type first");
+                  } else if (requestData == "") {
+                    setInvalidData(true);
+                    setInvalidDataReason(
+                      "Please tell us what you want us to add"
+                    );
+                  } else {
+                    setRequestingData(true);
+                    setTimeout(() => {
+                      setRequestingData(false);
+                      setDoneRequest(true);
+                    }, 200);
+
+                    if (analytics != null) {
+                      logEvent(analytics, dropdownRef.current.value, {
+                        // Request data
+                        Request: requestData,
+                      });
+                    }
+
+                    setInvalidData(false);
+                  }
+                }}
+                className="NormalButton"
+              >
+                <p>Submit/Request</p>
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* Show this so user sees a buffer animation */}
+        {requestingData && (
+          <div
+            className="ActivityIndicator"
+            style={{ marginBottom: "20px" }}
+          ></div>
+        )}
+
+        {doneRequest && (
+          <>
+            <p className="SuccessText">
+              Your request was submitted. Thank you for your contribution!
+            </p>
+            {/* Submit or Request button */}
+            <button
+              onClick={() => {
+                setDoneRequest(false);
+                setRequestData("");
+                setDataModalVisible(false);
+              }}
+              className="NormalButton"
+            >
+              <p>Okay</p>
             </button>
-          ))}
-        </div>
-        {/* Cancel Button */}
-        <button
-          className="DangerButton"
-          onClick={() => {
-            setCompareModalVisible(false);
-          }}
-        >
-          Cancel
-        </button>
+          </>
+        )}
       </Modal>
     </>
   );

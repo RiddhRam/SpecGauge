@@ -133,7 +133,7 @@ a {
 .ProCell {
   border-style: solid;
   border-width: thin;
-  background-color: #39ff14;
+  border-color: #39ff14;
   border-radius: 3px;
   background-color: #39ff14;
   box-shadow: 0px 0px 4px 3px rgba(60, 216, 25, 0.6);
@@ -346,16 +346,23 @@ a {
   &:active {
     background-color: #206090;
   }
+
+  &:disabled {
+    background-color: #206090b8;
+    color: #aaa;
+  }
 }
 
 /* for buttons that delete, cancel or close */
 .DangerButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #d6491a;
   color: #fff;
   font-size: 16px;
   font-weight: 600;
   padding: 10px 20px;
-  margin: 10px 0;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -363,6 +370,7 @@ a {
   user-select: none;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  height: 100%;
 
   &:hover {
     background-color: #cd2626;
@@ -499,6 +507,23 @@ a {
   color: #888;
   user-select: none;
   outline-style: none;
+}
+
+/* for text inputs */
+.RequestDataTextInput {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: transparent;
+  border-style: solid;
+  border-color: #4ca0d7;
+  border-width: 2;
+  padding: 20px;
+  color: #888;
+  user-select: none;
+  outline-style: none;
+  height: 150px;
+  width: 80%;
 }
 
 /* For the text input boxes on the prediction screens */

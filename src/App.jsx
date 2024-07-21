@@ -189,6 +189,7 @@ const reliable = -0.06;
 const reliableMotorCycle = -0.07;
 const reputableMotorCycle = -0.055;
 const expensiveSportMotorCycle = -0.045;
+const inBetweenCars = -0.045;
 const superReliable = -0.035;
 const expensiveSport = -0.03;
 const superMotorCycle = -0.025;
@@ -261,6 +262,7 @@ const carsAveragePrices = [
 const carsBrandValues = [
   { label: "Acura", value: reliable },
   { label: "Alfa Romeo", value: reputable },
+  { label: "Alpine", value: inBetweenCars },
   { label: "Aston Martin", value: expensiveSport },
   { label: "Audi", value: reputable },
   { label: "Bentley", value: expensiveSport },

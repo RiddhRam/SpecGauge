@@ -1,19 +1,14 @@
-5.9.0
-Forcing all users to dark mode
-
-5.10.0
-(REHAUL HOMEPAGE)
-Let users request a product or category
-Let users suggest fixes to the website or database
-
-Asynchronously unzip JSON Values
+6.1.0
 Improve price prediction algorithm
 
-6.0.0
+6.2.0
+Asynchronously unzip JSON Values
+
+7.0.0
 Add regional languages, fallback language is english
 Add top, side and back view of vehicle sizes
 
-7.0.0
+8.0.0
 Add performance calculator for cars and computers
 
 For cars, let users select an existing vehicle from the database.
@@ -24,5 +19,5 @@ Then calculate peformance in a variety of tests that the user can select.
 For computers, let users change cpu, gpu, ram, resolution and program, then 
 let them choose a game/program to calculate peformance in
 
-8.0.0
+9.0.0
 Compress firestore data
