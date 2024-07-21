@@ -1,8 +1,7 @@
-6.1.0
-Improve price prediction algorithm
-
 6.2.0
 Asynchronously unzip JSON Values
+Make the loading page more appealing
+Try to remove react-helmet (16.6 kb)
 
 7.0.0
 Add regional languages, fallback language is english

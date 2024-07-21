@@ -408,7 +408,7 @@ export default function Compare({
       <Navbar isMobile={isMobile} page="compare"></Navbar>
       {/* Main Body */}
       <div className="LargeContainer">
-        <p style={{ fontSize: 25 }} className="HeaderText">
+        <p style={{ fontSize: 20 }} className="HeaderText">
           {type} Comparison
         </p>
 

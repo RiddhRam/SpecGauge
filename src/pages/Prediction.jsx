@@ -237,15 +237,17 @@ export default function Prediction({
           originalPrice = newCalculatedPrice;
         } else {
           // If difference between new and last price is greater than an 8% of the original price
-          if (difference > originalPrice * 0.08) {
-            // Reduce difference to 10%
-            difference = difference * 0.1;
+          if (difference > lastPrice * 0.08) {
+            // Reduce difference to 8%
+            // Prevents sharp increases
+            difference = difference * 0.08;
           }
           // If new price is a decrease from last price
           else if (difference < 0) {
             // If the absolute value of the decrease is more than double of 8% of the original price
             if (difference * -1 > 2 * originalPrice * 0.08) {
               // Cut the difference in half
+              // Prevents sharp drops
               difference = difference * 0.5;
             }
           }
@@ -395,7 +397,7 @@ export default function Prediction({
       <Navbar isMobile={isMobile} page="prediction"></Navbar>
       {/* Main Body */}
       <div className="PredictionContainer">
-        <p style={{ fontSize: 25 }} className="HeaderText">
+        <p style={{ fontSize: 20 }} className="HeaderText">
           {type} Price Prediction
         </p>
         {/* Top Buttons */}
@@ -720,7 +722,7 @@ export default function Prediction({
             }}
           >
             {/* Graph and Scroll slider */}
-            <div style={{ minWidth: "736px" }}>
+            <div style={{ minWidth: "736px", width: "65%" }}>
               {/* Graph */}
               <Line options={lineOptions} data={lineData} />
               {/* Scroll */}
