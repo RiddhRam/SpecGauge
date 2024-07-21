@@ -362,7 +362,7 @@ export default function WebAccountHandler({
           onClick={() => {
             setShowPasswordReset(false);
           }}
-          style={{ marginTop: 20 }}
+          style={{ margin: "10px 0" }}
         >
           <p>Cancel</p>
         </button>

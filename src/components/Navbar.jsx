@@ -56,7 +56,7 @@ export const Navbar = ({ isMobile, page }) => {
               style={{
                 display: "flex",
                 alignItems: "center",
-                fontSize: isMobile ? "10.5px" : "14px",
+                fontSize: isMobile ? "13px" : "14px",
               }}
             >
               <p className="NavbarText">Home</p>
@@ -120,6 +120,7 @@ export const Navbar = ({ isMobile, page }) => {
                       display: "flex",
                       alignItems: "center",
                       textAlign: "center",
+                      fontSize: isMobile ? "13px" : "14px",
                     }}
                   >
                     <p className="NavbarText">Log In</p>

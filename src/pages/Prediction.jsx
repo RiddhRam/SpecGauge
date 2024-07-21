@@ -438,289 +438,298 @@ export default function Prediction({
         {/* Main Content */}
         {isMobile ? (
           /* Mobile view */
-          <div
-            className="ScrollViewY"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "10px 18px",
-              justifyContent: "center",
-            }}
-          >
+          <>
             {/* Graph */}
             <Line
               options={lineOptions}
               data={lineData}
-              style={{ minHeight: "120px" }}
+              style={{ minHeight: "200px", padding: "0 6px" }}
             />
-            {/* Scroll */}
-            <p
-              style={{ marginRight: 10, userSelect: "none" }}
-              className="PlainText"
-            >
-              Scroll
-            </p>
-            <Slider
-              value={position}
-              onChange={OnScrollChangeTrigger}
-              step={1}
-              min={0}
-              max={scrollLimit}
-              trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
-              railStyle={{ backgroundColor: "lightblue", height: 10 }}
-              handleStyle={{
-                marginLeft: 0,
-                marginTop: -2,
-              }}
-            />
-            {/* Zoom slider */}
+
             <div
+              className="ScrollViewY"
               style={{
                 display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
+                flexDirection: "column",
+                padding: "0 35px",
+                justifyContent: "center",
               }}
             >
+              {/* Scroll */}
               <p
                 style={{ marginRight: 10, userSelect: "none" }}
                 className="PlainText"
               >
-                Zoom
-              </p>
-              <p
-                style={{
-                  marginRight: 15,
-                  fontSize: 20,
-                  userSelect: "none",
-                }}
-                className="PlainText"
-              >
-                -
+                Scroll
               </p>
               <Slider
-                value={yearsCount}
-                onChange={OnZoomChangeTrigger}
+                value={position}
+                onChange={OnScrollChangeTrigger}
                 step={1}
-                min={22}
-                max={44}
-                trackStyle={{ backgroundColor: "#4ca0d7" }}
-                railStyle={{ backgroundColor: "lightblue" }}
+                min={0}
+                max={scrollLimit}
+                trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
+                railStyle={{ backgroundColor: "lightblue", height: 10 }}
+                handleStyle={{
+                  marginLeft: 0,
+                  marginTop: -2,
+                }}
               />
-              <p
+              {/* Zoom slider */}
+              <div
                 style={{
-                  marginLeft: 10,
-                  fontSize: 20,
-                  userSelect: "none",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
-                className="PlainText"
               >
-                +
-              </p>
-            </div>
-            {/* Bottom Controls */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: `repeat(2, 1fr)`,
-                gridTemplateRows: `65px 65px 65px 65px`,
-                rowGap: "6px",
-                minWidth: "340px",
-              }}
-            >
-              {/* Release Year Field */}
-              <input
-                type="number"
-                value={releaseYear}
-                className="TextInput"
-                placeholder="Release Year"
-                onChange={(event) =>
-                  handleNumberInput(event.target.value, setReleaseYear)
-                }
-                style={{ fontSize: 13, width: "67%" }}
-              ></input>
-
-              {/* Initial Price Field */}
-              <input
-                type="number"
-                value={initialPrice}
-                className="TextInput"
-                placeholder="Initial New Price"
-                onChange={(event) =>
-                  handleNumberInput(event.target.value, setInitialPrice)
-                }
-                style={{ fontSize: 13, width: "67%" }}
-              ></input>
-
-              {/* Select Brand */}
-              <button
-                onClick={() => {
-                  setShowBrandModal(true);
-                }}
-                style={{ width: "90%" }}
-                className="SelectABrandButton"
-              >
-                <p>
-                  {brand.length == 0
-                    ? "Select a brand"
-                    : `Brand Selected: ${brand}`}
+                <p
+                  style={{ marginRight: 10, userSelect: "none" }}
+                  className="PlainText"
+                >
+                  Zoom
                 </p>
-              </button>
-
-              {/* Add */}
-              <button
-                onClick={() => {
-                  const result = addToGraph(initialPrice, releaseYear, brand);
-                  if (result != 0) {
-                    setError(result);
-                    setShowErrorModal(true);
-                    if (analytics != null) {
-                      logEvent(analytics, "Error adding item", {
-                        Error: result,
-                      });
-                    }
-                  } else {
-                    if (analytics != null) {
-                      logEvent(analytics, "Add Prediction Item", {
-                        Type: type,
-                        InitialPrice: initialPrice,
-                        ReleaseYear: releaseYear,
-                        Brand: brand,
-                      });
-                    }
+                <p
+                  style={{
+                    marginRight: 15,
+                    fontSize: 20,
+                    userSelect: "none",
+                  }}
+                  className="PlainText"
+                >
+                  -
+                </p>
+                <Slider
+                  value={yearsCount}
+                  onChange={OnZoomChangeTrigger}
+                  step={1}
+                  min={22}
+                  max={44}
+                  trackStyle={{ backgroundColor: "#4ca0d7" }}
+                  railStyle={{ backgroundColor: "lightblue" }}
+                />
+                <p
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 20,
+                    userSelect: "none",
+                  }}
+                  className="PlainText"
+                >
+                  +
+                </p>
+              </div>
+              {/* Bottom Controls */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(2, 1fr)`,
+                  gridTemplateRows: `65px 65px 65px 65px`,
+                  rowGap: "6px",
+                  columnGap: "20px",
+                }}
+              >
+                {/* Release Year Field */}
+                <input
+                  type="number"
+                  value={releaseYear}
+                  className="TextInput"
+                  placeholder="Release Year"
+                  onChange={(event) =>
+                    handleNumberInput(event.target.value, setReleaseYear)
                   }
-                }}
-                className="NormalButton"
-                style={{ width: "90%" }}
-              >
-                <p>Add</p>
-              </button>
+                  style={{
+                    width: "calc(100% - 24px)",
+                    padding: "20px 0 20px 20px",
+                  }}
+                ></input>
 
-              {/* Edit */}
-              <button
-                onClick={() => {
-                  setShowEditModal(true);
-                }}
-                className="NormalButton"
-                style={{ width: "90%" }}
-              >
-                <p>Edit</p>
-              </button>
+                {/* Initial Price Field */}
+                <input
+                  type="number"
+                  value={initialPrice}
+                  className="TextInput"
+                  placeholder="Initial New Price"
+                  onChange={(event) =>
+                    handleNumberInput(event.target.value, setInitialPrice)
+                  }
+                  style={{
+                    width: "calc(100% - 24px)",
+                    padding: "20px 0 20px 20px",
+                  }}
+                ></input>
 
-              {/* Add Average Price, only if available */}
-              {averagePrices ? (
+                {/* Select Brand */}
                 <button
                   onClick={() => {
-                    if (analytics != null) {
-                      logEvent(analytics, "Add Average Price", { Type: type });
+                    setShowBrandModal(true);
+                  }}
+                  style={{ width: "100%" }}
+                  className="SelectABrandButton"
+                >
+                  <p>
+                    {brand.length == 0
+                      ? "Select a brand"
+                      : `Brand Selected: ${brand}`}
+                  </p>
+                </button>
+
+                {/* Add */}
+                <button
+                  onClick={() => {
+                    const result = addToGraph(initialPrice, releaseYear, brand);
+                    if (result != 0) {
+                      setError(result);
+                      setShowErrorModal(true);
+                      if (analytics != null) {
+                        logEvent(analytics, "Error adding item", {
+                          Error: result,
+                        });
+                      }
+                    } else {
+                      if (analytics != null) {
+                        logEvent(analytics, "Add Prediction Item", {
+                          Type: type,
+                          InitialPrice: initialPrice,
+                          ReleaseYear: releaseYear,
+                          Brand: brand,
+                        });
+                      }
                     }
-                    while (true) {
-                      let matchFound = false;
-                      const red = Math.random() * 255;
-                      const green = Math.random() * 255;
-                      const blue = Math.random() * 255;
+                  }}
+                  className="NormalButton"
+                  style={{ width: "100%" }}
+                >
+                  <p>Add</p>
+                </button>
 
-                      let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+                {/* Edit */}
+                <button
+                  onClick={() => {
+                    setShowEditModal(true);
+                  }}
+                  className="NormalButton"
+                  style={{ width: "100%" }}
+                >
+                  <p>Edit</p>
+                </button>
 
-                      for (let item in lineValueDataset) {
-                        if (
-                          newBorderColor == lineValueDataset[item].borderColor
-                        ) {
-                          matchFound = true;
+                {/* Add Average Price, only if available */}
+                {averagePrices ? (
+                  <button
+                    onClick={() => {
+                      if (analytics != null) {
+                        logEvent(analytics, "Add Average Price", {
+                          Type: type,
+                        });
+                      }
+                      while (true) {
+                        let matchFound = false;
+                        const red = Math.random() * 255;
+                        const green = Math.random() * 255;
+                        const blue = Math.random() * 255;
+
+                        let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+                        for (let item in lineValueDataset) {
+                          if (
+                            newBorderColor == lineValueDataset[item].borderColor
+                          ) {
+                            matchFound = true;
+                            break;
+                          }
+                        }
+
+                        if (!matchFound) {
+                          const newLine = {
+                            label: `Average ${type} Price (USD $)`,
+                            data: averagePrices.slice(),
+                            borderColor: newBorderColor,
+                          };
+                          setOriginalPoints((prevPoints) => [
+                            ...prevPoints,
+                            averagePrices.slice(),
+                          ]);
+                          setLineValueDataset((prevLines) => [
+                            ...prevLines,
+                            newLine,
+                          ]);
+                          setUpdateGraph(true);
+
                           break;
                         }
                       }
+                    }}
+                    style={{
+                      width: "100%",
+                    }}
+                    className="NormalButton"
+                  >
+                    <p style={{ textAlign: "center" }}>Add Average Price</p>
+                  </button>
+                ) : (
+                  /* Empty Cell */ <div></div>
+                )}
 
-                      if (!matchFound) {
-                        const newLine = {
-                          label: `Average ${type} Price (USD $)`,
-                          data: averagePrices.slice(),
-                          borderColor: newBorderColor,
-                        };
-                        setOriginalPoints((prevPoints) => [
-                          ...prevPoints,
-                          averagePrices.slice(),
-                        ]);
-                        setLineValueDataset((prevLines) => [
-                          ...prevLines,
-                          newLine,
-                        ]);
-                        setUpdateGraph(true);
-
-                        break;
-                      }
+                {/* Export CSV */}
+                <button
+                  onClick={() => {
+                    // This data will be converted to a csv
+                    let exportData = [];
+                    if (analytics != null) {
+                      logEvent(analytics, "Export CSV");
                     }
+                    // The first row, and in the first column is the years
+                    let firstJSON = {};
+                    firstJSON["Year"] = "Year";
+                    // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
+                    for (let j = 0; j < lineValueDataset.length; j++) {
+                      firstJSON[lineValueDataset[j].label] =
+                        lineValueDataset[j].label;
+                    }
+                    // Add the first row
+                    exportData.push(firstJSON);
+                    // Iterate through all years on the visible graph
+                    for (let i = startIndex; i < endIndex; i++) {
+                      let newJSON = {};
+                      // Year of the current row
+                      newJSON["Year"] = 2000 + i;
+                      // Iterate through prices of the current index for each item
+                      for (let j = 0; j < lineValueDataset.length; j++) {
+                        newJSON[lineValueDataset[j].label] =
+                          originalPoints[j][i];
+                      }
+                      // Add this row
+                      exportData.push(newJSON);
+                    }
+
+                    // Don't know what all this does, don't touch it
+                    const csv = exportData
+                      .map((row) => {
+                        return Object.values(row).toString();
+                      })
+                      .join("\n");
+
+                    const blob = new Blob([csv], {
+                      type: "text/csv;charset=utf-8;",
+                    });
+                    const link = document.createElement("a");
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", "table_data.csv");
+                    link.style.visibility = "hidden";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                   }}
-                  style={{
-                    width: "90%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  style={{ width: "100%" }}
                   className="NormalButton"
                 >
-                  <p style={{ textAlign: "center" }}>Add Average Price</p>
+                  <p>Export CSV</p>
                 </button>
-              ) : (
-                /* Empty Cell */ <div></div>
-              )}
-
-              {/* Export CSV */}
-              <button
-                onClick={() => {
-                  // This data will be converted to a csv
-                  let exportData = [];
-                  if (analytics != null) {
-                    logEvent(analytics, "Export CSV");
-                  }
-                  // The first row, and in the first column is the years
-                  let firstJSON = {};
-                  firstJSON["Year"] = "Year";
-                  // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
-                  for (let j = 0; j < lineValueDataset.length; j++) {
-                    firstJSON[lineValueDataset[j].label] =
-                      lineValueDataset[j].label;
-                  }
-                  // Add the first row
-                  exportData.push(firstJSON);
-                  // Iterate through all years on the visible graph
-                  for (let i = startIndex; i < endIndex; i++) {
-                    let newJSON = {};
-                    // Year of the current row
-                    newJSON["Year"] = 2000 + i;
-                    // Iterate through prices of the current index for each item
-                    for (let j = 0; j < lineValueDataset.length; j++) {
-                      newJSON[lineValueDataset[j].label] = originalPoints[j][i];
-                    }
-                    // Add this row
-                    exportData.push(newJSON);
-                  }
-
-                  // Don't know what all this does, don't touch it
-                  const csv = exportData
-                    .map((row) => {
-                      return Object.values(row).toString();
-                    })
-                    .join("\n");
-
-                  const blob = new Blob([csv], {
-                    type: "text/csv;charset=utf-8;",
-                  });
-                  const link = document.createElement("a");
-                  const url = URL.createObjectURL(blob);
-                  link.setAttribute("href", url);
-                  link.setAttribute("download", "table_data.csv");
-                  link.style.visibility = "hidden";
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }}
-                style={{ marginLeft: 0, width: "90%" }}
-                className="NormalButton"
-              >
-                <p>Export CSV</p>
-              </button>
+              </div>
             </div>
-          </div>
+          </>
         ) : (
           /* Computer view */
           <div
@@ -1093,6 +1102,7 @@ export default function Prediction({
             setShowBrandModal(false);
           }}
           className="DangerButton"
+          style={{ margin: "10px 0" }}
         >
           <p>Cancel</p>
         </button>
@@ -1279,6 +1289,7 @@ export default function Prediction({
             setShowEditModal(false);
           }}
           className="DangerButton"
+          style={{ margin: "10px 0" }}
         >
           <p>Close</p>
         </button>
@@ -1305,6 +1316,7 @@ export default function Prediction({
             setShowErrorModal(false);
           }}
           className="NormalButton"
+          style={{ margin: "10px 0" }}
         >
           <p>Okay</p>
         </button>
