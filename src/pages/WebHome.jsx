@@ -476,8 +476,11 @@ export default function WebHome({ isMobile }) {
                   });
                 }
                 navigate(`${comparisonLinks[index]}`);
-
                 setCompareModalVisible(false);
+              }}
+              style={{
+                width: "95%",
+                whiteSpace: "nowrap",
               }}
             >
               <p>{item}</p>
@@ -490,6 +493,7 @@ export default function WebHome({ isMobile }) {
           onClick={() => {
             setCompareModalVisible(false);
           }}
+          style={{ marginBottom: "20px" }}
         >
           Cancel
         </button>
@@ -523,6 +527,10 @@ export default function WebHome({ isMobile }) {
 
                 setPredictModalVisible(false);
               }}
+              style={{
+                width: "95%",
+                whiteSpace: "nowrap",
+              }}
             >
               <p>{item}</p>
             </button>
@@ -534,6 +542,7 @@ export default function WebHome({ isMobile }) {
           onClick={() => {
             setPredictModalVisible(false);
           }}
+          style={{ marginBottom: "20px" }}
         >
           Cancel
         </button>
@@ -651,6 +660,7 @@ export default function WebHome({ isMobile }) {
                 setDataModalVisible(false);
               }}
               className="NormalButton"
+              style={{ marginBottom: "20px" }}
             >
               <p>Okay</p>
             </button>

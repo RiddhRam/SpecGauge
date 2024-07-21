@@ -1,4 +1,7 @@
 6.2.0
+Improve mobile design
+
+6.3.0
 Asynchronously unzip JSON Values
 Make the loading page more appealing
 Try to remove react-helmet (16.6 kb)

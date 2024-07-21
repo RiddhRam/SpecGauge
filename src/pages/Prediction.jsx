@@ -1068,13 +1068,17 @@ export default function Prediction({
               item.label.toUpperCase().includes(searchString.toUpperCase()) && (
                 <button
                   className="NormalButtonNoBackground"
-                  style={{ padding: "15px 8px" }}
                   onClick={() => {
                     setBrand(item.label);
                     setShowBrandModal(false);
                     setSearchString("");
                   }}
                   key={index}
+                  style={{
+                    padding: "15px 8px",
+                    width: "95%",
+                    whiteSpace: "nowrap",
+                  }}
                 >
                   {item.label}
                 </button>

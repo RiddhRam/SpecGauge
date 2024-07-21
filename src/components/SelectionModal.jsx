@@ -245,6 +245,10 @@ export default function SelectionModal({
                         }, 50);
                     }
                   }}
+                  style={{
+                    width: "95%",
+                    whiteSpace: "nowrap",
+                  }}
                 >
                   <p>{item}</p>
                 </button>
