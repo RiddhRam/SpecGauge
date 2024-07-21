@@ -211,10 +211,13 @@ export default function Prediction({
     }
     // This gets appended to lineValuesDataset to display
     let prices = [];
-    // This is used for the seed
+    // This is used for the seed, and it's used to determine the margin that the next price should differ by
     let lastPrice = price;
 
     let originalPrice = null;
+
+    // Dtermines whether or not the last price was an increase from the second last price
+    let lastPriceIncreased = false;
 
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
@@ -236,20 +239,29 @@ export default function Prediction({
         if (i == year) {
           originalPrice = newCalculatedPrice;
         } else {
-          // If difference between new and last price is greater than an 8% of the original price
-          if (difference > lastPrice * 0.08) {
-            // Reduce difference to 8%
-            // Prevents sharp increases
-            difference = difference * 0.08;
-          }
-          // If new price is a decrease from last price
-          else if (difference < 0) {
-            // If the absolute value of the decrease is more than double of 8% of the original price
-            if (difference * -1 > 2 * originalPrice * 0.08) {
-              // Cut the difference in half
-              // Prevents sharp drops
-              difference = difference * 0.5;
+          // If last price wasn't an increase
+          if (!lastPriceIncreased) {
+            // If difference between new and last price is greater than an 8% of the original price
+            if (difference > lastPrice * 0.08) {
+              // Reduce difference to 8%
+              // Prevents sharp increases
+              difference = difference * 0.08;
+              lastPriceIncreased = true;
+            } // If new price is a decrease from last price
+            else if (difference < 0) {
+              // If the absolute value of the decrease is more than double of 8% of the original price
+              if (difference * -1 > 2 * originalPrice * 0.08) {
+                // Cut the difference in half
+                // Prevents sharp drops
+                difference = difference * 0.3;
+              }
             }
+          }
+          // If last price was an increase
+          else {
+            // Price will be a decrease of 4% from the last price
+            difference = lastPrice * -0.04;
+            lastPriceIncreased = false;
           }
         }
 
