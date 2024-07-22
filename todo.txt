@@ -1,4 +1,7 @@
 6.5.0
+Put firebase query functions for comparison pages in their own files
+
+6.6.0
 Add regional languages, fallback language is english
 
 7.0.0

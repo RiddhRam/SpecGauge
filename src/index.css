@@ -119,7 +119,7 @@ a {
 /* Displays specs for each category in a row for each product */
 .ComparisonCell {
   border-style: solid;
-  border-width: thin;
+  border-width: 2px;
   border-color: #4ca0d7;
   border-radius: 3px;
   background-color: #4ca0d7;
@@ -132,7 +132,7 @@ a {
 /* Displays pros for each product */
 .ProCell {
   border-style: solid;
-  border-width: thin;
+  border-width: 2px;
   border-color: #39ff14;
   border-radius: 3px;
   background-color: #39ff14;
