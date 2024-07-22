@@ -7,6 +7,7 @@ import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
 import BuildTitle from "../functions/BuildTitle";
+import PakoInflate from "../functions/PakoInflate";
 
 const SelectionModal = lazy(() => import("../components/SelectionModal"));
 const WebAccountHandler = lazy(() => import("../components/WebAccountHandler"));
@@ -20,18 +21,22 @@ Modal.setAppElement("#SpecGauge");
 
 export default function Compare({
   type,
-  Brands,
+  compressedBrands,
   Process,
   QueryProcess,
   QueryFunction,
   DirectQueryFunction,
-  DefaultArray,
+  compressedDefaultArray,
   Categories,
   isMobile,
   comparisonLink,
   description,
   defaultTitle,
 }) {
+  // Decompressed (inflated) String Values into JSON values
+  const Brands = JSON.parse(PakoInflate(compressedBrands));
+  const DefaultArray = JSON.parse(PakoInflate(compressedDefaultArray));
+
   const [productModalVisible, setProductModalVisible] = useState(false);
   const [accountModalVisible, setAccountModalVisible] = useState(false);
   const [savingComparison, setSavingComparison] = useState(false);

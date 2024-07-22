@@ -2,6 +2,7 @@ import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import RemoveCanonical from "../functions/RemoveCanonical";
+import PakoInflate from "../functions/PakoInflate";
 
 import Modal from "react-modal";
 Modal.setAppElement("#SpecGauge");
@@ -24,7 +25,7 @@ const comparisonLinks = [
 
 const categories = ["Vehicles", "Consoles", "CPUs", "Graphics Cards", "Drones"];
 
-export default function WebUserAccount({ isMobile, brands }) {
+export default function WebUserAccount({ isMobile, compressedBrands }) {
   // Initialize useNavigate as navigate
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -222,6 +223,14 @@ export default function WebUserAccount({ isMobile, brands }) {
 
     RemoveCanonical();
   }, []);
+
+  const brands = [];
+
+  for (let item in compressedBrands) {
+    const brandArray = JSON.parse(PakoInflate(compressedBrands[item]));
+
+    brands.push(brandArray);
+  }
 
   return (
     /* if logged in display user settings */
