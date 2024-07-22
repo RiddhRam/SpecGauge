@@ -1,4 +1,3 @@
-import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
@@ -23,7 +22,7 @@ export default function Information({ isMobile, title, text, description }) {
   }, []);
   return (
     <>
-      <Navbar isMobile={isMobile} page="aboutus"></Navbar>
+      <Navbar isMobile={isMobile}></Navbar>
       <div
         style={{ alignItems: "flex-start", paddingLeft: 20, paddingBottom: 40 }}
         className="LargeContainer"
@@ -38,7 +37,6 @@ export default function Information({ isMobile, title, text, description }) {
         </p>
         <div>{text}</div>
       </div>
-      <Footer isMobile={isMobile}></Footer>
     </>
   );
 }

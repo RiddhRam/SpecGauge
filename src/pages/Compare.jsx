@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 
 import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
 import BuildTitle from "../functions/BuildTitle";
@@ -407,7 +406,7 @@ export default function Compare({
 
   return (
     <>
-      <Navbar isMobile={isMobile} page="compare"></Navbar>
+      <Navbar isMobile={isMobile}></Navbar>
       {/* Main Body */}
       <div className="LargeContainer">
         <p style={{ fontSize: 20 }} className="HeaderText">
@@ -691,8 +690,6 @@ export default function Compare({
         )}
       </div>
 
-      <Footer isMobile={isMobile} />
-
       {/* Shows up if user needs to be logged in to complete action */}
       <Modal
         isOpen={accountModalVisible}
@@ -700,7 +697,11 @@ export default function Compare({
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
+        >
           <WebAccountHandler
             screenType={"modal"}
             setModaldiv={setAccountModalVisible}
@@ -763,7 +764,11 @@ export default function Compare({
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
+        >
           <SelectionModal
             type={type}
             setProductModalVisible={setProductModalVisible}

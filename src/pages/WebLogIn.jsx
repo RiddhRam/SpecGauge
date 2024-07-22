@@ -1,5 +1,4 @@
 import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
 import WebAccountHandler from "../components/WebAccountHandler";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import RemoveCanonical from "../functions/RemoveCanonical";
@@ -42,7 +41,7 @@ export default function WebLogIn({ isMobile }) {
   return (
     <>
       {/* navbar */}
-      <Navbar isMobile={isMobile} page={"login"} />
+      <Navbar isMobile={isMobile}></Navbar>
 
       {/* main body */}
       <div className="LargeContainer">
@@ -65,8 +64,6 @@ export default function WebLogIn({ isMobile }) {
         </button>
         {/* If user doesn't want to use an account, only available if on browser or if they don't want to save comparisons */}
       </div>
-
-      <Footer isMobile={isMobile} />
     </>
   );
 }

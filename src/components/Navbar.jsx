@@ -5,7 +5,7 @@ import { DropdownMenu } from "./DropdownMenu";
 
 import { auth } from "../firebaseConfig";
 
-export const Navbar = ({ isMobile, page }) => {
+export const Navbar = ({ isMobile }) => {
   return (
     <div className="NavbarContainer">
       {/* The title and logo */}
@@ -49,23 +49,18 @@ export const Navbar = ({ isMobile, page }) => {
           gap: "20px",
         }}
       >
-        {/* If not on the home page, give user the option to go to home page */}
-        {page != "home" ? (
-          <Link to="/home" className="NavbarText">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                fontSize: isMobile ? "13px" : "14px",
-              }}
-            >
-              <p className="NavbarText">Home</p>
-            </div>
-          </Link>
-        ) : (
-          // Need this so the navbar doesn't shift when changing screens
-          <div></div>
-        )}
+        {/* Give user the option to go to home page */}
+        <Link to="/home" className="NavbarText">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              fontSize: isMobile ? "13px" : "14px",
+            }}
+          >
+            <p className="NavbarText">Home</p>
+          </div>
+        </Link>
 
         <DropdownMenu
           label="Compare"
@@ -89,48 +84,42 @@ export const Navbar = ({ isMobile, page }) => {
         {/* Compare dropdown */}
 
         {/* If not on an account handling page, give user the option to go to an account handling page */}
-        <div style={{ justifySelf: "end" }}>
-          {page != "account" && page != "login" ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                fontSize: isMobile ? "10.5px" : "14px",
-              }}
-            >
-              {auth.currentUser ? (
-                /* My Account */
-                <Link to="/account" className="NavbarText">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      textAlign: "center",
-                      fontSize: isMobile ? "10.5px" : "14px",
-                    }}
-                  >
-                    <p className="NavbarText">My Account</p>
-                  </div>
-                </Link>
-              ) : (
-                /* Log In */
-                <Link to="/login" className="NavbarText">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      textAlign: "center",
-                      fontSize: isMobile ? "13px" : "14px",
-                    }}
-                  >
-                    <p className="NavbarText">Log In</p>
-                  </div>
-                </Link>
-              )}
-            </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifySelf: "end",
+          }}
+        >
+          {auth.currentUser ? (
+            /* My Account */
+            <Link to="/account" className="NavbarText">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  textAlign: "center",
+                  fontSize: isMobile ? "9px" : "14px",
+                }}
+              >
+                <p className="NavbarText">My Account</p>
+              </div>
+            </Link>
           ) : (
-            // Need this so the navbar doesn't shift when changing screens
-            <div></div>
+            /* Log In */
+            <Link to="/login" className="NavbarText">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  textAlign: "center",
+                  fontSize: isMobile ? "13px" : "14px",
+                }}
+              >
+                <p className="NavbarText">Log In</p>
+              </div>
+            </Link>
           )}
         </div>
       </div>

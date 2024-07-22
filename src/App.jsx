@@ -14,6 +14,9 @@ const NoPage = lazy(() => import("./pages/NoPage"));
 import { onAuthStateChanged } from "firebase/auth";
 import { query, where, collection, getDocs } from "firebase/firestore";
 import { db, auth } from "./firebaseConfig";
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
+import { Loading } from "./components/Loading";
 
 // This determines how many steps the user has to go through when adding a product
 const consoleProcess = ["a brand", "a console"];
@@ -533,230 +536,310 @@ export default function App() {
   });
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
-        <Route
-          path="/"
-          element={<WebHome isMobile={isMobile}></WebHome>}
-        ></Route>
-        {/* the home page */}
-        <Route
-          index
-          path="/home"
-          element={<WebHome isMobile={isMobile}></WebHome>}
-        ></Route>
-        {/* the login page */}
-        <Route
-          index
-          path="/login"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <WebLogIn isMobile={isMobile}></WebLogIn>
-            </Suspense>
-          }
-        ></Route>
-        {/* the user account page */}
-        <Route
-          index
-          path="/account"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <WebUserAccount
-                isMobile={isMobile}
-                compressedBrands={[
-                  compressedCarsBrands,
-                  compressedConsoleBrands,
-                  compressedCPUsBrands,
-                  compressedGraphicsCardsBrands,
-                  compressedDroneBrands,
-                ]}
-              ></WebUserAccount>
-            </Suspense>
-          }
-        ></Route>
-        {/* the cars comparison page */}
-        <Route
-          path="/comparison/automobiles/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Compare
-                type={"Vehicles"}
-                compressedBrands={compressedCarsBrands}
-                Process={carsProcess}
-                QueryProcess={carsQueryProcess}
-                QueryFunction={queryAutomobilesFunction}
-                DirectQueryFunction={directQueryAutomobilesFunction}
-                compressedDefaultArray={compressedCarsDefaultArray}
-                Categories={carsCategories}
-                isMobile={isMobile}
-                comparisonLink={
-                  window.location.origin + "/comparison/automobiles/"
+    <>
+      <BrowserRouter>
+        <Routes>
+          {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
+          <Route
+            path="/"
+            element={<WebHome isMobile={isMobile}></WebHome>}
+          ></Route>
+          {/* the home page */}
+          <Route
+            index
+            path="/home"
+            element={<WebHome isMobile={isMobile}></WebHome>}
+          ></Route>
+          {/* the login page */}
+          <Route
+            index
+            path="/login"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
                 }
-                description={`Compare multiple new and used Cars, SUVs, Trucks and Electric Vehicle (EVs) and more side-by-side. The ultimate automobile comparison tool.`}
-                defaultTitle={`Compare Multiple Vehicles Side-by-Side - Car Comparison Tool`}
-              ></Compare>
-            </Suspense>
-          }
-        ></Route>
-        {/* the consoles comparison page */}
-        <Route
-          path="/comparison/consoles/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Compare
-                type={"Consoles"}
-                compressedBrands={compressedConsoleBrands}
-                Process={consoleProcess}
-                QueryProcess={consoleQueryProcess}
-                QueryFunction={queryConsolesFunction}
-                DirectQueryFunction={directQueryConsolesFunction}
-                compressedDefaultArray={compressedConsoleDefaultArray}
-                Categories={consoleCategories}
-                isMobile={isMobile}
-                comparisonLink={
-                  window.location.origin + "/comparison/consoles/"
+              >
+                <WebLogIn isMobile={isMobile}></WebLogIn>
+              </Suspense>
+            }
+          ></Route>
+          {/* the user account page */}
+          <Route
+            index
+            path="/account"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
                 }
-                description={`Compare Xbox vs Nintendo vs PlayStation vs Steam Deck and more consoles side-by-side. The ultimate gaming console comparison tool`}
-                defaultTitle={`Compare Multiple Consoles Side-by-Side - Console Comparison Tool`}
-              ></Compare>
-            </Suspense>
-          }
-        ></Route>
-        {/* the cpus comparison page */}
-        <Route
-          path="/comparison/cpus/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Compare
-                type={"CPUs"}
-                compressedBrands={compressedCPUsBrands}
-                Process={CPUsProcess}
-                QueryProcess={CPUsQueryProcess}
-                QueryFunction={queryCPUsFunction}
-                DirectQueryFunction={directQueryCPUsFunction}
-                compressedDefaultArray={compressedCPUsDefaultArray}
-                Categories={CPUsCategories}
-                isMobile={isMobile}
-                comparisonLink={window.location.origin + "/comparison/cpus/"}
-                description={`Compare AMD Ryzen vs Intel Core processors side-by-side. View real-world benchmark performance in the ultimate CPU comparison tool.`}
-                defaultTitle={`Compare Multiple Processors Side-by-Side - CPUs Comparison Tool`}
-              ></Compare>
-            </Suspense>
-          }
-        ></Route>
-        {/* the graphics cards comparison page */}
-        <Route
-          path="/comparison/graphicsCards/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Compare
-                type={"Graphics Cards"}
-                compressedBrands={compressedGraphicsCardsBrands}
-                Process={graphicsCardsProcess}
-                QueryProcess={graphicsCardsQueryProcess}
-                QueryFunction={queryGraphicsCardsFunction}
-                DirectQueryFunction={directQueryGraphicsCardsFunction}
-                compressedDefaultArray={compressedGraphicsCardsDefaultArray}
-                Categories={graphicsCardsCategories}
-                isMobile={isMobile}
-                comparisonLink={
-                  window.location.origin + "/comparison/graphicsCards/"
+              >
+                <WebUserAccount
+                  isMobile={isMobile}
+                  compressedBrands={[
+                    compressedCarsBrands,
+                    compressedConsoleBrands,
+                    compressedCPUsBrands,
+                    compressedGraphicsCardsBrands,
+                    compressedDroneBrands,
+                  ]}
+                ></WebUserAccount>
+              </Suspense>
+            }
+          ></Route>
+          {/* the cars comparison page */}
+          <Route
+            path="/comparison/automobiles/*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
                 }
-                description={`Compare NVIDIA GeForce vs AMD Radeon vs Intel Alchemist GPUs side-by-side. Including GTX 10, RTX 20, RTX 30, RTX 40 series and RX 5000 - RX 7000 GPUs.`}
-                defaultTitle={`Compare Multiple GPUs Side-by-Side - Graphics Cards Comparison Tool`}
-              ></Compare>
-            </Suspense>
-          }
-        ></Route>
-        {/* the drones comparison page */}
-        <Route
-          path="/comparison/drones/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Compare
-                type={"Drones"}
-                compressedBrands={compressedDroneBrands}
-                Process={droneProcess}
-                QueryProcess={droneQueryProcess}
-                QueryFunction={queryDronesFunction}
-                DirectQueryFunction={directQueryDronesFunction}
-                compressedDefaultArray={compressedDroneDefaultArray}
-                Categories={droneCategories}
-                isMobile={isMobile}
-                comparisonLink={window.location.origin + "/comparison/drones/"}
-                description={`Compare DJI, Autel, Parrot, Holy Stone and more drones side-by-side. View the DJI Mini, Autel Evo, Parrot Anafi in the ultimate drone comparison tool.`}
-                defaultTitle={`Compare Multiple Drones Side-by-Side - Drone Comparison Tool`}
-              ></Compare>
-            </Suspense>
-          }
-        ></Route>
-        {/* the automobiles prediction page */}
-        <Route
-          path="/prediction/automobiles/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Prediction
-                type={"Vehicles"}
-                isMobile={isMobile}
-                averagePrices={carsAveragePrices}
-                brandValues={carsBrandValues}
-                minimumPrice={7500}
-                description={`View future prices of Cars, SUVs, Trucks, Electric (EVs) and more over time and into the future. View new and used vehicle depreciation and value.`}
-                predictionLink={
-                  window.location.origin + "/prediction/automobiles/"
+              >
+                <Compare
+                  type={"Vehicles"}
+                  compressedBrands={compressedCarsBrands}
+                  Process={carsProcess}
+                  QueryProcess={carsQueryProcess}
+                  QueryFunction={queryAutomobilesFunction}
+                  DirectQueryFunction={directQueryAutomobilesFunction}
+                  compressedDefaultArray={compressedCarsDefaultArray}
+                  Categories={carsCategories}
+                  isMobile={isMobile}
+                  comparisonLink={
+                    window.location.origin + "/comparison/automobiles/"
+                  }
+                  description={`Compare multiple new and used Cars, SUVs, Trucks and Electric Vehicle (EVs) and more side-by-side. The ultimate automobile comparison tool.`}
+                  defaultTitle={`Compare Multiple Vehicles Side-by-Side - Car Comparison Tool`}
+                ></Compare>
+              </Suspense>
+            }
+          ></Route>
+          {/* the consoles comparison page */}
+          <Route
+            path="/comparison/consoles/*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
                 }
-              ></Prediction>
-            </Suspense>
-          }
-        ></Route>
-        {/* the cpus prediction page */}
-        <Route
-          path="/prediction/cpus/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Prediction
-                type={"CPUs"}
-                isMobile={isMobile}
-                averagePrices={null}
-                brandValues={processorsBrandValues}
-                minimumPrice={150}
-                description={`View future prices of processors over time and into the future. Predict future costs and view past prices.`}
-                predictionLink={window.location.origin + "/prediction/cpus/"}
-              ></Prediction>
-            </Suspense>
-          }
-        ></Route>
-        {/* the graphics cards prediction page */}
-        <Route
-          path="/prediction/graphicsCards/*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Prediction
-                type={"Graphics Cards"}
-                isMobile={isMobile}
-                averagePrices={null}
-                brandValues={graphicsCardsBrandValues}
-                minimumPrice={200}
-                description={`View future prices of GPUs over time and into the future. Predict future costs and view past prices.`}
-                predictionLink={
-                  window.location.origin + "/prediction/graphicsCards/"
+              >
+                <Compare
+                  type={"Consoles"}
+                  compressedBrands={compressedConsoleBrands}
+                  Process={consoleProcess}
+                  QueryProcess={consoleQueryProcess}
+                  QueryFunction={queryConsolesFunction}
+                  DirectQueryFunction={directQueryConsolesFunction}
+                  compressedDefaultArray={compressedConsoleDefaultArray}
+                  Categories={consoleCategories}
+                  isMobile={isMobile}
+                  comparisonLink={
+                    window.location.origin + "/comparison/consoles/"
+                  }
+                  description={`Compare Xbox vs Nintendo vs PlayStation vs Steam Deck and more consoles side-by-side. The ultimate gaming console comparison tool`}
+                  defaultTitle={`Compare Multiple Consoles Side-by-Side - Console Comparison Tool`}
+                ></Compare>
+              </Suspense>
+            }
+          ></Route>
+          {/* the cpus comparison page */}
+          <Route
+            path="/comparison/cpus/*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
                 }
-              ></Prediction>
-            </Suspense>
-          }
-        ></Route>
-        {/* the about us page */}
-        <Route
-          path="/aboutus"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Information
-                isMobile={isMobile}
-                title={"About Us"}
-                text={
-                  /* prettier-ignore */
-                  <div>
+              >
+                <Compare
+                  type={"CPUs"}
+                  compressedBrands={compressedCPUsBrands}
+                  Process={CPUsProcess}
+                  QueryProcess={CPUsQueryProcess}
+                  QueryFunction={queryCPUsFunction}
+                  DirectQueryFunction={directQueryCPUsFunction}
+                  compressedDefaultArray={compressedCPUsDefaultArray}
+                  Categories={CPUsCategories}
+                  isMobile={isMobile}
+                  comparisonLink={window.location.origin + "/comparison/cpus/"}
+                  description={`Compare AMD Ryzen vs Intel Core processors side-by-side. View real-world benchmark performance in the ultimate CPU comparison tool.`}
+                  defaultTitle={`Compare Multiple Processors Side-by-Side - CPUs Comparison Tool`}
+                ></Compare>
+              </Suspense>
+            }
+          ></Route>
+          {/* the graphics cards comparison page */}
+          <Route
+            path="/comparison/graphicsCards/*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
+                }
+              >
+                <Compare
+                  type={"Graphics Cards"}
+                  compressedBrands={compressedGraphicsCardsBrands}
+                  Process={graphicsCardsProcess}
+                  QueryProcess={graphicsCardsQueryProcess}
+                  QueryFunction={queryGraphicsCardsFunction}
+                  DirectQueryFunction={directQueryGraphicsCardsFunction}
+                  compressedDefaultArray={compressedGraphicsCardsDefaultArray}
+                  Categories={graphicsCardsCategories}
+                  isMobile={isMobile}
+                  comparisonLink={
+                    window.location.origin + "/comparison/graphicsCards/"
+                  }
+                  description={`Compare NVIDIA GeForce vs AMD Radeon vs Intel Alchemist GPUs side-by-side. Including GTX 10, RTX 20, RTX 30, RTX 40 series and RX 5000 - RX 7000 GPUs.`}
+                  defaultTitle={`Compare Multiple GPUs Side-by-Side - Graphics Cards Comparison Tool`}
+                ></Compare>
+              </Suspense>
+            }
+          ></Route>
+          {/* the drones comparison page */}
+          <Route
+            path="/comparison/drones/*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
+                }
+              >
+                <Compare
+                  type={"Drones"}
+                  compressedBrands={compressedDroneBrands}
+                  Process={droneProcess}
+                  QueryProcess={droneQueryProcess}
+                  QueryFunction={queryDronesFunction}
+                  DirectQueryFunction={directQueryDronesFunction}
+                  compressedDefaultArray={compressedDroneDefaultArray}
+                  Categories={droneCategories}
+                  isMobile={isMobile}
+                  comparisonLink={
+                    window.location.origin + "/comparison/drones/"
+                  }
+                  description={`Compare DJI, Autel, Parrot, Holy Stone and more drones side-by-side. View the DJI Mini, Autel Evo, Parrot Anafi in the ultimate drone comparison tool.`}
+                  defaultTitle={`Compare Multiple Drones Side-by-Side - Drone Comparison Tool`}
+                ></Compare>
+              </Suspense>
+            }
+          ></Route>
+          {/* the automobiles prediction page */}
+          <Route
+            path="/prediction/automobiles/*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
+                }
+              >
+                <Prediction
+                  type={"Vehicles"}
+                  isMobile={isMobile}
+                  averagePrices={carsAveragePrices}
+                  brandValues={carsBrandValues}
+                  minimumPrice={7500}
+                  description={`View future prices of Cars, SUVs, Trucks, Electric (EVs) and more over time and into the future. View new and used vehicle depreciation and value.`}
+                  predictionLink={
+                    window.location.origin + "/prediction/automobiles/"
+                  }
+                ></Prediction>
+              </Suspense>
+            }
+          ></Route>
+          {/* the cpus prediction page */}
+          <Route
+            path="/prediction/cpus/*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
+                }
+              >
+                <Prediction
+                  type={"CPUs"}
+                  isMobile={isMobile}
+                  averagePrices={null}
+                  brandValues={processorsBrandValues}
+                  minimumPrice={150}
+                  description={`View future prices of processors over time and into the future. Predict future costs and view past prices.`}
+                  predictionLink={window.location.origin + "/prediction/cpus/"}
+                ></Prediction>
+              </Suspense>
+            }
+          ></Route>
+          {/* the graphics cards prediction page */}
+          <Route
+            path="/prediction/graphicsCards/*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
+                }
+              >
+                <Prediction
+                  type={"Graphics Cards"}
+                  isMobile={isMobile}
+                  averagePrices={null}
+                  brandValues={graphicsCardsBrandValues}
+                  minimumPrice={200}
+                  description={`View future prices of GPUs over time and into the future. Predict future costs and view past prices.`}
+                  predictionLink={
+                    window.location.origin + "/prediction/graphicsCards/"
+                  }
+                ></Prediction>
+              </Suspense>
+            }
+          ></Route>
+          {/* the about us page */}
+          <Route
+            path="/aboutus"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
+                }
+              >
+                <Information
+                  isMobile={isMobile}
+                  title={"About Us"}
+                  text={
+                    /* prettier-ignore */
+                    <div>
 
 <p className="InfoText">Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons!</p>
 <p className="InfoText">{"\n"}</p>
@@ -796,25 +879,32 @@ export default function App() {
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">Thanks for stopping by. Let's navigate the future together!</p>
                 </div>
+                  }
+                  description={
+                    "Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons. We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, gaming console, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence."
+                  }
+                ></Information>
+              </Suspense>
+            }
+          ></Route>
+          {/* the terms of service page */}
+          <Route
+            path="/termsofservice"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
                 }
-                description={
-                  "Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons. We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, gaming console, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence."
-                }
-              ></Information>
-            </Suspense>
-          }
-        ></Route>
-        {/* the terms of service page */}
-        <Route
-          path="/termsofservice"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Information
-                isMobile={isMobile}
-                title={"Terms of Service"}
-                text={
-                  /* prettier-ignore */
-                  <div>
+              >
+                <Information
+                  isMobile={isMobile}
+                  title={"Terms of Service"}
+                  text={
+                    /* prettier-ignore */
+                    <div>
 <p className="InfoText">Welcome to SpecGauge! These Terms of Service ("Terms") outline the rules and regulations for using our website.</p>
 
 <p className="InfoText">By accessing this website, we assume you accept these Terms in full. Do not continue to use SpecGauge if you do not agree to all of the Terms stated on this page.</p>
@@ -874,25 +964,32 @@ export default function App() {
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">If you have any questions or concerns about these Terms of Service, please contact us at specgauge@gmail.com.</p>
               </div>
+                  }
+                  description={
+                    "Read the Terms of Service for SpecGauge. Understand the rules, guidelines, and policies that govern your use of our services and website. Stay informed about your rights and responsibilities as a user."
+                  }
+                ></Information>
+              </Suspense>
+            }
+          ></Route>
+          {/* the privacy policy page */}
+          <Route
+            path="/privacypolicy"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
                 }
-                description={
-                  "Read the Terms of Service for SpecGauge. Understand the rules, guidelines, and policies that govern your use of our services and website. Stay informed about your rights and responsibilities as a user."
-                }
-              ></Information>
-            </Suspense>
-          }
-        ></Route>
-        {/* the privacy policy page */}
-        <Route
-          path="/privacypolicy"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Information
-                isMobile={isMobile}
-                title={"Privacy Policy"}
-                text={
-                  /* prettier-ignore */
-                  <div>
+              >
+                <Information
+                  isMobile={isMobile}
+                  title={"Privacy Policy"}
+                  text={
+                    /* prettier-ignore */
+                    <div>
 
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">We collect user activity data through Google Analytics to understand how our app is used and improve it for you. This data helps us tweak features and make your experience better. The data is not linked to you or your email. We do not store any of your usage data on our servers. We don't sell this info to third parties — your privacy is our priority.</p>
@@ -910,24 +1007,34 @@ export default function App() {
 <p className="InfoText">If you have any questions or concerns about our Privacy Policy, please contact us at specgauge@gmail.com.</p>
 
                 </div>
+                  }
+                  description={
+                    "Review the Privacy Policy of SpecGauge. Learn how we collect, use, and protect your personal information. Understand your privacy rights and our commitment to safeguarding your data."
+                  }
+                ></Information>
+              </Suspense>
+            }
+          ></Route>
+          {/* any other page, error 404 */}
+          <Route
+            path="*"
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
                 }
-                description={
-                  "Review the Privacy Policy of SpecGauge. Learn how we collect, use, and protect your personal information. Understand your privacy rights and our commitment to safeguarding your data."
-                }
-              ></Information>
-            </Suspense>
-          }
-        ></Route>
-        {/* any other page, error 404 */}
-        <Route
-          path="*"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <NoPage isMobile={isMobile}></NoPage>
-            </Suspense>
-          }
-        ></Route>
-      </Routes>
-    </BrowserRouter>
+              >
+                <NoPage isMobile={isMobile}></NoPage>
+              </Suspense>
+            }
+          ></Route>
+        </Routes>
+      </BrowserRouter>
+
+      <Footer isMobile={isMobile}></Footer>
+    </>
   );
 }

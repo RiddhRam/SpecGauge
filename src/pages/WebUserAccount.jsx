@@ -1,5 +1,4 @@
 import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import RemoveCanonical from "../functions/RemoveCanonical";
 import PakoInflate from "../functions/PakoInflate";
@@ -236,7 +235,7 @@ export default function WebUserAccount({ isMobile, compressedBrands }) {
     /* if logged in display user settings */
     <>
       {/* navbar */}
-      <Navbar isMobile={isMobile} page={"account"} />
+      <Navbar isMobile={isMobile} />
       {/* main body */}
       <div
         className={isMobile ? "UserAccountScreenMobile" : "UserAccountScreen"}
@@ -450,7 +449,6 @@ export default function WebUserAccount({ isMobile, compressedBrands }) {
           )}
         </div>
       </div>
-      <Footer isMobile={isMobile} />
       {/* Show status of deleted comparison */}
       <Modal
         isOpen={deletingSavedComparison}

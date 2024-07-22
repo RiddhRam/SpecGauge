@@ -1,6 +1,3 @@
-6.4.0
-Make the loading page more appealing
-
 6.5.0
 Add regional languages, fallback language is english
 

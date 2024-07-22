@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
 import SpecGaugeLogo from "../assets/SpecGauge SEO Logo.webp";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
@@ -21,7 +20,7 @@ export default function NoPage({ isMobile }) {
 
   return (
     <>
-      <Navbar isMobile={isMobile} page="nopage"></Navbar>
+      <Navbar isMobile={isMobile}></Navbar>
       <div className="LargeContainer">
         {/* title and logo */}
         <div
@@ -53,7 +52,6 @@ export default function NoPage({ isMobile }) {
           Go to home page
         </button>
       </div>
-      <Footer isMobile={isMobile}></Footer>
     </>
   );
 }

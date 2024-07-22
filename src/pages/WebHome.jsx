@@ -4,7 +4,6 @@ import Modal from "react-modal";
 Modal.setAppElement("#SpecGauge");
 
 import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import CompareIcon from "../assets/Comparison Icon.svg";
 import PredictIcon from "../assets/Prediction Icon.svg";
@@ -172,7 +171,7 @@ export default function WebHome({ isMobile }) {
   return (
     <>
       {/* Navbar */}
-      <Navbar isMobile={isMobile} page={"home"} />
+      <Navbar isMobile={isMobile}></Navbar>
 
       {/* Main div */}
       <div className="LargeContainer">
@@ -445,9 +444,6 @@ export default function WebHome({ isMobile }) {
           <p>Submit or Request Data</p>
         </button>
       </div>
-
-      {/* Footer */}
-      <Footer isMobile={isMobile} />
 
       {/* Comparison Category selection modal */}
       <Modal

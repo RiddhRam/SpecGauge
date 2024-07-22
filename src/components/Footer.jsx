@@ -1,7 +1,6 @@
 import InstagramLogo from "../assets/instagram icon.webp";
 import TikTokLogo from "../assets/tiktok icon.webp";
 import YouTubeLogo from "../assets/youtube icon.webp";
-import { Link } from "react-router-dom";
 
 export const Footer = ({ isMobile }) => {
   return (
@@ -38,10 +37,7 @@ export const Footer = ({ isMobile }) => {
         </h3>
 
         {/* Instagram */}
-        <Link
-          to="https://www.instagram.com/specgauge"
-          className="LinkWithImage"
-        >
+        <a href="https://www.instagram.com/specgauge" className="LinkWithImage">
           <img
             src={InstagramLogo}
             alt="Instagram Logo"
@@ -50,11 +46,11 @@ export const Footer = ({ isMobile }) => {
           <p className="ReversePlainText" style={{ fontSize: 12 }}>
             SpecGauge
           </p>
-        </Link>
+        </a>
 
         {/* TikTok */}
-        <Link
-          to="https://www.tiktok.com/@specgauge_official"
+        <a
+          href="https://www.tiktok.com/@specgauge_official"
           className="LinkWithImage"
         >
           <img
@@ -65,10 +61,10 @@ export const Footer = ({ isMobile }) => {
           <p className="ReversePlainText" style={{ fontSize: 12 }}>
             SpecGauge_Official
           </p>
-        </Link>
+        </a>
 
         {/* YouTube */}
-        <Link to="https://www.youtube.com/@SpecGauge" className="LinkWithImage">
+        <a href="https://www.youtube.com/@SpecGauge" className="LinkWithImage">
           <img
             src={YouTubeLogo}
             alt="YouTube Logo"
@@ -77,7 +73,7 @@ export const Footer = ({ isMobile }) => {
           <p className="ReversePlainText" style={{ fontSize: 12 }}>
             SpecGauge
           </p>
-        </Link>
+        </a>
 
         {/* Information */}
         <h3
@@ -91,40 +87,37 @@ export const Footer = ({ isMobile }) => {
         </h3>
 
         {/* About us */}
-        <Link
-          to="/aboutus"
-          style={{
-            marginLeft: 10,
-          }}
+        <a
+          href={`${window.location.origin}/aboutus`}
+          className="LinkWithImage"
+          style={{ marginLeft: 10 }}
         >
           <p className="ReversePlainText" style={{ fontSize: 14 }}>
             About Us
           </p>
-        </Link>
+        </a>
 
         {/* Terms of Service */}
-        <Link
-          to="/termsofservice"
-          style={{
-            marginLeft: 10,
-          }}
+        <a
+          href={`${window.location.origin}/termsofservice`}
+          className="LinkWithImage"
+          style={{ marginLeft: 10 }}
         >
           <p className="ReversePlainText" style={{ fontSize: 14 }}>
             Terms of Service
           </p>
-        </Link>
+        </a>
 
         {/* Privacy Policy */}
-        <Link
-          to="/privacypolicy"
-          style={{
-            marginLeft: 10,
-          }}
+        <a
+          href={`${window.location.origin}/privacypolicy`}
+          className="LinkWithImage"
+          style={{ marginLeft: 10 }}
         >
           <p className="ReversePlainText" style={{ fontSize: 14 }}>
             Privacy Policy
           </p>
-        </Link>
+        </a>
 
         {/* Column 2*/}
 

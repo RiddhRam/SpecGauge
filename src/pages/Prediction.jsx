@@ -1,4 +1,3 @@
-import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 
@@ -404,7 +403,8 @@ export default function Prediction({
 
   return (
     <>
-      <Navbar isMobile={isMobile} page="prediction"></Navbar>
+      <Navbar isMobile={isMobile}></Navbar>
+
       {/* Main Body */}
       <div className="PredictionContainer">
         <p style={{ fontSize: 20 }} className="HeaderText">
@@ -1040,8 +1040,6 @@ export default function Prediction({
           </div>
         )}
       </div>
-
-      <Footer isMobile={isMobile} />
 
       {/* Brand Modal */}
       <Modal
