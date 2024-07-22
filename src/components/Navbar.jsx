@@ -51,7 +51,7 @@ export const Navbar = ({ isMobile, page }) => {
       >
         {/* If not on the home page, give user the option to go to home page */}
         {page != "home" ? (
-          <Link to="/home/" className="NavbarText">
+          <Link to="/home" className="NavbarText">
             <div
               style={{
                 display: "flex",
@@ -70,20 +70,20 @@ export const Navbar = ({ isMobile, page }) => {
         <DropdownMenu
           label="Compare"
           menuItems={[
-            { label: "Vehicles", path: "/comparison/automobiles/" },
-            { label: "Consoles", path: "/comparison/consoles/" },
-            { label: "CPUs", path: "/comparison/cpus/" },
-            { label: "Graphics Cards", path: "/comparison/graphicsCards/" },
-            { label: "Drones", path: "/comparison/drones/" },
+            { label: "Vehicles", path: "/comparison/automobiles" },
+            { label: "Consoles", path: "/comparison/consoles" },
+            { label: "CPUs", path: "/comparison/cpus" },
+            { label: "Graphics Cards", path: "/comparison/graphicsCards" },
+            { label: "Drones", path: "/comparison/drones" },
           ]}
         ></DropdownMenu>
 
         <DropdownMenu
           label="Predict"
           menuItems={[
-            { label: "Vehicles", path: "/prediction/automobiles/" },
-            { label: "CPUs", path: "/prediction/cpus/" },
-            { label: "Graphics Cards", path: "/prediction/graphicsCards/" },
+            { label: "Vehicles", path: "/prediction/automobiles" },
+            { label: "CPUs", path: "/prediction/cpus" },
+            { label: "Graphics Cards", path: "/prediction/graphicsCards" },
           ]}
         ></DropdownMenu>
         {/* Compare dropdown */}
@@ -100,7 +100,7 @@ export const Navbar = ({ isMobile, page }) => {
             >
               {auth.currentUser ? (
                 /* My Account */
-                <Link to="/account/" className="NavbarText">
+                <Link to="/account" className="NavbarText">
                   <div
                     style={{
                       display: "flex",
@@ -114,7 +114,7 @@ export const Navbar = ({ isMobile, page }) => {
                 </Link>
               ) : (
                 /* Log In */
-                <Link to="/login/" className="NavbarText">
+                <Link to="/login" className="NavbarText">
                   <div
                     style={{
                       display: "flex",

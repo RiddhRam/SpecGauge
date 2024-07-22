@@ -1,8 +1,9 @@
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
-import Modal from "react-modal";
+import RemoveCanonical from "../functions/RemoveCanonical";
 
+import Modal from "react-modal";
 Modal.setAppElement("#SpecGauge");
 
 import { useEffect, useState } from "react";
@@ -218,6 +219,8 @@ export default function WebUserAccount({ isMobile, brands }) {
       "Your account details and saved comparisons.",
       window.location.href
     );
+
+    RemoveCanonical();
   }, []);
 
   return (

@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { HexColorPicker } from "react-colorful";
 import Modal from "react-modal";
-import { Helmet } from "react-helmet";
 
 Modal.setAppElement("#SpecGauge");
 
@@ -27,6 +26,7 @@ import {
 
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
+import SetCanonical from "../functions/SetCanonical";
 
 ChartJS.register(
   CategoryScale,
@@ -398,14 +398,12 @@ export default function Prediction({
       setUpdateGraph(true);
     }
     setFirstLoad(false);
+
+    SetCanonical(predictionLink);
   }, [type]);
 
   return (
     <>
-      {/* Set canonical for search engines */}
-      <Helmet>
-        <link rel="canonical" href={predictionLink} />
-      </Helmet>
       <Navbar isMobile={isMobile} page="prediction"></Navbar>
       {/* Main Body */}
       <div className="PredictionContainer">

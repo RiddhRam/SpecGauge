@@ -2,6 +2,8 @@ import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import WebAccountHandler from "../components/WebAccountHandler";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
+import RemoveCanonical from "../functions/RemoveCanonical";
+
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -34,6 +36,7 @@ export default function WebLogIn({ isMobile }) {
       "Create an account to save comparisons across all your devices.",
       window.location.href
     );
+    RemoveCanonical();
   }, []);
 
   return (

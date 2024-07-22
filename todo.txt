@@ -1,10 +1,11 @@
 6.3.0
 Asynchronously unzip JSON Values
 Make the loading page more appealing
-Try to remove react-helmet (16.6 kb)
+
+6.4.0
+Add regional languages, fallback language is english
 
 7.0.0
-Add regional languages, fallback language is english
 Add top, side and back view of vehicle sizes
 
 8.0.0

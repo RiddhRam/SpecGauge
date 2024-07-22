@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Modal from "react-modal";
-import { Helmet } from "react-helmet";
 Modal.setAppElement("#SpecGauge");
 
 import { Navbar } from "../components/Navbar";
@@ -12,6 +11,7 @@ import PredictIcon from "../assets/Prediction Icon.svg";
 
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
+import SetCanonical from "../functions/SetCanonical";
 
 // The categories to select from the modals
 const comparisonCategories = [
@@ -26,17 +26,17 @@ const predictionCategories = ["Vehicles", "Graphics Cards", "CPUs"];
 
 // The available links to navigate to from the modals
 const comparisonLinks = [
-  "/comparison/automobiles/",
-  "/comparison/consoles/",
-  "/comparison/cpus/",
-  "/comparison/graphicsCards/",
-  "/comparison/drones/",
+  "/comparison/automobiles",
+  "/comparison/consoles",
+  "/comparison/cpus",
+  "/comparison/graphicsCards",
+  "/comparison/drones",
 ];
 
 const predictionLinks = [
-  "/prediction/automobiles/",
-  "/prediction/graphicsCards/",
-  "/prediction/cpus/",
+  "/prediction/automobiles",
+  "/prediction/graphicsCards",
+  "/prediction/cpus",
 ];
 
 // The trending comparisons to display
@@ -165,15 +165,12 @@ export default function WebHome({ isMobile }) {
 
     //const userLanguage = navigator.language || navigator.userLanguage;
     //alert(userLanguage);
+
+    SetCanonical(window.location.origin);
   }, []);
 
   return (
     <>
-      {/* Set canonical for search engines */}
-      <Helmet>
-        <link rel="canonical" href={window.location.origin} />
-      </Helmet>
-
       {/* Navbar */}
       <Navbar isMobile={isMobile} page={"home"} />
 

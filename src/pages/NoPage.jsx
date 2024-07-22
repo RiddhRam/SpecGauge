@@ -4,6 +4,7 @@ import { Footer } from "../components/Footer";
 import SpecGaugeLogo from "../assets/SpecGauge SEO Logo.webp";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
+import SetCanonical from "../functions/SetCanonical";
 
 export default function NoPage({ isMobile }) {
   // Initialize useNavigate as navigate
@@ -15,7 +16,8 @@ export default function NoPage({ isMobile }) {
       "Error 404: Page not found.",
       window.location.href
     );
-  });
+    SetCanonical(window.location.origin + "/404");
+  }, []);
 
   return (
     <>

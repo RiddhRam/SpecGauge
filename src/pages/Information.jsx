@@ -2,6 +2,8 @@ import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
+import RemoveCanonical from "../functions/RemoveCanonical";
+
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
 
@@ -15,6 +17,10 @@ export default function Information({ isMobile, title, text, description }) {
     }
     SetTitleAndDescription(title, description, window.location.href);
   }, [title]);
+
+  useEffect(() => {
+    RemoveCanonical();
+  }, []);
   return (
     <>
       <Navbar isMobile={isMobile} page="aboutus"></Navbar>
