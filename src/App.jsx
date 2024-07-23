@@ -14,6 +14,7 @@ const NoPage = lazy(() => import("./pages/NoPage"));
 import { onAuthStateChanged } from "firebase/auth";
 import { query, where, collection, getDocs } from "firebase/firestore";
 import { db, auth } from "./firebaseConfig";
+
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { Loading } from "./components/Loading";
@@ -202,40 +203,42 @@ export default function App() {
   const [userVal, setUserVal] = useState(false);
   const isMobile = useWindowDimensions();
 
-  const queryDronesFunction = async (brand, name) => {
-    const colRef = collection(db, "Drones");
+  const queryAutomobilesFunction = async (brand, model) => {
+    const colRef = collection(db, "Automobiles");
     const q = await query(
       colRef,
       where("Brand", "==", brand),
-      where("Name", "==", name)
+      where("Model", "==", model)
     );
 
     const snapshot = await getDocs(q);
 
-    const dronesArray = [];
+    const automobilesArray = [];
     snapshot.forEach((doc) => {
-      dronesArray.push(doc.data());
+      automobilesArray.push(doc.data());
     });
 
-    return dronesArray;
+    return automobilesArray;
   };
 
-  const directQueryDronesFunction = async (product) => {
-    const colRef = collection(db, "Drones");
-    const q = query(
+  const directQueryAutomobilesFunction = async (product) => {
+    const colRef = collection(db, "Automobiles");
+    const q = await query(
       colRef,
       where("Brand", "==", product[0]),
-      where("Name", "==", product[1])
+      where("Model", "==", product[1]),
+      where("Year", "==", product[2]),
+      where("Trim", "==", product[3])
     );
 
     const snapshot = await getDocs(q);
-    const dronesArray = [];
+    const automobilesArray = [];
     snapshot.forEach((doc) => {
-      dronesArray.push(doc.data());
+      automobilesArray.push(doc.data());
     });
 
     // Should only be 1 item so return the first
-    return dronesArray[0];
+    return automobilesArray[0];
   };
 
   const queryConsolesFunction = async (brand, name) => {
@@ -347,42 +350,40 @@ export default function App() {
     return cpusArray[0];
   };
 
-  const queryAutomobilesFunction = async (brand, model) => {
-    const colRef = collection(db, "Automobiles");
+  const queryDronesFunction = async (brand, name) => {
+    const colRef = collection(db, "Drones");
     const q = await query(
       colRef,
       where("Brand", "==", brand),
-      where("Model", "==", model)
+      where("Name", "==", name)
     );
 
     const snapshot = await getDocs(q);
 
-    const automobilesArray = [];
+    const dronesArray = [];
     snapshot.forEach((doc) => {
-      automobilesArray.push(doc.data());
+      dronesArray.push(doc.data());
     });
 
-    return automobilesArray;
+    return dronesArray;
   };
 
-  const directQueryAutomobilesFunction = async (product) => {
-    const colRef = collection(db, "Automobiles");
+  const directQueryDronesFunction = async (product) => {
+    const colRef = collection(db, "Drones");
     const q = query(
       colRef,
       where("Brand", "==", product[0]),
-      where("Model", "==", product[1]),
-      where("Year", "==", product[2]),
-      where("Trim", "==", product[3])
+      where("Name", "==", product[1])
     );
 
     const snapshot = await getDocs(q);
-    const automobilesArray = [];
+    const dronesArray = [];
     snapshot.forEach((doc) => {
-      automobilesArray.push(doc.data());
+      dronesArray.push(doc.data());
     });
 
     // Should only be 1 item so return the first
-    return automobilesArray[0];
+    return dronesArray[0];
   };
 
   useEffect(() => {
@@ -460,9 +461,9 @@ export default function App() {
               >
                 <Compare
                   type={"Vehicles"}
+                  isMobile={isMobile}
                   QueryFunction={queryAutomobilesFunction}
                   DirectQueryFunction={directQueryAutomobilesFunction}
-                  isMobile={isMobile}
                   comparisonLink={
                     window.location.origin + "/comparison/automobiles/"
                   }
@@ -486,9 +487,9 @@ export default function App() {
               >
                 <Compare
                   type={"Consoles"}
+                  isMobile={isMobile}
                   QueryFunction={queryConsolesFunction}
                   DirectQueryFunction={directQueryConsolesFunction}
-                  isMobile={isMobile}
                   comparisonLink={
                     window.location.origin + "/comparison/consoles/"
                   }
@@ -512,9 +513,9 @@ export default function App() {
               >
                 <Compare
                   type={"CPUs"}
+                  isMobile={isMobile}
                   QueryFunction={queryCPUsFunction}
                   DirectQueryFunction={directQueryCPUsFunction}
-                  isMobile={isMobile}
                   comparisonLink={window.location.origin + "/comparison/cpus/"}
                   description={`Compare AMD Ryzen vs Intel Core processors side-by-side. View real-world benchmark performance in the ultimate CPU comparison tool.`}
                   defaultTitle={`Compare Multiple Processors Side-by-Side - CPUs Comparison Tool`}
@@ -536,9 +537,9 @@ export default function App() {
               >
                 <Compare
                   type={"Graphics Cards"}
+                  isMobile={isMobile}
                   QueryFunction={queryGraphicsCardsFunction}
                   DirectQueryFunction={directQueryGraphicsCardsFunction}
-                  isMobile={isMobile}
                   comparisonLink={
                     window.location.origin + "/comparison/graphicsCards/"
                   }
@@ -562,9 +563,9 @@ export default function App() {
               >
                 <Compare
                   type={"Drones"}
+                  isMobile={isMobile}
                   QueryFunction={queryDronesFunction}
                   DirectQueryFunction={directQueryDronesFunction}
-                  isMobile={isMobile}
                   comparisonLink={
                     window.location.origin + "/comparison/drones/"
                   }

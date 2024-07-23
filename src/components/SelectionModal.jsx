@@ -127,6 +127,7 @@ export default function SelectionModal({
                           Category: type,
                         });
                       }
+
                       result = await queryFunction(selectedBrand, item);
                     } else {
                       // If we have queried them, then just pick off from the last step

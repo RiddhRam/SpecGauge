@@ -301,9 +301,6 @@ export default function Prediction({
   }
 
   const updateColor = (newColor) => {
-    if (analytics != null) {
-      logEvent(analytics, "Update Line Color", { Color: newColor });
-    }
     // Update the points being displayed
     const newDataset = [];
     for (let item in lineValueDataset) {
