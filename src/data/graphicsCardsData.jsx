@@ -1,6 +1,3 @@
-import { query, where, collection, getDocs } from "firebase/firestore";
-import { db } from "../firebaseConfig";
-
 export const graphicsCardsData = () => {
   const graphicsCardsProcess = ["a brand", "a generation", "a graphics card"];
   const graphicsCardsQueryProcess = ["Brand", "Generation", "Card"];

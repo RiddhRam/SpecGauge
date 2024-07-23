@@ -1,6 +1,3 @@
-import { query, where, collection, getDocs } from "firebase/firestore";
-import { db } from "../firebaseConfig";
-
 export const cpusData = () => {
   const CPUsProcess = ["a brand", "a generation", "a processor"];
   const CPUsQueryProcess = ["Brand", "Generation", "CPU"];
@@ -33,7 +30,5 @@ export const cpusData = () => {
     compressedCPUsBrands,
     compressedCPUsDefaultArray,
     CPUsCategories,
-    queryCPUsFunction,
-    directQueryCPUsFunction,
   ];
 };
