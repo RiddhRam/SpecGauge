@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import SpecGaugeLogo from "../assets/SpecGauge SEO Logo.webp";
+import SpecGaugeLogo from "../assets/SpecGauge Logo Text.svg";
 import { DropdownMenu } from "./DropdownMenu";
 
 import { auth } from "../firebaseConfig";
@@ -25,19 +25,10 @@ export const Navbar = ({ isMobile }) => {
           style={{
             imageRendering: "crisp-edges",
             objectFit: "contain",
-            width: isMobile ? "30px" : "50px",
+            width: isMobile ? "200px" : "250px",
+            padding: 10,
           }}
         ></img>
-        <p
-          style={{
-            color: "#4ca0d7",
-            fontSize: isMobile ? 30 : 40,
-            padding: 10,
-            textAlign: "center",
-          }}
-        >
-          SpecGauge
-        </p>
       </Link>
       {/* The links */}
       <div

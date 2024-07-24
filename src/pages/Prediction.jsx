@@ -56,6 +56,7 @@ export default function Prediction({
   minimumPrice,
   description,
   predictionLink,
+  additionalOptions,
 }) {
   const navigate = useNavigate();
   // Years being displayed
@@ -89,6 +90,8 @@ export default function Prediction({
   const [colorChangeIndex, setColorChangeIndex] = useState(0);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [error, setError] = useState("");
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [rateAdjustments, setRateAdjustments] = useState(additionalOptions);
 
   // For the search input
   const [searchString, setSearchString] = useState("");
@@ -198,16 +201,6 @@ export default function Prediction({
       return "Select a brand";
     }
 
-    // The rate that the price drops
-    let rate = null;
-
-    // Iterate through the brandValues array and find the rate for this brand
-    for (let item in brandValues) {
-      if (brand == brandValues[item].label) {
-        rate = brandValues[item].value;
-        break;
-      }
-    }
     // This gets appended to lineValuesDataset to display
     let prices = [];
     // This is used for the seed, and it's used to determine the margin that the next price should differ by
@@ -220,53 +213,118 @@ export default function Prediction({
 
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
+      // The rate that the price drops
+      let rate = null;
+      // Iterate through the brandValues array and find the rate for this brand
+      for (let item in brandValues) {
+        if (brand == brandValues[item].label) {
+          rate = brandValues[item].value;
+          break;
+        }
+      }
+      // first parameter is name of option
+      // second parameter is default value
+      // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
+      // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
+      // If this comparison type has rate adjustments
+      if (rateAdjustments) {
+        // Iterate through rate adjustments
+        for (let item in rateAdjustments) {
+          // If this rate adjustment was enabled
+          if (rateAdjustments[item][1] == false) {
+            continue;
+          }
+
+          // If third parameter is lower than 2000
+          if (rateAdjustments[item][2] < 2000) {
+            // Add that many years to vehicle production year
+            const beginningYear = year + rateAdjustments[item][2];
+
+            // if current is higher than the beginning year (third parameter)
+            if (i >= beginningYear) {
+              rate *= rateAdjustments[item][3];
+            }
+            continue;
+          }
+          // If third parameter is 2000 or higher
+          // if current is higher than the beginning year (third parameter)
+          if (i >= rateAdjustments[item][2]) {
+            // Adjust the rate by adding the rate adjustment
+            rate += rateAdjustments[item][3];
+          }
+        }
+      }
+
+      if (rate > 0.03) {
+        rate = 0.03;
+      }
+
       // If vehicle wasn't manufactured yet, then don't display price for that year
       if (i < year) {
         prices.push(null);
-      } // For each year it was released, calculate the price for that year
-      else {
-        // Get the rng value
-        const seed = `${price}${brand}${year}${lastPrice}`;
-        const rng = seedrandom(seed);
-        // Get the new price
-        let newCalculatedPrice =
-          price * Math.E ** ((rate + rng() * 0.02) * (i - year));
-
-        // Difference between price of last iteration and this one
-        let difference = newCalculatedPrice - lastPrice;
-
-        if (i == year) {
-          originalPrice = newCalculatedPrice;
-        } else {
-          // If last price wasn't an increase
-          if (!lastPriceIncreased) {
-            // If difference between new and last price is greater than an 8% of the original price
-            if (difference > lastPrice * 0.08) {
-              // Reduce difference to 8%
-              // Prevents sharp increases
-              difference = difference * 0.08;
-              lastPriceIncreased = true;
-            } // If new price is a decrease from last price
-            else if (difference < 0) {
-              // If the absolute value of the decrease is more than double of 8% of the original price
-              if (difference * -1 > 2 * originalPrice * 0.08) {
-                // Cut the difference in half
-                // Prevents sharp drops
-                difference = difference * 0.3;
-              }
-            }
-          }
-          // If last price was an increase
-          else {
-            // Price will be a decrease of 4% from the last price
-            difference = lastPrice * -0.04;
-            lastPriceIncreased = false;
-          }
-        }
-
-        prices.push(lastPrice + difference);
-        lastPrice = lastPrice + difference;
+        continue;
       }
+      // If rate is depreciating, follow these rules
+      // For each year it was released, calculate the price for that year
+      // Get the rng value
+      const seed = `${price}${brand}${year}${lastPrice}${rateAdjustments}`;
+      const rng = seedrandom(seed);
+      // Get the new price
+      let newCalculatedPrice =
+        price * Math.E ** ((rate + rng() * 0.02) * (i - year));
+      // Difference between price of last iteration and this one
+      let difference = newCalculatedPrice - lastPrice;
+
+      // If this is the first value then initialize the original price
+      if (i == year) {
+        originalPrice = newCalculatedPrice;
+        prices.push(originalPrice);
+        continue;
+      }
+
+      // If not the first value
+      // If last price was greater than twice the original value, and last price wasn't an increase
+      if (lastPrice > originalPrice * 2 && !lastPriceIncreased) {
+        // The price will hover around twice it's original value
+        const differenceRate = rng() * -0.04;
+        difference = lastPrice * differenceRate;
+        lastPriceIncreased = false;
+      }
+      // If last price wasn't an increase
+      else if (!lastPriceIncreased) {
+        // If difference between new and last price is greater than an 8% of the original price
+        if (difference > lastPrice * 0.08) {
+          // Reduce difference to 8%
+          // Prevents sharp increases
+          difference = difference * 0.055;
+          lastPriceIncreased = true;
+        } // If new price is a decrease from last price
+        else if (difference < 0) {
+          // If the absolute value of the decrease is more than 10% of the original price
+          if (difference * -1 > originalPrice * 0.1) {
+            // Cut the difference in half
+            // Prevents sharp drops
+            difference = difference * 0.3;
+          }
+          lastPriceIncreased = false;
+        } else {
+          // Difference isn't too large, but the price stayed the same or increased by a small amount
+          lastPriceIncreased = true;
+        }
+      }
+      // If last price was an increase
+      else {
+        // Price will be a decrease of 4% from the last price
+        difference = lastPrice * -0.04;
+        lastPriceIncreased = false;
+      }
+
+      /* If difference is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
+      if (difference + lastPrice > originalPrice * 2.1) {
+        difference = originalPrice * 0.1 * rng();
+      }
+      prices.push(lastPrice + difference);
+      lastPrice = lastPrice + difference;
     }
 
     while (true) {
@@ -297,6 +355,7 @@ export default function Prediction({
         break;
       }
     }
+
     return 0;
   }
 
@@ -775,6 +834,7 @@ export default function Prediction({
                 columnGap: "60px",
               }}
             >
+              {/* Column 1 */}
               {/* Zoom slider */}
               <div
                 style={{
@@ -909,8 +969,33 @@ export default function Prediction({
               {/* Empty cell */}
               <div></div>
 
-              {/* Empty cell */}
-              <div></div>
+              {/* Additional Options, only if available */}
+              {additionalOptions ? (
+                <button
+                  onClick={() => {
+                    if (analytics != null) {
+                      logEvent(analytics, `Select Additional Options`, {
+                        Type: type,
+                      });
+                    }
+                    setShowOptionsModal(true);
+                  }}
+                  style={{ padding: "0 2px" }}
+                  className="NormalButton"
+                >
+                  <p
+                    style={{
+                      textAlign: "center",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    Options
+                  </p>
+                </button>
+              ) : (
+                /* Empty Cell */ <div></div>
+              )}
 
               {/* Add Average Price, only if available */}
               {averagePrices ? (
@@ -1280,6 +1365,86 @@ export default function Prediction({
           onClick={() => {
             // Hide the modal
             setShowEditModal(false);
+          }}
+          className="DangerButton"
+          style={{ margin: "10px 0" }}
+        >
+          <p>Close</p>
+        </button>
+      </Modal>
+
+      {/* Options Modal */}
+      <Modal
+        isOpen={showOptionsModal}
+        contentLabel="Select Options"
+        className={"ModalContainer"}
+        overlayClassName={"ModalOverlay"}
+        style={{
+          overlay: {
+            zIndex: 3,
+          },
+        }}
+      >
+        <p className="HeaderText">Select Options</p>
+        <div style={{ width: "70%" }}>
+          {additionalOptions.map((item, index) => (
+            <div
+              style={{ display: "grid", gridTemplateColumns: `repeat(2, 1fr)` }}
+              key={item}
+            >
+              <p style={{ fontSize: 20 }} className="PlainText">
+                {item[0]}
+              </p>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={rateAdjustments[index][1]}
+                  onChange={() => {
+                    // first parameter is name of option
+                    // second parameter is value
+                    // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
+                    // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
+                    // Create a new rate adjustment array
+                    const newRateAdjustments = [];
+                    // Iterate through the last one and copy everything
+                    for (let item in rateAdjustments) {
+                      // If the current item isn't that same as the one that changed
+                      if (item != index) {
+                        // Simply add it
+                        newRateAdjustments.push(rateAdjustments[item]);
+                      } else {
+                        // If it is the item that changed then copy it
+                        const newRateAdjustment = rateAdjustments[item];
+                        // But change the boolean value to be opposite
+                        newRateAdjustment[1] = !rateAdjustments[item][1];
+                        // Then add it
+                        newRateAdjustments.push(newRateAdjustment);
+                        if (analytics != null) {
+                          logEvent(analytics, `Toggle ${item[0]}`, {
+                            // Screen type
+                            Type: type,
+                            // Category type
+                            NewValue: !rateAdjustments[item][1],
+                          });
+                        }
+                      }
+                    }
+
+                    // Update the array
+                    setRateAdjustments(newRateAdjustments);
+                  }}
+                ></input>
+                <span className="slider"></span>
+              </label>
+            </div>
+          ))}
+        </div>
+
+        {/* Close button */}
+        <button
+          onClick={() => {
+            // Hide the modal
+            setShowOptionsModal(false);
           }}
           className="DangerButton"
           style={{ margin: "10px 0" }}

@@ -21,7 +21,7 @@ import { Loading } from "./components/Loading";
 
 const fast = -0.12;
 const normal = -0.09;
-const reputable = -0.07;
+const reputable = -0.075;
 const reliable = -0.06;
 const reliableMotorCycle = -0.07;
 const reputableMotorCycle = -0.055;
@@ -104,7 +104,7 @@ const carsBrandValues = [
   { label: "Audi", value: reputable },
   { label: "Bentley", value: expensiveSport },
   { label: "BMW", value: reputable },
-  { label: "BMW M-Series", value: reputable },
+  { label: "BMW M-Series", value: expensiveSport },
   { label: "BMW Motorcycle", value: expensiveSportMotorCycle },
   { label: "Bugatti", value: superCar },
   { label: "Buick", value: normal },
@@ -149,7 +149,7 @@ const carsBrandValues = [
   { label: "Maybach", value: superCar },
   { label: "Mazda", value: reliable },
   { label: "McLaren", value: expensiveSport },
-  { label: "Mercedes-AMG", value: reputable },
+  { label: "Mercedes-AMG", value: inBetweenCars },
   { label: "Mercedes-Benz", value: reputable },
   { label: "Mercury", value: normal },
   { label: "Mini", value: fast },
@@ -186,6 +186,16 @@ const carsBrandValues = [
   { label: "Volvo", value: reliable },
   { label: "Xiaomi", value: fast },
   { label: "Yamaha", value: expensiveSportMotorCycle },
+];
+
+// first parameter is name of option
+// second parameter is default value
+// third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
+// fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
+// PUT ANY ADDITION RATE CHANGES (fourth parameter) BEFORE MULTIPLICATION CHANGES
+const carsAdditionalOptions = [
+  ["Collectible", false, 25, -1],
+  ["Gasoline/Diesel", true, 2035, 0.04],
 ];
 
 const graphicsCardsBrandValues = [
@@ -597,6 +607,7 @@ export default function App() {
                   predictionLink={
                     window.location.origin + "/prediction/automobiles/"
                   }
+                  additionalOptions={carsAdditionalOptions}
                 ></Prediction>
               </Suspense>
             }
@@ -621,6 +632,7 @@ export default function App() {
                   minimumPrice={150}
                   description={`View future prices of processors over time and into the future. Predict future costs and view past prices.`}
                   predictionLink={window.location.origin + "/prediction/cpus/"}
+                  additionalOptions={null}
                 ></Prediction>
               </Suspense>
             }
@@ -647,6 +659,7 @@ export default function App() {
                   predictionLink={
                     window.location.origin + "/prediction/graphicsCards/"
                   }
+                  additionalOptions={null}
                 ></Prediction>
               </Suspense>
             }
