@@ -421,7 +421,7 @@ export default function WebHome({ isMobile }) {
         </button>
 
         {/* User request or submit data */}
-        {/* SUBMIT OR REQUEST DATA */}
+        {/* SUBMIT OR REQUEST COMPARISON DATA */}
         <h3
           className="ReversePlainText"
           style={{
@@ -432,7 +432,7 @@ export default function WebHome({ isMobile }) {
             textAlign: "center",
           }}
         >
-          SUBMIT OR REQUEST DATA
+          SUBMIT OR REQUEST COMPARISON DATA
         </h3>
 
         <button
@@ -441,7 +441,7 @@ export default function WebHome({ isMobile }) {
             setDataModalVisible(true);
           }}
         >
-          <p>Submit or Request Data</p>
+          <p>Submit or Request Comparison Data</p>
         </button>
       </div>
 
@@ -548,7 +548,7 @@ export default function WebHome({ isMobile }) {
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <p className="HeaderText">Submit or Request Data</p>
+        <p className="HeaderText">Submit or Request Comparison Data</p>
 
         {!requestingData && !doneRequest && (
           <>
@@ -591,7 +591,10 @@ export default function WebHome({ isMobile }) {
                   setInvalidData(false);
                 }}
                 className="DangerButton"
-                style={{ marginRight: "10px" }}
+                style={{
+                  marginRight: "10px",
+                  fontSize: isMobile ? "12px" : "20px",
+                }}
               >
                 <p>Cancel</p>
               </button>
@@ -625,6 +628,9 @@ export default function WebHome({ isMobile }) {
                   }
                 }}
                 className="NormalButton"
+                style={{
+                  fontSize: isMobile ? "12px" : "20px",
+                }}
               >
                 <p>Submit/Request</p>
               </button>
@@ -653,7 +659,9 @@ export default function WebHome({ isMobile }) {
                 setDataModalVisible(false);
               }}
               className="NormalButton"
-              style={{ marginBottom: "20px" }}
+              style={{
+                marginBottom: "20px",
+              }}
             >
               <p>Okay</p>
             </button>

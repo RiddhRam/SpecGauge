@@ -1,4 +1,4 @@
-import React from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -6,10 +6,10 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("SpecGauge")).render(
   // Strict Mode
   // WARNING: WHEN ENABLING, PRESET LINKS MAY NOT WORK AS INTENDED
-  /*<React.StrictMode>
+  <StrictMode>
     <App />
-  </React.StrictMode>*/
+  </StrictMode>
 
   // Production mode
-  <App />
+  //<App />
 );
