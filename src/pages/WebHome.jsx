@@ -162,8 +162,24 @@ export default function WebHome({ isMobile }) {
       window.location.href
     );
 
-    //const userLanguage = navigator.language || navigator.userLanguage;
-    //alert(userLanguage);
+    try {
+      const userLanguage = navigator.language || navigator.userLanguage;
+
+      console.log(userLanguage);
+      if (analytics != null) {
+        logEvent(analytics, "User Language", {
+          Language: userLanguage,
+          Platform: isMobile ? "Mobile" : "Computer",
+        });
+      }
+    } catch {
+      // Might not need this to be a try catch
+      if (analytics != null) {
+        logEvent(analytics, "No User Language", {
+          Platform: isMobile ? "Mobile" : "Computer",
+        });
+      }
+    }
 
     SetCanonical(window.location.origin);
   }, []);
