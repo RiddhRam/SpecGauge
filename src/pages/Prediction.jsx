@@ -628,6 +628,34 @@ export default function Prediction({
                   </p>
                 </button>
 
+                {/* Additional Options, only if available */}
+                {additionalOptions ? (
+                  <button
+                    onClick={() => {
+                      if (analytics != null) {
+                        logEvent(analytics, `Select Additional Options`, {
+                          Type: type,
+                        });
+                      }
+                      setShowOptionsModal(true);
+                    }}
+                    style={{ padding: "0 2px" }}
+                    className="NormalButton"
+                  >
+                    <p
+                      style={{
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      Options
+                    </p>
+                  </button>
+                ) : (
+                  /* Empty Cell */ <div></div>
+                )}
+
                 {/* Add */}
                 <button
                   onClick={() => {
@@ -960,6 +988,7 @@ export default function Prediction({
                 <p>Edit</p>
               </button>
 
+              {/* Column 2 */}
               {/* Empty cell */}
               <div></div>
 
@@ -1389,10 +1418,15 @@ export default function Prediction({
         <div style={{ width: "70%" }}>
           {additionalOptions.map((item, index) => (
             <div
-              style={{ display: "grid", gridTemplateColumns: `repeat(2, 1fr)` }}
               key={item}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "10px",
+              }}
             >
-              <p style={{ fontSize: 20 }} className="PlainText">
+              <p style={{ fontSize: isMobile ? 16 : 20 }} className="PlainText">
                 {item[0]}
               </p>
               <label className="switch">
