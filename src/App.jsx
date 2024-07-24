@@ -23,14 +23,16 @@ const fast = -0.12;
 const normal = -0.09;
 const reputable = -0.075;
 const reliable = -0.06;
-const reliableMotorCycle = -0.07;
-const reputableMotorCycle = -0.055;
-const expensiveSportMotorCycle = -0.045;
+const reputableSports = -0.055;
 const inBetweenCars = -0.045;
 const superReliable = -0.035;
 const expensiveSport = -0.03;
-const superMotorCycle = -0.025;
 const superCar = -0.02;
+
+const reliableMotorCycle = -0.07;
+const reputableMotorCycle = -0.055;
+const expensiveSportMotorCycle = -0.045;
+const superMotorCycle = -0.025;
 
 const gpuFast = -0.16;
 const gpuNormal = -0.12;
@@ -145,7 +147,7 @@ const carsBrandValues = [
   { label: "Lincoln", value: normal },
   { label: "Lotus", value: normal },
   { label: "Lucid", value: normal },
-  { label: "Maserati", value: expensiveSport },
+  { label: "Maserati", value: reputable },
   { label: "Maybach", value: superCar },
   { label: "Mazda", value: reliable },
   { label: "McLaren", value: expensiveSport },
@@ -154,7 +156,7 @@ const carsBrandValues = [
   { label: "Mercury", value: normal },
   { label: "Mini", value: fast },
   { label: "Mitsubishi", value: superReliable },
-  { label: "Nissan", value: reliable },
+  { label: "Nissan", value: reputableSports },
   { label: "Oldsmobile", value: normal },
   { label: "Opel", value: normal },
   { label: "Pagani", value: superCar },
@@ -195,7 +197,7 @@ const carsBrandValues = [
 // PUT ANY ADDITION RATE CHANGES (fourth parameter) BEFORE MULTIPLICATION CHANGES
 const carsAdditionalOptions = [
   ["Collectible", false, 25, -1],
-  ["Gasoline/Diesel", true, 2035, 0.04],
+  ["Gasoline/Diesel", true, 2035, 0.005],
 ];
 
 const graphicsCardsBrandValues = [

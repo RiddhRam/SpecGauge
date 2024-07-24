@@ -283,8 +283,8 @@ export default function Prediction({
       }
 
       // If not the first value
-      // If last price was greater than twice the original value, and last price wasn't an increase
-      if (lastPrice > originalPrice * 2 && !lastPriceIncreased) {
+      // If last price was greater than 1.5x the original value, and last price wasn't an increase
+      if (lastPrice > originalPrice * 1.5 && !lastPriceIncreased) {
         // The price will hover around twice it's original value
         const differenceRate = rng() * -0.04;
         difference = lastPrice * differenceRate;
