@@ -13,7 +13,7 @@ const NoPage = lazy(() => import("./pages/NoPage"));
 // Firebase
 import { onAuthStateChanged } from "firebase/auth";
 import { query, where, collection, getDocs } from "firebase/firestore";
-import { db, auth } from "./firebaseConfig";
+import { db, auth, analytics } from "./firebaseConfig";
 
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
@@ -106,7 +106,7 @@ const carsBrandValues = [
   { label: "Audi", value: reputable },
   { label: "Bentley", value: expensiveSport },
   { label: "BMW", value: reputable },
-  { label: "BMW M-Series", value: expensiveSport },
+  { label: "BMW M-Series", value: reputableSports },
   { label: "BMW Motorcycle", value: expensiveSportMotorCycle },
   { label: "Bugatti", value: superCar },
   { label: "Buick", value: normal },
@@ -194,10 +194,10 @@ const carsBrandValues = [
 // second parameter is default value
 // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
 // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
-// PUT ANY ADDITION RATE CHANGES (fourth parameter) BEFORE MULTIPLICATION CHANGES
+// PUT ANY FIXED RATE CHANGES (anything above 100) AT THE END. FIXED RATE CHANGES ARE DIVIDED BY 10000
 const carsAdditionalOptions = [
-  ["Collectible", false, 25, -1],
   ["Gasoline/Diesel", true, 2035, 0.005],
+  ["Collectible", false, 25, 300],
 ];
 
 const graphicsCardsBrandValues = [
@@ -409,6 +409,26 @@ export default function App() {
       unsubscribe();
     };
   });
+
+  useEffect(() => {
+    try {
+      const userLanguage = navigator.language || navigator.userLanguage;
+
+      if (analytics != null) {
+        logEvent(analytics, "User Language", {
+          Language: userLanguage,
+          Platform: isMobile ? "Mobile" : "Computer",
+        });
+      }
+    } catch {
+      // Might not need this to be a try catch
+      if (analytics != null) {
+        logEvent(analytics, "No User Language", {
+          Platform: isMobile ? "Mobile" : "Computer",
+        });
+      }
+    }
+  }, []);
 
   return (
     <>

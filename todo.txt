@@ -1,6 +1,6 @@
-6.6.6
+6.6.7
 Add share button to prediction screen
-Rethink how to do 'Collectible' rate adjustment for price predictions
+Add Shelbys to price prediction
 
 6.7.0
 Add regional languages, fallback language is english

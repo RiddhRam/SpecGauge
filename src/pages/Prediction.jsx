@@ -242,7 +242,9 @@ export default function Prediction({
 
             // if current is higher than the beginning year (third parameter)
             if (i >= beginningYear) {
-              rate *= rateAdjustments[item][3];
+              if (rateAdjustments[item][3] > 100) {
+                rate = rateAdjustments[item][3];
+              }
             }
             continue;
           }
@@ -255,6 +257,7 @@ export default function Prediction({
         }
       }
 
+      // Maximum rate increase is 0.03
       if (rate > 0.03) {
         rate = 0.03;
       }
@@ -314,9 +317,11 @@ export default function Prediction({
       }
       // If last price was an increase
       else {
-        // Price will be a decrease of 4% from the last price
-        difference = lastPrice * -0.04;
-        lastPriceIncreased = false;
+        // Difference is reduced to 2% from the last price if rate isn't positive
+        if (rate < 0) {
+          difference = lastPrice * 0.02;
+          lastPriceIncreased = false;
+        }
       }
 
       /* If difference is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
@@ -434,6 +439,8 @@ export default function Prediction({
       description,
       window.location.href
     );
+
+    setRateAdjustments(additionalOptions);
 
     if (!firstLoad) {
       // Have to manually reset, in case user uses navigation buttons to switch to another prediction page
@@ -595,23 +602,39 @@ export default function Prediction({
                   style={{
                     width: "calc(100% - 24px)",
                     padding: "20px 0 20px 20px",
+                    fontSize: "15px",
                   }}
                 ></input>
 
                 {/* Initial Price Field */}
-                <input
-                  type="number"
-                  value={initialPrice}
-                  className="TextInput"
-                  placeholder="Initial New Price"
-                  onChange={(event) =>
-                    handleNumberInput(event.target.value, setInitialPrice)
-                  }
-                  style={{
-                    width: "calc(100% - 24px)",
-                    padding: "20px 0 20px 20px",
-                  }}
-                ></input>
+                <div style={{ position: "relative" }}>
+                  <span
+                    style={{
+                      position: "absolute",
+                      left: "10px",
+                      top: "45%",
+                      transform: "translateY(-50%)",
+                      pointerEvents: "none",
+                      color: "#fff",
+                    }}
+                  >
+                    $
+                  </span>
+                  <input
+                    type="number"
+                    value={initialPrice}
+                    className="TextInput"
+                    placeholder="Initial New Price"
+                    onChange={(event) =>
+                      handleNumberInput(event.target.value, setInitialPrice)
+                    }
+                    style={{
+                      width: "calc(100% - 24px)",
+                      padding: "20px 0 20px 20px",
+                      fontSize: "15px",
+                    }}
+                  ></input>
+                </div>
 
                 {/* Select Brand */}
                 <button
@@ -921,17 +944,34 @@ export default function Prediction({
                 style={{ fontSize: 16, width: "100%" }}
               ></input>
 
-              {/* Initial Price Field */}
-              <input
-                type="number"
-                value={initialPrice}
-                className="TextInput"
-                placeholder="Initial New Price"
-                onChange={(event) =>
-                  handleNumberInput(event.target.value, setInitialPrice)
-                }
-                style={{ fontSize: 16, width: "100%" }}
-              ></input>
+              <div style={{ position: "relative" }}>
+                <span
+                  style={{
+                    position: "absolute",
+                    left: "10px",
+                    top: "47%",
+                    transform: "translateY(-50%)",
+                    pointerEvents: "none",
+                    color: "#fff",
+                  }}
+                >
+                  $
+                </span>
+                <input
+                  type="number"
+                  value={initialPrice}
+                  className="TextInput"
+                  placeholder="Initial New Price"
+                  onChange={(event) =>
+                    handleNumberInput(event.target.value, setInitialPrice)
+                  }
+                  style={{
+                    fontSize: 16,
+                    width: "100%",
+                    paddingLeft: "21px", // Add left padding to make room for the prefix
+                  }}
+                />
+              </div>
 
               {/* Select Brand */}
               <button
@@ -1416,62 +1456,66 @@ export default function Prediction({
       >
         <p className="HeaderText">Select Options</p>
         <div style={{ width: "70%" }}>
-          {additionalOptions.map((item, index) => (
-            <div
-              key={item}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "10px",
-              }}
-            >
-              <p style={{ fontSize: isMobile ? 16 : 20 }} className="PlainText">
-                {item[0]}
-              </p>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={rateAdjustments[index][1]}
-                  onChange={() => {
-                    // first parameter is name of option
-                    // second parameter is value
-                    // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
-                    // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
-                    // Create a new rate adjustment array
-                    const newRateAdjustments = [];
-                    // Iterate through the last one and copy everything
-                    for (let item in rateAdjustments) {
-                      // If the current item isn't that same as the one that changed
-                      if (item != index) {
-                        // Simply add it
-                        newRateAdjustments.push(rateAdjustments[item]);
-                      } else {
-                        // If it is the item that changed then copy it
-                        const newRateAdjustment = rateAdjustments[item];
-                        // But change the boolean value to be opposite
-                        newRateAdjustment[1] = !rateAdjustments[item][1];
-                        // Then add it
-                        newRateAdjustments.push(newRateAdjustment);
-                        if (analytics != null) {
-                          logEvent(analytics, `Toggle ${item[0]}`, {
-                            // Screen type
-                            Type: type,
-                            // Category type
-                            NewValue: !rateAdjustments[item][1],
-                          });
+          {rateAdjustments &&
+            rateAdjustments.map((item, index) => (
+              <div
+                key={item}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <p
+                  style={{ fontSize: isMobile ? 16 : 20 }}
+                  className="PlainText"
+                >
+                  {item[0]}
+                </p>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={rateAdjustments[index][1]}
+                    onChange={() => {
+                      // first parameter is name of option
+                      // second parameter is value
+                      // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
+                      // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
+                      // Create a new rate adjustment array
+                      const newRateAdjustments = [];
+                      // Iterate through the last one and copy everything
+                      for (let item in rateAdjustments) {
+                        // If the current item isn't that same as the one that changed
+                        if (item != index) {
+                          // Simply add it
+                          newRateAdjustments.push(rateAdjustments[item]);
+                        } else {
+                          // If it is the item that changed then copy it
+                          const newRateAdjustment = rateAdjustments[item];
+                          // But change the boolean value to be opposite
+                          newRateAdjustment[1] = !rateAdjustments[item][1];
+                          // Then add it
+                          newRateAdjustments.push(newRateAdjustment);
+                          if (analytics != null) {
+                            logEvent(analytics, `Toggle ${item[0]}`, {
+                              // Screen type
+                              Type: type,
+                              // Category type
+                              NewValue: !rateAdjustments[item][1],
+                            });
+                          }
                         }
                       }
-                    }
 
-                    // Update the array
-                    setRateAdjustments(newRateAdjustments);
-                  }}
-                ></input>
-                <span className="slider"></span>
-              </label>
-            </div>
-          ))}
+                      // Update the array
+                      setRateAdjustments(newRateAdjustments);
+                    }}
+                  ></input>
+                  <span className="slider"></span>
+                </label>
+              </div>
+            ))}
         </div>
 
         {/* Close button */}
