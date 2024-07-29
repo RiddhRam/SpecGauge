@@ -482,6 +482,8 @@ export default function Compare({
             gridTemplateRows: `65px`,
             borderBottom: "1px solid darkGrey",
             paddingBottom: "10px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
           }}
         >
           {/* Back to home */}

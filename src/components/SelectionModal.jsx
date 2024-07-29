@@ -247,8 +247,7 @@ export default function SelectionModal({
                     }
                   }}
                   style={{
-                    width: "95%",
-                    whiteSpace: "nowrap",
+                    maxWidth: "250px",
                   }}
                 >
                   <p>{item}</p>

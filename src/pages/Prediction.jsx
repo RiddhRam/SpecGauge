@@ -1425,9 +1425,8 @@ export default function Prediction({
                   }}
                   key={index}
                   style={{
-                    padding: "15px 8px",
-                    width: "95%",
-                    whiteSpace: "nowrap",
+                    padding: "15px 10px",
+                    maxWidth: "250px",
                   }}
                 >
                   {item.label}

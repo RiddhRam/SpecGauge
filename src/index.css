@@ -60,8 +60,9 @@ a {
 .ModalButtonSection {
   display: flex;
   flex-direction: column;
-  max-height: 250px;
+  height: 250px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* The background blur of the modal */
@@ -394,6 +395,9 @@ a {
   outline: none;
   user-select: none;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   &:hover {
     background-color: #3579a8;
