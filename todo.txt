@@ -1,9 +1,5 @@
-6.6.7
-Add share button to prediction screen
-Add Shelbys to price prediction
-
 6.7.0
-Add regional languages, fallback language is english
+Add share button to prediction screen
 
 7.0.0
 Add top, side and back view of vehicle sizes
@@ -11,6 +7,9 @@ Add top, side and back view of vehicle sizes
 7.1.0
 Put firebase query functions for comparison pages in their own files
 Split modals in lazy imports where possible
+
+7.2.0
+Add regional languages, fallback language is english
 
 8.0.0
 Add performance calculator for cars and computers

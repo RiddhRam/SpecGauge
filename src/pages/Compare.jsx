@@ -257,6 +257,7 @@ export default function Compare({
 
     // Index of the prefix (/comparison/type/)
     const startIndex = fullURL.indexOf(comparisonLink);
+
     // The presets
     const presetsURL = fullURL.substring(startIndex + comparisonLink.length);
 
@@ -401,7 +402,6 @@ export default function Compare({
           parameterArray.push(newJSON);
         }
 
-        // returns [tempProsArray, tempNewProduct]
         // prettier-ignore
         const prosAndSpecs = GetProsAndSpecs(parameterArray, result, Categories);
 
@@ -413,6 +413,7 @@ export default function Compare({
       if (analytics != null) {
         logEvent(analytics, "Load Comparison Presets", {
           Processes: processes,
+          Type: type,
         });
       }
     }
@@ -462,24 +463,6 @@ export default function Compare({
     } catch (error) {
       return error;
     }
-  };
-
-  const copyURLToClipboard = async (shareURL) => {
-    // Create a temporary textarea element
-    const textarea = document.createElement("textarea");
-    textarea.value = shareURL;
-    textarea.setAttribute("readonly", ""); // Prevent mobile devices from popping up the keyboard
-    textarea.style.position = "absolute";
-    textarea.style.left = "-9999px"; // Move the textarea off-screen
-    document.body.appendChild(textarea);
-
-    // Select and copy the URL from the textarea
-    textarea.select();
-    textarea.setSelectionRange(0, textarea.value.length); // For mobile devices
-    document.execCommand("copy");
-
-    // Clean up: remove the textarea from the DOM
-    document.body.removeChild(textarea);
   };
 
   return (
@@ -599,7 +582,11 @@ export default function Compare({
               const shareURL = comparisonLink + presetsURL;
 
               // Copy to user's clipboard
-              copyURLToClipboard(shareURL);
+              await import("../functions/copyToClipboard").then((module) => {
+                // Construct the process array into a string
+                module.default(shareURL);
+              });
+
               // Tell user copying to clipboard was successful
               setCopiedLink(true);
               if (analytics != null) {
@@ -888,7 +875,7 @@ export default function Compare({
             setCopiedLink(false);
           }}
         >
-          <p>Ok</p>
+          <p>Okay</p>
         </button>
       </Modal>
     </>

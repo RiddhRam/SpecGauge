@@ -1,7 +1,6 @@
 import pako from "pako";
 
 export default function BuildURLFriendlyCompare(processes, brands) {
-  // Start with 'short/' so the DeconstructURLFriendlyCompare function knows that it's the updated version.
   let url = "";
 
   // Iterate to each process
@@ -67,6 +66,7 @@ export default function BuildURLFriendlyCompare(processes, brands) {
     String.fromCharCode(...new Uint8Array(compressed))
   );
 
+  // Start with 'short/' so the DeconstructURLFriendlyCompare function knows that it's the updated version.
   url = "short/" + compressedBase64;
 
   return url;

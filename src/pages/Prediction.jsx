@@ -25,7 +25,9 @@ import {
 
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
+
 import SetCanonical from "../functions/SetCanonical";
+import PakoInflate from "../functions/PakoInflate";
 
 ChartJS.register(
   CategoryScale,
@@ -92,6 +94,8 @@ export default function Prediction({
   const [error, setError] = useState("");
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [rateAdjustments, setRateAdjustments] = useState(additionalOptions);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [beginLoadingPresets, setBeginLoadingPresets] = useState(false);
 
   // For the search input
   const [searchString, setSearchString] = useState("");
@@ -319,7 +323,7 @@ export default function Prediction({
       else {
         // Difference is reduced to 2% from the last price if rate isn't positive
         if (rate < 0) {
-          difference = lastPrice * 0.02;
+          difference = lastPrice * rng() * -0.06;
           lastPriceIncreased = false;
         }
       }
@@ -393,45 +397,73 @@ export default function Prediction({
     setSearchString(text);
   };
 
-  useEffect(() => {
-    if (updateGraph) {
-      setUpdateGraph(false);
-      // Update the points being displayed
-      const newDataset = [];
-      for (let item in lineValueDataset) {
-        let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
-        newItem.data = originalPoints[item].slice(startIndex, endIndex);
-        newDataset.push(newItem);
-      }
-      setLineValueDataset(newDataset);
-    }
-    if (!initalizedAveragePrices) {
-      if (averagePrices != null) {
-        setOriginalPoints([averagePrices.slice()]);
-        setLineValueDataset([
-          {
-            label: `Average ${type} Price (USD $)`,
-            data: averagePrices.slice(startIndex, endIndex),
-            borderColor: `rgb(${Math.random() * 255}, ${Math.random() * 255},${
-              Math.random() * 255
-            })`,
-          },
-        ]);
-      }
+  const loadPresets = async (presetURL) => {
+    const brands = [];
 
-      setInitializedAveragePrices(true);
+    for (let item in brandValues) {
+      brands.push(brandValues[item].label);
     }
-  }, [isMobile, updateGraph]);
 
-  useEffect(() => {
+    let processes = [];
+
+    // Lazy import this, becaues it includes pako
+    await import("../functions/DeconstructURLFriendlyPredict").then(
+      (module) => {
+        // Deconstruct the string into a process array
+        processes = module.default(presetURL, brands);
+      }
+    );
+
+    for (let item in processes) {
+      const processItem = processes[item];
+      if (processItem[0] != "Average") {
+        addToGraph(processItem[0], processItem[1], processItem[2]);
+      } else {
+        addAveragePrice();
+      }
+    }
+
     if (analytics != null) {
-      logEvent(analytics, "Screen", {
-        Screen: type,
-        Platform: isMobile ? "Mobile" : "Computer",
-        Tool: "Prediction",
+      logEvent(analytics, "Load Comparison Presets", {
+        Processes: processes,
+        Type: type,
       });
     }
-  }, []);
+  };
+
+  const addAveragePrice = () => {
+    while (true) {
+      let matchFound = false;
+      const red = Math.random() * 255;
+      const green = Math.random() * 255;
+      const blue = Math.random() * 255;
+
+      let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+      for (let item in lineValueDataset) {
+        if (newBorderColor == lineValueDataset[item].borderColor) {
+          matchFound = true;
+          break;
+        }
+      }
+
+      if (!matchFound) {
+        const newLine = {
+          label: `Average ${type} Price (USD $)`,
+          data: averagePrices.slice(),
+          borderColor: newBorderColor,
+        };
+        setOriginalPoints((prevPoints) => [
+          ...prevPoints,
+          averagePrices.slice(),
+        ]);
+        setLineValueDataset((prevLines) => [...prevLines, newLine]);
+        setUpdateGraph(true);
+
+        break;
+      }
+    }
+  };
 
   useEffect(() => {
     SetTitleAndDescription(
@@ -462,7 +494,90 @@ export default function Prediction({
     setFirstLoad(false);
 
     SetCanonical(predictionLink);
+
+    // URL of the page
+    const fullURL = window.location.href;
+
+    // Index of the prefix (/prediction/type/)
+    const linkStartIndex = fullURL.indexOf(predictionLink);
+
+    // The presets
+    const presetsURL = fullURL.substring(
+      linkStartIndex + predictionLink.length
+    );
+
+    if (presetsURL.length > 1) {
+      setBeginLoadingPresets(true);
+    } else {
+      //SetTitleAndDescription(defaultTitle, description, window.location.href);
+    }
   }, [type]);
+
+  useEffect(() => {
+    if (updateGraph) {
+      setUpdateGraph(false);
+      // Update the points being displayed
+      const newDataset = [];
+      for (let item in lineValueDataset) {
+        let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
+        newItem.data = originalPoints[item].slice(startIndex, endIndex);
+        newDataset.push(newItem);
+      }
+      setLineValueDataset(newDataset);
+    }
+    // Make sure there's no presets
+    // URL of the page
+    const fullURL = window.location.href;
+    // Index of the prefix (/prediction/type/)
+    const linkStartIndex = fullURL.indexOf(predictionLink);
+    // The presets
+    const presetsURL = fullURL.substring(
+      linkStartIndex + predictionLink.length
+    );
+
+    // If we haven't initialized average prices yet, and no presets in the url
+    if (!initalizedAveragePrices && presetsURL.length == 0) {
+      if (averagePrices != null) {
+        setOriginalPoints([averagePrices.slice()]);
+        setLineValueDataset([
+          {
+            label: `Average ${type} Price (USD $)`,
+            data: averagePrices.slice(startIndex, endIndex),
+            borderColor: `rgb(${Math.random() * 255}, ${Math.random() * 255},${
+              Math.random() * 255
+            })`,
+          },
+        ]);
+      }
+
+      setInitializedAveragePrices(true);
+    }
+  }, [isMobile, updateGraph]);
+
+  useEffect(() => {
+    if (analytics != null) {
+      logEvent(analytics, "Screen", {
+        Screen: type,
+        Platform: isMobile ? "Mobile" : "Computer",
+        Tool: "Prediction",
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (beginLoadingPresets) {
+      // URL of the page
+      const fullURL = window.location.href;
+
+      // Index of the prefix (/comparison/type/)
+      const startIndex = fullURL.indexOf(predictionLink);
+      // The presets
+      const presetsURL = fullURL.substring(startIndex + predictionLink.length);
+
+      loadPresets(presetsURL);
+      setBeginLoadingPresets(false);
+    }
+  }, [beginLoadingPresets]);
 
   return (
     <>
@@ -476,9 +591,13 @@ export default function Prediction({
         {/* Top Buttons */}
         <div
           style={{
-            marginLeft: "40px",
+            marginLeft: "20px",
             marginRight: "auto",
             marginBottom: "30px",
+            display: "grid",
+            gridTemplateColumns: `repeat(2, 1fr)`,
+            gridTemplateRows: `47px`,
+            columnGap: "5px",
           }}
         >
           {/* Back to home */}
@@ -490,9 +609,84 @@ export default function Prediction({
               navigate("/home");
             }}
             className="NormalButton"
-            style={{ height: "47px" }}
+            style={{ fontSize: isMobile ? "13px" : "16px" }}
           >
             <p>{"< Go Back"}</p>
+          </button>
+
+          {/* Share comparison */}
+          <button
+            onClick={async () => {
+              let presetsURL = "";
+
+              const processes = [];
+
+              for (let item in lineValueDataset) {
+                const str = lineValueDataset[item].label;
+
+                // Find the index of the first space
+                const firstSpaceIndex = str.indexOf(" ");
+
+                // Find the index of the second space
+                let secondSpaceIndex = str.indexOf(" ", firstSpaceIndex + 1);
+
+                // If there's no second space, use the length of the string
+                if (secondSpaceIndex === -1) {
+                  secondSpaceIndex = str.length;
+                }
+
+                // Split the string
+                const priceAndYear = str.substring(0, secondSpaceIndex);
+                const brand = str.substring(secondSpaceIndex).trim(); // Trim leading spaces from the second part
+
+                const process = ["", "", ""];
+                const splitPriceAndYear = priceAndYear.split(" ");
+
+                process[0] = splitPriceAndYear[0];
+                process[1] = splitPriceAndYear[1];
+                process[2] = brand;
+
+                if (process[0] == "Average") {
+                  process[1] = "Average";
+                  process[2] = "Average";
+                }
+
+                processes.push(process);
+              }
+
+              const brands = [];
+
+              for (let item in brandValues) {
+                brands.push(brandValues[item].label);
+              }
+
+              // Lazy import this, becaues it includes pako
+              await import("../functions/BuildURLFriendlyPredict").then(
+                (module) => {
+                  // Construct the process array into a string
+                  presetsURL = module.default(processes, brands);
+                }
+              );
+
+              const shareURL = predictionLink + presetsURL;
+
+              // Copy to user's clipboard
+              await import("../functions/copyToClipboard").then((module) => {
+                // Construct the process array into a string
+                module.default(shareURL);
+              });
+
+              // Tell user copying to clipboard was successful
+              setCopiedLink(true);
+
+              if (analytics != null) {
+                logEvent(analytics, "Share Comparison", { Type: type });
+              }
+            }}
+            className="ShareTopButton"
+            style={{ fontSize: isMobile ? "13px" : "16px" }}
+          >
+            <p>Share</p>
           </button>
         </div>
 
@@ -1528,6 +1722,38 @@ export default function Prediction({
           style={{ margin: "10px 0" }}
         >
           <p>Close</p>
+        </button>
+      </Modal>
+
+      {/* Shows up when user clicks the share button */}
+      <Modal
+        isOpen={copiedLink}
+        contentLabel="Copied link to clipboard"
+        className={"ModalContainer"}
+        overlayClassName={"ModalOverlay"}
+        style={{
+          overlay: {
+            zIndex: 3,
+          },
+        }}
+      >
+        <p className="HeaderText">Share Comparison</p>
+        <div
+          className="ModalButtonSection"
+          style={{ marginBottom: 30, display: "flex", alignItems: "center" }}
+        >
+          <p className="SuccessText">
+            Successfully copied link to your clipboard
+          </p>
+        </div>
+
+        <button
+          className="NormalButtonNoBackground"
+          onClick={() => {
+            setCopiedLink(false);
+          }}
+        >
+          <p>Okay</p>
         </button>
       </Modal>
 

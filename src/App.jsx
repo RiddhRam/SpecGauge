@@ -174,6 +174,7 @@ const carsBrandValues = [
   { label: "Saab", value: normal },
   { label: "Saturn", value: normal },
   { label: "Scion", value: normal },
+  { label: "Shelby", value: reputable },
   { label: "Smart", value: fast },
   { label: "Spyker", value: normal },
   { label: "Subaru", value: reliable },
