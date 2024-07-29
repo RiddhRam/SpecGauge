@@ -27,7 +27,6 @@ import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
 
 import SetCanonical from "../functions/SetCanonical";
-import PakoInflate from "../functions/PakoInflate";
 
 ChartJS.register(
   CategoryScale,
@@ -368,6 +367,50 @@ export default function Prediction({
     return 0;
   }
 
+  function removeGraph(datasetIndex) {
+    if (analytics != null) {
+      logEvent(analytics, "Delete Graph Item", {
+        Item: lineValueDataset[datasetIndex].label,
+      });
+    }
+
+    // Remove this item and set the color change index to 0 to minimize errors
+    const newOriginalPoints = originalPoints.filter(
+      (array) => array !== originalPoints[datasetIndex]
+    );
+
+    setOriginalPoints(newOriginalPoints);
+
+    const newLineValueDataset = lineValueDataset.filter(
+      (array) => array !== lineValueDataset[datasetIndex]
+    );
+
+    const lineNames = [];
+
+    for (let item in newLineValueDataset) {
+      // Have to split it up so it works with BuildTitle, or else it puts each character in its own space
+      lineNames.push(newLineValueDataset[item].label.split());
+    }
+
+    setLineValueDataset(newLineValueDataset);
+
+    if (newLineValueDataset.length > 0) {
+      import("../functions/BuildTitle").then((module) => {
+        // Update the title
+        const newTitle = module.default(lineNames, "Predict:");
+        SetTitleAndDescription(newTitle, description, window.location.href);
+      });
+    } else {
+      SetTitleAndDescription(
+        `Predict Future ${type} Prices`,
+        description,
+        window.location.href
+      );
+    }
+
+    setColorChangeIndex(0);
+  }
+
   const updateColor = (newColor) => {
     // Update the points being displayed
     const newDataset = [];
@@ -508,8 +551,6 @@ export default function Prediction({
 
     if (presetsURL.length > 1) {
       setBeginLoadingPresets(true);
-    } else {
-      //SetTitleAndDescription(defaultTitle, description, window.location.href);
     }
   }, [type]);
 
@@ -518,12 +559,29 @@ export default function Prediction({
       setUpdateGraph(false);
       // Update the points being displayed
       const newDataset = [];
+      // This is just for the page title, it runs everytime user scrolls or zooms, not just when an item is added
+      const lineNames = [];
       for (let item in lineValueDataset) {
         let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
+        // Have to split it so it works with BuildTitle, or else it puts each character in its own space
+        lineNames.push(lineValueDataset[item].label.split());
         newItem.data = originalPoints[item].slice(startIndex, endIndex);
         newDataset.push(newItem);
       }
       setLineValueDataset(newDataset);
+      if (newDataset.length > 0) {
+        import("../functions/BuildTitle").then((module) => {
+          // Update the title
+          const newTitle = module.default(lineNames, "Predict:");
+          SetTitleAndDescription(newTitle, description, window.location.href);
+        });
+      } else {
+        SetTitleAndDescription(
+          `Predict Future ${type} Prices`,
+          description,
+          window.location.href
+        );
+      }
     }
     // Make sure there's no presets
     // URL of the page
@@ -1524,23 +1582,7 @@ export default function Prediction({
                     fontSize: 12,
                   }}
                   onClick={async () => {
-                    if (analytics != null) {
-                      logEvent(analytics, "Delete Graph Item", {
-                        Item: lineValueDataset[index].label,
-                      });
-                    }
-                    // Remove this item and set the color change index to 0 to minimize errors
-                    const newOriginalPoints = originalPoints.filter(
-                      (array) => array !== originalPoints[index]
-                    );
-                    setOriginalPoints(newOriginalPoints);
-
-                    const newLineValueDataset = lineValueDataset.filter(
-                      (array) => array !== lineValueDataset[index]
-                    );
-                    setLineValueDataset(newLineValueDataset);
-
-                    setColorChangeIndex(0);
+                    removeGraph(index);
                   }}
                 >
                   <p>Delete</p>
@@ -1598,22 +1640,7 @@ export default function Prediction({
                     fontSize: 14,
                   }}
                   onClick={async () => {
-                    if (analytics != null) {
-                      logEvent(analytics, "Delete Graph Item", {
-                        Item: lineValueDataset[index].label,
-                      });
-                    }
-                    // Remove this item and set the color change index to 0 to minimize errors
-                    const newOriginalPoints = originalPoints.filter(
-                      (array) => array !== originalPoints[index]
-                    );
-                    setOriginalPoints(newOriginalPoints);
-                    const newLineValueDataset = lineValueDataset.filter(
-                      (array) => array !== lineValueDataset[index]
-                    );
-                    setLineValueDataset(newLineValueDataset);
-
-                    setColorChangeIndex(0);
+                    removeGraph(index);
                   }}
                 >
                   <p>Delete</p>

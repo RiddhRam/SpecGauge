@@ -1,6 +1,3 @@
-6.7.1
-Update prediction screen title when new item is added
-
 7.0.0
 Add top, side and back view of vehicle sizes
 

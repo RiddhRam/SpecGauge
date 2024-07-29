@@ -11,10 +11,10 @@ export default function BuildTitle(processes, prefix) {
             title += ` ${processes[process][processItem]}`
       }
       
-      title += " vs "
+      title += " vs"
     }
 
-  title = title.slice(0, -4);
+  title = title.slice(0, -3);
 
   return title;
 }

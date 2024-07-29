@@ -5,7 +5,6 @@ import Modal from "react-modal";
 import { Navbar } from "../components/Navbar";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
-import BuildTitle from "../functions/BuildTitle";
 import PakoInflate from "../functions/PakoInflate";
 
 const SelectionModal = lazy(() => import("../components/SelectionModal"));
@@ -244,9 +243,11 @@ export default function Compare({
     if (pros.length == 0) {
       SetTitleAndDescription(defaultTitle, description, window.location.href);
     } else {
-      // Update the title
-      const newTitle = BuildTitle(saveComparisonProcesses, "Compare:");
-      SetTitleAndDescription(newTitle, description, window.location.href);
+      import("../functions/BuildTitle").then((module) => {
+        // Update the title
+        const newTitle = module.default(saveComparisonProcesses, "Compare:");
+        SetTitleAndDescription(newTitle, description, window.location.href);
+      });
     }
   }, [pros]);
 
