@@ -1,6 +1,7 @@
-6.8.3
+6.8.4
 Look into improving price prediction algorithm
 Try to lazy import chartjs (Maybe display an image until user interacts with it)
+Maybe move navbar from App.jsx into Loading.jsx
 
 7.0.0
 Rehaul comparison screen

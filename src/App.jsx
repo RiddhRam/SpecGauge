@@ -1,8 +1,11 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
+import { Loading } from "./components/Loading";
 import useWindowDimensions from "./useWindowDimensions";
-import WebHome from "./pages/WebHome";
+const WebHome = lazy(() => import("./pages/WebHome"));
 const WebLogIn = lazy(() => import("./pages/WebLogIn"));
 const WebUserAccount = lazy(() => import("./pages/WebUserAccount"));
 const Compare = lazy(() => import("./pages/Compare"));
@@ -13,10 +16,6 @@ const NoPage = lazy(() => import("./pages/NoPage"));
 // Firebase
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, analytics } from "./firebaseConfig";
-
-import { Navbar } from "./components/Navbar";
-import { Footer } from "./components/Footer";
-import { Loading } from "./components/Loading";
 
 const fast = -0.12;
 const normal = -0.09;
@@ -347,13 +346,35 @@ export default function App() {
           {/* in case user goes to specgauge.com, instead of specgauge.com/home */}
           <Route
             path="/"
-            element={<WebHome isMobile={isMobile}></WebHome>}
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
+                }
+              >
+                <WebHome isMobile={isMobile}></WebHome>
+              </Suspense>
+            }
           ></Route>
           {/* the home page */}
           <Route
             index
             path="/home"
-            element={<WebHome isMobile={isMobile}></WebHome>}
+            element={
+              <Suspense
+                fallback={
+                  <>
+                    <Navbar isMobile={isMobile}></Navbar>
+                    <Loading></Loading>
+                  </>
+                }
+              >
+                <WebHome isMobile={isMobile}></WebHome>
+              </Suspense>
+            }
           ></Route>
           {/* the login page */}
           <Route
