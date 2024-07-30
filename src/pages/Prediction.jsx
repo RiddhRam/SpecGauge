@@ -1,9 +1,9 @@
 import { Navbar } from "../components/Navbar";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import { HexColorPicker } from "react-colorful";
+
 import Modal from "react-modal";
 
 Modal.setAppElement("#SpecGauge");
@@ -27,6 +27,19 @@ import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
 
 import SetCanonical from "../functions/SetCanonical";
+const PredictionBrandSelectionModal = lazy(() =>
+  import("../components/PredictionBrandSelectionModal")
+);
+const PredictionEditModal = lazy(() =>
+  import("../components/PredictionEditModal")
+);
+const PredictionOptionsModal = lazy(() =>
+  import("../components/PredictionOptionsModal")
+);
+const SimpleSuccessModal = lazy(() =>
+  import("../components/SimpleSuccessModal")
+);
+import SimpleErrorModal from "../components/SImpleErrorModal";
 
 ChartJS.register(
   CategoryScale,
@@ -1469,53 +1482,22 @@ export default function Prediction({
           },
         }}
       >
-        <p className="HeaderText">Select a brand</p>
-
-        <input
-          type="text"
-          value={searchString}
-          className="TextInput"
-          placeholder="Search"
-          id={"SearchString" + type}
-          onChange={(text) => checkNoResults(text.target.value)}
-          style={{ margin: "15px 0" }}
-        ></input>
-
-        <div className="ModalButtonSection">
-          {brandValues.map(
-            (item, index) =>
-              /* Brand button */
-              item.label.toUpperCase().includes(searchString.toUpperCase()) && (
-                <button
-                  className="NormalButtonNoBackground"
-                  onClick={() => {
-                    setBrand(item.label);
-                    setShowBrandModal(false);
-                    setSearchString("");
-                  }}
-                  key={index}
-                  style={{
-                    padding: "15px 10px",
-                    maxWidth: "250px",
-                  }}
-                >
-                  {item.label}
-                </button>
-              )
-          )}
-          {noResultsFound && <p className="SimpleText">No Results Found</p>}
-        </div>
-        {/* Cancel button */}
-        <button
-          onClick={() => {
-            // Hide the modal
-            setShowBrandModal(false);
-          }}
-          className="DangerButton"
-          style={{ margin: "10px 0" }}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
         >
-          <p>Cancel</p>
-        </button>
+          <PredictionBrandSelectionModal
+            checkNoResults={checkNoResults}
+            searchString={searchString}
+            brandValues={brandValues}
+            noResultsFound={noResultsFound}
+            setShowBrandModal={setShowBrandModal}
+            type={type}
+            setBrand={setBrand}
+            setSearchString={setSearchString}
+          ></PredictionBrandSelectionModal>
+        </Suspense>
       </Modal>
 
       {/* Edit Modal */}
@@ -1530,148 +1512,21 @@ export default function Prediction({
           },
         }}
       >
-        <p className="HeaderText">Edit Graph</p>
-        <div className="ModalButtonSection" style={{ width: "70%" }}>
-          {lineValueDataset.map((item, index) =>
-            isMobile ? (
-              /* Mobile display */
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  borderStyle: "solid",
-                  borderWidth: 3,
-                  borderColor: item.borderColor,
-                  padding: "15px 7px",
-                  margin: "5px 0",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  {/* Label name */}
-                  <p
-                    style={{ fontSize: 14, marginRight: 5 }}
-                    className="PlainText"
-                  >
-                    {item.label}
-                  </p>
-
-                  {/* Change color */}
-                  {colorChangeIndex == index ? (
-                    // Color picker
-                    <HexColorPicker
-                      color={item.borderColor}
-                      onChange={updateColor}
-                      style={{ height: 150, width: 250 }}
-                    ></HexColorPicker>
-                  ) : (
-                    // Enable Color Picker
-                    <button
-                      style={{
-                        width: 20,
-                        height: 20,
-                        backgroundColor: item.borderColor,
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setColorChangeIndex(index);
-                      }}
-                    ></button>
-                  )}
-                </div>
-
-                {/* Delete Button */}
-                <button
-                  className="DangerButtonNoBackground"
-                  style={{
-                    fontSize: 12,
-                  }}
-                  onClick={async () => {
-                    removeGraph(index);
-                  }}
-                >
-                  <p>Delete</p>
-                </button>
-              </div>
-            ) : (
-              /* Computer display */
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  borderStyle: "solid",
-                  borderWidth: 3,
-                  borderColor: item.borderColor,
-                  padding: "15px 7px",
-                  margin: "5px 0",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                {/* Label name */}
-                <p
-                  style={{ fontSize: 20, marginRight: 5 }}
-                  className="PlainText"
-                >
-                  {item.label}
-                </p>
-
-                {/* Change color */}
-                {colorChangeIndex == index ? (
-                  // Color picker
-                  <HexColorPicker
-                    color={item.borderColor}
-                    onChange={updateColor}
-                  ></HexColorPicker>
-                ) : (
-                  // Enable Color Picker
-                  <button
-                    style={{
-                      width: 20,
-                      height: 20,
-                      backgroundColor: item.borderColor,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      setColorChangeIndex(index);
-                    }}
-                  ></button>
-                )}
-
-                {/* Delete Button */}
-                <button
-                  className="DangerButtonNoBackground"
-                  style={{
-                    fontSize: 14,
-                  }}
-                  onClick={async () => {
-                    removeGraph(index);
-                  }}
-                >
-                  <p>Delete</p>
-                </button>
-              </div>
-            )
-          )}
-        </div>
-        {/* Close button */}
-        <button
-          onClick={() => {
-            // Hide the modal
-            setShowEditModal(false);
-          }}
-          className="DangerButton"
-          style={{ margin: "10px 0" }}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
         >
-          <p>Close</p>
-        </button>
+          <PredictionEditModal
+            lineValueDataset={lineValueDataset}
+            colorChangeIndex={colorChangeIndex}
+            updateColor={updateColor}
+            setColorChangeIndex={setColorChangeIndex}
+            removeGraph={removeGraph}
+            setShowEditModal={setShowEditModal}
+            isMobile={isMobile}
+          />
+        </Suspense>
       </Modal>
 
       {/* Options Modal */}
@@ -1686,81 +1541,20 @@ export default function Prediction({
           },
         }}
       >
-        <p className="HeaderText">Select Options</p>
-        <div style={{ width: "70%" }}>
-          {rateAdjustments &&
-            rateAdjustments.map((item, index) => (
-              <div
-                key={item}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "10px",
-                }}
-              >
-                <p
-                  style={{ fontSize: isMobile ? 16 : 20 }}
-                  className="PlainText"
-                >
-                  {item[0]}
-                </p>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={rateAdjustments[index][1]}
-                    onChange={() => {
-                      // first parameter is name of option
-                      // second parameter is value
-                      // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
-                      // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
-                      // Create a new rate adjustment array
-                      const newRateAdjustments = [];
-                      // Iterate through the last one and copy everything
-                      for (let item in rateAdjustments) {
-                        // If the current item isn't that same as the one that changed
-                        if (item != index) {
-                          // Simply add it
-                          newRateAdjustments.push(rateAdjustments[item]);
-                        } else {
-                          // If it is the item that changed then copy it
-                          const newRateAdjustment = rateAdjustments[item];
-                          // But change the boolean value to be opposite
-                          newRateAdjustment[1] = !rateAdjustments[item][1];
-                          // Then add it
-                          newRateAdjustments.push(newRateAdjustment);
-                          if (analytics != null) {
-                            logEvent(analytics, `Toggle ${item[0]}`, {
-                              // Screen type
-                              Type: type,
-                              // Category type
-                              NewValue: !rateAdjustments[item][1],
-                            });
-                          }
-                        }
-                      }
-
-                      // Update the array
-                      setRateAdjustments(newRateAdjustments);
-                    }}
-                  ></input>
-                  <span className="slider"></span>
-                </label>
-              </div>
-            ))}
-        </div>
-
-        {/* Close button */}
-        <button
-          onClick={() => {
-            // Hide the modal
-            setShowOptionsModal(false);
-          }}
-          className="DangerButton"
-          style={{ margin: "10px 0" }}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
         >
-          <p>Close</p>
-        </button>
+          <PredictionOptionsModal
+            setShowOptionsModal={setShowOptionsModal}
+            setRateAdjustments={setRateAdjustments}
+            rateAdjustments={rateAdjustments}
+            isMobile={isMobile}
+            type={type}
+            analytics={analytics}
+          />
+        </Suspense>
       </Modal>
 
       {/* Shows up when user clicks the share button */}
@@ -1775,24 +1569,17 @@ export default function Prediction({
           },
         }}
       >
-        <p className="HeaderText">Share Comparison</p>
-        <div
-          className="ModalButtonSection"
-          style={{ marginBottom: 30, display: "flex", alignItems: "center" }}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
         >
-          <p className="SuccessText">
-            Successfully copied link to your clipboard
-          </p>
-        </div>
-
-        <button
-          className="NormalButtonNoBackground"
-          onClick={() => {
-            setCopiedLink(false);
-          }}
-        >
-          <p>Okay</p>
-        </button>
+          <SimpleSuccessModal
+            title={"Share Comparison"}
+            message={"Successfully copied link to your clipboard"}
+            setModalVisible={setCopiedLink}
+          ></SimpleSuccessModal>
+        </Suspense>
       </Modal>
 
       {/* Error Modal */}
@@ -1807,19 +1594,16 @@ export default function Prediction({
           },
         }}
       >
-        <p className="HeaderText">Error</p>
-        <p className="ErrorText">{error}</p>
-        {/* Okay button */}
-        <button
-          onClick={() => {
-            // Hide the modal
-            setShowErrorModal(false);
-          }}
-          className="NormalButton"
-          style={{ margin: "10px 0" }}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
         >
-          <p>Okay</p>
-        </button>
+          <SimpleErrorModal
+            message={error}
+            setModalVisible={setShowErrorModal}
+          ></SimpleErrorModal>
+        </Suspense>
       </Modal>
     </>
   );
