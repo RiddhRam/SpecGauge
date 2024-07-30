@@ -12,8 +12,7 @@ const NoPage = lazy(() => import("./pages/NoPage"));
 
 // Firebase
 import { onAuthStateChanged } from "firebase/auth";
-import { query, where, collection, getDocs } from "firebase/firestore";
-import { db, auth, analytics } from "./firebaseConfig";
+import { auth, analytics } from "./firebaseConfig";
 
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
@@ -216,188 +215,98 @@ export default function App() {
   const [userVal, setUserVal] = useState(false);
   const isMobile = useWindowDimensions();
 
-  const queryAutomobilesFunction = async (brand, model) => {
-    const colRef = collection(db, "Automobiles");
-    const q = await query(
-      colRef,
-      where("Brand", "==", brand),
-      where("Model", "==", model)
+  async function queryAutomobilesFunction(brand, model) {
+    let result = null;
+    await import("./functions/QueryAutomobilesFunction").then(
+      async (module) => {
+        result = await module.default(brand, model);
+        console.log("Importing");
+      }
     );
+    return result;
+  }
 
-    const snapshot = await getDocs(q);
-
-    const automobilesArray = [];
-    snapshot.forEach((doc) => {
-      automobilesArray.push(doc.data());
-    });
-
-    return automobilesArray;
-  };
-
-  const directQueryAutomobilesFunction = async (product) => {
-    const colRef = collection(db, "Automobiles");
-    const q = await query(
-      colRef,
-      where("Brand", "==", product[0]),
-      where("Model", "==", product[1]),
-      where("Year", "==", product[2]),
-      where("Trim", "==", product[3])
+  async function directQueryAutomobilesFunction(product) {
+    let result = null;
+    await import("./functions/DirectQueryAutomobilesFunction").then(
+      async (module) => {
+        result = await module.default(product);
+      }
     );
+    return result;
+  }
 
-    const snapshot = await getDocs(q);
-    const automobilesArray = [];
-    snapshot.forEach((doc) => {
-      automobilesArray.push(doc.data());
+  async function queryConsolesFunction(brand, name) {
+    let result = null;
+    await import("./functions/QueryConsolesFunction").then(async (module) => {
+      result = await module.default(brand, name);
     });
+    return result;
+  }
 
-    // Should only be 1 item so return the first
-    return automobilesArray[0];
-  };
-
-  const queryConsolesFunction = async (brand, name) => {
-    const colRef = collection(db, "Consoles");
-    const q = await query(
-      colRef,
-      where("Brand", "==", brand),
-      where("Name", "==", name)
+  async function directQueryConsolesFunction(product) {
+    let result = null;
+    await import("./functions/DirectQueryConsolesFunction").then(
+      async (module) => {
+        result = await module.default(product);
+      }
     );
+    return result;
+  }
 
-    const snapshot = await getDocs(q);
-
-    const ConsolesArray = [];
-    snapshot.forEach((doc) => {
-      ConsolesArray.push(doc.data());
-    });
-
-    return ConsolesArray;
-  };
-
-  const directQueryConsolesFunction = async (product) => {
-    const colRef = collection(db, "Consoles");
-    const q = query(
-      colRef,
-      where("Brand", "==", product[0]),
-      where("Name", "==", product[1])
+  async function queryGraphicsCardsFunction(brand, generation) {
+    let result = null;
+    await import("./functions/QueryGraphicsCardsFunction").then(
+      async (module) => {
+        result = await module.default(brand, generation);
+      }
     );
+    return result;
+  }
 
-    const snapshot = await getDocs(q);
-    const consolesArray = [];
-    snapshot.forEach((doc) => {
-      consolesArray.push(doc.data());
-    });
-
-    // Should only be 1 item so return the first
-    return consolesArray[0];
-  };
-
-  const queryGraphicsCardsFunction = async (brand, generation) => {
-    const colRef = collection(db, "Graphics Cards");
-    const q = await query(
-      colRef,
-      where("Brand", "==", brand),
-      where("Generation", "==", generation)
+  async function directQueryGraphicsCardsFunction(product) {
+    let result = null;
+    await import("./functions/DirectQueryGraphicsCardsFunction").then(
+      async (module) => {
+        result = await module.default(product);
+      }
     );
+    return result;
+  }
 
-    const snapshot = await getDocs(q);
-
-    const GraphicsCardsArray = [];
-    snapshot.forEach((doc) => {
-      GraphicsCardsArray.push(doc.data());
+  async function queryCPUsFunction(brand, generation) {
+    let result = null;
+    await import("./functions/QueryCPUsFunction").then(async (module) => {
+      result = await module.default(brand, generation);
     });
+    return result;
+  }
 
-    return GraphicsCardsArray;
-  };
+  async function directQueryCPUsFunction(product) {
+    let result = null;
+    await import("./functions/DirectQueryCPUsFunction").then(async (module) => {
+      result = await module.default(product);
+    });
+    return result;
+  }
 
-  const directQueryGraphicsCardsFunction = async (product) => {
-    const colRef = collection(db, "Graphics Cards");
-    const q = query(
-      colRef,
-      where("Brand", "==", product[0]),
-      where("Generation", "==", product[1]),
-      where("Card", "==", product[2])
+  async function queryDronesFunction(brand, name) {
+    let result = null;
+    await import("./functions/QueryDronesFunction").then(async (module) => {
+      result = await module.default(brand, name);
+    });
+    return result;
+  }
+
+  async function directQueryDronesFunction(product) {
+    let result = null;
+    await import("./functions/DirectQueryDronesFunction").then(
+      async (module) => {
+        result = await module.default(product);
+      }
     );
-
-    const snapshot = await getDocs(q);
-    const graphicsCardsArray = [];
-    snapshot.forEach((doc) => {
-      graphicsCardsArray.push(doc.data());
-    });
-    // Should only be 1 item so return the first
-    return graphicsCardsArray[0];
-  };
-
-  const queryCPUsFunction = async (brand, generation) => {
-    const colRef = collection(db, "CPUs");
-    const q = await query(
-      colRef,
-      where("Brand", "==", brand),
-      where("Generation", "==", generation)
-    );
-
-    const snapshot = await getDocs(q);
-
-    const CPUsArray = [];
-    snapshot.forEach((doc) => {
-      CPUsArray.push(doc.data());
-    });
-
-    return CPUsArray;
-  };
-
-  const directQueryCPUsFunction = async (product) => {
-    const colRef = collection(db, "CPUs");
-    const q = query(
-      colRef,
-      where("Brand", "==", product[0]),
-      where("Generation", "==", product[1]),
-      where("CPU", "==", product[2])
-    );
-
-    const snapshot = await getDocs(q);
-    const cpusArray = [];
-    snapshot.forEach((doc) => {
-      cpusArray.push(doc.data());
-    });
-
-    // Should only be 1 item so return the first
-    return cpusArray[0];
-  };
-
-  const queryDronesFunction = async (brand, name) => {
-    const colRef = collection(db, "Drones");
-    const q = await query(
-      colRef,
-      where("Brand", "==", brand),
-      where("Name", "==", name)
-    );
-
-    const snapshot = await getDocs(q);
-
-    const dronesArray = [];
-    snapshot.forEach((doc) => {
-      dronesArray.push(doc.data());
-    });
-
-    return dronesArray;
-  };
-
-  const directQueryDronesFunction = async (product) => {
-    const colRef = collection(db, "Drones");
-    const q = query(
-      colRef,
-      where("Brand", "==", product[0]),
-      where("Name", "==", product[1])
-    );
-
-    const snapshot = await getDocs(q);
-    const dronesArray = [];
-    snapshot.forEach((doc) => {
-      dronesArray.push(doc.data());
-    });
-
-    // Should only be 1 item so return the first
-    return dronesArray[0];
-  };
+    return result;
+  }
 
   useEffect(() => {
     // listen for changes (sign in, sign out)

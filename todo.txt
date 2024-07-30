@@ -1,11 +1,10 @@
+6.8.0
+Split modals in lazy imports where possible
+
 7.0.0
 Add top, side and back view of vehicle sizes
 
 7.1.0
-Put firebase query functions for comparison pages in their own files
-Split modals in lazy imports where possible
-
-7.2.0
 Add regional languages, fallback language is english
 
 8.0.0

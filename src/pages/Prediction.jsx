@@ -11,7 +11,7 @@ Modal.setAppElement("#SpecGauge");
 import { Line } from "react-chartjs-2";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import seedrandom from "seedrandom";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -274,10 +274,15 @@ export default function Prediction({
       // For each year it was released, calculate the price for that year
       // Get the rng value
       const seed = `${price}${brand}${year}${lastPrice}${rateAdjustments}`;
-      const rng = seedrandom(seed);
+      let rng = null;
+      import("../functions/SeedrandomImport").then((module) => {
+        const rngFunc = module.default(seed);
+        rng = rngFunc();
+      });
+
       // Get the new price
       let newCalculatedPrice =
-        price * Math.E ** ((rate + rng() * 0.02) * (i - year));
+        price * Math.E ** ((rate + rng * 0.02) * (i - year));
       // Difference between price of last iteration and this one
       let difference = newCalculatedPrice - lastPrice;
 
@@ -292,7 +297,7 @@ export default function Prediction({
       // If last price was greater than 1.5x the original value, and last price wasn't an increase
       if (lastPrice > originalPrice * 1.5 && !lastPriceIncreased) {
         // The price will hover around twice it's original value
-        const differenceRate = rng() * -0.04;
+        const differenceRate = rng * -0.04;
         difference = lastPrice * differenceRate;
         lastPriceIncreased = false;
       }
@@ -322,14 +327,14 @@ export default function Prediction({
       else {
         // Difference is reduced to 2% from the last price if rate isn't positive
         if (rate < 0) {
-          difference = lastPrice * rng() * -0.06;
+          difference = lastPrice * rng * -0.06;
           lastPriceIncreased = false;
         }
       }
 
       /* If difference is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
       if (difference + lastPrice > originalPrice * 2.1) {
-        difference = originalPrice * 0.1 * rng();
+        difference = originalPrice * 0.1 * rng;
       }
       prices.push(lastPrice + difference);
       lastPrice = lastPrice + difference;

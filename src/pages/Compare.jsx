@@ -4,8 +4,6 @@ import Modal from "react-modal";
 
 import { Navbar } from "../components/Navbar";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
-import GetProsAndSpecs from "../functions/GetProsAndSpecs";
-import PakoInflate from "../functions/PakoInflate";
 
 const SelectionModal = lazy(() => import("../components/SelectionModal"));
 const WebAccountHandler = lazy(() => import("../components/WebAccountHandler"));
@@ -293,65 +291,70 @@ export default function Compare({
     }
   }, [beginLoadingPresets, QueryProcess]);
 
-  const updateTypeData = () => {
-    if (type == "Vehicles") {
-      import("../data/carsData").then((module) => {
-        const typeDataFunc = module.carsData;
+  const updateTypeData = async () => {
+    // LAZY IMPORT INCEPTION
+    // Import PakoInflate, then import type data
+    import("../functions/PakoInflate").then((module) => {
+      const PakoInflate = module.default;
+      if (type == "Vehicles") {
+        import("../data/carsData").then((module) => {
+          const typeDataFunc = module.carsData;
 
-        const typeData = typeDataFunc();
+          const typeData = typeDataFunc();
 
-        setProcess(typeData[0]);
-        setQueryProcess(typeData[1]);
-        // Decompressed (inflated) String Values into JSON values
-        setBrands(JSON.parse(PakoInflate(typeData[2])));
-        setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-        setCategories(typeData[4]);
-      });
-    } else if (type == "Consoles") {
-      import("../data/consolesData").then((module) => {
-        const typeData = module.consolesData();
+          setProcess(typeData[0]);
+          setQueryProcess(typeData[1]);
+          // Decompressed (inflated) String Values into JSON values
+          setBrands(JSON.parse(PakoInflate(typeData[2])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
+          setCategories(typeData[4]);
+        });
+      } else if (type == "Consoles") {
+        import("../data/consolesData").then((module) => {
+          const typeData = module.consolesData();
 
-        setProcess(typeData[0]);
-        setQueryProcess(typeData[1]);
-        // Decompressed (inflated) String Values into JSON values
-        setBrands(JSON.parse(PakoInflate(typeData[2])));
-        setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-        setCategories(typeData[4]);
-      });
-    } else if (type == "CPUs") {
-      import("../data/cpusData").then((module) => {
-        const typeData = module.cpusData();
+          setProcess(typeData[0]);
+          setQueryProcess(typeData[1]);
+          // Decompressed (inflated) String Values into JSON values
+          setBrands(JSON.parse(PakoInflate(typeData[2])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
+          setCategories(typeData[4]);
+        });
+      } else if (type == "CPUs") {
+        import("../data/cpusData").then((module) => {
+          const typeData = module.cpusData();
 
-        setProcess(typeData[0]);
-        setQueryProcess(typeData[1]);
-        // Decompressed (inflated) String Values into JSON values
-        setBrands(JSON.parse(PakoInflate(typeData[2])));
-        setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-        setCategories(typeData[4]);
-      });
-    } else if (type == "Graphics Cards") {
-      import("../data/graphicsCardsData").then((module) => {
-        const typeData = module.graphicsCardsData();
+          setProcess(typeData[0]);
+          setQueryProcess(typeData[1]);
+          // Decompressed (inflated) String Values into JSON values
+          setBrands(JSON.parse(PakoInflate(typeData[2])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
+          setCategories(typeData[4]);
+        });
+      } else if (type == "Graphics Cards") {
+        import("../data/graphicsCardsData").then((module) => {
+          const typeData = module.graphicsCardsData();
 
-        setProcess(typeData[0]);
-        setQueryProcess(typeData[1]);
-        // Decompressed (inflated) String Values into JSON values
-        setBrands(JSON.parse(PakoInflate(typeData[2])));
-        setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-        setCategories(typeData[4]);
-      });
-    } else {
-      import("../data/dronesData").then((module) => {
-        const typeData = module.dronesData();
+          setProcess(typeData[0]);
+          setQueryProcess(typeData[1]);
+          // Decompressed (inflated) String Values into JSON values
+          setBrands(JSON.parse(PakoInflate(typeData[2])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
+          setCategories(typeData[4]);
+        });
+      } else {
+        import("../data/dronesData").then((module) => {
+          const typeData = module.dronesData();
 
-        setProcess(typeData[0]);
-        setQueryProcess(typeData[1]);
-        // Decompressed (inflated) String Values into JSON values
-        setBrands(JSON.parse(PakoInflate(typeData[2])));
-        setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-        setCategories(typeData[4]);
-      });
-    }
+          setProcess(typeData[0]);
+          setQueryProcess(typeData[1]);
+          // Decompressed (inflated) String Values into JSON values
+          setBrands(JSON.parse(PakoInflate(typeData[2])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
+          setCategories(typeData[4]);
+        });
+      }
+    });
   };
 
   // This returns an array that is just the base of the pros string array, It's just empty categories with \n
@@ -403,8 +406,14 @@ export default function Compare({
           parameterArray.push(newJSON);
         }
 
+        let prosAndSpecs = null;
         // prettier-ignore
-        const prosAndSpecs = GetProsAndSpecs(parameterArray, result, Categories);
+        await import("../functions/GetProsAndSpecs").then(
+          (module) => {
+            // Deconstruct the string into a process array
+            prosAndSpecs = module.default(parameterArray, result, Categories);
+          }
+        );
 
         // prettier-ignore
         setPros((prevPros) => [...prevPros, prosAndSpecs[0]]);
