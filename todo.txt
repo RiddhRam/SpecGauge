@@ -1,4 +1,4 @@
-6.8.1
+6.8.2
 Split modals in lazy imports where possible
 
 7.0.0
