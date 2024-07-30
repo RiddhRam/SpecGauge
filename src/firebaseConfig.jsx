@@ -1,10 +1,8 @@
 // Firebase
 import { initializeApp } from "firebase/app";
 import { browserLocalPersistence, initializeAuth } from "firebase/auth";
-//import { getFirestore } from "firebase/firestore";
 
 import { getAnalytics, isSupported } from "firebase/analytics";
-import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA10cNsdHKS-hVwScviUKrmcXbduduTFVA",
@@ -19,7 +17,6 @@ const firebaseConfig = {
 // Initialize firebase
 const app = initializeApp(firebaseConfig);
 //connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-//const db = getFirestore();
 
 const auth = initializeAuth(app, {
   persistence: browserLocalPersistence,
@@ -36,6 +33,4 @@ if (analyticsSettings !== "true") {
   });
 }
 
-const functions = getFunctions();
-
-export { app, auth, analytics, functions };
+export { app, auth, analytics };

@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { signOut, sendPasswordResetEmail } from "firebase/auth";
 import { logEvent } from "firebase/analytics";
 import { httpsCallable } from "firebase/functions";
-import { auth, analytics, functions } from "../firebaseConfig";
+import { auth, analytics } from "../firebaseConfig";
 
 const compressedBrands = [
   // Cars
@@ -97,10 +97,13 @@ export default function WebUserAccount({ isMobile }) {
       logEvent(analytics, "Get saved comparisons");
     }
     try {
-      const GetSavedComparisons = httpsCallable(
-        functions,
-        "GetSavedComparisons"
-      );
+      let GetSavedComparisons = null;
+      await import("../functions/LazyLoadGetFunctions").then((module) => {
+        // Update the title
+        const functions = module.default();
+        GetSavedComparisons = httpsCallable(functions, "GetSavedComparisons");
+      });
+
       const result = await GetSavedComparisons(email);
       return result.data;
     } catch (error) {
@@ -148,10 +151,16 @@ export default function WebUserAccount({ isMobile }) {
     };
 
     try {
-      const DeleteSavedComparisons = httpsCallable(
-        functions,
-        "DeleteSavedComparisons"
-      );
+      let DeleteSavedComparisons = null;
+      await import("../functions/LazyLoadGetFunctions").then((module) => {
+        // Update the title
+        const functions = module.default();
+        DeleteSavedComparisons = httpsCallable(
+          functions,
+          "DeleteSavedComparisons"
+        );
+      });
+
       const result = await DeleteSavedComparisons(comparison);
       return result.data;
     } catch (error) {

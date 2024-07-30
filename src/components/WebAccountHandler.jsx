@@ -11,7 +11,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { httpsCallable } from "firebase/functions";
-import { auth, functions } from "../firebaseConfig";
+import { auth } from "../firebaseConfig";
 
 export default function WebAccountHandler({
   screenType,
@@ -64,8 +64,17 @@ export default function WebAccountHandler({
     try {
       await createUserWithEmailAndPassword(auth, email, password); // returns a response
       try {
-        const InitializeAccount = httpsCallable(functions, "InitializeAccount");
-        const result = await InitializeAccount(email); // returns a response
+        await import("../functions/LazyLoadGetFunctions").then(
+          async (module) => {
+            // Update the title
+            const functions = module.default();
+            const InitializeAccount = httpsCallable(
+              functions,
+              "InitializeAccount"
+            );
+            const result = await InitializeAccount(email); // returns a response
+          }
+        );
       } catch (error) {}
       // if it's not a seperate popup window, go to home page
       if (screenType == "tab") {
