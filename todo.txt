@@ -2,6 +2,7 @@
 Split modals in lazy imports where possible
 
 7.0.0
+Rehaul comparison screen
 Add top, side and back view of vehicle sizes
 
 7.1.0

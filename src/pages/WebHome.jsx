@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Modal from "react-modal";
 Modal.setAppElement("#SpecGauge");
@@ -11,6 +11,11 @@ import PredictIcon from "../assets/Prediction Icon.svg";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
 import SetCanonical from "../functions/SetCanonical";
+
+const HomeDataRequestModal = lazy(() =>
+  import("../components/HomeDataRequestModal")
+);
+const HomeCategoryModal = lazy(() => import("../components/HomeCategoryModal"));
 
 // The categories to select from the modals
 const comparisonCategories = [
@@ -121,7 +126,6 @@ const mobileTrendingComparisons = [
 ];
 
 export default function WebHome({ isMobile }) {
-  const dropdownRef = useRef(null);
   {
     /* This is for the modal that determines the comparison type */
   }
@@ -131,16 +135,7 @@ export default function WebHome({ isMobile }) {
   const [predictModalVisible, setPredictModalVisible] = useState(false);
   // Show request data modal
   const [dataModalVisible, setDataModalVisible] = useState(false);
-  // Data being requested
-  const [requestData, setRequestData] = useState("");
-  // In case user doesn't select a type or requests no data
-  const [invalidData, setInvalidData] = useState(false);
-  // Tell user reason data was invalid
-  const [invalidDataReason, setInvalidDataReason] = useState("");
-  // To simulate a loading time when user requests data, so user feels more satisfied, also prevents spam
-  const [requestingData, setRequestingData] = useState(false);
-  // Show this when user is done, to confirm, and to prevent spam
-  const [doneRequest, setDoneRequest] = useState(false);
+
   const navigate = useNavigate();
   {
     /* Records the initial load of the website */
@@ -449,44 +444,19 @@ export default function WebHome({ isMobile }) {
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <p className="HeaderText">Select a category</p>
-        {/* Buttons */}
-        <div className="ModalButtonSection">
-          {/* Buttons to select a category */}
-          {comparisonCategories.map((item, index) => (
-            <button
-              className="NormalButtonNoBackground"
-              key={item}
-              onClick={() => {
-                if (analytics != null) {
-                  logEvent(analytics, "Modal Button", {
-                    Type: "Comparison",
-                    Category: item,
-                    Platform: isMobile ? "Mobile" : "Computer",
-                  });
-                }
-                navigate(`${comparisonLinks[index]}`);
-                setCompareModalVisible(false);
-              }}
-              style={{
-                width: "95%",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <p>{item}</p>
-            </button>
-          ))}
-        </div>
-        {/* Cancel Button */}
-        <button
-          className="DangerButton"
-          onClick={() => {
-            setCompareModalVisible(false);
-          }}
-          style={{ marginBottom: "20px" }}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
         >
-          Cancel
-        </button>
+          <HomeCategoryModal
+            categories={comparisonCategories}
+            analytics={analytics}
+            isMobile={isMobile}
+            setModalVisible={setCompareModalVisible}
+            links={comparisonLinks}
+          />
+        </Suspense>
       </Modal>
 
       {/* Prediction Category selection modal */}
@@ -496,46 +466,19 @@ export default function WebHome({ isMobile }) {
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <p className="HeaderText">Select a category</p>
-        {/* Buttons */}
-        <div className="ModalButtonSection">
-          {/* Buttons to select a category */}
-          {predictionCategories.map((item, index) => (
-            <button
-              className="NormalButtonNoBackground"
-              key={item}
-              onClick={() => {
-                if (analytics != null) {
-                  logEvent(analytics, "Modal Button", {
-                    Type: "Prediction",
-                    Category: item,
-                    Platform: isMobile ? "Mobile" : "Computer",
-                  });
-                }
-
-                navigate(`${predictionLinks[index]}`);
-
-                setPredictModalVisible(false);
-              }}
-              style={{
-                width: "95%",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <p>{item}</p>
-            </button>
-          ))}
-        </div>
-        {/* Cancel Button */}
-        <button
-          className="DangerButton"
-          onClick={() => {
-            setPredictModalVisible(false);
-          }}
-          style={{ marginBottom: "20px" }}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
         >
-          Cancel
-        </button>
+          <HomeCategoryModal
+            categories={predictionCategories}
+            analytics={analytics}
+            isMobile={isMobile}
+            setModalVisible={setPredictModalVisible}
+            links={predictionLinks}
+          />
+        </Suspense>
       </Modal>
 
       {/* Data Request modal */}
@@ -545,125 +488,17 @@ export default function WebHome({ isMobile }) {
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <p className="HeaderText">Submit or Request Comparison Data</p>
-
-        {!requestingData && !doneRequest && (
-          <>
-            {/* Dropdown Menu */}
-            <select
-              name="type"
-              id="type"
-              ref={dropdownRef}
-              style={{ marginBottom: "30px" }}
-            >
-              <option value="">Please choose a type</option>
-              <option value="Request-Product">Request Product</option>
-              <option value="Request-Category">Request Category</option>
-              <option value="Submit-Data">Submit Data</option>
-              <option value="Submit-Fix">Submit Fix</option>
-            </select>
-
-            <textarea
-              value={requestData}
-              className="RequestDataTextInput"
-              placeholder="What would you like us to do?"
-              onChange={(event) => setRequestData(event.target.value)}
-            ></textarea>
-
-            {invalidData && <p className="ErrorText">{invalidDataReason}</p>}
-
-            {/* Buttons */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                height: "50px",
-                padding: "10px",
-              }}
-            >
-              {/* Cancel button */}
-              <button
-                onClick={() => {
-                  setDataModalVisible(false);
-                  setInvalidData(false);
-                }}
-                className="DangerButton"
-                style={{
-                  marginRight: "10px",
-                  fontSize: isMobile ? "12px" : "20px",
-                }}
-              >
-                <p>Cancel</p>
-              </button>
-
-              {/* Submit or Request button */}
-              <button
-                onClick={() => {
-                  if (dropdownRef.current.value.split("-")[0] == "") {
-                    setInvalidData(true);
-                    setInvalidDataReason("Please choose a type first");
-                  } else if (requestData == "") {
-                    setInvalidData(true);
-                    setInvalidDataReason(
-                      "Please tell us what you want us to add"
-                    );
-                  } else {
-                    setRequestingData(true);
-                    setTimeout(() => {
-                      setRequestingData(false);
-                      setDoneRequest(true);
-                    }, 200);
-
-                    if (analytics != null) {
-                      logEvent(analytics, dropdownRef.current.value, {
-                        // Request data
-                        Request: requestData,
-                      });
-                    }
-
-                    setInvalidData(false);
-                  }
-                }}
-                className="NormalButton"
-                style={{
-                  fontSize: isMobile ? "12px" : "20px",
-                }}
-              >
-                <p>Submit/Request</p>
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* Show this so user sees a buffer animation */}
-        {requestingData && (
-          <div
-            className="ActivityIndicator"
-            style={{ marginBottom: "20px" }}
-          ></div>
-        )}
-
-        {doneRequest && (
-          <>
-            <p className="SuccessText">
-              Your request was submitted. Thank you for your contribution!
-            </p>
-            {/* Submit or Request button */}
-            <button
-              onClick={() => {
-                setDoneRequest(false);
-                setRequestData("");
-                setDataModalVisible(false);
-              }}
-              className="NormalButton"
-              style={{
-                marginBottom: "20px",
-              }}
-            >
-              <p>Okay</p>
-            </button>
-          </>
-        )}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
+        >
+          <HomeDataRequestModal
+            analytics={analytics}
+            isMobile={isMobile}
+            setDataModalVisible={setDataModalVisible}
+          />
+        </Suspense>
       </Modal>
     </>
   );

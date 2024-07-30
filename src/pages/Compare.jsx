@@ -7,6 +7,12 @@ import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 
 const SelectionModal = lazy(() => import("../components/SelectionModal"));
 const WebAccountHandler = lazy(() => import("../components/WebAccountHandler"));
+const CompareDisplaySavingComparisonModal = lazy(() =>
+  import("../components/CompareDisplaySavingComparisonModal")
+);
+const SimpleSuccessModal = lazy(() =>
+  import("../components/SimpleSuccessModal")
+);
 
 import { logEvent } from "firebase/analytics";
 import { httpsCallable } from "firebase/functions";
@@ -810,36 +816,17 @@ export default function Compare({
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <p className="HeaderText">Save Comparison</p>
-        {awaitingSavingComparison ? (
-          <div
-            className="ActivityIndicator"
-            style={{ marginTop: 30, marginBottom: 30 }}
-          ></div>
-        ) : (
-          <div
-            className="ModalButtonSection"
-            style={{ marginBottom: 30, display: "flex", alignItems: "center" }}
-          >
-            {successfullySavedComparison ? (
-              <p className="SuccessText">Succesfully saved this comparison.</p>
-            ) : (
-              <p className="ErrorText">
-                Saving this comparison was unsuccessful, try again later.
-              </p>
-            )}
-            {/* Okay Button */}
-            <button
-              className="NormalButton"
-              onClick={() => {
-                setSavingComparison(false);
-              }}
-              style={{ width: "50%" }}
-            >
-              Okay
-            </button>
-          </div>
-        )}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
+        >
+          <CompareDisplaySavingComparisonModal
+            awaitingSavingComparison={awaitingSavingComparison}
+            successfullySavedComparison={successfullySavedComparison}
+            setSavingComparison={setSavingComparison}
+          />
+        </Suspense>
       </Modal>
 
       {/* Shows up when user is selecting a new product */}
@@ -877,24 +864,17 @@ export default function Compare({
         className={"ModalContainer"}
         overlayClassName={"ModalOverlay"}
       >
-        <p className="HeaderText">Share Comparison</p>
-        <div
-          className="ModalButtonSection"
-          style={{ marginBottom: 30, display: "flex", alignItems: "center" }}
+        <Suspense
+          fallback={
+            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
+          }
         >
-          <p className="SuccessText">
-            Successfully copied link to your clipboard
-          </p>
-        </div>
-
-        <button
-          className="NormalButtonNoBackground"
-          onClick={() => {
-            setCopiedLink(false);
-          }}
-        >
-          <p>Okay</p>
-        </button>
+          <SimpleSuccessModal
+            title={"Share Comparison"}
+            message={"Successfully copied link to your clipboard"}
+            setModalVisible={setCopiedLink}
+          ></SimpleSuccessModal>
+        </Suspense>
       </Modal>
     </>
   );
