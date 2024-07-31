@@ -1,7 +1,5 @@
 import { useEffect, useState, lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Modal from "react-modal";
-Modal.setAppElement("#SpecGauge");
 
 import { Navbar } from "../components/Navbar";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
@@ -442,12 +440,7 @@ export default function WebHome({ isMobile }) {
       </div>
 
       {/* Comparison Category selection modal */}
-      <Modal
-        isOpen={compareModalVisible}
-        contentLabel="Select a comparison"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-      >
+      {compareModalVisible ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -459,17 +452,16 @@ export default function WebHome({ isMobile }) {
             isMobile={isMobile}
             setModalVisible={setCompareModalVisible}
             links={comparisonLinks}
+            modalVisible={compareModalVisible}
           />
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Prediction Category selection modal */}
-      <Modal
-        isOpen={predictModalVisible}
-        contentLabel="Select a comparison"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-      >
+
+      {predictModalVisible ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -481,17 +473,16 @@ export default function WebHome({ isMobile }) {
             isMobile={isMobile}
             setModalVisible={setPredictModalVisible}
             links={predictionLinks}
+            modalVisible={predictModalVisible}
           />
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Data Request modal */}
-      <Modal
-        isOpen={dataModalVisible}
-        contentLabel="Select a request type"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-      >
+
+      {dataModalVisible ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -501,9 +492,12 @@ export default function WebHome({ isMobile }) {
             analytics={analytics}
             isMobile={isMobile}
             setDataModalVisible={setDataModalVisible}
+            dataModalVisible={dataModalVisible}
           />
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

@@ -1,10 +1,13 @@
 import { logEvent } from "firebase/analytics";
 import { useState, useRef } from "react";
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
 
 export default function HomeDataRequestModal({
   analytics,
   isMobile,
   setDataModalVisible,
+  dataModalVisible,
 }) {
   const dropdownRef = useRef(null);
   // To simulate a loading time when user requests data, so user feels more satisfied, also prevents spam
@@ -19,7 +22,12 @@ export default function HomeDataRequestModal({
   const [requestData, setRequestData] = useState("");
 
   return (
-    <>
+    <Modal
+      isOpen={dataModalVisible}
+      contentLabel="Submit or Request Comparison Data"
+      className={"ModalContainer"}
+      overlayClassName={"ModalOverlay"}
+    >
       <p className="HeaderText">Submit or Request Comparison Data</p>
 
       {!requestingData && !doneRequest && (
@@ -139,6 +147,6 @@ export default function HomeDataRequestModal({
           </button>
         </>
       )}
-    </>
+    </Modal>
   );
 }

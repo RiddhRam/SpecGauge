@@ -1,5 +1,7 @@
 import { logEvent } from "firebase/analytics";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
 
 export default function HomeCategoryModal({
   categories,
@@ -7,10 +9,16 @@ export default function HomeCategoryModal({
   isMobile,
   setModalVisible,
   links,
+  modalVisible,
 }) {
   const navigate = useNavigate();
   return (
-    <>
+    <Modal
+      isOpen={modalVisible}
+      contentLabel="Select a category"
+      className={"ModalContainer"}
+      overlayClassName={"ModalOverlay"}
+    >
       <p className="HeaderText">Select a category</p>
       {/* Buttons */}
       <div className="ModalButtonSection">
@@ -49,6 +57,6 @@ export default function HomeCategoryModal({
       >
         Cancel
       </button>
-    </>
+    </Modal>
   );
 }

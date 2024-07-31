@@ -1,4 +1,7 @@
 7.0.0
+Lazy import modals
+
+7.1.0
 Rehaul comparison screen
 Add top, side and back view of vehicle sizes
 
