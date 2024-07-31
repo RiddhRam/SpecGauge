@@ -1,9 +1,7 @@
-6.8.4
-Look into improving price prediction algorithm
-
 6.8.5
 Scroll up automatically when changing screens
 Try to lazy import chartjs (Maybe display an image until user interacts with it)
+Break price prediction functions down into their own files
 
 7.0.0
 Rehaul comparison screen

@@ -203,7 +203,7 @@ export default function Prediction({
     }
   };
 
-  async function addToGraph(priceString, yearString, brand) {
+  const addToGraph = async (priceString, yearString, brand) => {
     const price = parseFloat(priceString);
     const year = parseFloat(yearString);
 
@@ -309,42 +309,43 @@ export default function Prediction({
       // If last price was greater than 1.5x the original value, and last price wasn't an increase
       if (lastPrice > originalPrice * 1.5 && !lastPriceIncreased) {
         // The price will hover around twice it's original value
-        const differenceRate = rng() * -0.04;
-        difference = lastPrice * differenceRate;
+        difference = lastPrice * rng() * -0.04;
         lastPriceIncreased = false;
       }
       // If last price wasn't an increase
       else if (!lastPriceIncreased) {
         // If difference between new and last price is greater than an 8% of the original price
         if (difference > lastPrice * 0.08) {
-          // Reduce difference to 8%
+          // Reduce difference to rng
           // Prevents sharp increases
-          difference = difference * 0.055;
-          lastPriceIncreased = true;
+          difference = lastPrice * rng() * 0.045;
+          lastPriceIncreased = false;
         } // If new price is a decrease from last price
         else if (difference < 0) {
-          // If the absolute value of the decrease is more than 10% of the original price
-          if (difference * -1 > originalPrice * 0.1) {
+          // If the absolute value of the decrease is more than 8% of the original price
+          if (difference * -1 > originalPrice * 0.08) {
             // Cut the difference in half
             // Prevents sharp drops
-            difference = difference * 0.3;
+            difference = difference * 0.25;
           }
           lastPriceIncreased = false;
         } else {
           // Difference isn't too large, but the price stayed the same or increased by a small amount
-          lastPriceIncreased = true;
+          lastPriceIncreased = false;
         }
       }
       // If last price was an increase
       else {
         // Difference is reduced to 2% from the last price if rate isn't positive
-        if (rate < 0) {
-          difference = lastPrice * rng() * -0.06;
-          lastPriceIncreased = false;
+        if (rate < 0 && difference > lastPrice * 0.06) {
+          /*difference = lastPrice * rng() * -0.06;
+          lastPriceIncreased = false;*/
+          rate *= -1;
         }
       }
 
       /* If difference is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
+
       if (difference + lastPrice > originalPrice * 2.1) {
         difference = originalPrice * 0.1 * rng();
       }
@@ -380,11 +381,10 @@ export default function Prediction({
         break;
       }
     }
-
     return 0;
-  }
+  };
 
-  function removeGraph(datasetIndex) {
+  const removeGraph = (datasetIndex) => {
     if (analytics != null) {
       logEvent(analytics, "Delete Graph Item", {
         Item: lineValueDataset[datasetIndex].label,
@@ -426,7 +426,7 @@ export default function Prediction({
     }
 
     setColorChangeIndex(0);
-  }
+  };
 
   const updateColor = (newColor) => {
     // Update the points being displayed
