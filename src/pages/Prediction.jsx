@@ -8,20 +8,9 @@ import Modal from "react-modal";
 
 Modal.setAppElement("#SpecGauge");
 
-import { Line } from "react-chartjs-2";
-import Slider from "rc-slider";
+const LineImport = lazy(() => import("../components/LineImport"));
+const SliderImport = lazy(() => import("../components/SliderImport"));
 import "rc-slider/assets/index.css";
-
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
 
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
@@ -41,16 +30,6 @@ const SimpleSuccessModal = lazy(() =>
 );
 const SimpleErrorModal = lazy(() => import("../components/SimpleErrorModal"));
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
 const years = [
   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012,
   2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025,
@@ -65,12 +44,9 @@ let endIndex = 56;
 export default function Prediction({
   type,
   isMobile,
-  averagePrices,
-  brandValues,
   minimumPrice,
   description,
   predictionLink,
-  additionalOptions,
 }) {
   const navigate = useNavigate();
   // Years being displayed
@@ -94,8 +70,10 @@ export default function Prediction({
 
   // The orignal reference array of all the lines currently selected by the user
   const [originalPoints, setOriginalPoints] = useState([]);
-  const [initalizedAveragePrices, setInitializedAveragePrices] =
-    useState(false);
+
+  const [averagePrices, setAveragePrices] = useState(null);
+  const [brandValues, setBrandValues] = useState(null);
+  const [additionalOptions, setAdditionalOptions] = useState(null);
 
   // For the modals
   const [showBrandModal, setShowBrandModal] = useState(false);
@@ -108,6 +86,8 @@ export default function Prediction({
   const [rateAdjustments, setRateAdjustments] = useState(additionalOptions);
   const [copiedLink, setCopiedLink] = useState(false);
   const [beginLoadingPresets, setBeginLoadingPresets] = useState(false);
+  const [createdChart, setCreatedChart] = useState(false);
+  const [needToCreateChart, setNeedToCreateChart] = useState(true);
 
   // For the search input
   const [searchString, setSearchString] = useState("");
@@ -477,6 +457,8 @@ export default function Prediction({
     for (let item in processes) {
       const processItem = processes[item];
       if (processItem[0] != "Average") {
+        setNeedToCreateChart(true);
+        createChart();
         addToGraph(processItem[0], processItem[1], processItem[2]);
       } else {
         addAveragePrice();
@@ -525,6 +507,26 @@ export default function Prediction({
     }
   };
 
+  const createChart = async () => {
+    if (!createdChart && needToCreateChart) {
+      await import("../functions/ChartImport").then((module) => {
+        module.ChartJS.register(
+          module.CategoryScale,
+          module.LinearScale,
+          module.PointElement,
+          module.LineElement,
+          module.Title,
+          module.Tooltip,
+          module.Legend
+        );
+
+        setCreatedChart(true);
+      });
+    }
+
+    setNeedToCreateChart(false);
+  };
+
   useEffect(() => {
     SetTitleAndDescription(
       `Predict Future ${type} Prices`,
@@ -547,7 +549,6 @@ export default function Prediction({
       setDisplayYears(years.slice(24, 56));
       startIndex = 24;
       endIndex = 56;
-      setInitializedAveragePrices(false);
       setLineValueDataset([]);
       setUpdateGraph(true);
     }
@@ -568,6 +569,29 @@ export default function Prediction({
 
     if (presetsURL.length > 1) {
       setBeginLoadingPresets(true);
+    }
+
+    if (type == "Vehicles") {
+      import("../data/carsPredictData").then((module) => {
+        setAveragePrices(module.carsAveragePrices);
+        setBrandValues(module.carsBrandValues);
+        setAdditionalOptions(module.carsAdditionalOptions);
+        setRateAdjustments(module.carsAdditionalOptions);
+      });
+    } else if (type == "CPUs") {
+      import("../data/CPUsPredictData").then((module) => {
+        setAveragePrices(null);
+        setBrandValues(module.processorsBrandValues);
+        setAdditionalOptions(null);
+        setRateAdjustments(null);
+      });
+    } else {
+      import("../data/graphicsCardsPredictData").then((module) => {
+        setAveragePrices(null);
+        setBrandValues(module.graphicsCardsBrandValues);
+        setAdditionalOptions(null);
+        setRateAdjustments(null);
+      });
     }
   }, [type]);
 
@@ -600,34 +624,7 @@ export default function Prediction({
         );
       }
     }
-    // Make sure there's no presets
-    // URL of the page
-    const fullURL = window.location.href;
-    // Index of the prefix (/prediction/type/)
-    const linkStartIndex = fullURL.indexOf(predictionLink);
-    // The presets
-    const presetsURL = fullURL.substring(
-      linkStartIndex + predictionLink.length
-    );
-
-    // If we haven't initialized average prices yet, and no presets in the url
-    if (!initalizedAveragePrices && presetsURL.length == 0) {
-      if (averagePrices != null) {
-        setOriginalPoints([averagePrices.slice()]);
-        setLineValueDataset([
-          {
-            label: `Average ${type} Price (USD $)`,
-            data: averagePrices.slice(startIndex, endIndex),
-            borderColor: `rgb(${Math.random() * 255}, ${Math.random() * 255},${
-              Math.random() * 255
-            })`,
-          },
-        ]);
-      }
-
-      setInitializedAveragePrices(true);
-    }
-  }, [isMobile, updateGraph]);
+  }, [updateGraph]);
 
   useEffect(() => {
     if (analytics != null) {
@@ -774,12 +771,125 @@ export default function Prediction({
           /* Mobile view */
           <>
             {/* Graph */}
-            <Line
-              options={lineOptions}
-              data={lineData}
-              style={{ minHeight: "200px", padding: "0 6px" }}
-            />
+            {lineValueDataset.length == 0 ? (
+              <h3 className="SimpleText">
+                Add A {type.slice(0, -1)} To Get Started{" "}
+              </h3>
+            ) : (
+              <>
+                <Suspense
+                  fallback={
+                    <div
+                      className="ActivityIndicator"
+                      style={{ margin: "50px auto" }}
+                    ></div>
+                  }
+                >
+                  <LineImport
+                    options={lineOptions}
+                    data={lineData}
+                    style={{ minHeight: "200px", padding: "0 6px" }}
+                  />
+                </Suspense>
+                {/* Sliders */}
+                <div
+                  className="ScrollViewY"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    padding: "0 35px",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* Scroll Slider */}
+                  <p
+                    style={{ marginRight: 10, userSelect: "none" }}
+                    className="PlainText"
+                  >
+                    Scroll
+                  </p>
+                  <Suspense
+                    fallback={
+                      <div
+                        style={{ backgroundColor: "#4ca0d7", height: 10 }}
+                      ></div>
+                    }
+                  >
+                    <SliderImport
+                      value={position}
+                      onChange={OnScrollChangeTrigger}
+                      step={1}
+                      min={0}
+                      max={scrollLimit}
+                      trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
+                      railStyle={{ backgroundColor: "lightblue", height: 10 }}
+                      handleStyle={{
+                        marginLeft: 0,
+                        marginTop: -2,
+                      }}
+                    />
+                  </Suspense>
+                  {/* Zoom slider */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p
+                      style={{ marginRight: 10, userSelect: "none" }}
+                      className="PlainText"
+                    >
+                      Zoom
+                    </p>
+                    <p
+                      style={{
+                        marginRight: 15,
+                        fontSize: 20,
+                        userSelect: "none",
+                      }}
+                      className="PlainText"
+                    >
+                      -
+                    </p>
+                    <Suspense
+                      fallback={
+                        <div
+                          style={{
+                            backgroundColor: "lightblue",
+                            height: 4,
+                            width: "100%",
+                          }}
+                        ></div>
+                      }
+                    >
+                      <SliderImport
+                        value={yearsCount}
+                        onChange={OnZoomChangeTrigger}
+                        step={1}
+                        min={22}
+                        max={44}
+                        trackStyle={{ backgroundColor: "#4ca0d7" }}
+                        railStyle={{ backgroundColor: "lightblue" }}
+                      />
+                    </Suspense>
+                    <p
+                      style={{
+                        marginLeft: 10,
+                        fontSize: 20,
+                        userSelect: "none",
+                      }}
+                      className="PlainText"
+                    >
+                      +
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
 
+            {/* Bottom Controls */}
             <div
               className="ScrollViewY"
               style={{
@@ -789,71 +899,6 @@ export default function Prediction({
                 justifyContent: "center",
               }}
             >
-              {/* Scroll */}
-              <p
-                style={{ marginRight: 10, userSelect: "none" }}
-                className="PlainText"
-              >
-                Scroll
-              </p>
-              <Slider
-                value={position}
-                onChange={OnScrollChangeTrigger}
-                step={1}
-                min={0}
-                max={scrollLimit}
-                trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
-                railStyle={{ backgroundColor: "lightblue", height: 10 }}
-                handleStyle={{
-                  marginLeft: 0,
-                  marginTop: -2,
-                }}
-              />
-              {/* Zoom slider */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <p
-                  style={{ marginRight: 10, userSelect: "none" }}
-                  className="PlainText"
-                >
-                  Zoom
-                </p>
-                <p
-                  style={{
-                    marginRight: 15,
-                    fontSize: 20,
-                    userSelect: "none",
-                  }}
-                  className="PlainText"
-                >
-                  -
-                </p>
-                <Slider
-                  value={yearsCount}
-                  onChange={OnZoomChangeTrigger}
-                  step={1}
-                  min={22}
-                  max={44}
-                  trackStyle={{ backgroundColor: "#4ca0d7" }}
-                  railStyle={{ backgroundColor: "lightblue" }}
-                />
-                <p
-                  style={{
-                    marginLeft: 10,
-                    fontSize: 20,
-                    userSelect: "none",
-                  }}
-                  className="PlainText"
-                >
-                  +
-                </p>
-              </div>
-              {/* Bottom Controls */}
               <div
                 style={{
                   display: "grid",
@@ -885,7 +930,7 @@ export default function Prediction({
                     style={{
                       position: "absolute",
                       left: "10px",
-                      top: "45%",
+                      top: "46%",
                       transform: "translateY(-50%)",
                       pointerEvents: "none",
                       color: "#fff",
@@ -924,37 +969,11 @@ export default function Prediction({
                   </p>
                 </button>
 
-                {/* Additional Options, only if available */}
-                {additionalOptions ? (
-                  <button
-                    onClick={() => {
-                      if (analytics != null) {
-                        logEvent(analytics, `Select Additional Options`, {
-                          Type: type,
-                        });
-                      }
-                      setShowOptionsModal(true);
-                    }}
-                    style={{ padding: "0 2px" }}
-                    className="NormalButton"
-                  >
-                    <p
-                      style={{
-                        textAlign: "center",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      Options
-                    </p>
-                  </button>
-                ) : (
-                  /* Empty Cell */ <div></div>
-                )}
-
                 {/* Add */}
                 <button
                   onClick={async () => {
+                    setNeedToCreateChart(true);
+                    createChart();
                     const result = await addToGraph(
                       initialPrice,
                       releaseYear,
@@ -995,63 +1014,6 @@ export default function Prediction({
                 >
                   <p>Edit</p>
                 </button>
-
-                {/* Add Average Price, only if available */}
-                {averagePrices ? (
-                  <button
-                    onClick={() => {
-                      if (analytics != null) {
-                        logEvent(analytics, "Add Average Price", {
-                          Type: type,
-                        });
-                      }
-                      while (true) {
-                        let matchFound = false;
-                        const red = Math.random() * 255;
-                        const green = Math.random() * 255;
-                        const blue = Math.random() * 255;
-
-                        let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
-
-                        for (let item in lineValueDataset) {
-                          if (
-                            newBorderColor == lineValueDataset[item].borderColor
-                          ) {
-                            matchFound = true;
-                            break;
-                          }
-                        }
-
-                        if (!matchFound) {
-                          const newLine = {
-                            label: `Average ${type} Price (USD $)`,
-                            data: averagePrices.slice(),
-                            borderColor: newBorderColor,
-                          };
-                          setOriginalPoints((prevPoints) => [
-                            ...prevPoints,
-                            averagePrices.slice(),
-                          ]);
-                          setLineValueDataset((prevLines) => [
-                            ...prevLines,
-                            newLine,
-                          ]);
-                          setUpdateGraph(true);
-
-                          break;
-                        }
-                      }
-                    }}
-                    style={{
-                      width: "100%",
-                    }}
-                    className="NormalButton"
-                  >
-                    <p style={{ textAlign: "center" }}>Add Average Price</p>
-                  </button>
-                ) : (
-                  /* Empty Cell */ <div></div>
-                )}
 
                 {/* Export CSV */}
                 <button
@@ -1109,6 +1071,93 @@ export default function Prediction({
                 >
                   <p>Export CSV</p>
                 </button>
+
+                {/* Add Average Price, only if available */}
+                {averagePrices ? (
+                  <button
+                    onClick={() => {
+                      setNeedToCreateChart(true);
+                      createChart();
+                      if (analytics != null) {
+                        logEvent(analytics, "Add Average Price", {
+                          Type: type,
+                        });
+                      }
+                      while (true) {
+                        let matchFound = false;
+                        const red = Math.random() * 255;
+                        const green = Math.random() * 255;
+                        const blue = Math.random() * 255;
+
+                        let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+                        for (let item in lineValueDataset) {
+                          if (
+                            newBorderColor == lineValueDataset[item].borderColor
+                          ) {
+                            matchFound = true;
+                            break;
+                          }
+                        }
+
+                        if (!matchFound) {
+                          const newLine = {
+                            label: `Average ${type} Price (USD $)`,
+                            data: averagePrices.slice(),
+                            borderColor: newBorderColor,
+                          };
+                          setOriginalPoints((prevPoints) => [
+                            ...prevPoints,
+                            averagePrices.slice(),
+                          ]);
+                          setLineValueDataset((prevLines) => [
+                            ...prevLines,
+                            newLine,
+                          ]);
+                          setUpdateGraph(true);
+
+                          break;
+                        }
+                      }
+                    }}
+                    style={{
+                      width: "100%",
+                    }}
+                    className="NormalButton"
+                  >
+                    <p style={{ textAlign: "center" }}>Add Average Price</p>
+                  </button>
+                ) : (
+                  /* Empty Cell */ <></>
+                )}
+
+                {/* Additional Options, only if available */}
+                {additionalOptions ? (
+                  <button
+                    onClick={() => {
+                      if (analytics != null) {
+                        logEvent(analytics, `Select Additional Options`, {
+                          Type: type,
+                        });
+                      }
+                      setShowOptionsModal(true);
+                    }}
+                    style={{ padding: "0 2px" }}
+                    className="NormalButton"
+                  >
+                    <p
+                      style={{
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      Options
+                    </p>
+                  </button>
+                ) : (
+                  /* Empty Cell */ <></>
+                )}
               </div>
             </div>
           </>
@@ -1125,29 +1174,61 @@ export default function Prediction({
             }}
           >
             {/* Graph and Scroll slider */}
-            <div style={{ minWidth: "736px", width: "65%" }}>
+            <div
+              style={{
+                minWidth: "736px",
+                width: "65%",
+              }}
+            >
               {/* Graph */}
-              <Line options={lineOptions} data={lineData} />
-              {/* Scroll */}
-              <p
-                style={{ marginRight: 10, userSelect: "none" }}
-                className="PlainText"
-              >
-                Scroll
-              </p>
-              <Slider
-                value={position}
-                onChange={OnScrollChangeTrigger}
-                step={1}
-                min={0}
-                max={scrollLimit}
-                trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
-                railStyle={{ backgroundColor: "lightblue", height: 10 }}
-                handleStyle={{
-                  marginLeft: 0,
-                  marginTop: -2,
-                }}
-              />
+              {lineValueDataset.length == 0 ? (
+                <h2 className="SimpleText">
+                  Add A {type.slice(0, -1)} To Get Started{" "}
+                </h2>
+              ) : (
+                <>
+                  <Suspense
+                    fallback={
+                      <div
+                        className="ActivityIndicator"
+                        style={{ margin: "50px auto" }}
+                      ></div>
+                    }
+                  >
+                    <LineImport options={lineOptions} data={lineData} />
+                  </Suspense>
+                  {/* Scroll */}
+                  <>
+                    <p
+                      style={{ marginRight: 10, userSelect: "none" }}
+                      className="PlainText"
+                    >
+                      Scroll
+                    </p>
+                    <Suspense
+                      fallback={
+                        <div
+                          style={{ backgroundColor: "#4ca0d7", height: 10 }}
+                        ></div>
+                      }
+                    >
+                      <SliderImport
+                        value={position}
+                        onChange={OnScrollChangeTrigger}
+                        step={1}
+                        min={0}
+                        max={scrollLimit}
+                        trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
+                        railStyle={{ backgroundColor: "lightblue", height: 10 }}
+                        handleStyle={{
+                          marginLeft: 0,
+                          marginTop: -2,
+                        }}
+                      />
+                    </Suspense>
+                  </>
+                </>
+              )}
             </div>
             {/* Side Controls */}
             <div
@@ -1164,50 +1245,66 @@ export default function Prediction({
             >
               {/* Column 1 */}
               {/* Zoom slider */}
-              <div
-                style={{
-                  width: "126%",
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <p
-                  style={{ marginRight: 10, userSelect: "none" }}
-                  className="PlainText"
-                >
-                  Zoom
-                </p>
-                <p
+              {lineValueDataset.length == 0 ? (
+                <div></div>
+              ) : (
+                <div
                   style={{
-                    marginRight: 15,
-                    fontSize: 20,
-                    userSelect: "none",
+                    width: "126%",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
-                  className="PlainText"
                 >
-                  -
-                </p>
-                <Slider
-                  value={yearsCount}
-                  onChange={OnZoomChangeTrigger}
-                  step={1}
-                  min={22}
-                  max={44}
-                  trackStyle={{ backgroundColor: "#4ca0d7" }}
-                  railStyle={{ backgroundColor: "lightblue" }}
-                />
-                <p
-                  style={{
-                    marginLeft: 10,
-                    fontSize: 20,
-                    userSelect: "none",
-                  }}
-                  className="PlainText"
-                >
-                  +
-                </p>
-              </div>
+                  <p
+                    style={{ marginRight: 10, userSelect: "none" }}
+                    className="PlainText"
+                  >
+                    Zoom
+                  </p>
+                  <p
+                    style={{
+                      marginRight: 15,
+                      fontSize: 20,
+                      userSelect: "none",
+                    }}
+                    className="PlainText"
+                  >
+                    -
+                  </p>
+                  <Suspense
+                    fallback={
+                      <div
+                        style={{
+                          backgroundColor: "lightblue",
+                          height: 4,
+                          width: 95,
+                        }}
+                      ></div>
+                    }
+                  >
+                    <SliderImport
+                      value={yearsCount}
+                      onChange={OnZoomChangeTrigger}
+                      step={1}
+                      min={22}
+                      max={44}
+                      trackStyle={{ backgroundColor: "#4ca0d7" }}
+                      railStyle={{ backgroundColor: "lightblue" }}
+                    />
+                  </Suspense>
+                  <p
+                    style={{
+                      marginLeft: 10,
+                      fontSize: 20,
+                      userSelect: "none",
+                    }}
+                    className="PlainText"
+                  >
+                    +
+                  </p>
+                </div>
+              )}
 
               {/* Release Year Field */}
               <input
@@ -1268,6 +1365,8 @@ export default function Prediction({
               {/* Add */}
               <button
                 onClick={async () => {
+                  setNeedToCreateChart(true);
+                  createChart();
                   const result = await addToGraph(
                     initialPrice,
                     releaseYear,
@@ -1351,6 +1450,8 @@ export default function Prediction({
               {averagePrices ? (
                 <button
                   onClick={() => {
+                    setNeedToCreateChart(true);
+                    createChart();
                     if (analytics != null) {
                       logEvent(analytics, "Add Average Price", { Type: type });
                     }
