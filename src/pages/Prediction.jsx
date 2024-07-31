@@ -9,7 +9,7 @@ import Modal from "react-modal";
 Modal.setAppElement("#SpecGauge");
 
 import { Line } from "react-chartjs-2";
-import Slider from "rc-slider";
+const SliderImport = lazy(() => import("../components/SliderImport"));
 import "rc-slider/assets/index.css";
 
 import {
@@ -796,19 +796,25 @@ export default function Prediction({
               >
                 Scroll
               </p>
-              <Slider
-                value={position}
-                onChange={OnScrollChangeTrigger}
-                step={1}
-                min={0}
-                max={scrollLimit}
-                trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
-                railStyle={{ backgroundColor: "lightblue", height: 10 }}
-                handleStyle={{
-                  marginLeft: 0,
-                  marginTop: -2,
-                }}
-              />
+              <Suspense
+                fallback={
+                  <div style={{ backgroundColor: "#4ca0d7", height: 10 }}></div>
+                }
+              >
+                <SliderImport
+                  value={position}
+                  onChange={OnScrollChangeTrigger}
+                  step={1}
+                  min={0}
+                  max={scrollLimit}
+                  trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
+                  railStyle={{ backgroundColor: "lightblue", height: 10 }}
+                  handleStyle={{
+                    marginLeft: 0,
+                    marginTop: -2,
+                  }}
+                />
+              </Suspense>
               {/* Zoom slider */}
               <div
                 style={{
@@ -833,15 +839,27 @@ export default function Prediction({
                 >
                   -
                 </p>
-                <Slider
-                  value={yearsCount}
-                  onChange={OnZoomChangeTrigger}
-                  step={1}
-                  min={22}
-                  max={44}
-                  trackStyle={{ backgroundColor: "#4ca0d7" }}
-                  railStyle={{ backgroundColor: "lightblue" }}
-                />
+                <Suspense
+                  fallback={
+                    <div
+                      style={{
+                        backgroundColor: "lightblue",
+                        height: 4,
+                        width: "100%",
+                      }}
+                    ></div>
+                  }
+                >
+                  <SliderImport
+                    value={yearsCount}
+                    onChange={OnZoomChangeTrigger}
+                    step={1}
+                    min={22}
+                    max={44}
+                    trackStyle={{ backgroundColor: "#4ca0d7" }}
+                    railStyle={{ backgroundColor: "lightblue" }}
+                  />
+                </Suspense>
                 <p
                   style={{
                     marginLeft: 10,
@@ -1135,19 +1153,25 @@ export default function Prediction({
               >
                 Scroll
               </p>
-              <Slider
-                value={position}
-                onChange={OnScrollChangeTrigger}
-                step={1}
-                min={0}
-                max={scrollLimit}
-                trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
-                railStyle={{ backgroundColor: "lightblue", height: 10 }}
-                handleStyle={{
-                  marginLeft: 0,
-                  marginTop: -2,
-                }}
-              />
+              <Suspense
+                fallback={
+                  <div style={{ backgroundColor: "#4ca0d7", height: 10 }}></div>
+                }
+              >
+                <SliderImport
+                  value={position}
+                  onChange={OnScrollChangeTrigger}
+                  step={1}
+                  min={0}
+                  max={scrollLimit}
+                  trackStyle={{ backgroundColor: "#4ca0d7", height: 10 }}
+                  railStyle={{ backgroundColor: "lightblue", height: 10 }}
+                  handleStyle={{
+                    marginLeft: 0,
+                    marginTop: -2,
+                  }}
+                />
+              </Suspense>
             </div>
             {/* Side Controls */}
             <div
@@ -1188,15 +1212,27 @@ export default function Prediction({
                 >
                   -
                 </p>
-                <Slider
-                  value={yearsCount}
-                  onChange={OnZoomChangeTrigger}
-                  step={1}
-                  min={22}
-                  max={44}
-                  trackStyle={{ backgroundColor: "#4ca0d7" }}
-                  railStyle={{ backgroundColor: "lightblue" }}
-                />
+                <Suspense
+                  fallback={
+                    <div
+                      style={{
+                        backgroundColor: "lightblue",
+                        height: 4,
+                        width: 95,
+                      }}
+                    ></div>
+                  }
+                >
+                  <SliderImport
+                    value={yearsCount}
+                    onChange={OnZoomChangeTrigger}
+                    step={1}
+                    min={22}
+                    max={44}
+                    trackStyle={{ backgroundColor: "#4ca0d7" }}
+                    railStyle={{ backgroundColor: "lightblue" }}
+                  />
+                </Suspense>
                 <p
                   style={{
                     marginLeft: 10,
