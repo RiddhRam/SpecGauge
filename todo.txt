@@ -2,9 +2,6 @@
 Rehaul comparison screen
 Add top, side and back view of vehicle sizes
 
-7.1.0
-Add regional languages, fallback language is english
-
 8.0.0
 Add performance calculator for cars and computers
 
@@ -17,4 +14,5 @@ For computers, let users change cpu, gpu, ram, resolution and program, then
 let them choose a game/program to calculate peformance in
 
 8.1.0
+Add regional languages, fallback language is english
 Compress firestore data
