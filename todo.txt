@@ -1,5 +1,4 @@
 6.8.4
-Try to move query functions from App.jsx to the respective type data file
 Look into improving price prediction algorithm
 Try to lazy import chartjs (Maybe display an image until user interacts with it)
 Maybe move navbar from App.jsx into Loading.jsx

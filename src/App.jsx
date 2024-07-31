@@ -214,99 +214,6 @@ export default function App() {
   const [userVal, setUserVal] = useState(false);
   const isMobile = useWindowDimensions();
 
-  async function queryAutomobilesFunction(brand, model) {
-    let result = null;
-    await import("./functions/QueryAutomobilesFunction").then(
-      async (module) => {
-        result = await module.default(brand, model);
-        console.log("Importing");
-      }
-    );
-    return result;
-  }
-
-  async function directQueryAutomobilesFunction(product) {
-    let result = null;
-    await import("./functions/DirectQueryAutomobilesFunction").then(
-      async (module) => {
-        result = await module.default(product);
-      }
-    );
-    return result;
-  }
-
-  async function queryConsolesFunction(brand, name) {
-    let result = null;
-    await import("./functions/QueryConsolesFunction").then(async (module) => {
-      result = await module.default(brand, name);
-    });
-    return result;
-  }
-
-  async function directQueryConsolesFunction(product) {
-    let result = null;
-    await import("./functions/DirectQueryConsolesFunction").then(
-      async (module) => {
-        result = await module.default(product);
-      }
-    );
-    return result;
-  }
-
-  async function queryGraphicsCardsFunction(brand, generation) {
-    let result = null;
-    await import("./functions/QueryGraphicsCardsFunction").then(
-      async (module) => {
-        result = await module.default(brand, generation);
-      }
-    );
-    return result;
-  }
-
-  async function directQueryGraphicsCardsFunction(product) {
-    let result = null;
-    await import("./functions/DirectQueryGraphicsCardsFunction").then(
-      async (module) => {
-        result = await module.default(product);
-      }
-    );
-    return result;
-  }
-
-  async function queryCPUsFunction(brand, generation) {
-    let result = null;
-    await import("./functions/QueryCPUsFunction").then(async (module) => {
-      result = await module.default(brand, generation);
-    });
-    return result;
-  }
-
-  async function directQueryCPUsFunction(product) {
-    let result = null;
-    await import("./functions/DirectQueryCPUsFunction").then(async (module) => {
-      result = await module.default(product);
-    });
-    return result;
-  }
-
-  async function queryDronesFunction(brand, name) {
-    let result = null;
-    await import("./functions/QueryDronesFunction").then(async (module) => {
-      result = await module.default(brand, name);
-    });
-    return result;
-  }
-
-  async function directQueryDronesFunction(product) {
-    let result = null;
-    await import("./functions/DirectQueryDronesFunction").then(
-      async (module) => {
-        result = await module.default(product);
-      }
-    );
-    return result;
-  }
-
   useEffect(() => {
     // listen for changes (sign in, sign out)
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -425,8 +332,6 @@ export default function App() {
                 <Compare
                   type={"Vehicles"}
                   isMobile={isMobile}
-                  QueryFunction={queryAutomobilesFunction}
-                  DirectQueryFunction={directQueryAutomobilesFunction}
                   comparisonLink={
                     window.location.origin + "/comparison/automobiles/"
                   }
@@ -451,8 +356,6 @@ export default function App() {
                 <Compare
                   type={"Consoles"}
                   isMobile={isMobile}
-                  QueryFunction={queryConsolesFunction}
-                  DirectQueryFunction={directQueryConsolesFunction}
                   comparisonLink={
                     window.location.origin + "/comparison/consoles/"
                   }
@@ -477,8 +380,6 @@ export default function App() {
                 <Compare
                   type={"CPUs"}
                   isMobile={isMobile}
-                  QueryFunction={queryCPUsFunction}
-                  DirectQueryFunction={directQueryCPUsFunction}
                   comparisonLink={window.location.origin + "/comparison/cpus/"}
                   description={`Compare AMD Ryzen vs Intel Core processors side-by-side. View real-world benchmark performance in the ultimate CPU comparison tool.`}
                   defaultTitle={`Compare Multiple Processors Side-by-Side - CPUs Comparison Tool`}
@@ -501,8 +402,6 @@ export default function App() {
                 <Compare
                   type={"Graphics Cards"}
                   isMobile={isMobile}
-                  QueryFunction={queryGraphicsCardsFunction}
-                  DirectQueryFunction={directQueryGraphicsCardsFunction}
                   comparisonLink={
                     window.location.origin + "/comparison/graphicsCards/"
                   }
@@ -527,8 +426,6 @@ export default function App() {
                 <Compare
                   type={"Drones"}
                   isMobile={isMobile}
-                  QueryFunction={queryDronesFunction}
-                  DirectQueryFunction={directQueryDronesFunction}
                   comparisonLink={
                     window.location.origin + "/comparison/drones/"
                   }

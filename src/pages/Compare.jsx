@@ -24,8 +24,6 @@ Modal.setAppElement("#SpecGauge");
 export default function Compare({
   type,
   isMobile,
-  QueryFunction,
-  DirectQueryFunction,
   comparisonLink,
   description,
   defaultTitle,
@@ -390,8 +388,44 @@ export default function Compare({
       setSaveComparisonProcesses(processes);
 
       for (let processItem in processes) {
-        // Directly get the product
-        const result = await DirectQueryFunction(processes[processItem]);
+        let result = null;
+        // Lazy import the right DirectQueryFunction and use it
+        if (type == "Vehicles") {
+          await import("../functions/DirectQueryAutomobilesFunction").then(
+            async (module) => {
+              // Directly get the product
+              result = await module.default(processes[processItem]);
+            }
+          );
+        } else if (type == "Consoles") {
+          await import("../functions/DirectQueryConsolesFunction").then(
+            async (module) => {
+              // Directly get the product
+              result = await module.default(processes[processItem]);
+            }
+          );
+        } else if (type == "CPUs") {
+          await import("../functions/DirectQueryCPUsFunction").then(
+            async (module) => {
+              // Directly get the product
+              result = await module.default(processes[processItem]);
+            }
+          );
+        } else if (type == "Graphics Cards") {
+          await import("../functions/DirectQueryGraphicsCardsFunction").then(
+            async (module) => {
+              // Directly get the product
+              result = await module.default(processes[processItem]);
+            }
+          );
+        } else {
+          await import("../functions/DirectQueryDronesFunction").then(
+            async (module) => {
+              // Directly get the product
+              result = await module.default(processes[processItem]);
+            }
+          );
+        }
 
         let parameterArray = [];
 
@@ -845,7 +879,6 @@ export default function Compare({
             type={type}
             setProductModalVisible={setProductModalVisible}
             brands={Brands}
-            queryFunction={QueryFunction}
             queryProcess={QueryProcess}
             process={Process}
             defaultArray={DefaultArray}

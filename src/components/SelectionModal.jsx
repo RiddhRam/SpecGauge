@@ -7,7 +7,6 @@ export default function SelectionModal({
   type,
   setProductModalVisible,
   brands,
-  queryFunction,
   queryProcess,
   process,
   defaultArray,
@@ -127,8 +126,43 @@ export default function SelectionModal({
                           Category: type,
                         });
                       }
-
-                      result = await queryFunction(selectedBrand, item);
+                      // Lazy import the right DirectQueryFunction and use it
+                      if (type == "Vehicles") {
+                        await import(
+                          "../functions/QueryAutomobilesFunction"
+                        ).then(async (module) => {
+                          // Directly get the product
+                          result = await module.default(selectedBrand, item);
+                        });
+                      } else if (type == "Consoles") {
+                        await import("../functions/QueryConsolesFunction").then(
+                          async (module) => {
+                            // Directly get the product
+                            result = await module.default(selectedBrand, item);
+                          }
+                        );
+                      } else if (type == "CPUs") {
+                        await import("../functions/QueryCPUsFunction").then(
+                          async (module) => {
+                            // Directly get the product
+                            result = await module.default(selectedBrand, item);
+                          }
+                        );
+                      } else if (type == "Graphics Cards") {
+                        await import(
+                          "../functions/QueryGraphicsCardsFunction"
+                        ).then(async (module) => {
+                          // Directly get the product
+                          result = await module.default(selectedBrand, item);
+                        });
+                      } else {
+                        await import("../functions/QueryDronesFunction").then(
+                          async (module) => {
+                            // Directly get the product
+                            result = await module.default(selectedBrand, item);
+                          }
+                        );
+                      }
                     } else {
                       // If we have queried them, then just pick off from the last step
                       result = requestedSpecs;
