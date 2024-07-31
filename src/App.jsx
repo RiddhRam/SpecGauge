@@ -1,7 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { Loading } from "./components/Loading";
 import useWindowDimensions from "./useWindowDimensions";
@@ -254,14 +253,7 @@ export default function App() {
           <Route
             path="/"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <WebHome isMobile={isMobile}></WebHome>
               </Suspense>
             }
@@ -271,14 +263,7 @@ export default function App() {
             index
             path="/home"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <WebHome isMobile={isMobile}></WebHome>
               </Suspense>
             }
@@ -288,14 +273,7 @@ export default function App() {
             index
             path="/login"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <WebLogIn isMobile={isMobile}></WebLogIn>
               </Suspense>
             }
@@ -305,14 +283,7 @@ export default function App() {
             index
             path="/account"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <WebUserAccount isMobile={isMobile}></WebUserAccount>
               </Suspense>
             }
@@ -321,14 +292,7 @@ export default function App() {
           <Route
             path="/comparison/automobiles/*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Compare
                   type={"Vehicles"}
                   isMobile={isMobile}
@@ -345,14 +309,7 @@ export default function App() {
           <Route
             path="/comparison/consoles/*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Compare
                   type={"Consoles"}
                   isMobile={isMobile}
@@ -369,14 +326,7 @@ export default function App() {
           <Route
             path="/comparison/cpus/*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Compare
                   type={"CPUs"}
                   isMobile={isMobile}
@@ -391,14 +341,7 @@ export default function App() {
           <Route
             path="/comparison/graphicsCards/*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Compare
                   type={"Graphics Cards"}
                   isMobile={isMobile}
@@ -415,14 +358,7 @@ export default function App() {
           <Route
             path="/comparison/drones/*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Compare
                   type={"Drones"}
                   isMobile={isMobile}
@@ -439,14 +375,7 @@ export default function App() {
           <Route
             path="/prediction/automobiles/*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Prediction
                   type={"Vehicles"}
                   isMobile={isMobile}
@@ -466,14 +395,7 @@ export default function App() {
           <Route
             path="/prediction/cpus/*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Prediction
                   type={"CPUs"}
                   isMobile={isMobile}
@@ -491,14 +413,7 @@ export default function App() {
           <Route
             path="/prediction/graphicsCards/*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Prediction
                   type={"Graphics Cards"}
                   isMobile={isMobile}
@@ -518,14 +433,7 @@ export default function App() {
           <Route
             path="/aboutus"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Information
                   isMobile={isMobile}
                   title={"About Us"}
@@ -583,14 +491,7 @@ export default function App() {
           <Route
             path="/termsofservice"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Information
                   isMobile={isMobile}
                   title={"Terms of Service"}
@@ -668,14 +569,7 @@ export default function App() {
           <Route
             path="/privacypolicy"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <Information
                   isMobile={isMobile}
                   title={"Privacy Policy"}
@@ -711,14 +605,7 @@ export default function App() {
           <Route
             path="*"
             element={
-              <Suspense
-                fallback={
-                  <>
-                    <Navbar isMobile={isMobile}></Navbar>
-                    <Loading></Loading>
-                  </>
-                }
-              >
+              <Suspense fallback={<Loading></Loading>}>
                 <NoPage isMobile={isMobile}></NoPage>
               </Suspense>
             }

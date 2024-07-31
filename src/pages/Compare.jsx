@@ -4,7 +4,6 @@ import Modal from "react-modal";
 
 import { Navbar } from "../components/Navbar";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
-
 const SelectionModal = lazy(() => import("../components/SelectionModal"));
 const WebAccountHandler = lazy(() => import("../components/WebAccountHandler"));
 const CompareDisplaySavingComparisonModal = lazy(() =>

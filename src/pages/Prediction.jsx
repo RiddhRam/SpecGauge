@@ -39,7 +39,7 @@ const PredictionOptionsModal = lazy(() =>
 const SimpleSuccessModal = lazy(() =>
   import("../components/SimpleSuccessModal")
 );
-import SimpleErrorModal from "../components/SImpleErrorModal";
+const SimpleErrorModal = lazy(() => import("../components/SimpleErrorModal"));
 
 ChartJS.register(
   CategoryScale,
