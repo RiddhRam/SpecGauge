@@ -161,7 +161,11 @@ export default function WebHome({ isMobile }) {
   }, []);
 
   return (
-    <>
+    <div // Scroll to the top when page loads
+      onLoad={() => {
+        window.scrollTo(0, 0);
+      }}
+    >
       {/* Navbar */}
       <Navbar isMobile={isMobile}></Navbar>
 
@@ -500,6 +504,6 @@ export default function WebHome({ isMobile }) {
           />
         </Suspense>
       </Modal>
-    </>
+    </div>
   );
 }

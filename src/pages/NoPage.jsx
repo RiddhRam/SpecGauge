@@ -19,7 +19,11 @@ export default function NoPage({ isMobile }) {
   }, []);
 
   return (
-    <>
+    <div // Scroll to the top when page loads
+      onLoad={() => {
+        window.scrollTo(0, 0);
+      }}
+    >
       <Navbar isMobile={isMobile}></Navbar>
       <div className="LargeContainer">
         {/* title and logo */}
@@ -52,6 +56,6 @@ export default function NoPage({ isMobile }) {
           Go to home page
         </button>
       </div>
-    </>
+    </div>
   );
 }

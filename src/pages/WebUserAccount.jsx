@@ -255,7 +255,11 @@ export default function WebUserAccount({ isMobile }) {
 
   return (
     /* if logged in display user settings */
-    <>
+    <div // Scroll to the top when page loads
+      onLoad={() => {
+        window.scrollTo(0, 0);
+      }}
+    >
       {/* navbar */}
       <Navbar isMobile={isMobile} />
       {/* main body */}
@@ -514,6 +518,6 @@ export default function WebUserAccount({ isMobile }) {
           </div>
         )}
       </Modal>
-    </>
+    </div>
   );
 }

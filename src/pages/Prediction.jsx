@@ -655,7 +655,11 @@ export default function Prediction({
   }, [beginLoadingPresets]);
 
   return (
-    <>
+    <div // Scroll to the top when page loads
+      onLoad={() => {
+        window.scrollTo(0, 0);
+      }}
+    >
       <Navbar isMobile={isMobile}></Navbar>
 
       {/* Main Body */}
@@ -1605,6 +1609,6 @@ export default function Prediction({
           ></SimpleErrorModal>
         </Suspense>
       </Modal>
-    </>
+    </div>
   );
 }

@@ -521,7 +521,12 @@ export default function Compare({
   };
 
   return (
-    <>
+    <div
+      // Scroll to the top when page loads
+      onLoad={() => {
+        window.scrollTo(0, 0);
+      }}
+    >
       <Navbar isMobile={isMobile}></Navbar>
       {/* Main Body */}
       <div className="LargeContainer">
@@ -908,6 +913,6 @@ export default function Compare({
           ></SimpleSuccessModal>
         </Suspense>
       </Modal>
-    </>
+    </div>
   );
 }

@@ -1,5 +1,4 @@
-6.8.5
-Scroll up automatically when changing screens
+6.8.6
 Try to lazy import chartjs (Maybe display an image until user interacts with it)
 Break price prediction functions down into their own files
 

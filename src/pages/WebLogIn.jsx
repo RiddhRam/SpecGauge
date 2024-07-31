@@ -39,7 +39,11 @@ export default function WebLogIn({ isMobile }) {
   }, []);
 
   return (
-    <>
+    <div // Scroll to the top when page loads
+      onLoad={() => {
+        window.scrollTo(0, 0);
+      }}
+    >
       {/* navbar */}
       <Navbar isMobile={isMobile}></Navbar>
 
@@ -64,6 +68,6 @@ export default function WebLogIn({ isMobile }) {
         </button>
         {/* If user doesn't want to use an account, only available if on browser or if they don't want to save comparisons */}
       </div>
-    </>
+    </div>
   );
 }

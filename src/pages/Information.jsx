@@ -21,7 +21,11 @@ export default function Information({ isMobile, title, text, description }) {
     RemoveCanonical();
   }, []);
   return (
-    <>
+    <div // Scroll to the top when page loads
+      onLoad={() => {
+        window.scrollTo(0, 0);
+      }}
+    >
       <Navbar isMobile={isMobile}></Navbar>
       <div
         style={{ alignItems: "flex-start", paddingLeft: 20, paddingBottom: 40 }}
@@ -37,6 +41,6 @@ export default function Information({ isMobile, title, text, description }) {
         </p>
         <div>{text}</div>
       </div>
-    </>
+    </div>
   );
 }
