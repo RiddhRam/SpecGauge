@@ -44,12 +44,9 @@ let endIndex = 56;
 export default function Prediction({
   type,
   isMobile,
-  averagePrices,
-  brandValues,
   minimumPrice,
   description,
   predictionLink,
-  additionalOptions,
 }) {
   const navigate = useNavigate();
   // Years being displayed
@@ -73,6 +70,10 @@ export default function Prediction({
 
   // The orignal reference array of all the lines currently selected by the user
   const [originalPoints, setOriginalPoints] = useState([]);
+
+  const [averagePrices, setAveragePrices] = useState(null);
+  const [brandValues, setBrandValues] = useState(null);
+  const [additionalOptions, setAdditionalOptions] = useState(null);
 
   // For the modals
   const [showBrandModal, setShowBrandModal] = useState(false);
@@ -568,6 +569,29 @@ export default function Prediction({
 
     if (presetsURL.length > 1) {
       setBeginLoadingPresets(true);
+    }
+
+    if (type == "Vehicles") {
+      import("../data/carsPredictData").then((module) => {
+        setAveragePrices(module.carsAveragePrices);
+        setBrandValues(module.carsBrandValues);
+        setAdditionalOptions(module.carsAdditionalOptions);
+        setRateAdjustments(module.carsAdditionalOptions);
+      });
+    } else if (type == "CPUs") {
+      import("../data/CPUsPredictData").then((module) => {
+        setAveragePrices(null);
+        setBrandValues(module.processorsBrandValues);
+        setAdditionalOptions(null);
+        setRateAdjustments(null);
+      });
+    } else {
+      import("../data/graphicsCardsPredictData").then((module) => {
+        setAveragePrices(null);
+        setBrandValues(module.graphicsCardsBrandValues);
+        setAdditionalOptions(null);
+        setRateAdjustments(null);
+      });
     }
   }, [type]);
 
