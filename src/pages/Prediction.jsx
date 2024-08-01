@@ -1179,8 +1179,8 @@ export default function Prediction({
             >
               {/* Graph */}
               {lineValueDataset.length == 0 ? (
-                <h2 className="SimpleText">
-                  Add A {type.slice(0, -1)} To Get Started{" "}
+                <h2 className="SimpleText" style={{ marginTop: "60px" }}>
+                  Add A {type.slice(0, -1)} To Get Started
                 </h2>
               ) : (
                 <>
