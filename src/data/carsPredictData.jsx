@@ -172,7 +172,7 @@ const carsBrandValues = [
 // PUT ANY FIXED RATE CHANGES (anything above 100) AT THE END. FIXED RATE CHANGES ARE DIVIDED BY 10000
 const carsAdditionalOptions = [
   ["Gasoline/Diesel", true, 2035, 0.005],
-  ["Collectible", false, 25, 300],
+  ["Collectible", false, 15, 300],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };

@@ -1,6 +1,6 @@
 7.1.0
 Rehaul comparison screen
-Try to make prediction scree more appealing
+Try to make prediction screen more appealing
 
 7.2.0
 Add top, side and back view of vehicle sizes

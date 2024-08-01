@@ -9,17 +9,6 @@ import {
   Legend,
 } from "chart.js";
 
-console.log({
-  ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-});
-
 export {
   ChartJS,
   CategoryScale,
