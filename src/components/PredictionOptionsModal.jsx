@@ -1,3 +1,6 @@
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
+
 export default function PredictionOptionsModal({
   setShowOptionsModal,
   setRateAdjustments,
@@ -5,9 +8,20 @@ export default function PredictionOptionsModal({
   isMobile,
   type,
   analytics,
+  showOptionsModal,
 }) {
   return (
-    <>
+    <Modal
+      isOpen={showOptionsModal}
+      contentLabel="Select Options"
+      className={"ModalContainer"}
+      overlayClassName={"ModalOverlay"}
+      style={{
+        overlay: {
+          zIndex: 3,
+        },
+      }}
+    >
       <p className="HeaderText">Select Options</p>
       <div style={{ width: "70%" }}>
         {rateAdjustments &&
@@ -80,6 +94,6 @@ export default function PredictionOptionsModal({
       >
         <p>Close</p>
       </button>
-    </>
+    </Modal>
   );
 }

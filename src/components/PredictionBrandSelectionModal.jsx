@@ -1,3 +1,6 @@
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
+
 export default function PredictionBrandSelectionModal({
   checkNoResults,
   searchString,
@@ -7,9 +10,21 @@ export default function PredictionBrandSelectionModal({
   type,
   setSearchString,
   setBrand,
+  showBrandModal,
 }) {
   return (
-    <>
+    <Modal
+      isOpen={showBrandModal}
+      contentLabel="Select a brand"
+      className={"ModalContainer"}
+      overlayClassName={"ModalOverlay"}
+      // Have to set modals on this screen to zIndex 3, because the handle for the rc-slider is also on zIndex 3, so it will show through the modal
+      style={{
+        overlay: {
+          zIndex: 3,
+        },
+      }}
+    >
       <p className="HeaderText">Select a brand</p>
 
       <input
@@ -57,6 +72,6 @@ export default function PredictionBrandSelectionModal({
       >
         <p>Cancel</p>
       </button>
-    </>
+    </Modal>
   );
 }

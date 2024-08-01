@@ -1,10 +1,24 @@
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
+
 export default function SimpleSuccessModal({
   title,
   message,
   setModalVisible,
+  modalVisible,
 }) {
   return (
-    <>
+    <Modal
+      isOpen={modalVisible}
+      contentLabel="Copied link to clipboard"
+      className={"ModalContainer"}
+      overlayClassName={"ModalOverlay"}
+      style={{
+        overlay: {
+          zIndex: 3,
+        },
+      }}
+    >
       <p className="HeaderText">{title}</p>
       <div
         className="ModalButtonSection"
@@ -22,6 +36,6 @@ export default function SimpleSuccessModal({
       >
         <p>Okay</p>
       </button>
-    </>
+    </Modal>
   );
 }

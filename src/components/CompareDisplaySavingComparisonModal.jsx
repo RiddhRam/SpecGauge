@@ -1,10 +1,19 @@
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
+
 export default function CompareDisplaySavingComparisonModal({
   awaitingSavingComparison,
   successfullySavedComparison,
   setSavingComparison,
+  savingComparison,
 }) {
   return (
-    <>
+    <Modal
+      isOpen={savingComparison}
+      contentLabel="Saving comparison"
+      className={"ModalContainer"}
+      overlayClassName={"ModalOverlay"}
+    >
       <p className="HeaderText">Save Comparison</p>
       {awaitingSavingComparison ? (
         <div
@@ -40,6 +49,6 @@ export default function CompareDisplaySavingComparisonModal({
           </button>
         </div>
       )}
-    </>
+    </Modal>
   );
 }

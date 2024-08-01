@@ -67,7 +67,10 @@ export default function WebAccountHandler({
         await import("../functions/LazyLoadGetFunctions").then(
           async (module) => {
             // Update the title
-            const functions = module.default();
+            const getFunctions = module.getFunctions;
+            const httpsCallable = module.httpsCallable;
+
+            const functions = getFunctions();
             const InitializeAccount = httpsCallable(
               functions,
               "InitializeAccount"

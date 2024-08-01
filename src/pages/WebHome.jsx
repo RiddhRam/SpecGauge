@@ -155,7 +155,7 @@ export default function WebHome({ isMobile }) {
       window.location.href
     );
 
-    SetCanonical(window.location.origin);
+    SetCanonical(window.location.origin + "/");
   }, []);
 
   return (

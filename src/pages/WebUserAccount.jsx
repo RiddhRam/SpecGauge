@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 
 import { signOut, sendPasswordResetEmail } from "firebase/auth";
 import { logEvent } from "firebase/analytics";
-import { httpsCallable } from "firebase/functions";
 import { auth, analytics } from "../firebaseConfig";
 
 const compressedBrands = [
@@ -100,7 +99,10 @@ export default function WebUserAccount({ isMobile }) {
       let GetSavedComparisons = null;
       await import("../functions/LazyLoadGetFunctions").then((module) => {
         // Update the title
-        const functions = module.default();
+        const getFunctions = module.getFunctions;
+        const httpsCallable = module.httpsCallable;
+
+        const functions = getFunctions();
         GetSavedComparisons = httpsCallable(functions, "GetSavedComparisons");
       });
 
@@ -154,7 +156,10 @@ export default function WebUserAccount({ isMobile }) {
       let DeleteSavedComparisons = null;
       await import("../functions/LazyLoadGetFunctions").then((module) => {
         // Update the title
-        const functions = module.default();
+        const getFunctions = module.getFunctions;
+        const httpsCallable = module.httpsCallable;
+
+        const functions = getFunctions();
         DeleteSavedComparisons = httpsCallable(
           functions,
           "DeleteSavedComparisons"

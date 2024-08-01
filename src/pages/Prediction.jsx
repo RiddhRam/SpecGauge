@@ -4,12 +4,9 @@ import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Modal from "react-modal";
-
-Modal.setAppElement("#SpecGauge");
-
 const LineImport = lazy(() => import("../components/LineImport"));
 const SliderImport = lazy(() => import("../components/SliderImport"));
+// neccessary to lazy import
 import "rc-slider/assets/index.css";
 
 import { logEvent } from "firebase/analytics";
@@ -1575,18 +1572,7 @@ export default function Prediction({
       </div>
 
       {/* Brand Modal */}
-      <Modal
-        isOpen={showBrandModal}
-        contentLabel="Select a brand"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-        // Have to set modals on this screen to zIndex 3, because the handle for the rc-slider is also on zIndex 3, so it will show through the modal
-        style={{
-          overlay: {
-            zIndex: 3,
-          },
-        }}
-      >
+      {showBrandModal ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -1601,22 +1587,15 @@ export default function Prediction({
             type={type}
             setBrand={setBrand}
             setSearchString={setSearchString}
+            showBrandModal={showBrandModal}
           ></PredictionBrandSelectionModal>
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Edit Modal */}
-      <Modal
-        isOpen={showEditModal}
-        contentLabel="Edit Graph Lines"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-        style={{
-          overlay: {
-            zIndex: 3,
-          },
-        }}
-      >
+      {showEditModal ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -1630,22 +1609,15 @@ export default function Prediction({
             removeGraph={removeGraph}
             setShowEditModal={setShowEditModal}
             isMobile={isMobile}
+            showEditModal={showEditModal}
           />
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Options Modal */}
-      <Modal
-        isOpen={showOptionsModal}
-        contentLabel="Select Options"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-        style={{
-          overlay: {
-            zIndex: 3,
-          },
-        }}
-      >
+      {showOptionsModal ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -1658,22 +1630,15 @@ export default function Prediction({
             isMobile={isMobile}
             type={type}
             analytics={analytics}
+            showOptionsModal={showOptionsModal}
           />
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Shows up when user clicks the share button */}
-      <Modal
-        isOpen={copiedLink}
-        contentLabel="Copied link to clipboard"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-        style={{
-          overlay: {
-            zIndex: 3,
-          },
-        }}
-      >
+      {copiedLink ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -1683,22 +1648,15 @@ export default function Prediction({
             title={"Share Comparison"}
             message={"Successfully copied link to your clipboard"}
             setModalVisible={setCopiedLink}
+            modalVisible={copiedLink}
           ></SimpleSuccessModal>
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Error Modal */}
-      <Modal
-        isOpen={showErrorModal}
-        contentLabel="Error adding this line"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-        style={{
-          overlay: {
-            zIndex: 3,
-          },
-        }}
-      >
+      {showErrorModal ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -1707,9 +1665,12 @@ export default function Prediction({
           <SimpleErrorModal
             message={error}
             setModalVisible={setShowErrorModal}
+            modalVisible={showErrorModal}
           ></SimpleErrorModal>
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

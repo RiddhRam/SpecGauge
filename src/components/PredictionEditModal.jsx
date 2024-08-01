@@ -1,4 +1,6 @@
 import { HexColorPicker } from "react-colorful";
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
 
 export default function PredictionEditModal({
   lineValueDataset,
@@ -8,9 +10,20 @@ export default function PredictionEditModal({
   removeGraph,
   setShowEditModal,
   isMobile,
+  showEditModal,
 }) {
   return (
-    <>
+    <Modal
+      isOpen={showEditModal}
+      contentLabel="Edit Graph Lines"
+      className={"ModalContainer"}
+      overlayClassName={"ModalOverlay"}
+      style={{
+        overlay: {
+          zIndex: 3,
+        },
+      }}
+    >
       <p className="HeaderText">Edit Graph</p>
       <div className="ModalButtonSection" style={{ width: "70%" }}>
         {lineValueDataset.map((item, index) =>
@@ -150,6 +163,6 @@ export default function PredictionEditModal({
       >
         <p>Close</p>
       </button>
-    </>
+    </Modal>
   );
 }

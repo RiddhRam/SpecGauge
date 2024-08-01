@@ -1,5 +1,3 @@
-import { getFunctions } from "firebase/functions";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
-export default function LazyLoadGetFunctions() {
-  return getFunctions();
-}
+export { getFunctions, httpsCallable };

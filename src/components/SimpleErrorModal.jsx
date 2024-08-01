@@ -1,6 +1,23 @@
-export default function SimpleErrorModal({ message, setModalVisible }) {
+import Modal from "react-modal";
+Modal.setAppElement("#SpecGauge");
+
+export default function SimpleErrorModal({
+  message,
+  setModalVisible,
+  modalVisible,
+}) {
   return (
-    <>
+    <Modal
+      isOpen={modalVisible}
+      contentLabel={message}
+      className={"ModalContainer"}
+      overlayClassName={"ModalOverlay"}
+      style={{
+        overlay: {
+          zIndex: 3,
+        },
+      }}
+    >
       <p className="HeaderText">Error</p>
       <div
         className="ModalButtonSection"
@@ -19,6 +36,6 @@ export default function SimpleErrorModal({ message, setModalVisible }) {
       >
         <p>Okay</p>
       </button>
-    </>
+    </Modal>
   );
 }

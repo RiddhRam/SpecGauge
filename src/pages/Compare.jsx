@@ -1,11 +1,12 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import Modal from "react-modal";
 
 import { Navbar } from "../components/Navbar";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 const SelectionModal = lazy(() => import("../components/SelectionModal"));
-const WebAccountHandler = lazy(() => import("../components/WebAccountHandler"));
+const WebAccountHandlerModal = lazy(() =>
+  import("../components/WebAccountHandlerModal")
+);
 const CompareDisplaySavingComparisonModal = lazy(() =>
   import("../components/CompareDisplaySavingComparisonModal")
 );
@@ -14,11 +15,8 @@ const SimpleSuccessModal = lazy(() =>
 );
 
 import { logEvent } from "firebase/analytics";
-import { httpsCallable } from "firebase/functions";
 import { auth, analytics } from "../firebaseConfig";
 import SetCanonical from "../functions/SetCanonical";
-
-Modal.setAppElement("#SpecGauge");
 
 export default function Compare({
   type,
@@ -29,7 +27,7 @@ export default function Compare({
 }) {
   // Initialized in useEffect
   const [Process, setProcess] = useState(null);
-  const [QueryProcess, setQueryProcess] = useState(null);
+  const [QueryProcess, setQueryProcess] = useState([]);
   const [Categories, setCategories] = useState(null);
   const [Brands, setBrands] = useState(null);
   const [DefaultArray, setDefaultArray] = useState(null);
@@ -280,7 +278,7 @@ export default function Compare({
   }, [type]);
 
   useEffect(() => {
-    if (beginLoadingPresets && QueryProcess) {
+    if (beginLoadingPresets && QueryProcess.length != 0) {
       // URL of the page
       const fullURL = window.location.href;
 
@@ -506,7 +504,10 @@ export default function Compare({
       let WriteSavedComparisons = null;
       await import("../functions/LazyLoadGetFunctions").then((module) => {
         // Update the title
-        const functions = module.default();
+        const getFunctions = module.getFunctions;
+        const httpsCallable = module.httpsCallable;
+
+        const functions = getFunctions();
         WriteSavedComparisons = httpsCallable(
           functions,
           "WriteSavedComparisons"
@@ -820,40 +821,23 @@ export default function Compare({
       </div>
 
       {/* Shows up if user needs to be logged in to complete action */}
-      <Modal
-        isOpen={accountModalVisible}
-        contentLabel="Account Sign Up or Log In"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-      >
+      {accountModalVisible ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
           }
         >
-          <WebAccountHandler
-            screenType={"modal"}
-            setModaldiv={setAccountModalVisible}
-          ></WebAccountHandler>
+          <WebAccountHandlerModal
+            accountModalVisible={accountModalVisible}
+            setAccountModalVisible={setAccountModalVisible}
+          ></WebAccountHandlerModal>
         </Suspense>
-
-        <button
-          className="NormalButtonNoBackground"
-          onClick={() => {
-            setAccountModalVisible(false);
-          }}
-        >
-          <p>Cancel</p>
-        </button>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Display status of saving comparison */}
-      <Modal
-        isOpen={savingComparison}
-        contentLabel="Saving comparison"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-      >
+      {savingComparison ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -863,17 +847,15 @@ export default function Compare({
             awaitingSavingComparison={awaitingSavingComparison}
             successfullySavedComparison={successfullySavedComparison}
             setSavingComparison={setSavingComparison}
+            savingComparison={savingComparison}
           />
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Shows up when user is selecting a new product */}
-      <Modal
-        isOpen={productModalVisible}
-        contentLabel="Select a product to compare"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-      >
+      {productModalVisible ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -890,17 +872,15 @@ export default function Compare({
             setPros={setPros}
             setProducts={setProducts}
             setSaveComparisonProcesses={setSaveComparisonProcesses}
+            productModalVisible={productModalVisible}
           ></SelectionModal>
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
 
       {/* Shows up when user clicks the share button */}
-      <Modal
-        isOpen={copiedLink}
-        contentLabel="Copied link to clipboard"
-        className={"ModalContainer"}
-        overlayClassName={"ModalOverlay"}
-      >
+      {copiedLink ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
@@ -910,9 +890,12 @@ export default function Compare({
             title={"Share Comparison"}
             message={"Successfully copied link to your clipboard"}
             setModalVisible={setCopiedLink}
+            modalVisible={copiedLink}
           ></SimpleSuccessModal>
         </Suspense>
-      </Modal>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
