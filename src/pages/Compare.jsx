@@ -222,17 +222,25 @@ export default function Compare({
       const newDisplayPros = [];
       for (let productIndex in productPros) {
         let tempProductPros = "";
+        const newJSONs = [];
 
         for (let categoryIndex in tempOriginalDefaultPros) {
           if (
             productPros[productIndex][categoryIndex] !=
             tempOriginalDefaultPros[categoryIndex]
           ) {
-            tempProductPros += productPros[productIndex][categoryIndex];
+            const newJSON = {};
+            newJSON["Category"] = tempOriginalDefaultPros[categoryIndex];
+            tempProductPros += productPros[productIndex][categoryIndex].split(
+              "\n",
+              2
+            )[1];
             tempProductPros += "\n";
+            newJSON["Pros"] = tempProductPros;
+            newJSONs.push(newJSON);
           }
         }
-        newDisplayPros.push(tempProductPros);
+        newDisplayPros.push(newJSONs);
       }
       setDisplayPros(newDisplayPros);
     } else {
@@ -718,49 +726,10 @@ export default function Compare({
             {/* Create a div for each category in each product, but don't create a div for each product */}
             {/* This way, it won't put everything on the first row */}
             {products.flatMap((product, productIndex) =>
-              product.map((category, categoryIndex) =>
-                categoryIndex != 2 ? (
-                  // If not the pros index
-                  categoryIndex != 0 ? (
-                    // If not the second row
-                    categoryIndex != 1 ? (
-                      // If not the first row
-                      <div
-                        key={`${productIndex}-${categoryIndex}`}
-                        className="ComparisonCell"
-                      >
-                        <p
-                          className="ComparisonRowName"
-                          style={{ fontSize: isMobile ? "13px" : "15px" }}
-                        >
-                          {category.Category}
-                        </p>
-
-                        <div
-                          className="ComparisonRowValue"
-                          style={{ fontSize: isMobile ? "13px" : "15px" }}
-                        >
-                          {[]
-                            .concat(category.Values)
-                            .map((rowValue, rowIndex) => (
-                              <p key={rowIndex}>{rowValue}</p>
-                            ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <p
-                        className="SimpleText"
-                        key={`${productIndex}-${categoryIndex}`}
-                      >
-                        {saveComparisonProcesses[productIndex][0] +
-                          " " +
-                          saveComparisonProcesses[productIndex][
-                            saveComparisonProcesses[productIndex].length - 1
-                          ]}
-                      </p>
-                    )
-                  ) : (
-                    // If it is the second row
+              product.map((category, categoryIndex) => (
+                <>
+                  {/* If it is the remove button index */}
+                  {categoryIndex == 0 && (
                     <div key={`${productIndex}-${categoryIndex}`}>
                       <button
                         className="DangerButton"
@@ -790,31 +759,145 @@ export default function Compare({
                         Remove
                       </button>
                     </div>
-                  )
-                ) : (
-                  // If it is the pro index
-                  <div
-                    key={`${productIndex}-${categoryIndex}`}
-                    className="ProCell"
-                  >
-                    <p
-                      className="ComparisonRowName"
-                      style={{ fontSize: isMobile ? "13px" : "15px" }}
-                    >
-                      Pros
-                    </p>
+                  )}
 
+                  {/* If it is the pro index */}
+                  {categoryIndex == 2 && (
                     <div
-                      className="ComparisonRowValue"
-                      style={{ fontSize: isMobile ? "13px" : "15px" }}
+                      key={`${productIndex}-${categoryIndex}`}
+                      className="ProCell"
                     >
-                      {[].concat(category.Values).map((rowValue, rowIndex) => (
-                        <p key={rowIndex}>{displayPros[productIndex]}</p>
-                      ))}
+                      <p
+                        className="ComparisonRowName"
+                        style={{ fontSize: isMobile ? "13px" : "15px" }}
+                      >
+                        Pros
+                      </p>
+
+                      {displayPros.length >= 2 ? (
+                        <div
+                          className="ComparisonRowValue"
+                          style={{ fontSize: isMobile ? "13px" : "15px" }}
+                        >
+                          {[]
+                            .concat(category.Values)
+                            .map((rowValue, rowIndex) => (
+                              <div key={rowIndex}>
+                                {[]
+                                  .concat(displayPros[productIndex])
+                                  .map((proCategory, proCategoryIndex) => (
+                                    <div key={proCategoryIndex}>
+                                      <p
+                                        style={{
+                                          fontSize: isMobile ? "15px" : "18px",
+                                          fontWeight: "bold",
+                                          color: "#39ff14",
+                                        }}
+                                      >
+                                        {
+                                          displayPros[productIndex][
+                                            proCategoryIndex
+                                          ]["Category"]
+                                        }
+                                      </p>
+                                      <p>
+                                        {
+                                          displayPros[productIndex][
+                                            proCategoryIndex
+                                          ]["Pros"]
+                                        }
+                                      </p>
+                                    </div>
+                                  ))}
+                              </div>
+                            ))}
+                        </div>
+                      ) : (
+                        <div
+                          className="ComparisonRowValue"
+                          style={{
+                            fontSize: isMobile ? "13px" : "15px",
+                            textAlign: "center",
+                          }}
+                        >
+                          Add at least 2 items to view the pros
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )
-              )
+                  )}
+
+                  {/* If it is the name index */}
+                  {categoryIndex == 1 && (
+                    <p
+                      className="SimpleText"
+                      key={`${productIndex}-${categoryIndex}`}
+                    >
+                      {saveComparisonProcesses[productIndex][0] +
+                        " " +
+                        saveComparisonProcesses[productIndex][
+                          saveComparisonProcesses[productIndex].length - 1
+                        ]}
+                    </p>
+                  )}
+
+                  {/* Must be a normal cell */}
+                  {categoryIndex != 0 &&
+                    categoryIndex != 1 &&
+                    categoryIndex != 2 && (
+                      <div
+                        key={`${productIndex}-${categoryIndex}`}
+                        className="ComparisonCell"
+                      >
+                        <p
+                          className="ComparisonRowName"
+                          style={{ fontSize: isMobile ? "13px" : "15px" }}
+                        >
+                          {category.Category}
+                        </p>
+
+                        <div className="ComparisonRowValue">
+                          {[]
+                            .concat(category.Values)
+                            .map((rowValue, rowIndex) => (
+                              <div key={rowIndex}>
+                                {rowValue.includes(":") &&
+                                category.Values.length != 1 ? (
+                                  <div style={{ margin: "30px 0" }}>
+                                    <p
+                                      style={{
+                                        fontSize: isMobile ? "15px" : "18px",
+                                        fontWeight: "bold",
+                                        color: "#4ca0d7",
+                                      }}
+                                    >
+                                      {rowValue.split(":")[0].trim()}
+                                    </p>
+                                    <p
+                                      style={{
+                                        textAlign: "left",
+                                        fontSize: isMobile ? "13px" : "15px",
+                                      }}
+                                    >
+                                      {rowValue.split(":")[1].trim()}
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <p
+                                    style={{
+                                      fontSize: isMobile ? "14px" : "17px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {rowValue}
+                                  </p>
+                                )}
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+                </>
+              ))
             )}
           </div>
         )}

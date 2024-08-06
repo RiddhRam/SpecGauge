@@ -304,6 +304,7 @@ a {
   background-color: #1e2033;
   flex-grow: 1;
   white-space: pre-wrap;
+  text-align: left;
 }
 
 /* For paragraphs on the information screens */

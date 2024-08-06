@@ -1,7 +1,7 @@
 {
   "name": "specgauge",
   "private": true,
-  "version": "7.0.2",
+  "version": "7.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,8 @@
     "serve": "serve -s dist",
     "build-dev": "vite build --mode development",
     "compress": "node PakoTestingAndCreating/CompressJS.js",
-    "decompress": "node PakoTestingAndCreating/DecompressJS.js"
+    "decompress": "node PakoTestingAndCreating/DecompressJS.js",
+    "addjson": "node PakoTestingAndCreating/AddToJson.js"
   },
   "dependencies": {
     "chart.js": "^4.4.3",
