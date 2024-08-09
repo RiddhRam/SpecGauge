@@ -220,22 +220,25 @@ export default function Compare({
 
       const tempOriginalDefaultPros = defaultProCategories();
       const newDisplayPros = [];
+
+      // iterate through the pros of each product
       for (let productIndex in productPros) {
-        let tempProductPros = "";
         const newJSONs = [];
 
         for (let categoryIndex in tempOriginalDefaultPros) {
-          if (
-            productPros[productIndex][categoryIndex] !=
-            tempOriginalDefaultPros[categoryIndex]
-          ) {
+          let tempProductPros = "";
+          const productProsString = productPros[productIndex][categoryIndex];
+          if (productProsString != tempOriginalDefaultPros[categoryIndex]) {
             const newJSON = {};
+            // Save the category name
             newJSON["Category"] = tempOriginalDefaultPros[categoryIndex];
-            tempProductPros += productPros[productIndex][categoryIndex].split(
-              "\n",
-              2
-            )[1];
-            tempProductPros += "\n";
+
+            // These are the pros of the product to display
+            const splitIndex = productProsString.indexOf("\n");
+            const prosOnlyString = productProsString.slice(splitIndex + 1);
+
+            tempProductPros += prosOnlyString + "\n";
+
             newJSON["Pros"] = tempProductPros;
             newJSONs.push(newJSON);
           }
@@ -701,6 +704,28 @@ export default function Compare({
           >
             <p>Reset</p>
           </button>
+
+          {/* Compare Size */}
+          {/*
+          {products.length != 0 && (
+            <button
+              onClick={() => {
+                /* Set page to home *
+                console.log("Compare Size");
+              }}
+              className="CompareTopButton"
+              style={
+                isMobile
+                  ? {
+                      fontSize: "13px",
+                    }
+                  : {}
+              }
+            >
+              <p>Compare Size</p>
+            </button>
+          )}
+          */}
         </div>
 
         {/* For each product, show a column */}
@@ -816,7 +841,9 @@ export default function Compare({
                         <div
                           className="ComparisonRowValue"
                           style={{
-                            fontSize: isMobile ? "13px" : "15px",
+                            fontSize: isMobile ? "15px" : "18px",
+                            fontWeight: "bold",
+                            color: "#39ff14",
                             textAlign: "center",
                           }}
                         >
