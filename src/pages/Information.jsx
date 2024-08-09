@@ -1,4 +1,5 @@
 import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import { useEffect } from "react";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import RemoveCanonical from "../functions/RemoveCanonical";
@@ -41,6 +42,7 @@ export default function Information({ isMobile, title, text, description }) {
         </p>
         <div>{text}</div>
       </div>
+      <Footer isMobile={isMobile}></Footer>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 const SelectionModal = lazy(() => import("../components/SelectionModal"));
 const WebAccountHandlerModal = lazy(() =>
@@ -808,32 +809,35 @@ export default function Compare({
                             .concat(category.Values)
                             .map((rowValue, rowIndex) => (
                               <div key={rowIndex}>
-                                {[]
-                                  .concat(displayPros[productIndex])
-                                  .map((proCategory, proCategoryIndex) => (
-                                    <div key={proCategoryIndex}>
-                                      <p
-                                        style={{
-                                          fontSize: isMobile ? "15px" : "18px",
-                                          fontWeight: "bold",
-                                          color: "#39ff14",
-                                        }}
-                                      >
-                                        {
-                                          displayPros[productIndex][
-                                            proCategoryIndex
-                                          ]["Category"]
-                                        }
-                                      </p>
-                                      <p>
-                                        {
-                                          displayPros[productIndex][
-                                            proCategoryIndex
-                                          ]["Pros"]
-                                        }
-                                      </p>
-                                    </div>
-                                  ))}
+                                {[].concat(displayPros[productIndex]).map(
+                                  (proCategory, proCategoryIndex) =>
+                                    displayPros[productIndex] != undefined && (
+                                      <div key={proCategoryIndex}>
+                                        <p
+                                          style={{
+                                            fontSize: isMobile
+                                              ? "15px"
+                                              : "18px",
+                                            fontWeight: "bold",
+                                            color: "#39ff14",
+                                          }}
+                                        >
+                                          {
+                                            displayPros[productIndex][
+                                              proCategoryIndex
+                                            ]["Category"]
+                                          }
+                                        </p>
+                                        <p>
+                                          {
+                                            displayPros[productIndex][
+                                              proCategoryIndex
+                                            ]["Pros"]
+                                          }
+                                        </p>
+                                      </div>
+                                    )
+                                )}
                               </div>
                             ))}
                         </div>
@@ -929,6 +933,8 @@ export default function Compare({
           </div>
         )}
       </div>
+
+      <Footer isMobile={isMobile}></Footer>
 
       {/* Shows up if user needs to be logged in to complete action */}
       {accountModalVisible ? (

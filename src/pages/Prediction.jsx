@@ -1,4 +1,5 @@
 import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 
 import { useState, useEffect, lazy, Suspense } from "react";
@@ -1570,6 +1571,8 @@ export default function Prediction({
           </div>
         )}
       </div>
+
+      <Footer isMobile={isMobile}></Footer>
 
       {/* Brand Modal */}
       {showBrandModal ? (

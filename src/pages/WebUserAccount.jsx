@@ -1,4 +1,5 @@
 import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import RemoveCanonical from "../functions/RemoveCanonical";
 import PakoInflate from "../functions/PakoInflate";
@@ -480,6 +481,7 @@ export default function WebUserAccount({ isMobile }) {
           )}
         </div>
       </div>
+      <Footer isMobile={isMobile}></Footer>
       {/* Show status of deleted comparison */}
       <Modal
         isOpen={deletingSavedComparison}

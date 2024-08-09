@@ -1,7 +1,6 @@
-7.2.0
+7.3.0
 Add top, side and back view of vehicle sizes
 Put product selection for compare and predict pages inside a modal with dropdown selectors
-Put all footers back to their pages
 
 8.0.0
 Add performance calculator for cars and computers

@@ -2,6 +2,7 @@ import { useEffect, useState, lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
 import CompareIcon from "../assets/Comparison Icon.svg";
 import PredictIcon from "../assets/Prediction Icon.svg";
@@ -438,6 +439,8 @@ export default function WebHome({ isMobile }) {
           <p>Submit or Request Comparison Data</p>
         </button>
       </div>
+
+      <Footer isMobile={isMobile}></Footer>
 
       {/* Comparison Category selection modal */}
       {compareModalVisible ? (

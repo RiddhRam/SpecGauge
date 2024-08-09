@@ -1,7 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Footer } from "./components/Footer";
 import { Loading } from "./components/Loading";
 import useWindowDimensions from "./useWindowDimensions";
 const WebHome = lazy(() => import("./pages/WebHome"));
@@ -410,8 +409,6 @@ export default function App() {
           ></Route>
         </Routes>
       </BrowserRouter>
-
-      <Footer isMobile={isMobile}></Footer>
     </>
   );
 }
