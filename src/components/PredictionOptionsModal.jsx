@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import { logEvent } from "firebase/analytics";
 Modal.setAppElement("#SpecGauge");
 
 export default function PredictionOptionsModal({

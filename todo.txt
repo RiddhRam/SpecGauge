@@ -1,6 +1,12 @@
 7.3.0
+Change prediction page initial price to current price, and work backward from that year and forward too
+Let user rename graph items
+Add trending predictions to home page
+
+7.4.0
 Add top, side and back view of vehicle sizes
 Put product selection for compare and predict pages inside a modal with dropdown selectors
+Get database data for comparison screen from Cloudflare by using lazy imports instead of calling from firebase
 
 8.0.0
 Add performance calculator for cars and computers

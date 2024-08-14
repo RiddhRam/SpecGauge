@@ -139,7 +139,7 @@ const carsBrandValues = [
   { label: "Plymouth", value: normal },
   { label: "Polestar", value: normal },
   { label: "Pontiac", value: normal },
-  { label: "Porsche", value: expensiveSport },
+  { label: "Porsche", value: inBetweenCars },
   { label: "RAM", value: normal },
   { label: "Renault", value: normal },
   { label: "Rimac", value: superCar },
