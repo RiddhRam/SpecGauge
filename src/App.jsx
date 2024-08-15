@@ -13,6 +13,7 @@ const NoPage = lazy(() => import("./pages/NoPage"));
 
 // Firebase
 import { onAuthStateChanged } from "firebase/auth";
+import { logEvent } from "firebase/analytics";
 import { auth, analytics } from "./firebaseConfig";
 
 export default function App() {

@@ -261,7 +261,6 @@ export default function Prediction({
         prices.push(null);
         continue;
       }
-      // If rate is depreciating, follow these rules
       // For each year it was released, calculate the price for that year
       // Get the rng() value
       const seed = `${price}${brand}${year}${lastPrice}${rateAdjustments}`;
@@ -281,6 +280,11 @@ export default function Prediction({
         originalPrice = newCalculatedPrice;
         prices.push(originalPrice);
         continue;
+      }
+
+      // If rate is depreciating, but value grew higher, then reduce the difference to 5%
+      if (rate < 0 && difference > 0) {
+        difference *= 0.05;
       }
 
       // If not the first value
@@ -316,14 +320,11 @@ export default function Prediction({
       else {
         // Difference is reduced to 2% from the last price if rate isn't positive
         if (rate < 0 && difference > lastPrice * 0.06) {
-          /*difference = lastPrice * rng() * -0.06;
-          lastPriceIncreased = false;*/
           rate *= -1;
         }
       }
 
-      /* If difference is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
-
+      /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
       if (difference + lastPrice > originalPrice * 2.1) {
         difference = originalPrice * 0.1 * rng();
       }
