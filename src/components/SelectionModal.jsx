@@ -89,7 +89,6 @@ export default function SelectionModal({
             value={searchString}
             className="TextInput"
             placeholder="Search"
-            id={"SearchString" + type + step}
             onChange={(text) => checkNoResults(text.target.value)}
             style={{ margin: "15px 0" }}
           ></input>

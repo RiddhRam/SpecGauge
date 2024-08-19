@@ -11,6 +11,7 @@ export default function PredictionEditModal({
   setShowEditModal,
   isMobile,
   showEditModal,
+  updateName,
 }) {
   return (
     <Modal
@@ -50,12 +51,14 @@ export default function PredictionEditModal({
                 }}
               >
                 {/* Label name */}
-                <p
-                  style={{ fontSize: 14, marginRight: 5 }}
-                  className="PlainText"
-                >
-                  {item.label}
-                </p>
+                <input
+                  type="text"
+                  value={item.label}
+                  className="TextInput"
+                  placeholder="Name"
+                  onChange={(text) => updateName(text.target.value, index)}
+                  style={{ margin: "15px 15px 15px 0" }}
+                ></input>
 
                 {/* Change color */}
                 {colorChangeIndex == index ? (
@@ -110,9 +113,14 @@ export default function PredictionEditModal({
               }}
             >
               {/* Label name */}
-              <p style={{ fontSize: 20, marginRight: 5 }} className="PlainText">
-                {item.label}
-              </p>
+              <input
+                type="text"
+                value={item.label}
+                className="TextInput"
+                placeholder="Name"
+                onChange={(text) => updateName(text.target.value, index)}
+                style={{ margin: "15px 15px 15px 0" }}
+              ></input>
 
               {/* Change color */}
               {colorChangeIndex == index ? (
