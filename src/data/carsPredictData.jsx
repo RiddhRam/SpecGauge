@@ -1,5 +1,5 @@
-const fast = -0.12;
-const normal = -0.09;
+const fast = -0.17;
+const normal = -0.095;
 const reputable = -0.075;
 const reliable = -0.06;
 const reputableSports = -0.055;
@@ -73,14 +73,13 @@ const carsAveragePrices = [
 ];
 
 const carsBrandValues = [
-  { label: "Acura", value: reliable },
   { label: "Alfa Romeo", value: reputable },
   { label: "Alpine", value: inBetweenCars },
   { label: "Aston Martin", value: expensiveSport },
   { label: "Audi", value: reputable },
   { label: "Bentley", value: expensiveSport },
   { label: "BMW", value: -0.08 },
-  { label: "BMW M-Series", value: reputableSports },
+  { label: "BMW M-Series", value: -0.06 },
   { label: "BMW Motorcycle", value: expensiveSportMotorCycle },
   { label: "Bugatti", value: superCar },
   { label: "Buick", value: normal },
@@ -117,7 +116,7 @@ const carsBrandValues = [
   { label: "KTM", value: expensiveSport },
   { label: "Lamborghini", value: superCar },
   { label: "Land Rover", value: normal },
-  { label: "Lexus", value: reliable },
+  { label: "Lexus", value: -0.065 },
   { label: "Lincoln", value: normal },
   { label: "Lotus", value: normal },
   { label: "Lucid", value: normal },
@@ -139,7 +138,7 @@ const carsBrandValues = [
   { label: "Plymouth", value: normal },
   { label: "Polestar", value: normal },
   { label: "Pontiac", value: normal },
-  { label: "Porsche", value: inBetweenCars },
+  { label: "Porsche", value: -0.05 },
   { label: "RAM", value: normal },
   { label: "Renault", value: normal },
   { label: "Rimac", value: superCar },
