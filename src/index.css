@@ -654,7 +654,7 @@ a {
 }
 
 /* for the Select A Brand button on the prediction page*/
-.SelectABrandButton {
+.SelectABrandOptions {
   background-color: #f3c353;
   color: #000;
   font-size: 16px;
@@ -667,16 +667,13 @@ a {
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
   &:hover {
-    background-color: #deb34c;
+    background-color: #c1993b;
   }
 
   &:active {
-    background-color: #b18e3d;
+    background-color: #856a2a;
   }
 }
 
