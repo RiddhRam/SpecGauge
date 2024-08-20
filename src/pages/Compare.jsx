@@ -254,9 +254,9 @@ export default function Compare({
     if (pros.length == 0) {
       SetTitleAndDescription(defaultTitle, description, window.location.href);
     } else {
-      import("../functions/BuildTitle").then((module) => {
+      import("../functions/BuildTitleCompare").then((module) => {
         // Update the title
-        const newTitle = module.default(saveComparisonProcesses, "Compare:");
+        const newTitle = module.default(saveComparisonProcesses);
         SetTitleAndDescription(newTitle, description, window.location.href);
       });
     }

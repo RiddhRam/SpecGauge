@@ -1,4 +1,4 @@
-const cpuNormal = -0.12;
+const cpuNormal = -0.13;
 
 const processorsBrandValues = [
   { label: "AMD", value: cpuNormal },

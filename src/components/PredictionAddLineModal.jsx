@@ -10,17 +10,21 @@ export default function PredictionAddLineModal({
   handleNumberInput,
   releaseYear,
   setReleaseYear,
-  initialPrice,
-  setInitialPrice,
+  productPrice,
+  setProductPrice,
   modalAddToGraph,
   brand,
   error,
+  type,
 }) {
-  let modalInitialPrice = initialPrice;
+  let modalProductPrice = productPrice;
   let modalReleaseYear = releaseYear;
 
+  // Updates when user selects a brand because setBrand will be executed
   const brandToUse = brand.length === 0 ? brandValues[0].label : brand;
 
+  // Doesn't have a function in the Prediction page, so we just set it here
+  const [priceToUse, setPriceToUse] = useState("Current Price");
   const [showError, setShowError] = useState(false);
 
   return (
@@ -36,7 +40,7 @@ export default function PredictionAddLineModal({
         },
       }}
     >
-      <p className="HeaderText">Add A New Line</p>
+      <p className="HeaderText">Add A {type.slice(0, -1)}</p>
 
       {/* Price Field */}
       <div style={{ position: "relative" }}>
@@ -44,7 +48,7 @@ export default function PredictionAddLineModal({
           style={{
             position: "absolute",
             left: "10px",
-            top: "49%",
+            top: "50%",
             transform: "translateY(-50%)",
             pointerEvents: "none",
             color: "#fff",
@@ -54,11 +58,11 @@ export default function PredictionAddLineModal({
         </span>
         <input
           type="number"
-          value={modalInitialPrice}
+          value={modalProductPrice}
           className="TextInput"
-          placeholder="Initial New Price"
+          placeholder="Price"
           onChange={(event) =>
-            handleNumberInput(event.target.value, setInitialPrice)
+            handleNumberInput(event.target.value, setProductPrice)
           }
           style={{
             fontSize: 16,
@@ -66,6 +70,17 @@ export default function PredictionAddLineModal({
           }}
         />
       </div>
+
+      <select
+        className="SelectABrandOptions"
+        onChange={(event) => {
+          setPriceToUse(event.target.value);
+        }}
+        style={{ margin: "10px 0", padding: "10px" }}
+      >
+        <option value={"Current Price"}>Current Price</option>
+        <option value={"Release Price"}>Release Price</option>
+      </select>
 
       {/* Release Year Field */}
       <input
@@ -76,7 +91,7 @@ export default function PredictionAddLineModal({
         onChange={(event) =>
           handleNumberInput(event.target.value, setReleaseYear)
         }
-        style={{ fontSize: 16, margin: "15px 0" }}
+        style={{ fontSize: 16, margin: "35px 0 15px 0" }}
       ></input>
 
       {/* Select Brand */}
@@ -97,6 +112,7 @@ export default function PredictionAddLineModal({
 
       {showError && <p className="ErrorText">{error}</p>}
 
+      {/* Bottom Buttons */}
       <div
         style={{
           display: "grid",
@@ -111,7 +127,7 @@ export default function PredictionAddLineModal({
           onClick={() => {
             // Hide the modal
             setShowAddLineModal(false);
-            setInitialPrice("");
+            setProductPrice("");
             setReleaseYear("");
           }}
           className="DangerButton"
@@ -122,10 +138,12 @@ export default function PredictionAddLineModal({
         {/* Add button */}
         <button
           onClick={async () => {
-            const result = await modalAddToGraph(
-              initialPrice,
+            let result = null;
+            result = await modalAddToGraph(
+              productPrice,
               releaseYear,
-              brandToUse
+              brandToUse,
+              priceToUse
             );
 
             if (result != 0) {
@@ -133,10 +151,9 @@ export default function PredictionAddLineModal({
             } else {
               // Hide the modal
               setShowAddLineModal(false);
-              setInitialPrice("");
+              setProductPrice("");
               setReleaseYear("");
               setBrand("");
-              setShowError(false);
             }
           }}
           className="NormalButton"

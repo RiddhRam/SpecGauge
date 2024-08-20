@@ -62,7 +62,7 @@ export default function Prediction({
   const [scrollLimit, setScrollLimit] = useState(24);
 
   // For the input fields
-  const [initialPrice, setInitialPrice] = useState("");
+  const [productPrice, setProductPrice] = useState("");
   const [releaseYear, setReleaseYear] = useState("");
 
   // The orignal reference array of all the lines currently selected by the user
@@ -175,8 +175,10 @@ export default function Prediction({
     }
   };
 
-  const addToGraph = async (priceString, yearString, brand) => {
-    const price = parseFloat(priceString);
+  const addToGraph = async (priceString, yearString, brand, priceToUse) => {
+    let price = parseFloat(priceString);
+    // Used for the process in case priceToUse is current price
+    const originalPriceString = priceString;
     const year = parseFloat(yearString);
 
     // If price is not at least 7500
@@ -198,6 +200,12 @@ export default function Prediction({
 
     // Dtermines whether or not the last price was an increase from the second last price
     let lastPriceIncreased = false;
+
+    // If it's the current price, work backwards to the release price, then continue as normal
+    // It also must be an older vehicle, at least 1 year old
+    if (priceToUse == "Current Price" && releaseYear < 2024) {
+      console.log("Reversing back to release price");
+    }
 
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
@@ -298,9 +306,9 @@ export default function Prediction({
         continue;
       }
 
-      // If rate is depreciating, but value grew higher, then reduce the difference to 5%
+      // If rate is depreciating, but value grew higher, then reduce the difference to 5% and make it negative
       if (rate < 0 && difference > 0) {
-        difference *= 0.05;
+        difference *= -0.05;
       }
 
       // If not the first value
@@ -344,18 +352,19 @@ export default function Prediction({
       if (difference + lastPrice > originalPrice * 2.1) {
         difference = originalPrice * 0.1 * rng();
       }
+      difference = Math.round(difference);
       prices.push(lastPrice + difference);
       lastPrice = lastPrice + difference;
     }
 
     while (true) {
       let matchFound = false;
-      const red = Math.random() * 255;
-      const green = Math.random() * 255;
-      const blue = Math.random() * 255;
+      let newBorderColor = "#fff";
 
-      // Create a colour
-      const newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+      const colourRequest = await newColour();
+
+      matchFound = colourRequest.matchFound;
+      newBorderColor = colourRequest.newBorderColor;
 
       for (let item in lineValueDataset) {
         // Make sure no match
@@ -406,16 +415,15 @@ export default function Prediction({
     const lineNames = [];
 
     for (let item in newLineValueDataset) {
-      // Have to split it up so it works with BuildTitle, or else it puts each character in its own space
-      lineNames.push(newLineValueDataset[item].label.split());
+      lineNames.push(newLineValueDataset[item].label);
     }
 
     setLineValueDataset(newLineValueDataset);
 
     if (newLineValueDataset.length > 0) {
-      import("../functions/BuildTitle").then((module) => {
+      import("../functions/BuildTitlePredict").then((module) => {
         // Update the title
-        const newTitle = module.default(lineNames, "Predict:");
+        const newTitle = module.default(lineNames);
         SetTitleAndDescription(newTitle, description, window.location.href);
       });
     } else {
@@ -510,18 +518,12 @@ export default function Prediction({
   const addAveragePrice = async () => {
     while (true) {
       let matchFound = false;
-      const red = Math.random() * 255;
-      const green = Math.random() * 255;
-      const blue = Math.random() * 255;
+      let newBorderColor = "#fff";
 
-      let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+      const colourRequest = await newColour();
 
-      for (let item in lineValueDataset) {
-        if (newBorderColor == lineValueDataset[item].borderColor) {
-          matchFound = true;
-          break;
-        }
-      }
+      matchFound = colourRequest.matchFound;
+      newBorderColor = colourRequest.newBorderColor;
 
       if (!matchFound) {
         let currentAveragePrices = null;
@@ -626,10 +628,20 @@ export default function Prediction({
     document.body.removeChild(link);
   };
 
-  const modalAddToGraph = async (initialPrice, releaseYear, brand) => {
+  const modalAddToGraph = async (
+    productPrice,
+    releaseYear,
+    brand,
+    priceToUse
+  ) => {
     setNeedToCreateChart(true);
     createChart();
-    const result = await addToGraph(initialPrice, releaseYear, brand);
+    const result = await addToGraph(
+      productPrice,
+      releaseYear,
+      brand,
+      priceToUse
+    );
     if (result != 0) {
       setError(result);
       if (analytics != null) {
@@ -641,7 +653,7 @@ export default function Prediction({
       if (analytics != null) {
         logEvent(analytics, "Add Prediction Item", {
           Type: type,
-          InitialPrice: initialPrice,
+          ProductPrice: productPrice,
           ReleaseYear: releaseYear,
           Brand: brand,
         });
@@ -649,6 +661,48 @@ export default function Prediction({
     }
 
     return result;
+  };
+
+  const newColour = async () => {
+    let matchFound = false;
+
+    // Convert background page color into RGB
+    const backgroundColor = "#1e2033";
+    const baseRgb = [
+      parseInt(backgroundColor.substring(1, 3), 16),
+      parseInt(backgroundColor.substring(3, 5), 16),
+      parseInt(backgroundColor.substring(5, 7), 16),
+    ];
+
+    // Minimum distance of the new colour from the page colour
+    const minDistance = 200;
+
+    let red, green, blue, colorRgb, distance;
+
+    do {
+      red = Math.random() * 255;
+      green = Math.random() * 255;
+      blue = Math.random() * 255;
+      colorRgb = [red, green, blue];
+      distance = Math.sqrt(
+        Math.pow(colorRgb[0] - baseRgb[0], 2) +
+          Math.pow(colorRgb[1] - baseRgb[1], 2) +
+          Math.pow(colorRgb[2] - baseRgb[2], 2)
+      );
+    } while (distance < minDistance);
+
+    // Create a colour
+    const newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+    // Make sure no repeat colours
+    for (let item in lineValueDataset) {
+      if (newBorderColor == lineValueDataset[item].borderColor) {
+        matchFound = true;
+        break;
+      }
+    }
+
+    return { matchFound, newBorderColor };
   };
 
   useEffect(() => {
@@ -665,7 +719,7 @@ export default function Prediction({
       setBrand("");
       setColorChangeIndex(0);
       setOriginalPoints([]);
-      setInitialPrice("");
+      setProductPrice("");
       setReleaseYear("");
       setScrollLimit(24);
       setPosition(24);
@@ -728,14 +782,13 @@ export default function Prediction({
       const lineNames = [];
       for (let item in lineValueDataset) {
         let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
-        // Have to split it so it works with BuildTitle, or else it puts each character in its own space
-        lineNames.push(lineValueDataset[item].label.split());
+        lineNames.push(lineValueDataset[item].label);
         newItem.data = originalPoints[item].slice(startIndex, endIndex);
         newDataset.push(newItem);
       }
       setLineValueDataset(newDataset);
       if (newDataset.length > 0) {
-        import("../functions/BuildTitle").then((module) => {
+        import("../functions/BuildTitlePredict").then((module) => {
           // Update the title
           const newTitle = module.default(lineNames, "Predict:");
           SetTitleAndDescription(newTitle, description, window.location.href);
@@ -1058,7 +1111,7 @@ export default function Prediction({
                 {/* Add Average Price, only if available */}
                 {averagePrices ? (
                   <button
-                    onClick={() => {
+                    onClick={async () => {
                       setNeedToCreateChart(true);
                       createChart();
                       if (analytics != null) {
@@ -1068,20 +1121,12 @@ export default function Prediction({
                       }
                       while (true) {
                         let matchFound = false;
-                        const red = Math.random() * 255;
-                        const green = Math.random() * 255;
-                        const blue = Math.random() * 255;
+                        let newBorderColor = "#fff";
 
-                        let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+                        const colourRequest = await newColour();
 
-                        for (let item in lineValueDataset) {
-                          if (
-                            newBorderColor == lineValueDataset[item].borderColor
-                          ) {
-                            matchFound = true;
-                            break;
-                          }
-                        }
+                        matchFound = colourRequest.matchFound;
+                        newBorderColor = colourRequest.newBorderColor;
 
                         if (!matchFound) {
                           const newLine = {
@@ -1201,7 +1246,7 @@ export default function Prediction({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: `150px 100px`,
+                gridTemplateColumns: `150px`,
                 gridTemplateRows: `65px 65px 65px 65px 65px 65px`,
                 gridAutoFlow: "column",
                 marginLeft: "30px",
@@ -1320,13 +1365,13 @@ export default function Prediction({
                   </p>
                 </button>
               ) : (
-                /* Empty Cell */ <div></div>
+                /* Empty Cell */ <></>
               )}
 
               {/* Add Average Price, only if available */}
               {averagePrices ? (
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setNeedToCreateChart(true);
                     createChart();
                     if (analytics != null) {
@@ -1334,20 +1379,12 @@ export default function Prediction({
                     }
                     while (true) {
                       let matchFound = false;
-                      const red = Math.random() * 255;
-                      const green = Math.random() * 255;
-                      const blue = Math.random() * 255;
+                      let newBorderColor = "#fff";
 
-                      let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+                      const colourRequest = await newColour();
 
-                      for (let item in lineValueDataset) {
-                        if (
-                          newBorderColor == lineValueDataset[item].borderColor
-                        ) {
-                          matchFound = true;
-                          break;
-                        }
-                      }
+                      matchFound = colourRequest.matchFound;
+                      newBorderColor = colourRequest.newBorderColor;
 
                       if (!matchFound) {
                         const newLine = {
@@ -1384,7 +1421,7 @@ export default function Prediction({
                   </p>
                 </button>
               ) : (
-                /* Empty Cell */ <div></div>
+                /* Empty Cell */ <></>
               )}
 
               {/* Export CSV */}
@@ -1419,11 +1456,12 @@ export default function Prediction({
             handleNumberInput={handleNumberInput}
             releaseYear={releaseYear}
             setReleaseYear={setReleaseYear}
-            initialPrice={initialPrice}
-            setInitialPrice={setInitialPrice}
+            productPrice={productPrice}
+            setProductPrice={setProductPrice}
             modalAddToGraph={modalAddToGraph}
             brand={brand}
             error={error}
+            type={type}
           ></PredictionAddLineModal>
         </Suspense>
       ) : (

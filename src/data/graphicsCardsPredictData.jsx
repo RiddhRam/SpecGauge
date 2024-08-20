@@ -1,5 +1,5 @@
 const gpuFast = -0.16;
-const gpuNormal = -0.12;
+const gpuNormal = -0.13;
 
 const graphicsCardsBrandValues = [
   { label: "AMD", value: gpuFast },
