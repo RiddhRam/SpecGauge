@@ -208,45 +208,66 @@ export default function Prediction({
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
       // The rate that the price drops
-      let rate = null;
+      let rate = 0;
+
+      let currentBrandValues = brandValues;
+      let currentRateAdjustments = rateAdjustments;
+      if (!brandValues) {
+        if (type == "Vehicles") {
+          await import("../data/carsPredictData").then((module) => {
+            currentBrandValues = module.carsBrandValues;
+            currentRateAdjustments = module.carsAdditionalOptions;
+          });
+        } else if (type == "CPUs") {
+          import("../data/CPUsPredictData").then((module) => {
+            currentBrandValues = module.processorsBrandValues;
+          });
+        } else {
+          import("../data/graphicsCardsPredictData").then((module) => {
+            currentBrandValues = module.graphicsCardsBrandValues;
+          });
+        }
+      }
       // Iterate through the brandValues array and find the rate for this brand
-      for (let item in brandValues) {
-        if (brand == brandValues[item].label) {
-          rate = brandValues[item].value;
+      for (let item in currentBrandValues) {
+        if (brand == currentBrandValues[item].label) {
+          rate = currentBrandValues[item].value;
           break;
         }
       }
+
       // first parameter is name of option
       // second parameter is default value
       // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
       // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
       // If this comparison type has rate adjustments
-      if (rateAdjustments) {
+
+      if (currentRateAdjustments) {
         // Iterate through rate adjustments
-        for (let item in rateAdjustments) {
+        for (let item in currentRateAdjustments) {
           // If this rate adjustment was enabled
-          if (rateAdjustments[item][1] == false) {
+          if (currentRateAdjustments[item][1] == false) {
             continue;
           }
 
           // If third parameter is lower than 2000
-          if (rateAdjustments[item][2] < 2000) {
+          if (currentRateAdjustments[item][2] < 2000) {
             // Add that many years to vehicle production year
-            const beginningYear = year + rateAdjustments[item][2];
+            const beginningYear = year + currentRateAdjustments[item][2];
 
             // if current is higher than the beginning year (third parameter)
             if (i >= beginningYear) {
-              if (rateAdjustments[item][3] > 100) {
-                rate = rateAdjustments[item][3];
+              if (currentRateAdjustments[item][3] > 100) {
+                rate = currentRateAdjustments[item][3];
               }
             }
             continue;
           }
           // If third parameter is 2000 or higher
           // if current is higher than the beginning year (third parameter)
-          if (i >= rateAdjustments[item][2]) {
+          if (i >= currentRateAdjustments[item][2]) {
             // Adjust the rate by adding the rate adjustment
-            rate += rateAdjustments[item][3];
+            rate += currentRateAdjustments[item][3];
           }
         }
       }
@@ -261,9 +282,10 @@ export default function Prediction({
         prices.push(null);
         continue;
       }
+
       // For each year it was released, calculate the price for that year
       // Get the rng() value
-      const seed = `${price}${brand}${year}${lastPrice}${rateAdjustments}`;
+      const seed = `${price}${brand}${year}${lastPrice}${currentRateAdjustments}`;
       let rng = null;
       await import("../functions/SeedrandomImport").then((module) => {
         rng = module.default(seed);
@@ -338,20 +360,24 @@ export default function Prediction({
       const green = Math.random() * 255;
       const blue = Math.random() * 255;
 
+      // Create a colour
       const newBorderColor = `rgb(${red}, ${green}, ${blue})`;
 
       for (let item in lineValueDataset) {
+        // Make sure no match
         if (newBorderColor == lineValueDataset[item].borderColor) {
           matchFound = true;
           break;
         }
       }
 
+      // If no match
       if (!matchFound) {
         const newLine = {
           label: `$${price} ${year} ${brand}`,
           data: prices,
           borderColor: newBorderColor,
+          process: [priceString, yearString, brand],
         };
         setOriginalPoints((prevPoints) => [...prevPoints, prices]);
         setLineValueDataset((prevLines) => [...prevLines, newLine]);
@@ -359,6 +385,8 @@ export default function Prediction({
 
         break;
       }
+
+      // If there are matches, then repeat the loop until no match
     }
     return 0;
   };
@@ -419,6 +447,17 @@ export default function Prediction({
     setLineValueDataset(newDataset);
   };
 
+  const updateName = (newName, nameIndex) => {
+    const newDataset = [];
+    for (let item in lineValueDataset) {
+      let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
+      newDataset.push(newItem);
+    }
+
+    newDataset[nameIndex].label = newName;
+    setLineValueDataset(newDataset);
+  };
+
   const checkNoResults = (text) => {
     let matchFound = false;
     for (let item in brandValues) {
@@ -437,10 +476,26 @@ export default function Prediction({
   };
 
   const loadPresets = async (presetURL) => {
+    let tempBrandValues = null;
+
+    if (type == "Vehicles") {
+      await import("../data/carsPredictData").then((module) => {
+        tempBrandValues = module.carsBrandValues;
+      });
+    } else if (type == "CPUs") {
+      import("../data/CPUsPredictData").then((module) => {
+        tempBrandValues = module.processorsBrandValues;
+      });
+    } else {
+      import("../data/graphicsCardsPredictData").then((module) => {
+        tempBrandValues = module.graphicsCardsBrandValues;
+      });
+    }
+
     const brands = [];
 
-    for (let item in brandValues) {
-      brands.push(brandValues[item].label);
+    for (let item in tempBrandValues) {
+      brands.push(tempBrandValues[item].label);
     }
 
     let processes = [];
@@ -458,9 +513,9 @@ export default function Prediction({
       if (processItem[0] != "Average") {
         setNeedToCreateChart(true);
         createChart();
-        addToGraph(processItem[0], processItem[1], processItem[2]);
+        await addToGraph(processItem[0], processItem[1], processItem[2]);
       } else {
-        addAveragePrice();
+        await addAveragePrice();
       }
     }
 
@@ -470,9 +525,12 @@ export default function Prediction({
         Type: type,
       });
     }
+
+    setBrandValues(tempBrandValues);
   };
 
-  const addAveragePrice = () => {
+  // This is only done when loading presets, otherwise it's done in the button itself
+  const addAveragePrice = async () => {
     while (true) {
       let matchFound = false;
       const red = Math.random() * 255;
@@ -489,14 +547,31 @@ export default function Prediction({
       }
 
       if (!matchFound) {
+        let currentAveragePrices = null;
+
+        if (type == "Vehicles") {
+          await import("../data/carsPredictData").then((module) => {
+            currentAveragePrices = module.carsAveragePrices;
+          });
+        } else if (type == "CPUs") {
+          import("../data/CPUsPredictData").then((module) => {
+            currentAveragePrices = null;
+          });
+        } else {
+          import("../data/graphicsCardsPredictData").then((module) => {
+            currentAveragePrices = null;
+          });
+        }
+
         const newLine = {
           label: `Average ${type} Price (USD $)`,
-          data: averagePrices.slice(),
+          data: currentAveragePrices,
           borderColor: newBorderColor,
+          process: "Average",
         };
         setOriginalPoints((prevPoints) => [
           ...prevPoints,
-          averagePrices.slice(),
+          currentAveragePrices,
         ]);
         setLineValueDataset((prevLines) => [...prevLines, newLine]);
         setUpdateGraph(true);
@@ -524,6 +599,54 @@ export default function Prediction({
     }
 
     setNeedToCreateChart(false);
+  };
+
+  const exportCSV = async () => {
+    // This data will be converted to a csv
+    let exportData = [];
+    if (analytics != null) {
+      logEvent(analytics, "Export CSV");
+    }
+    // The first row, and in the first column is the years
+    let firstJSON = {};
+    firstJSON["Year"] = "Year";
+    // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
+    for (let j = 0; j < lineValueDataset.length; j++) {
+      firstJSON[lineValueDataset[j].label] = lineValueDataset[j].label;
+    }
+    // Add the first row
+    exportData.push(firstJSON);
+    // Iterate through all years on the visible graph
+    for (let i = startIndex; i < endIndex; i++) {
+      let newJSON = {};
+      // Year of the current row
+      newJSON["Year"] = 2000 + i;
+      // Iterate through prices of the current index for each item
+      for (let j = 0; j < lineValueDataset.length; j++) {
+        newJSON[lineValueDataset[j].label] = originalPoints[j][i];
+      }
+      // Add this row
+      exportData.push(newJSON);
+    }
+
+    // Don't know what all this does, don't touch it
+    const csv = exportData
+      .map((row) => {
+        return Object.values(row).toString();
+      })
+      .join("\n");
+
+    const blob = new Blob([csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "table_data.csv");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   useEffect(() => {
@@ -697,36 +820,9 @@ export default function Prediction({
               const processes = [];
 
               for (let item in lineValueDataset) {
-                const str = lineValueDataset[item].label;
+                const lineProcess = lineValueDataset[item].process;
 
-                // Find the index of the first space
-                const firstSpaceIndex = str.indexOf(" ");
-
-                // Find the index of the second space
-                let secondSpaceIndex = str.indexOf(" ", firstSpaceIndex + 1);
-
-                // If there's no second space, use the length of the string
-                if (secondSpaceIndex === -1) {
-                  secondSpaceIndex = str.length;
-                }
-
-                // Split the string
-                const priceAndYear = str.substring(0, secondSpaceIndex);
-                const brand = str.substring(secondSpaceIndex).trim(); // Trim leading spaces from the second part
-
-                const process = ["", "", ""];
-                const splitPriceAndYear = priceAndYear.split(" ");
-
-                process[0] = splitPriceAndYear[0];
-                process[1] = splitPriceAndYear[1];
-                process[2] = brand;
-
-                if (process[0] == "Average") {
-                  process[1] = "Average";
-                  process[2] = "Average";
-                }
-
-                processes.push(process);
+                processes.push(lineProcess);
               }
 
               const brands = [];
@@ -751,12 +847,12 @@ export default function Prediction({
                 module.default(shareURL);
               });
 
-              // Tell user copying to clipboard was successful
-              setCopiedLink(true);
-
               if (analytics != null) {
                 logEvent(analytics, "Share Comparison", { Type: type });
               }
+
+              // Tell user copying to clipboard was successful
+              setCopiedLink(true);
             }}
             className="ShareTopButton"
             style={{ fontSize: isMobile ? "13px" : "16px" }}
@@ -1017,53 +1113,7 @@ export default function Prediction({
                 {/* Export CSV */}
                 <button
                   onClick={() => {
-                    // This data will be converted to a csv
-                    let exportData = [];
-                    if (analytics != null) {
-                      logEvent(analytics, "Export CSV");
-                    }
-                    // The first row, and in the first column is the years
-                    let firstJSON = {};
-                    firstJSON["Year"] = "Year";
-                    // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
-                    for (let j = 0; j < lineValueDataset.length; j++) {
-                      firstJSON[lineValueDataset[j].label] =
-                        lineValueDataset[j].label;
-                    }
-                    // Add the first row
-                    exportData.push(firstJSON);
-                    // Iterate through all years on the visible graph
-                    for (let i = startIndex; i < endIndex; i++) {
-                      let newJSON = {};
-                      // Year of the current row
-                      newJSON["Year"] = 2000 + i;
-                      // Iterate through prices of the current index for each item
-                      for (let j = 0; j < lineValueDataset.length; j++) {
-                        newJSON[lineValueDataset[j].label] =
-                          originalPoints[j][i];
-                      }
-                      // Add this row
-                      exportData.push(newJSON);
-                    }
-
-                    // Don't know what all this does, don't touch it
-                    const csv = exportData
-                      .map((row) => {
-                        return Object.values(row).toString();
-                      })
-                      .join("\n");
-
-                    const blob = new Blob([csv], {
-                      type: "text/csv;charset=utf-8;",
-                    });
-                    const link = document.createElement("a");
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", "table_data.csv");
-                    link.style.visibility = "hidden";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    exportCSV();
                   }}
                   style={{ width: "100%" }}
                   className="NormalButton"
@@ -1104,6 +1154,7 @@ export default function Prediction({
                             label: `Average ${type} Price (USD $)`,
                             data: averagePrices.slice(),
                             borderColor: newBorderColor,
+                            process: "Average",
                           };
                           setOriginalPoints((prevPoints) => [
                             ...prevPoints,
@@ -1476,6 +1527,7 @@ export default function Prediction({
                           label: `Average ${type} Price (USD $)`,
                           data: averagePrices.slice(),
                           borderColor: newBorderColor,
+                          process: "Average",
                         };
                         setOriginalPoints((prevPoints) => [
                           ...prevPoints,
@@ -1511,53 +1563,7 @@ export default function Prediction({
               {/* Export CSV */}
               <button
                 onClick={() => {
-                  // This data will be converted to a csv
-                  let exportData = [];
-                  if (analytics != null) {
-                    logEvent(analytics, "Export CSV");
-                  }
-                  // The first row, and in the first column is the years
-                  let firstJSON = {};
-                  firstJSON["Year"] = "Year";
-                  // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
-                  for (let j = 0; j < lineValueDataset.length; j++) {
-                    firstJSON[lineValueDataset[j].label] =
-                      lineValueDataset[j].label;
-                  }
-                  // Add the first row
-                  exportData.push(firstJSON);
-                  // Iterate through all years on the visible graph
-                  for (let i = startIndex; i < endIndex; i++) {
-                    let newJSON = {};
-                    // Year of the current row
-                    newJSON["Year"] = 2000 + i;
-                    // Iterate through prices of the current index for each car
-                    for (let j = 0; j < lineValueDataset.length; j++) {
-                      newJSON[lineValueDataset[j].label] = originalPoints[j][i];
-                    }
-                    // Add this row
-                    exportData.push(newJSON);
-                  }
-
-                  // Don't know what all this does, don't touch it
-                  const csv = exportData
-                    .map((row) => {
-                      return Object.values(row).toString();
-                    })
-                    .join("\n");
-
-                  const blob = new Blob([csv], {
-                    type: "text/csv;charset=utf-8;",
-                  });
-                  const link = document.createElement("a");
-                  const url = URL.createObjectURL(blob);
-                  link.setAttribute("href", url);
-                  // table_data.csv is the name of the file, maybe the name can be changed according to the category
-                  link.setAttribute("download", "table_data.csv");
-                  link.style.visibility = "hidden";
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
+                  exportCSV();
                 }}
                 className="NormalButton"
                 style={{
@@ -1614,6 +1620,7 @@ export default function Prediction({
             setShowEditModal={setShowEditModal}
             isMobile={isMobile}
             showEditModal={showEditModal}
+            updateName={updateName}
           />
         </Suspense>
       ) : (

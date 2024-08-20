@@ -32,7 +32,6 @@ export default function PredictionBrandSelectionModal({
         value={searchString}
         className="TextInput"
         placeholder="Search"
-        id={"SearchString" + type}
         onChange={(text) => checkNoResults(text.target.value)}
         style={{ margin: "15px 0" }}
       ></input>

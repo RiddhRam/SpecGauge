@@ -12,51 +12,45 @@ export default function BuildURLFriendlyPredict(processes, brands) {
   // prettier-ignore
   for (let process in processes) {
     // The index of the brand of the current item that we are adding, 0 is a placeholder
-    let brandIndex = 0
+    let brandIndex = 0;
     // If it's not an average price process
-    if (processes[process][0] != "Average") {
-        // Iterate to each process item
-        for (let processItem in processes[process]) {
-            // Add the item to the url, this is for this products process
-            // If its the year index
-            if (processItem == 1) {
-                let yearInt = parseInt(processes[process][processItem])
-                // Subtract year by 1990, this will remove 2 digits, lowest being 10, highest being 35
-                yearInt = yearInt - 1990
-                url += yearInt + "%3B"
-            }
-            // If it's the brand index
-            else if (processItem == 2) {
-                // Iterate through all brands to find a match
-                for (let brandItem in brands) {
-                    // Once a match is found, save the brandIndex
-                    if (processes[process][processItem] == brands[brandItem]) {
-                        brandIndex = brandItem
-                        break;
-                    }
-                }
-                url += brandIndex + "%3B";
-            } 
-            // If its the price index
-            else {
-                let removedSign = processes[process][processItem]
-                // Remove the $ sign from the string
-                removedSign = removedSign.substring(1);
-
-                url += removedSign + "%3B";
-
-            }
-            
+    if (processes[process] != "Average") {
+      // Iterate to each process item
+      for (let processItem in processes[process]) {
+        // Add the item to the url, this is for this products process
+        // If its the year index
+        if (processItem == 1) {
+          let yearInt = parseInt(processes[process][processItem]);
+          // Subtract year by 1990, this will remove 2 digits, lowest being 10, highest being 35
+          yearInt = yearInt - 1990;
+          url += yearInt + "%3B";
         }
+        // If it's the brand index
+        else if (processItem == 2) {
+          // Iterate through all brands to find a match
+          for (let brandItem in brands) {
+            // Once a match is found, save the brandIndex
+            if (processes[process][processItem] == brands[brandItem]) {
+              brandIndex = brandItem;
+              break;
+            }
+          }
+          url += brandIndex + "%3B";
+        }
+        // If it's the price index 
+        else {
+          url += processes[process][processItem] + "%3B";
+        }
+      }
     }
-    // If it is an average price process 
+    // If it is an average price process
     else {
-        // Simply add 1 "Average"
-        url += "Average" + "%3B";
+      // Simply add 1 "Average"
+      url += "Average" + "%3B";
     }
     // Remove the last ; from the string, since the products process is over.
-    url = url.slice(0, -3)
-    // Add this since its a new product now, the %20 means space. 
+    url = url.slice(0, -3);
+    // Add this since its a new product now, the %20 means space.
     // Two %20 before and after to avoid mixing it up with a product that might have vs in its name
     url += "%7Cvs%7C";
   }
