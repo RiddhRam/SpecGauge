@@ -601,6 +601,54 @@ export default function Prediction({
     setNeedToCreateChart(false);
   };
 
+  const exportCSV = async () => {
+    // This data will be converted to a csv
+    let exportData = [];
+    if (analytics != null) {
+      logEvent(analytics, "Export CSV");
+    }
+    // The first row, and in the first column is the years
+    let firstJSON = {};
+    firstJSON["Year"] = "Year";
+    // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
+    for (let j = 0; j < lineValueDataset.length; j++) {
+      firstJSON[lineValueDataset[j].label] = lineValueDataset[j].label;
+    }
+    // Add the first row
+    exportData.push(firstJSON);
+    // Iterate through all years on the visible graph
+    for (let i = startIndex; i < endIndex; i++) {
+      let newJSON = {};
+      // Year of the current row
+      newJSON["Year"] = 2000 + i;
+      // Iterate through prices of the current index for each item
+      for (let j = 0; j < lineValueDataset.length; j++) {
+        newJSON[lineValueDataset[j].label] = originalPoints[j][i];
+      }
+      // Add this row
+      exportData.push(newJSON);
+    }
+
+    // Don't know what all this does, don't touch it
+    const csv = exportData
+      .map((row) => {
+        return Object.values(row).toString();
+      })
+      .join("\n");
+
+    const blob = new Blob([csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "table_data.csv");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
     SetTitleAndDescription(
       `Predict Future ${type} Prices`,
@@ -1065,53 +1113,7 @@ export default function Prediction({
                 {/* Export CSV */}
                 <button
                   onClick={() => {
-                    // This data will be converted to a csv
-                    let exportData = [];
-                    if (analytics != null) {
-                      logEvent(analytics, "Export CSV");
-                    }
-                    // The first row, and in the first column is the years
-                    let firstJSON = {};
-                    firstJSON["Year"] = "Year";
-                    // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
-                    for (let j = 0; j < lineValueDataset.length; j++) {
-                      firstJSON[lineValueDataset[j].label] =
-                        lineValueDataset[j].label;
-                    }
-                    // Add the first row
-                    exportData.push(firstJSON);
-                    // Iterate through all years on the visible graph
-                    for (let i = startIndex; i < endIndex; i++) {
-                      let newJSON = {};
-                      // Year of the current row
-                      newJSON["Year"] = 2000 + i;
-                      // Iterate through prices of the current index for each item
-                      for (let j = 0; j < lineValueDataset.length; j++) {
-                        newJSON[lineValueDataset[j].label] =
-                          originalPoints[j][i];
-                      }
-                      // Add this row
-                      exportData.push(newJSON);
-                    }
-
-                    // Don't know what all this does, don't touch it
-                    const csv = exportData
-                      .map((row) => {
-                        return Object.values(row).toString();
-                      })
-                      .join("\n");
-
-                    const blob = new Blob([csv], {
-                      type: "text/csv;charset=utf-8;",
-                    });
-                    const link = document.createElement("a");
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", "table_data.csv");
-                    link.style.visibility = "hidden";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    exportCSV();
                   }}
                   style={{ width: "100%" }}
                   className="NormalButton"
@@ -1561,53 +1563,7 @@ export default function Prediction({
               {/* Export CSV */}
               <button
                 onClick={() => {
-                  // This data will be converted to a csv
-                  let exportData = [];
-                  if (analytics != null) {
-                    logEvent(analytics, "Export CSV");
-                  }
-                  // The first row, and in the first column is the years
-                  let firstJSON = {};
-                  firstJSON["Year"] = "Year";
-                  // All the other columns will be the prices in the order they were added, this for loop is to initialize the first row
-                  for (let j = 0; j < lineValueDataset.length; j++) {
-                    firstJSON[lineValueDataset[j].label] =
-                      lineValueDataset[j].label;
-                  }
-                  // Add the first row
-                  exportData.push(firstJSON);
-                  // Iterate through all years on the visible graph
-                  for (let i = startIndex; i < endIndex; i++) {
-                    let newJSON = {};
-                    // Year of the current row
-                    newJSON["Year"] = 2000 + i;
-                    // Iterate through prices of the current index for each car
-                    for (let j = 0; j < lineValueDataset.length; j++) {
-                      newJSON[lineValueDataset[j].label] = originalPoints[j][i];
-                    }
-                    // Add this row
-                    exportData.push(newJSON);
-                  }
-
-                  // Don't know what all this does, don't touch it
-                  const csv = exportData
-                    .map((row) => {
-                      return Object.values(row).toString();
-                    })
-                    .join("\n");
-
-                  const blob = new Blob([csv], {
-                    type: "text/csv;charset=utf-8;",
-                  });
-                  const link = document.createElement("a");
-                  const url = URL.createObjectURL(blob);
-                  link.setAttribute("href", url);
-                  // table_data.csv is the name of the file, maybe the name can be changed according to the category
-                  link.setAttribute("download", "table_data.csv");
-                  link.style.visibility = "hidden";
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
+                  exportCSV();
                 }}
                 className="NormalButton"
                 style={{
