@@ -14,8 +14,8 @@ import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
 
 import SetCanonical from "../functions/SetCanonical";
-const PredictionBrandSelectionModal = lazy(() =>
-  import("../components/PredictionBrandSelectionModal")
+const PredictionAddLineModal = lazy(() =>
+  import("../components/PredictionAddLineModal")
 );
 const PredictionEditModal = lazy(() =>
   import("../components/PredictionEditModal")
@@ -26,7 +26,6 @@ const PredictionOptionsModal = lazy(() =>
 const SimpleSuccessModal = lazy(() =>
   import("../components/SimpleSuccessModal")
 );
-const SimpleErrorModal = lazy(() => import("../components/SimpleErrorModal"));
 
 const years = [
   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012,
@@ -74,11 +73,10 @@ export default function Prediction({
   const [additionalOptions, setAdditionalOptions] = useState(null);
 
   // For the modals
-  const [showBrandModal, setShowBrandModal] = useState(false);
+  const [showAddLineModal, setShowAddLineModal] = useState(false);
   const [brand, setBrand] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [colorChangeIndex, setColorChangeIndex] = useState(0);
-  const [showErrorModal, setShowErrorModal] = useState(false);
   const [error, setError] = useState("");
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [rateAdjustments, setRateAdjustments] = useState(additionalOptions);
@@ -86,10 +84,6 @@ export default function Prediction({
   const [beginLoadingPresets, setBeginLoadingPresets] = useState(false);
   const [createdChart, setCreatedChart] = useState(false);
   const [needToCreateChart, setNeedToCreateChart] = useState(true);
-
-  // For the search input
-  const [searchString, setSearchString] = useState("");
-  const [noResultsFound, setNoResultsFound] = useState(false);
 
   // This is used in case the user uses navigation buttons to switch types, in which case, the values of the old graph type need to be reset
   const [firstLoad, setFirstLoad] = useState(true);
@@ -458,23 +452,6 @@ export default function Prediction({
     setLineValueDataset(newDataset);
   };
 
-  const checkNoResults = (text) => {
-    let matchFound = false;
-    for (let item in brandValues) {
-      if (brandValues[item].label.toUpperCase().includes(text.toUpperCase())) {
-        matchFound = true;
-        break;
-      }
-    }
-
-    if (matchFound) {
-      setNoResultsFound(false);
-    } else {
-      setNoResultsFound(true);
-    }
-    setSearchString(text);
-  };
-
   const loadPresets = async (presetURL) => {
     let tempBrandValues = null;
 
@@ -647,6 +624,31 @@ export default function Prediction({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const modalAddToGraph = async (initialPrice, releaseYear, brand) => {
+    setNeedToCreateChart(true);
+    createChart();
+    const result = await addToGraph(initialPrice, releaseYear, brand);
+    if (result != 0) {
+      setError(result);
+      if (analytics != null) {
+        logEvent(analytics, "Error adding item", {
+          Error: result,
+        });
+      }
+    } else {
+      if (analytics != null) {
+        logEvent(analytics, "Add Prediction Item", {
+          Type: type,
+          InitialPrice: initialPrice,
+          ReleaseYear: releaseYear,
+          Brand: brand,
+        });
+      }
+    }
+
+    return result;
   };
 
   useEffect(() => {
@@ -1003,95 +1005,10 @@ export default function Prediction({
                   columnGap: "20px",
                 }}
               >
-                {/* Release Year Field */}
-                <input
-                  type="number"
-                  value={releaseYear}
-                  className="TextInput"
-                  placeholder="Release Year"
-                  onChange={(event) =>
-                    handleNumberInput(event.target.value, setReleaseYear)
-                  }
-                  style={{
-                    width: "calc(100% - 24px)",
-                    padding: "20px 0 20px 20px",
-                    fontSize: "15px",
-                  }}
-                ></input>
-
-                {/* Initial Price Field */}
-                <div style={{ position: "relative" }}>
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: "10px",
-                      top: "46%",
-                      transform: "translateY(-50%)",
-                      pointerEvents: "none",
-                      color: "#fff",
-                    }}
-                  >
-                    $
-                  </span>
-                  <input
-                    type="number"
-                    value={initialPrice}
-                    className="TextInput"
-                    placeholder="Initial New Price"
-                    onChange={(event) =>
-                      handleNumberInput(event.target.value, setInitialPrice)
-                    }
-                    style={{
-                      width: "calc(100% - 24px)",
-                      padding: "20px 0 20px 20px",
-                      fontSize: "15px",
-                    }}
-                  ></input>
-                </div>
-
-                {/* Select Brand */}
-                <button
-                  onClick={() => {
-                    setShowBrandModal(true);
-                  }}
-                  style={{ width: "100%" }}
-                  className="SelectABrandButton"
-                >
-                  <p>
-                    {brand.length == 0
-                      ? "Select a brand"
-                      : `Brand Selected: ${brand}`}
-                  </p>
-                </button>
-
                 {/* Add */}
                 <button
                   onClick={async () => {
-                    setNeedToCreateChart(true);
-                    createChart();
-                    const result = await addToGraph(
-                      initialPrice,
-                      releaseYear,
-                      brand
-                    );
-                    if (result != 0) {
-                      setError(result);
-                      setShowErrorModal(true);
-                      if (analytics != null) {
-                        logEvent(analytics, "Error adding item", {
-                          Error: result,
-                        });
-                      }
-                    } else {
-                      if (analytics != null) {
-                        logEvent(analytics, "Add Prediction Item", {
-                          Type: type,
-                          InitialPrice: initialPrice,
-                          ReleaseYear: releaseYear,
-                          Brand: brand,
-                        });
-                      }
-                    }
+                    setShowAddLineModal(true);
                   }}
                   className="NormalButton"
                   style={{ width: "100%" }}
@@ -1110,16 +1027,33 @@ export default function Prediction({
                   <p>Edit</p>
                 </button>
 
-                {/* Export CSV */}
-                <button
-                  onClick={() => {
-                    exportCSV();
-                  }}
-                  style={{ width: "100%" }}
-                  className="NormalButton"
-                >
-                  <p>Export CSV</p>
-                </button>
+                {/* Additional Options, only if available */}
+                {additionalOptions ? (
+                  <button
+                    onClick={() => {
+                      if (analytics != null) {
+                        logEvent(analytics, `Select Additional Options`, {
+                          Type: type,
+                        });
+                      }
+                      setShowOptionsModal(true);
+                    }}
+                    style={{ padding: "0 2px" }}
+                    className="NormalButton"
+                  >
+                    <p
+                      style={{
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      Options
+                    </p>
+                  </button>
+                ) : (
+                  /* Empty Cell */ <></>
+                )}
 
                 {/* Add Average Price, only if available */}
                 {averagePrices ? (
@@ -1181,33 +1115,16 @@ export default function Prediction({
                   /* Empty Cell */ <></>
                 )}
 
-                {/* Additional Options, only if available */}
-                {additionalOptions ? (
-                  <button
-                    onClick={() => {
-                      if (analytics != null) {
-                        logEvent(analytics, `Select Additional Options`, {
-                          Type: type,
-                        });
-                      }
-                      setShowOptionsModal(true);
-                    }}
-                    style={{ padding: "0 2px" }}
-                    className="NormalButton"
-                  >
-                    <p
-                      style={{
-                        textAlign: "center",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      Options
-                    </p>
-                  </button>
-                ) : (
-                  /* Empty Cell */ <></>
-                )}
+                {/* Export CSV */}
+                <button
+                  onClick={() => {
+                    exportCSV();
+                  }}
+                  style={{ width: "100%" }}
+                  className="NormalButton"
+                >
+                  <p>Export CSV</p>
+                </button>
               </div>
             </div>
           </>
@@ -1356,90 +1273,10 @@ export default function Prediction({
                 </div>
               )}
 
-              {/* Release Year Field */}
-              <input
-                type="number"
-                value={releaseYear}
-                className="TextInput"
-                placeholder="Release Year"
-                onChange={(event) =>
-                  handleNumberInput(event.target.value, setReleaseYear)
-                }
-                style={{ fontSize: 16, width: "100%" }}
-              ></input>
-
-              <div style={{ position: "relative" }}>
-                <span
-                  style={{
-                    position: "absolute",
-                    left: "10px",
-                    top: "47%",
-                    transform: "translateY(-50%)",
-                    pointerEvents: "none",
-                    color: "#fff",
-                  }}
-                >
-                  $
-                </span>
-                <input
-                  type="number"
-                  value={initialPrice}
-                  className="TextInput"
-                  placeholder="Initial New Price"
-                  onChange={(event) =>
-                    handleNumberInput(event.target.value, setInitialPrice)
-                  }
-                  style={{
-                    fontSize: 16,
-                    width: "100%",
-                    paddingLeft: "21px", // Add left padding to make room for the prefix
-                  }}
-                />
-              </div>
-
-              {/* Select Brand */}
-              <button
-                onClick={() => {
-                  setShowBrandModal(true);
-                }}
-                style={{ width: "130%" }}
-                className="SelectABrandButton"
-              >
-                <p>
-                  {brand.length == 0
-                    ? "Select a brand"
-                    : `Brand Selected: ${brand}`}
-                </p>
-              </button>
-
               {/* Add */}
               <button
                 onClick={async () => {
-                  setNeedToCreateChart(true);
-                  createChart();
-                  const result = await addToGraph(
-                    initialPrice,
-                    releaseYear,
-                    brand
-                  );
-                  if (result != 0) {
-                    setError(result);
-                    setShowErrorModal(true);
-                    if (analytics != null) {
-                      logEvent(analytics, "Error adding item", {
-                        Error: result,
-                      });
-                    }
-                  } else {
-                    if (analytics != null) {
-                      logEvent(analytics, "Add Prediction Item", {
-                        Type: type,
-                        InitialPrice: initialPrice,
-                        ReleaseYear: releaseYear,
-                        Brand: brand,
-                      });
-                    }
-                  }
+                  setShowAddLineModal(true);
                 }}
                 className="NormalButton"
                 style={{ width: "130%" }}
@@ -1458,16 +1295,6 @@ export default function Prediction({
                 <p>Edit</p>
               </button>
 
-              {/* Column 2 */}
-              {/* Empty cell */}
-              <div></div>
-
-              {/* Empty cell */}
-              <div></div>
-
-              {/* Empty cell */}
-              <div></div>
-
               {/* Additional Options, only if available */}
               {additionalOptions ? (
                 <button
@@ -1479,7 +1306,7 @@ export default function Prediction({
                     }
                     setShowOptionsModal(true);
                   }}
-                  style={{ padding: "0 2px" }}
+                  style={{ width: "130%" }}
                   className="NormalButton"
                 >
                   <p
@@ -1543,7 +1370,7 @@ export default function Prediction({
                       }
                     }
                   }}
-                  style={{ padding: "0 2px" }}
+                  style={{ width: "130%" }}
                   className="NormalButton"
                 >
                   <p
@@ -1566,11 +1393,7 @@ export default function Prediction({
                   exportCSV();
                 }}
                 className="NormalButton"
-                style={{
-                  textAlign: "center",
-                  display: "flex",
-                  alignItems: "center",
-                }}
+                style={{ width: "130%" }}
               >
                 <p>Export CSV</p>
               </button>
@@ -1581,24 +1404,27 @@ export default function Prediction({
 
       <Footer isMobile={isMobile}></Footer>
 
-      {/* Brand Modal */}
-      {showBrandModal ? (
+      {/* Add Line Modal */}
+      {showAddLineModal ? (
         <Suspense
           fallback={
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
           }
         >
-          <PredictionBrandSelectionModal
-            checkNoResults={checkNoResults}
-            searchString={searchString}
+          <PredictionAddLineModal
             brandValues={brandValues}
-            noResultsFound={noResultsFound}
-            setShowBrandModal={setShowBrandModal}
-            type={type}
+            setShowAddLineModal={setShowAddLineModal}
             setBrand={setBrand}
-            setSearchString={setSearchString}
-            showBrandModal={showBrandModal}
-          ></PredictionBrandSelectionModal>
+            showAddLineModal={showAddLineModal}
+            handleNumberInput={handleNumberInput}
+            releaseYear={releaseYear}
+            setReleaseYear={setReleaseYear}
+            initialPrice={initialPrice}
+            setInitialPrice={setInitialPrice}
+            modalAddToGraph={modalAddToGraph}
+            brand={brand}
+            error={error}
+          ></PredictionAddLineModal>
         </Suspense>
       ) : (
         <></>
@@ -1661,23 +1487,6 @@ export default function Prediction({
             setModalVisible={setCopiedLink}
             modalVisible={copiedLink}
           ></SimpleSuccessModal>
-        </Suspense>
-      ) : (
-        <></>
-      )}
-
-      {/* Error Modal */}
-      {showErrorModal ? (
-        <Suspense
-          fallback={
-            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
-          }
-        >
-          <SimpleErrorModal
-            message={error}
-            setModalVisible={setShowErrorModal}
-            modalVisible={showErrorModal}
-          ></SimpleErrorModal>
         </Suspense>
       ) : (
         <></>
