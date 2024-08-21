@@ -1,14 +1,17 @@
 import PakoInflate from "./PakoInflate";
 
-export default function DeconstructURLFriendlyPredict(url, brands) {
+export default function DeconstructURLFriendlyPredict(
+  url,
+  brands,
+  rateAdjustments
+) {
   const processes = [];
+  const allRateAdjustments = [];
 
   let tempURL = PakoInflate(url);
 
   // Replace any %3A with colons
   tempURL = tempURL.replace(/%3A/g, ":");
-  // Replace any %20 with spaces
-  tempURL = tempURL.replace(/%20/g, " ");
   // Replace any %2F that aren't use for navigation with extra slashes
   tempURL = tempURL.replace(/%2F/g, "/");
 
@@ -19,6 +22,32 @@ export default function DeconstructURLFriendlyPredict(url, brands) {
   for (let product in products) {
     // Split product string up into seperate strings, 1 for each process step
     const productProcess = products[product].split("%3B");
+
+    let productRateAdjustments = null;
+
+    // If this type has rate adjustments
+    if (rateAdjustments && productProcess[0] != "Average") {
+      // Get the last item, which also contains the rate adjustments
+      const lastItem = productProcess[productProcess.length - 1];
+
+      // Split it up, then the first up of the split is the actual last item,
+      // which will be reassigned to the array
+      const splitLastItem = lastItem.split("%2A");
+      const actualLastItem = splitLastItem[0];
+      productProcess[productProcess.length - 1] = actualLastItem;
+
+      const tempRateAdjustments = [];
+      for (let item in splitLastItem) {
+        // Skip the first item
+        if (item == "0") {
+          continue;
+        }
+        // Add this rate adjustment
+        tempRateAdjustments.push(splitLastItem[item]);
+      }
+
+      productRateAdjustments = tempRateAdjustments;
+    }
 
     // If it's not an Average price process
     if (productProcess[0] != "Average") {
@@ -35,9 +64,19 @@ export default function DeconstructURLFriendlyPredict(url, brands) {
       productProcess[2] = brands[productProcess[2]];
     }
 
-    // Push the array to the major array
+    // If there are productRateAdjustments
+    if (productRateAdjustments) {
+      for (let item in productRateAdjustments) {
+        productRateAdjustments[item] = rateAdjustments[item];
+        // Enable the adjustment if not default
+        productRateAdjustments[item][1] = true;
+      }
+    }
+
+    // Push the arrays to the major arrays
     processes.push(productProcess);
+    allRateAdjustments.push(productRateAdjustments);
   }
 
-  return processes;
+  return { processes, allRateAdjustments };
 }

@@ -16,6 +16,7 @@ export default function PredictionAddLineModal({
   brand,
   error,
   type,
+  rateAdjustments,
 }) {
   let modalProductPrice = productPrice;
   let modalReleaseYear = releaseYear;
@@ -48,7 +49,7 @@ export default function PredictionAddLineModal({
           style={{
             position: "absolute",
             left: "10px",
-            top: "50%",
+            top: "49%",
             transform: "translateY(-50%)",
             pointerEvents: "none",
             color: "#fff",
@@ -71,6 +72,8 @@ export default function PredictionAddLineModal({
         />
       </div>
 
+      {/* Select price type */}
+      {/*
       <select
         className="SelectABrandOptions"
         onChange={(event) => {
@@ -100,7 +103,7 @@ export default function PredictionAddLineModal({
         onChange={() => {
           setBrand(event.target.value);
         }}
-        style={{ padding: "20px" }}
+        style={{ padding: "20px", margin: "20px" }}
       >
         {brandValues &&
           brandValues.map((brandItem) => (
@@ -138,12 +141,19 @@ export default function PredictionAddLineModal({
         {/* Add button */}
         <button
           onClick={async () => {
+            const allRateAdjustments = [];
+            for (let item in rateAdjustments) {
+              if (rateAdjustments[item][1]) {
+                allRateAdjustments.push(rateAdjustments[item]);
+              }
+            }
             let result = null;
             result = await modalAddToGraph(
               productPrice,
               releaseYear,
               brandToUse,
-              priceToUse
+              priceToUse,
+              allRateAdjustments
             );
 
             if (result != 0) {
