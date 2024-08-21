@@ -1,6 +1,7 @@
 7.3.0
 Change prediction page initial price to current price, and work backward from that year and forward too
 Price division based prediction, if high, then rate is lower, if low, rate is higher
+Make price drop off harder in first 2 years
 
 7.4.0
 Add top, side and back view of vehicle sizes
