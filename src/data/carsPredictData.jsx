@@ -1,5 +1,5 @@
 const fast = -0.17;
-const somewhatFast = -0.12;
+const somewhatFast = -0.16;
 const normal = -0.095;
 const reputable = -0.075;
 const reliable = -0.06;
@@ -78,7 +78,8 @@ const carsBrandValues = [
   { label: "Alpine", value: inBetweenCars },
   { label: "Aston Martin", value: expensiveSport },
   { label: "Audi", value: reputable },
-  { label: "Bentley", value: somewhatFast },
+  { label: "Audi RS-Series", value: -0.065 },
+  { label: "Bentley", value: fast },
   { label: "BMW", value: -0.08 },
   { label: "BMW M-Series", value: -0.06 },
   { label: "BMW Motorcycle", value: expensiveSportMotorCycle },
@@ -92,6 +93,7 @@ const carsBrandValues = [
   { label: "Citroen", value: fast },
   { label: "Daewoo", value: normal },
   { label: "Dodge", value: reputable },
+  { label: "Dodge SRT", value: reputableSports },
   { label: "Ducati", value: reliableMotorCycle },
   { label: "Ferrari", value: superCar },
   { label: "Fiat", value: fast },
@@ -125,7 +127,7 @@ const carsBrandValues = [
   { label: "Maybach", value: superCar },
   { label: "Mazda", value: reliable },
   { label: "McLaren", value: expensiveSport },
-  { label: "Mercedes-AMG", value: inBetweenCars },
+  { label: "Mercedes-AMG", value: -0.07 },
   { label: "Mercedes-Benz", value: reputable },
   { label: "Mercury", value: normal },
   { label: "Mini", value: fast },

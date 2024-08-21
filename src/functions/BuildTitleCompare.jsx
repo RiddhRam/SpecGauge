@@ -1,5 +1,5 @@
-export default function BuildTitle(processes, prefix) {
-  let title = prefix;
+export default function BuildTitleCompare(processes) {
+  let title = "Compare:";
 
   // Iterate to each process
   // prettier-ignore

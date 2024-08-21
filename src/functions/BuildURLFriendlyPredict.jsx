@@ -3,10 +3,15 @@ import pako from "pako";
 // The %3B represents a ";" (semicolon) in URL encoding
 // The %7C represents a "|" (vertical bar) in URL encoding
 // The %2F represents a "/" (forward slash) in URL encoding
-// The %20 represents a " " (space) in URL encoding
 // The %3A represents a ":" (colon) in URL encoding
+// The %2B represents a "+" (plus) in URL encoding
 
-export default function BuildURLFriendlyPredict(processes, brands) {
+export default function BuildURLFriendlyPredict(
+  processes,
+  localAdjustments,
+  brands,
+  rateAdjustments
+) {
   let url = "";
   // Iterate to each process
   // prettier-ignore
@@ -21,7 +26,7 @@ export default function BuildURLFriendlyPredict(processes, brands) {
         // If its the year index
         if (processItem == 1) {
           let yearInt = parseInt(processes[process][processItem]);
-          // Subtract year by 1990, this will remove 2 digits, lowest being 10, highest being 35
+          // Subtract year by 1990, this will remove 2 digits, lowest being 10 (2000), highest being 35 (2025)
           yearInt = yearInt - 1990;
           url += yearInt + "%3B";
         }
@@ -48,18 +53,31 @@ export default function BuildURLFriendlyPredict(processes, brands) {
       // Simply add 1 "Average"
       url += "Average" + "%3B";
     }
+
     // Remove the last ; from the string, since the products process is over.
     url = url.slice(0, -3);
-    // Add this since its a new product now, the %20 means space.
-    // Two %20 before and after to avoid mixing it up with a product that might have vs in its name
+
+    // If this type has rateAdjustments
+    if (rateAdjustments) {
+      for (let item in localAdjustments[process]) {
+        console.log(localAdjustments[process][item][1])
+        // If this rate adjustment was enabled, keep going, else continue to next iteration
+        if (localAdjustments[process][item][1] == false) {
+          continue
+        }
+        // Use just the index to compress the link
+        url += "%2A" + item
+      }
+    }
+
+    // Add this since its a new product now
+    // Two %7C before and after to avoid mixing it up with a product that might have 'vs' in its name
     url += "%7Cvs%7C";
   }
   // Remove the last %7Cvs%7C since there are no more products
   url = url.slice(0, -8);
   // Replace any extra slashes that aren't use for navigation with %2F
   url = url.replace(/\//g, "%2F");
-  // Replace any spaces with %20
-  url = url.replace(/ /g, "%20");
   // Replace any colons with %3A
   url = url.replace(/:/g, "%3A");
 

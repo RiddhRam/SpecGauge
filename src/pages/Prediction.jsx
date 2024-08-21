@@ -62,7 +62,7 @@ export default function Prediction({
   const [scrollLimit, setScrollLimit] = useState(24);
 
   // For the input fields
-  const [initialPrice, setInitialPrice] = useState("");
+  const [productPrice, setProductPrice] = useState("");
   const [releaseYear, setReleaseYear] = useState("");
 
   // The orignal reference array of all the lines currently selected by the user
@@ -175,8 +175,14 @@ export default function Prediction({
     }
   };
 
-  const addToGraph = async (priceString, yearString, brand) => {
-    const price = parseFloat(priceString);
+  const addToGraph = async (
+    priceString,
+    yearString,
+    productBrand,
+    priceToUse,
+    localRateAdjustments
+  ) => {
+    let price = parseFloat(priceString);
     const year = parseFloat(yearString);
 
     // If price is not at least 7500
@@ -185,7 +191,7 @@ export default function Prediction({
     } // If year is too old or new
     else if (year < 2000 || year > 2025 || isNaN(year)) {
       return "Enter a year between 2000 and 2025";
-    } else if (brand.length == 0) {
+    } else if (productBrand.length == 0) {
       return "Select a brand";
     }
 
@@ -196,8 +202,11 @@ export default function Prediction({
 
     let originalPrice = null;
 
-    // Dtermines whether or not the last price was an increase from the second last price
-    let lastPriceIncreased = false;
+    // If it's the current price, work backwards to the release price, then continue as normal
+    // It also must be an older vehicle, at least 1 year old
+    if (priceToUse == "Current Price" && releaseYear < 2024) {
+      console.log("Reversing back to release price");
+    }
 
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
@@ -213,18 +222,19 @@ export default function Prediction({
             currentRateAdjustments = module.carsAdditionalOptions;
           });
         } else if (type == "CPUs") {
-          import("../data/CPUsPredictData").then((module) => {
+          await import("../data/CPUsPredictData").then((module) => {
             currentBrandValues = module.processorsBrandValues;
           });
         } else {
-          import("../data/graphicsCardsPredictData").then((module) => {
+          await import("../data/graphicsCardsPredictData").then((module) => {
             currentBrandValues = module.graphicsCardsBrandValues;
           });
         }
       }
+
       // Iterate through the brandValues array and find the rate for this brand
       for (let item in currentBrandValues) {
-        if (brand == currentBrandValues[item].label) {
+        if (productBrand == currentBrandValues[item].label) {
           rate = currentBrandValues[item].value;
           break;
         }
@@ -235,12 +245,16 @@ export default function Prediction({
       // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
       // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
       // If this comparison type has rate adjustments
-
       if (currentRateAdjustments) {
         // Iterate through rate adjustments
-        for (let item in currentRateAdjustments) {
-          // If this rate adjustment was enabled
-          if (currentRateAdjustments[item][1] == false) {
+        // Iterate through these to get the settings
+        for (let item in localRateAdjustments) {
+          // currentRateAdjustments = rate adjustments for this type
+          // localRateAdjustments = rate adjustments for this product
+          // rateAdjustments = rate adjustments from the modal
+
+          // If this rate adjustment was enabled, keep going, else continue to next iteration
+          if (localRateAdjustments[item][1] == false) {
             continue;
           }
 
@@ -267,8 +281,8 @@ export default function Prediction({
       }
 
       // Maximum rate increase is 0.03
-      if (rate > 0.03) {
-        rate = 0.03;
+      if (rate > 0.2) {
+        rate = 0.2;
       }
 
       // If vehicle wasn't manufactured yet, then don't display price for that year
@@ -279,7 +293,7 @@ export default function Prediction({
 
       // For each year it was released, calculate the price for that year
       // Get the rng() value
-      const seed = `${price}${brand}${year}${lastPrice}${currentRateAdjustments}`;
+      const seed = `${price}${productBrand}${year}${lastPrice}${localRateAdjustments}`;
       let rng = null;
       await import("../functions/SeedrandomImport").then((module) => {
         rng = module.default(seed);
@@ -298,26 +312,24 @@ export default function Prediction({
         continue;
       }
 
-      // If rate is depreciating, but value grew higher, then reduce the difference to 5%
+      // If rate is depreciating, but value grew higher, then reduce the difference to 5% and make it negative
       if (rate < 0 && difference > 0) {
-        difference *= 0.05;
+        difference *= -0.05;
       }
 
       // If not the first value
       // If last price was greater than 1.5x the original value, and last price wasn't an increase
-      if (lastPrice > originalPrice * 1.5 && !lastPriceIncreased) {
+      if (lastPrice > originalPrice * 2) {
         // The price will hover around twice it's original value
         difference = lastPrice * rng() * -0.04;
-        lastPriceIncreased = false;
       }
       // If last price wasn't an increase
-      else if (!lastPriceIncreased) {
-        // If difference between new and last price is greater than an 8% of the original price
-        if (difference > lastPrice * 0.08) {
+      else {
+        // If difference is greater than an 8% of the last price
+        if (difference * -1 > lastPrice * 0.53) {
           // Reduce difference to rng
           // Prevents sharp increases
-          difference = lastPrice * rng() * 0.045;
-          lastPriceIncreased = false;
+          difference = lastPrice * rng() * 0.045 * -1;
         } // If new price is a decrease from last price
         else if (difference < 0) {
           // If the absolute value of the decrease is more than 8% of the original price
@@ -326,52 +338,40 @@ export default function Prediction({
             // Prevents sharp drops
             difference = difference * 0.25;
           }
-          lastPriceIncreased = false;
-        } else {
-          // Difference isn't too large, but the price stayed the same or increased by a small amount
-          lastPriceIncreased = false;
         }
       }
-      // If last price was an increase
-      else {
-        // Difference is reduced to 2% from the last price if rate isn't positive
-        if (rate < 0 && difference > lastPrice * 0.06) {
-          rate *= -1;
-        }
+
+      if (rate > 0) {
+        difference = lastPrice * rate;
       }
 
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
       if (difference + lastPrice > originalPrice * 2.1) {
         difference = originalPrice * 0.1 * rng();
       }
+
+      difference = Math.round(difference);
       prices.push(lastPrice + difference);
       lastPrice = lastPrice + difference;
     }
 
     while (true) {
       let matchFound = false;
-      const red = Math.random() * 255;
-      const green = Math.random() * 255;
-      const blue = Math.random() * 255;
+      let newBorderColor = "#fff";
 
-      // Create a colour
-      const newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+      const colourRequest = await newColour();
 
-      for (let item in lineValueDataset) {
-        // Make sure no match
-        if (newBorderColor == lineValueDataset[item].borderColor) {
-          matchFound = true;
-          break;
-        }
-      }
+      matchFound = colourRequest.matchFound;
+      newBorderColor = colourRequest.newBorderColor;
 
       // If no match
       if (!matchFound) {
         const newLine = {
-          label: `$${price} ${year} ${brand}`,
+          label: `$${price} ${year} ${productBrand}`,
           data: prices,
           borderColor: newBorderColor,
-          process: [priceString, yearString, brand],
+          process: [priceString, yearString, productBrand],
+          adjustments: localRateAdjustments,
         };
         setOriginalPoints((prevPoints) => [...prevPoints, prices]);
         setLineValueDataset((prevLines) => [...prevLines, newLine]);
@@ -382,6 +382,7 @@ export default function Prediction({
 
       // If there are matches, then repeat the loop until no match
     }
+
     return 0;
   };
 
@@ -406,16 +407,15 @@ export default function Prediction({
     const lineNames = [];
 
     for (let item in newLineValueDataset) {
-      // Have to split it up so it works with BuildTitle, or else it puts each character in its own space
-      lineNames.push(newLineValueDataset[item].label.split());
+      lineNames.push(newLineValueDataset[item].label);
     }
 
     setLineValueDataset(newLineValueDataset);
 
     if (newLineValueDataset.length > 0) {
-      import("../functions/BuildTitle").then((module) => {
+      import("../functions/BuildTitlePredict").then((module) => {
         // Update the title
-        const newTitle = module.default(lineNames, "Predict:");
+        const newTitle = module.default(lineNames);
         SetTitleAndDescription(newTitle, description, window.location.href);
       });
     } else {
@@ -454,17 +454,19 @@ export default function Prediction({
 
   const loadPresets = async (presetURL) => {
     let tempBrandValues = null;
+    let tempRateAdjustments = null;
 
     if (type == "Vehicles") {
       await import("../data/carsPredictData").then((module) => {
         tempBrandValues = module.carsBrandValues;
+        tempRateAdjustments = module.carsAdditionalOptions;
       });
     } else if (type == "CPUs") {
-      import("../data/CPUsPredictData").then((module) => {
+      await import("../data/CPUsPredictData").then((module) => {
         tempBrandValues = module.processorsBrandValues;
       });
     } else {
-      import("../data/graphicsCardsPredictData").then((module) => {
+      await import("../data/graphicsCardsPredictData").then((module) => {
         tempBrandValues = module.graphicsCardsBrandValues;
       });
     }
@@ -476,12 +478,15 @@ export default function Prediction({
     }
 
     let processes = [];
+    let allRateAdjustments = [];
 
     // Lazy import this, becaues it includes pako
     await import("../functions/DeconstructURLFriendlyPredict").then(
       (module) => {
         // Deconstruct the string into a process array
-        processes = module.default(presetURL, brands);
+        const result = module.default(presetURL, brands, tempRateAdjustments);
+        processes = result.processes;
+        allRateAdjustments = result.allRateAdjustments;
       }
     );
 
@@ -490,7 +495,13 @@ export default function Prediction({
       if (processItem[0] != "Average") {
         setNeedToCreateChart(true);
         createChart();
-        await addToGraph(processItem[0], processItem[1], processItem[2]);
+        await addToGraph(
+          processItem[0],
+          processItem[1],
+          processItem[2],
+          "Release Price",
+          allRateAdjustments[item]
+        );
       } else {
         await addAveragePrice();
       }
@@ -510,18 +521,12 @@ export default function Prediction({
   const addAveragePrice = async () => {
     while (true) {
       let matchFound = false;
-      const red = Math.random() * 255;
-      const green = Math.random() * 255;
-      const blue = Math.random() * 255;
+      let newBorderColor = "#fff";
 
-      let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+      const colourRequest = await newColour();
 
-      for (let item in lineValueDataset) {
-        if (newBorderColor == lineValueDataset[item].borderColor) {
-          matchFound = true;
-          break;
-        }
-      }
+      matchFound = colourRequest.matchFound;
+      newBorderColor = colourRequest.newBorderColor;
 
       if (!matchFound) {
         let currentAveragePrices = null;
@@ -531,11 +536,11 @@ export default function Prediction({
             currentAveragePrices = module.carsAveragePrices;
           });
         } else if (type == "CPUs") {
-          import("../data/CPUsPredictData").then((module) => {
+          await import("../data/CPUsPredictData").then((module) => {
             currentAveragePrices = null;
           });
         } else {
-          import("../data/graphicsCardsPredictData").then((module) => {
+          await import("../data/graphicsCardsPredictData").then((module) => {
             currentAveragePrices = null;
           });
         }
@@ -626,10 +631,23 @@ export default function Prediction({
     document.body.removeChild(link);
   };
 
-  const modalAddToGraph = async (initialPrice, releaseYear, brand) => {
+  // This is only called from the modal
+  const modalAddToGraph = async (
+    priceString,
+    yearString,
+    brand,
+    priceToUse,
+    localRateAdjustments
+  ) => {
     setNeedToCreateChart(true);
     createChart();
-    const result = await addToGraph(initialPrice, releaseYear, brand);
+    const result = await addToGraph(
+      priceString,
+      yearString,
+      brand,
+      priceToUse,
+      localRateAdjustments
+    );
     if (result != 0) {
       setError(result);
       if (analytics != null) {
@@ -641,7 +659,7 @@ export default function Prediction({
       if (analytics != null) {
         logEvent(analytics, "Add Prediction Item", {
           Type: type,
-          InitialPrice: initialPrice,
+          ProductPrice: productPrice,
           ReleaseYear: releaseYear,
           Brand: brand,
         });
@@ -649,6 +667,48 @@ export default function Prediction({
     }
 
     return result;
+  };
+
+  const newColour = async () => {
+    let matchFound = false;
+
+    // Convert background page color into RGB
+    const backgroundColor = "#1e2033";
+    const baseRgb = [
+      parseInt(backgroundColor.substring(1, 3), 16),
+      parseInt(backgroundColor.substring(3, 5), 16),
+      parseInt(backgroundColor.substring(5, 7), 16),
+    ];
+
+    // Minimum distance of the new colour from the page colour
+    const minDistance = 200;
+
+    let red, green, blue, colorRgb, distance;
+
+    do {
+      red = Math.random() * 255;
+      green = Math.random() * 255;
+      blue = Math.random() * 255;
+      colorRgb = [red, green, blue];
+      distance = Math.sqrt(
+        Math.pow(colorRgb[0] - baseRgb[0], 2) +
+          Math.pow(colorRgb[1] - baseRgb[1], 2) +
+          Math.pow(colorRgb[2] - baseRgb[2], 2)
+      );
+    } while (distance < minDistance);
+
+    // Create a colour
+    const newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+
+    // Make sure no repeat colours
+    for (let item in lineValueDataset) {
+      if (newBorderColor == lineValueDataset[item].borderColor) {
+        matchFound = true;
+        break;
+      }
+    }
+
+    return { matchFound, newBorderColor };
   };
 
   useEffect(() => {
@@ -665,7 +725,7 @@ export default function Prediction({
       setBrand("");
       setColorChangeIndex(0);
       setOriginalPoints([]);
-      setInitialPrice("");
+      setProductPrice("");
       setReleaseYear("");
       setScrollLimit(24);
       setPosition(24);
@@ -728,14 +788,13 @@ export default function Prediction({
       const lineNames = [];
       for (let item in lineValueDataset) {
         let newItem = JSON.parse(JSON.stringify(lineValueDataset[item]));
-        // Have to split it so it works with BuildTitle, or else it puts each character in its own space
-        lineNames.push(lineValueDataset[item].label.split());
+        lineNames.push(lineValueDataset[item].label);
         newItem.data = originalPoints[item].slice(startIndex, endIndex);
         newDataset.push(newItem);
       }
       setLineValueDataset(newDataset);
       if (newDataset.length > 0) {
-        import("../functions/BuildTitle").then((module) => {
+        import("../functions/BuildTitlePredict").then((module) => {
           // Update the title
           const newTitle = module.default(lineNames, "Predict:");
           SetTitleAndDescription(newTitle, description, window.location.href);
@@ -820,11 +879,14 @@ export default function Prediction({
               let presetsURL = "";
 
               const processes = [];
+              const localAdjustments = [];
 
               for (let item in lineValueDataset) {
                 const lineProcess = lineValueDataset[item].process;
+                const lineAdjustment = lineValueDataset[item].adjustments;
 
                 processes.push(lineProcess);
+                localAdjustments.push(lineAdjustment);
               }
 
               const brands = [];
@@ -837,7 +899,12 @@ export default function Prediction({
               await import("../functions/BuildURLFriendlyPredict").then(
                 (module) => {
                   // Construct the process array into a string
-                  presetsURL = module.default(processes, brands);
+                  presetsURL = module.default(
+                    processes,
+                    localAdjustments,
+                    brands,
+                    rateAdjustments
+                  );
                 }
               );
 
@@ -1048,7 +1115,7 @@ export default function Prediction({
                         alignItems: "center",
                       }}
                     >
-                      Options
+                      More Options
                     </p>
                   </button>
                 ) : (
@@ -1058,7 +1125,7 @@ export default function Prediction({
                 {/* Add Average Price, only if available */}
                 {averagePrices ? (
                   <button
-                    onClick={() => {
+                    onClick={async () => {
                       setNeedToCreateChart(true);
                       createChart();
                       if (analytics != null) {
@@ -1068,20 +1135,12 @@ export default function Prediction({
                       }
                       while (true) {
                         let matchFound = false;
-                        const red = Math.random() * 255;
-                        const green = Math.random() * 255;
-                        const blue = Math.random() * 255;
+                        let newBorderColor = "#fff";
 
-                        let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+                        const colourRequest = await newColour();
 
-                        for (let item in lineValueDataset) {
-                          if (
-                            newBorderColor == lineValueDataset[item].borderColor
-                          ) {
-                            matchFound = true;
-                            break;
-                          }
-                        }
+                        matchFound = colourRequest.matchFound;
+                        newBorderColor = colourRequest.newBorderColor;
 
                         if (!matchFound) {
                           const newLine = {
@@ -1201,7 +1260,7 @@ export default function Prediction({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: `150px 100px`,
+                gridTemplateColumns: `150px`,
                 gridTemplateRows: `65px 65px 65px 65px 65px 65px`,
                 gridAutoFlow: "column",
                 marginLeft: "30px",
@@ -1316,17 +1375,17 @@ export default function Prediction({
                       alignItems: "center",
                     }}
                   >
-                    Options
+                    More Options
                   </p>
                 </button>
               ) : (
-                /* Empty Cell */ <div></div>
+                /* Empty Cell */ <></>
               )}
 
               {/* Add Average Price, only if available */}
               {averagePrices ? (
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setNeedToCreateChart(true);
                     createChart();
                     if (analytics != null) {
@@ -1334,20 +1393,12 @@ export default function Prediction({
                     }
                     while (true) {
                       let matchFound = false;
-                      const red = Math.random() * 255;
-                      const green = Math.random() * 255;
-                      const blue = Math.random() * 255;
+                      let newBorderColor = "#fff";
 
-                      let newBorderColor = `rgb(${red}, ${green}, ${blue})`;
+                      const colourRequest = await newColour();
 
-                      for (let item in lineValueDataset) {
-                        if (
-                          newBorderColor == lineValueDataset[item].borderColor
-                        ) {
-                          matchFound = true;
-                          break;
-                        }
-                      }
+                      matchFound = colourRequest.matchFound;
+                      newBorderColor = colourRequest.newBorderColor;
 
                       if (!matchFound) {
                         const newLine = {
@@ -1384,7 +1435,7 @@ export default function Prediction({
                   </p>
                 </button>
               ) : (
-                /* Empty Cell */ <div></div>
+                /* Empty Cell */ <></>
               )}
 
               {/* Export CSV */}
@@ -1419,11 +1470,13 @@ export default function Prediction({
             handleNumberInput={handleNumberInput}
             releaseYear={releaseYear}
             setReleaseYear={setReleaseYear}
-            initialPrice={initialPrice}
-            setInitialPrice={setInitialPrice}
+            productPrice={productPrice}
+            setProductPrice={setProductPrice}
             modalAddToGraph={modalAddToGraph}
             brand={brand}
             error={error}
+            type={type}
+            rateAdjustments={rateAdjustments}
           ></PredictionAddLineModal>
         </Suspense>
       ) : (

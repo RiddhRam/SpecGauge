@@ -254,9 +254,9 @@ export default function Compare({
     if (pros.length == 0) {
       SetTitleAndDescription(defaultTitle, description, window.location.href);
     } else {
-      import("../functions/BuildTitle").then((module) => {
+      import("../functions/BuildTitleCompare").then((module) => {
         // Update the title
-        const newTitle = module.default(saveComparisonProcesses, "Compare:");
+        const newTitle = module.default(saveComparisonProcesses);
         SetTitleAndDescription(newTitle, description, window.location.href);
       });
     }
@@ -307,10 +307,10 @@ export default function Compare({
   const updateTypeData = async () => {
     // LAZY IMPORT INCEPTION
     // Import PakoInflate, then import type data
-    import("../functions/PakoInflate").then((module) => {
+    import("../functions/PakoInflate").then(async (module) => {
       const PakoInflate = module.default;
       if (type == "Vehicles") {
-        import("../data/carsData").then((module) => {
+        await import("../data/carsData").then((module) => {
           const typeDataFunc = module.carsData;
 
           const typeData = typeDataFunc();
@@ -323,7 +323,7 @@ export default function Compare({
           setCategories(typeData[4]);
         });
       } else if (type == "Consoles") {
-        import("../data/consolesData").then((module) => {
+        await import("../data/consolesData").then((module) => {
           const typeData = module.consolesData();
 
           setProcess(typeData[0]);
@@ -334,7 +334,7 @@ export default function Compare({
           setCategories(typeData[4]);
         });
       } else if (type == "CPUs") {
-        import("../data/cpusData").then((module) => {
+        await import("../data/cpusData").then((module) => {
           const typeData = module.cpusData();
 
           setProcess(typeData[0]);
@@ -345,7 +345,7 @@ export default function Compare({
           setCategories(typeData[4]);
         });
       } else if (type == "Graphics Cards") {
-        import("../data/graphicsCardsData").then((module) => {
+        await import("../data/graphicsCardsData").then((module) => {
           const typeData = module.graphicsCardsData();
 
           setProcess(typeData[0]);
@@ -356,7 +356,7 @@ export default function Compare({
           setCategories(typeData[4]);
         });
       } else {
-        import("../data/dronesData").then((module) => {
+        await import("../data/dronesData").then((module) => {
           const typeData = module.dronesData();
 
           setProcess(typeData[0]);
