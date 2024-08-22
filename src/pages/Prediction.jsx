@@ -280,11 +280,6 @@ export default function Prediction({
         }
       }
 
-      // Maximum rate increase is 0.03
-      if (rate > 0.2) {
-        rate = 0.2;
-      }
-
       // If vehicle wasn't manufactured yet, then don't display price for that year
       if (i < year) {
         prices.push(null);
@@ -298,6 +293,11 @@ export default function Prediction({
       await import("../functions/SeedrandomImport").then((module) => {
         rng = module.default(seed);
       });
+
+      // Maximum rate increase is 0.2
+      if (rate > 0.12) {
+        rate = 0.2 * rng();
+      }
 
       // Get the new price
       let newCalculatedPrice =
@@ -318,18 +318,13 @@ export default function Prediction({
       }
 
       // If not the first value
-      // If last price was greater than 1.5x the original value, and last price wasn't an increase
-      if (lastPrice > originalPrice * 2) {
-        // The price will hover around twice it's original value
-        difference = lastPrice * rng() * -0.04;
-      }
       // If last price wasn't an increase
       else {
-        // If difference is greater than an 8% of the last price
-        if (difference * -1 > lastPrice * 0.53) {
+        // If difference is greater than an 53% of the last price
+        if (difference * -1 > lastPrice * 0.68) {
           // Reduce difference to rng
           // Prevents sharp increases
-          difference = lastPrice * rng() * 0.045 * -1;
+          difference = lastPrice * rng() * 0.08 * -1;
         } // If new price is a decrease from last price
         else if (difference < 0) {
           // If the absolute value of the decrease is more than 8% of the original price
@@ -347,7 +342,13 @@ export default function Prediction({
 
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
       if (difference + lastPrice > originalPrice * 2.1) {
+        // The price will not increase as quickly
         difference = originalPrice * 0.1 * rng();
+      }
+
+      // Price shouldn't go under 1000
+      if (difference + lastPrice < 1000) {
+        difference = lastPrice * 0.1 * rng();
       }
 
       difference = Math.round(difference);

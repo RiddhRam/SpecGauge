@@ -61,7 +61,7 @@ export default function PredictionAddLineModal({
           type="number"
           value={modalProductPrice}
           className="TextInput"
-          placeholder="Price"
+          placeholder="Release Price"
           onChange={(event) =>
             handleNumberInput(event.target.value, setProductPrice)
           }

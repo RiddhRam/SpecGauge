@@ -1,3 +1,4 @@
+const veryFast = -0.24;
 const fast = -0.17;
 const somewhatFast = -0.16;
 const normal = -0.095;
@@ -80,7 +81,7 @@ const carsBrandValues = [
   { label: "Audi", value: reputable },
   { label: "Audi RS-Series", value: -0.065 },
   { label: "Bentley", value: fast },
-  { label: "BMW", value: -0.08 },
+  { label: "BMW", value: -0.11 },
   { label: "BMW M-Series", value: -0.06 },
   { label: "BMW Motorcycle", value: expensiveSportMotorCycle },
   { label: "Bugatti", value: superCar },
@@ -107,7 +108,7 @@ const carsBrandValues = [
   { label: "Hummer", value: fast },
   { label: "Hyundai", value: normal },
   { label: "INEOS", value: fast },
-  { label: "Infiniti", value: normal },
+  { label: "Infiniti", value: -0.15 },
   { label: "Isuzu", value: normal },
   { label: "Jaguar", value: expensiveSport },
   { label: "Jeep", value: normal },
@@ -115,14 +116,14 @@ const carsBrandValues = [
   { label: "Kawasaki", value: expensiveSportMotorCycle },
   { label: "Kia", value: normal },
   { label: "Koenigsegg", value: superCar },
-  { label: "KTM", value: expensiveSport },
+  { label: "KTM", value: -0.08 },
   { label: "Lamborghini", value: superCar },
   { label: "Land Rover", value: normal },
   { label: "Lexus", value: -0.065 },
   { label: "Lincoln", value: normal },
   { label: "Lotus", value: normal },
   { label: "Lucid", value: normal },
-  { label: "Maserati", value: reputable },
+  { label: "Maserati", value: veryFast },
   { label: "Maybach", value: superCar },
   { label: "Mazda", value: reliable },
   { label: "McLaren", value: expensiveSport },
@@ -152,7 +153,7 @@ const carsBrandValues = [
   { label: "Shelby", value: reputable },
   { label: "Smart", value: fast },
   { label: "Spyker", value: normal },
-  { label: "Subaru", value: reliable },
+  { label: "Subaru", value: -0.07 },
   { label: "Suzuki", value: normal },
   { label: "Suzuki Motorcycle", value: reputableMotorCycle },
   { label: "Tata", value: normal },
@@ -173,7 +174,7 @@ const carsBrandValues = [
 // PUT ANY FIXED RATE CHANGES (anything above 100) AT THE END. FIXED RATE CHANGES ARE DIVIDED BY 10000
 const carsAdditionalOptions = [
   ["Gasoline/Diesel", true, 2035, 0.005],
-  ["Collectible", false, 18, 300],
+  ["Collectible", false, 10, 300],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };
