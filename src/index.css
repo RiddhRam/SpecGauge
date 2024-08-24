@@ -214,6 +214,7 @@ a {
   font-size: 15;
   padding: 10px;
   text-align: center;
+  font-weight: bold;
 }
 
 /* When displaying success messages */

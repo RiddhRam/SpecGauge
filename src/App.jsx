@@ -186,7 +186,7 @@ export default function App() {
                 <Prediction
                   type={"Vehicles"}
                   isMobile={isMobile}
-                  minimumPrice={7500}
+                  minimumPrice={3000}
                   description={`View future prices of Cars, SUVs, Trucks, Electric (EVs) and more over time and into the future. View new and used vehicle depreciation and value.`}
                   predictionLink={
                     window.location.origin + "/prediction/automobiles/"

@@ -1,19 +1,23 @@
-const veryFast = -0.24;
-const fast = -0.17;
-const somewhatFast = -0.16;
+// Adjustment 2
+const fast = -0.125;
+// Adjustment 2
+// Adjustment 1
+const somewhatFast = -0.105;
 const normal = -0.095;
+// Adjustment 1
+// Good
 const reputable = -0.075;
 const reliable = -0.06;
 const reputableSports = -0.055;
 const inBetweenCars = -0.045;
-const superReliable = -0.035;
-const expensiveSport = -0.03;
-const superCar = -0.02;
+const expensiveSport = -0.0375;
+const superCar = -0.0325;
+// Good
 
-const reliableMotorCycle = -0.07;
-const reputableMotorCycle = -0.055;
-const expensiveSportMotorCycle = -0.045;
-const superMotorCycle = -0.025;
+const reliableMotorCycle = -0.075;
+const reputableMotorCycle = -0.06;
+const expensiveSportMotorCycle = -0.05;
+const superMotorCycle = -0.03;
 
 const carsAveragePrices = [
   null,
@@ -77,10 +81,10 @@ const carsAveragePrices = [
 const carsBrandValues = [
   { label: "Alfa Romeo", value: reputable },
   { label: "Alpine", value: inBetweenCars },
-  { label: "Aston Martin", value: expensiveSport },
+  { label: "Aston Martin", value: reputableSports },
   { label: "Audi", value: reputable },
   { label: "Audi RS-Series", value: -0.065 },
-  { label: "Bentley", value: fast },
+  { label: "Bentley", value: somewhatFast },
   { label: "BMW", value: -0.11 },
   { label: "BMW M-Series", value: -0.06 },
   { label: "BMW Motorcycle", value: expensiveSportMotorCycle },
@@ -110,7 +114,7 @@ const carsBrandValues = [
   { label: "INEOS", value: fast },
   { label: "Infiniti", value: -0.15 },
   { label: "Isuzu", value: normal },
-  { label: "Jaguar", value: expensiveSport },
+  { label: "Jaguar", value: fast },
   { label: "Jeep", value: normal },
   { label: "Karma", value: normal },
   { label: "Kawasaki", value: expensiveSportMotorCycle },
@@ -123,15 +127,15 @@ const carsBrandValues = [
   { label: "Lincoln", value: normal },
   { label: "Lotus", value: normal },
   { label: "Lucid", value: normal },
-  { label: "Maserati", value: veryFast },
+  { label: "Maserati", value: fast },
   { label: "Maybach", value: superCar },
   { label: "Mazda", value: reliable },
   { label: "McLaren", value: expensiveSport },
   { label: "Mercedes-AMG", value: -0.07 },
   { label: "Mercedes-Benz", value: reputable },
   { label: "Mercury", value: normal },
-  { label: "Mini", value: fast },
-  { label: "Mitsubishi", value: superReliable },
+  { label: "Mini", value: normal },
+  { label: "Mitsubishi", value: reliable },
   { label: "Nissan", value: reputableSports },
   { label: "Oldsmobile", value: normal },
   { label: "Opel", value: normal },
@@ -146,7 +150,7 @@ const carsBrandValues = [
   { label: "Renault", value: normal },
   { label: "Rimac", value: superCar },
   { label: "Rivian", value: normal },
-  { label: "Rolls-Royce", value: expensiveSport },
+  { label: "Rolls-Royce", value: reputable },
   { label: "Saab", value: normal },
   { label: "Saturn", value: normal },
   { label: "Scion", value: normal },
@@ -158,7 +162,7 @@ const carsBrandValues = [
   { label: "Suzuki Motorcycle", value: reputableMotorCycle },
   { label: "Tata", value: normal },
   { label: "Tesla", value: reputable },
-  { label: "Toyota", value: superReliable },
+  { label: "Toyota", value: reliable },
   { label: "Triumph", value: expensiveSportMotorCycle },
   { label: "VinFast", value: fast },
   { label: "Volkswagen", value: normal },

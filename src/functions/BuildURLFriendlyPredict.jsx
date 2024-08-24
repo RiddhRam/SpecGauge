@@ -60,7 +60,6 @@ export default function BuildURLFriendlyPredict(
     // If this type has rateAdjustments
     if (rateAdjustments) {
       for (let item in localAdjustments[process]) {
-        console.log(localAdjustments[process][item][1])
         // If this rate adjustment was enabled, keep going, else continue to next iteration
         if (localAdjustments[process][item][1] == false) {
           continue

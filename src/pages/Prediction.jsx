@@ -179,7 +179,6 @@ export default function Prediction({
     priceString,
     yearString,
     productBrand,
-    priceToUse,
     localRateAdjustments
   ) => {
     let price = parseFloat(priceString);
@@ -201,12 +200,6 @@ export default function Prediction({
     let lastPrice = price;
 
     let originalPrice = null;
-
-    // If it's the current price, work backwards to the release price, then continue as normal
-    // It also must be an older vehicle, at least 1 year old
-    if (priceToUse == "Current Price" && releaseYear < 2024) {
-      console.log("Reversing back to release price");
-    }
 
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
@@ -299,9 +292,15 @@ export default function Prediction({
         rate = 0.2 * rng();
       }
 
+      let xAdjustment = 0;
+
+      if (rate < -0.14) {
+        xAdjustment = 10;
+      }
+
       // Get the new price
       let newCalculatedPrice =
-        price * Math.E ** ((rate + rng() * 0.02) * (i - year));
+        price * Math.E ** ((rate + rng() * 0.008) * (i - year + xAdjustment));
       // Difference between price of last iteration and this one
       let difference = newCalculatedPrice - lastPrice;
 
@@ -637,7 +636,6 @@ export default function Prediction({
     priceString,
     yearString,
     brand,
-    priceToUse,
     localRateAdjustments
   ) => {
     setNeedToCreateChart(true);
@@ -646,7 +644,6 @@ export default function Prediction({
       priceString,
       yearString,
       brand,
-      priceToUse,
       localRateAdjustments
     );
     if (result != 0) {
@@ -1478,6 +1475,7 @@ export default function Prediction({
             error={error}
             type={type}
             rateAdjustments={rateAdjustments}
+            minimumPrice={minimumPrice}
           ></PredictionAddLineModal>
         </Suspense>
       ) : (
