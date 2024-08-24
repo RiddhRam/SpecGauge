@@ -499,7 +499,6 @@ export default function Prediction({
           processItem[0],
           processItem[1],
           processItem[2],
-          "Release Price",
           allRateAdjustments[item]
         );
       } else {

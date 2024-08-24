@@ -3,6 +3,7 @@ Price division based prediction, if high, then rate is lower, if low, rate is hi
 Make price drop off harder in first 2 years
 Add KTM Motorcycles
 Put rate adjustments in the add item modal
+Add RNG to reverse price prediction
 
 7.5.0
 Add top, side and back view of vehicle sizes

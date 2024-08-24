@@ -92,7 +92,7 @@ export default function PredictionAddLineModal({
         onChange={(event) =>
           handleNumberInput(event.target.value, setReleaseYear)
         }
-        style={{ fontSize: 16, margin: "35px 0 15px 0" }}
+        style={{ fontSize: 16 }}
       ></input>
 
       {/* Select Brand */}
@@ -112,12 +112,12 @@ export default function PredictionAddLineModal({
       </select>
 
       {/* Price Field */}
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", margin: "35px 0 10px 0" }}>
         <span
           style={{
             position: "absolute",
             left: "10px",
-            top: "49%",
+            top: "50%",
             transform: "translateY(-50%)",
             pointerEvents: "none",
             color: "#fff",
@@ -158,7 +158,7 @@ export default function PredictionAddLineModal({
         onChange={(event) => {
           setPriceToUse(event.target.value);
         }}
-        style={{ margin: "10px 0", padding: "10px" }}
+        style={{ margin: "10px 0 35px 0", padding: "10px" }}
       >
         <option value={"Current Price"}>Current Price</option>
         <option value={"Release Price"}>Release Price</option>
