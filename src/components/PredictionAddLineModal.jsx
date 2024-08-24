@@ -44,9 +44,7 @@ export default function PredictionAddLineModal({
 
       let xAdjustment = 0;
 
-      if (rate < -0.11) {
-        xAdjustment = 5;
-      } else if (rate < -0.09) {
+      if (rate < -0.09) {
         xAdjustment = 3.8;
       }
 

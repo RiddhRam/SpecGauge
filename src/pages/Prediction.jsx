@@ -295,7 +295,7 @@ export default function Prediction({
       let xAdjustment = 0;
 
       if (rate < -0.14) {
-        xAdjustment = 10;
+        xAdjustment = 3.8;
       }
 
       // Get the new price

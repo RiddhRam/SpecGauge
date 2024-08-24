@@ -1,5 +1,6 @@
+const veryFast = -0.15;
 // Adjustment 2
-const fast = -0.125;
+const fast = -0.135;
 // Adjustment 2
 // Adjustment 1
 const somewhatFast = -0.105;
@@ -114,7 +115,7 @@ const carsBrandValues = [
   { label: "INEOS", value: fast },
   { label: "Infiniti", value: -0.15 },
   { label: "Isuzu", value: normal },
-  { label: "Jaguar", value: fast },
+  { label: "Jaguar", value: veryFast },
   { label: "Jeep", value: normal },
   { label: "Karma", value: normal },
   { label: "Kawasaki", value: expensiveSportMotorCycle },
@@ -127,7 +128,7 @@ const carsBrandValues = [
   { label: "Lincoln", value: normal },
   { label: "Lotus", value: normal },
   { label: "Lucid", value: normal },
-  { label: "Maserati", value: fast },
+  { label: "Maserati", value: veryFast },
   { label: "Maybach", value: superCar },
   { label: "Mazda", value: reliable },
   { label: "McLaren", value: expensiveSport },
