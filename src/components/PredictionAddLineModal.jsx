@@ -40,7 +40,7 @@ export default function PredictionAddLineModal({
     if (brandValues.find((brandLabel) => brandLabel.label === brand)) {
       let rate = brandValues.find(
         (brandLabel) => brandLabel.label === brand
-      ).value;
+      ).reverseValue;
 
       let xAdjustment = 0;
 
