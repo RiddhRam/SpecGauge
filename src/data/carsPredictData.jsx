@@ -166,7 +166,7 @@ const carsBrandValues = [
   { label: "Maserati", value: fast + 0.01 },
   { label: "Maybach", value: superCar, reverseValue: superCar },
   { label: "Mazda", value: reliable, reverseValue: reliable - 0.005 },
-  { label: "McLaren", value: expensiveSport, reverseValue: expensiveSport },
+  { label: "McLaren", value: inBetweenCars, reverseValue: inBetweenCars },
   { label: "Mercedes-AMG", value: -0.07, reverseValue: -0.075 },
   { label: "Mercedes-Benz", value: reputable, reverseValue: reputable + 0.01 },
   { label: "Mercury", value: normal, reverseValue: normal - 0.015 },
