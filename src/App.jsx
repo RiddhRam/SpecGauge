@@ -191,6 +191,7 @@ export default function App() {
                   predictionLink={
                     window.location.origin + "/prediction/automobiles/"
                   }
+                  minimumAdjuster={1000}
                 ></Prediction>
               </Suspense>
             }
@@ -203,9 +204,10 @@ export default function App() {
                 <Prediction
                   type={"CPUs"}
                   isMobile={isMobile}
-                  minimumPrice={150}
+                  minimumPrice={100}
                   description={`View future prices of processors over time and into the future. Predict future costs and view past prices.`}
                   predictionLink={window.location.origin + "/prediction/cpus/"}
+                  minimumAdjuster={10}
                 ></Prediction>
               </Suspense>
             }
@@ -218,11 +220,12 @@ export default function App() {
                 <Prediction
                   type={"Graphics Cards"}
                   isMobile={isMobile}
-                  minimumPrice={200}
+                  minimumPrice={100}
                   description={`View future prices of GPUs over time and into the future. Predict future costs and view past prices.`}
                   predictionLink={
                     window.location.origin + "/prediction/graphicsCards/"
                   }
+                  minimumAdjuster={10}
                 ></Prediction>
               </Suspense>
             }

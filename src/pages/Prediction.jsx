@@ -44,6 +44,7 @@ export default function Prediction({
   minimumPrice,
   description,
   predictionLink,
+  minimumAdjuster,
 }) {
   const navigate = useNavigate();
   // Years being displayed
@@ -346,7 +347,7 @@ export default function Prediction({
 
       // Price shouldn't go too far under 10% of original price
       if (difference + lastPrice < 0.1 * originalPrice) {
-        difference = 1000 * -0.1 * rng();
+        difference = minimumAdjuster * -0.1 * rng();
       }
 
       difference = Math.round(difference);
