@@ -71,6 +71,7 @@ export default function Prediction({
 
   const [averagePrices, setAveragePrices] = useState(null);
   const [brandValues, setBrandValues] = useState(null);
+  // Unchanged rate adjustments
   const [additionalOptions, setAdditionalOptions] = useState(null);
 
   // For the modals
@@ -79,7 +80,7 @@ export default function Prediction({
   const [showEditModal, setShowEditModal] = useState(false);
   const [colorChangeIndex, setColorChangeIndex] = useState(0);
   const [error, setError] = useState("");
-  const [rateAdjustments, setRateAdjustments] = useState(additionalOptions);
+  const [rateAdjustments, setRateAdjustments] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [beginLoadingPresets, setBeginLoadingPresets] = useState(false);
   const [createdChart, setCreatedChart] = useState(false);
@@ -201,6 +202,8 @@ export default function Prediction({
 
     let originalPrice = null;
 
+    const maxRate = 0.09;
+
     // Start at 2000 for readability, each i value is an x value on the graph (years)
     for (let i = 2000; i < 2056; i++) {
       // The rate that the price drops
@@ -233,6 +236,15 @@ export default function Prediction({
         }
       }
 
+      // For each year it was released, calculate the price for that year
+
+      // Get the rng value
+      const seed = `${price}${productBrand}${year}${lastPrice}${localRateAdjustments}`;
+      let rng = null;
+      await import("../functions/SeedrandomImport").then((module) => {
+        rng = module.default(seed);
+      });
+
       // first parameter is name of option
       // second parameter is default value
       // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
@@ -258,8 +270,15 @@ export default function Prediction({
 
             // if current is higher than the beginning year (third parameter)
             if (i >= beginningYear) {
+              // if it's a huge adjustment, don't even add it, just set it
               if (currentRateAdjustments[item][3] > 100) {
                 rate = currentRateAdjustments[item][3];
+              } else {
+                rate += currentRateAdjustments[item][3];
+              }
+
+              if (rate > maxRate) {
+                rate = rate = 0.2 * rng;
               }
             }
             continue;
@@ -279,17 +298,9 @@ export default function Prediction({
         continue;
       }
 
-      // For each year it was released, calculate the price for that year
-      // Get the rng() value
-      const seed = `${price}${productBrand}${year}${lastPrice}${localRateAdjustments}`;
-      let rng = null;
-      await import("../functions/SeedrandomImport").then((module) => {
-        rng = module.default(seed);
-      });
-
-      // Maximum rate increase is 0.2
-      if (rate > 0.12) {
-        rate = 0.2 * rng();
+      // Maximum rate increase is 0.09
+      if (rate > maxRate) {
+        rate = 0.2 * rng;
       }
 
       let xAdjustment = 0;
@@ -300,7 +311,7 @@ export default function Prediction({
 
       // Get the new price
       let newCalculatedPrice =
-        price * Math.E ** ((rate + rng() * 0.008) * (i - year + xAdjustment));
+        price * Math.E ** ((rate + rng * 0.008) * (i - year + xAdjustment));
       // Difference between price of last iteration and this one
       let difference = newCalculatedPrice - lastPrice;
 
@@ -323,7 +334,7 @@ export default function Prediction({
         if (difference * -1 > lastPrice * 0.68) {
           // Reduce difference to rng
           // Prevents sharp increases
-          difference = lastPrice * rng() * 0.08 * -1;
+          difference = lastPrice * rng * 0.08 * -1;
         } // If new price is a decrease from last price
         else if (difference < 0) {
           // If the absolute value of the decrease is more than 68% of the last price
@@ -342,12 +353,12 @@ export default function Prediction({
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
       if (difference + lastPrice > originalPrice * 1.6) {
         // The price will not increase as quickly
-        difference = originalPrice * 0.1 * rng();
+        difference = originalPrice * 0.1 * rng;
       }
 
       // Price shouldn't go too far under 10% of original price
       if (difference + lastPrice < 0.1 * originalPrice) {
-        difference = minimumAdjuster * -0.1 * rng();
+        difference = minimumAdjuster * -0.1 * rng;
       }
 
       difference = Math.round(difference);
@@ -514,6 +525,7 @@ export default function Prediction({
     }
 
     setBrandValues(tempBrandValues);
+    setRateAdjustments(tempRateAdjustments);
   };
 
   // This is only done when loading presets, otherwise it's done in the button itself
@@ -715,8 +727,6 @@ export default function Prediction({
       window.location.href
     );
 
-    setRateAdjustments(additionalOptions);
-
     if (!firstLoad) {
       // Have to manually reset, in case user uses navigation buttons to switch to another prediction page
       setBrand("");
@@ -756,8 +766,11 @@ export default function Prediction({
       import("../data/carsPredictData").then((module) => {
         setAveragePrices(module.carsAveragePrices);
         setBrandValues(module.carsBrandValues);
-        setAdditionalOptions(module.carsAdditionalOptions);
-        setRateAdjustments(module.carsAdditionalOptions);
+        // Have to copy additional options or this or we get duplicates
+        setAdditionalOptions(
+          module.carsAdditionalOptions.map((i) => ({ ...i }))
+        );
+        setRateAdjustments(module.carsAdditionalOptions.map((i) => ({ ...i })));
       });
     } else if (type == "CPUs") {
       import("../data/CPUsPredictData").then((module) => {
@@ -1422,6 +1435,7 @@ export default function Prediction({
             setRateAdjustments={setRateAdjustments}
             isMobile={isMobile}
             analytics={analytics}
+            additionalOptions={additionalOptions}
           ></PredictionAddLineModal>
         </Suspense>
       ) : (

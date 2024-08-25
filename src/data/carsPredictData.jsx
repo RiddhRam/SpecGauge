@@ -87,7 +87,7 @@ const carsBrandValues = [
     reverseValue: reputableSports,
   },
   { label: "Audi RS-Series", value: -0.075, reverseValue: -0.075 },
-  { label: "Audi", value: normal - 0.04, reverseValue: normal - 0.055 },
+  { label: "Audi", value: normal - 0.02, reverseValue: normal },
   { label: "Bentley", value: somewhatFast, reverseValue: somewhatFast - 0.01 },
   { label: "BMW M-Series", value: -0.08, reverseValue: -0.085 },
   {
@@ -235,7 +235,7 @@ const carsBrandValues = [
 // PUT ANY FIXED RATE CHANGES (anything above 100) AT THE END. FIXED RATE CHANGES ARE DIVIDED BY 10000
 const carsAdditionalOptions = [
   ["Gasoline/Diesel", true, 2035, 0.005],
-  ["Collectible", false, 10, 300],
+  ["Collectible", false, 10, 0.13],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };

@@ -22,6 +22,7 @@ export default function PredictionAddLineModal({
   setRateAdjustments,
   isMobile,
   analytics,
+  additionalOptions,
 }) {
   let modalProductPrice = productPrice;
   let modalReleaseYear = releaseYear;
@@ -48,17 +49,24 @@ export default function PredictionAddLineModal({
     updatePrice();
   }, [brandValues, releaseYear, productPrice, brand, rateAdjustments]);
 
+  useEffect(() => {
+    setRateAdjustments(additionalOptions);
+  }, [type]);
+
   const updatePrice = async () => {
     if (brandValues.find((brandLabel) => brandLabel.label === brand)) {
-      let rate = 0;
+      // Initialize with this, but we reset it to the reverse value after rate adjustments are done
+      let rate = brandValues.find(
+        (brandLabel) => brandLabel.label === brand
+      ).value;
 
       let xAdjustment = 0;
       let startingPoint = modalProductPrice;
 
       // Rate cannot exceed this
-      const maxRate = 0.12;
+      const maxRate = 0.09;
 
-      // Get the rng() value
+      // Get the rng value
       const seed = `${rate}${brand}${releaseYear}`;
       let rng = null;
       await import("../functions/SeedrandomImport").then((module) => {
@@ -67,7 +75,6 @@ export default function PredictionAddLineModal({
 
       // Adjust starting point if rate adjustments were used
       if (rateAdjustments) {
-        console.log("Running1");
         // Iterate through rate adjustments
         // Iterate through these to get the settings
         for (let item in rateAdjustments) {
@@ -78,23 +85,22 @@ export default function PredictionAddLineModal({
 
           // If third parameter is lower than 2000
           if (rateAdjustments[item][2] < 2000) {
-            console.log("Running2");
             // Add that many years to vehicle production year
             const beginningYear =
               parseInt(releaseYear) + rateAdjustments[item][2];
 
-            console.log(beginningYear);
             // if current is higher than the beginning year (third parameter)
             if (2025 >= beginningYear) {
-              console.log("Running3");
               // if it's a huge adjustment, don't even add it, just set it
               if (rateAdjustments[item][3] > 100) {
                 rate = rateAdjustments[item][3];
+              } else {
+                rate += rateAdjustments[item][3];
               }
 
               // Bring rate down if needed
               if (rate > maxRate) {
-                rate = maxRate;
+                rate = rate = 0.2 * rng;
               }
 
               const time = 2025 - beginningYear;
@@ -102,13 +108,13 @@ export default function PredictionAddLineModal({
               startingPoint = // Formula for reverse price prediction of this rate adjustment type
                 // starting point = original
                 // rate = rate adjustment
-                // 0.004 = average random rate fluctuation
+                // 0.008 = max random rate fluctuation
                 // time = time that the rate was used
 
                 // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * time)
 
                 parseInt(startingPoint) /
-                Math.E ** ((rate + rng() * 0.004) * time);
+                Math.E ** ((rate + rng * 0.02) * time);
             }
             continue;
           }
@@ -139,8 +145,7 @@ export default function PredictionAddLineModal({
 
         // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * vehicle age)
         parseInt(startingPoint) /
-          Math.E **
-            ((rate + rng() * 0.004) * (2025 - releaseYear - xAdjustment))
+          Math.E ** ((rate + rng * 0.004) * (2025 - releaseYear - xAdjustment))
       );
 
       setEstimatedMSRP(estimatedOriginalPrice);
