@@ -78,7 +78,6 @@ export default function Prediction({
   const [showEditModal, setShowEditModal] = useState(false);
   const [colorChangeIndex, setColorChangeIndex] = useState(0);
   const [error, setError] = useState("");
-  const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [rateAdjustments, setRateAdjustments] = useState(additionalOptions);
   const [copiedLink, setCopiedLink] = useState(false);
   const [beginLoadingPresets, setBeginLoadingPresets] = useState(false);
@@ -319,15 +318,15 @@ export default function Prediction({
       // If not the first value
       // If last price wasn't an increase
       else {
-        // If difference is greater than an 53% of the last price
+        // If difference is greater than an 68% of the last price
         if (difference * -1 > lastPrice * 0.68) {
           // Reduce difference to rng
           // Prevents sharp increases
           difference = lastPrice * rng() * 0.08 * -1;
         } // If new price is a decrease from last price
         else if (difference < 0) {
-          // If the absolute value of the decrease is more than 8% of the original price
-          if (difference * -1 > originalPrice * 0.08) {
+          // If the absolute value of the decrease is more than 68% of the last price
+          if (difference * -1 > lastPrice * 0.68) {
             // Cut the difference in half
             // Prevents sharp drops
             difference = difference * 0.25;
@@ -340,14 +339,14 @@ export default function Prediction({
       }
 
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
-      if (difference + lastPrice > originalPrice * 2.1) {
+      if (difference + lastPrice > originalPrice * 1.6) {
         // The price will not increase as quickly
         difference = originalPrice * 0.1 * rng();
       }
 
-      // Price shouldn't go under 1000
-      if (difference + lastPrice < 1000) {
-        difference = lastPrice * 0.1 * rng();
+      // Price shouldn't go too far under 10% of original price
+      if (difference + lastPrice < 0.1 * originalPrice) {
+        difference = 1000 * -0.1 * rng();
       }
 
       difference = Math.round(difference);
@@ -1091,34 +1090,6 @@ export default function Prediction({
                   <p>Edit</p>
                 </button>
 
-                {/* Additional Options, only if available */}
-                {additionalOptions ? (
-                  <button
-                    onClick={() => {
-                      if (analytics != null) {
-                        logEvent(analytics, `Select Additional Options`, {
-                          Type: type,
-                        });
-                      }
-                      setShowOptionsModal(true);
-                    }}
-                    style={{ padding: "0 2px" }}
-                    className="NormalButton"
-                  >
-                    <p
-                      style={{
-                        textAlign: "center",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      More Options
-                    </p>
-                  </button>
-                ) : (
-                  /* Empty Cell */ <></>
-                )}
-
                 {/* Add Average Price, only if available */}
                 {averagePrices ? (
                   <button
@@ -1351,34 +1322,6 @@ export default function Prediction({
                 <p>Edit</p>
               </button>
 
-              {/* Additional Options, only if available */}
-              {additionalOptions ? (
-                <button
-                  onClick={() => {
-                    if (analytics != null) {
-                      logEvent(analytics, `Select Additional Options`, {
-                        Type: type,
-                      });
-                    }
-                    setShowOptionsModal(true);
-                  }}
-                  style={{ width: "130%" }}
-                  className="NormalButton"
-                >
-                  <p
-                    style={{
-                      textAlign: "center",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    More Options
-                  </p>
-                </button>
-              ) : (
-                /* Empty Cell */ <></>
-              )}
-
               {/* Add Average Price, only if available */}
               {averagePrices ? (
                 <button
@@ -1475,6 +1418,9 @@ export default function Prediction({
             type={type}
             rateAdjustments={rateAdjustments}
             minimumPrice={minimumPrice}
+            setRateAdjustments={setRateAdjustments}
+            isMobile={isMobile}
+            analytics={analytics}
           ></PredictionAddLineModal>
         </Suspense>
       ) : (
@@ -1498,27 +1444,6 @@ export default function Prediction({
             isMobile={isMobile}
             showEditModal={showEditModal}
             updateName={updateName}
-          />
-        </Suspense>
-      ) : (
-        <></>
-      )}
-
-      {/* Options Modal */}
-      {showOptionsModal ? (
-        <Suspense
-          fallback={
-            <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
-          }
-        >
-          <PredictionOptionsModal
-            setShowOptionsModal={setShowOptionsModal}
-            setRateAdjustments={setRateAdjustments}
-            rateAdjustments={rateAdjustments}
-            isMobile={isMobile}
-            type={type}
-            analytics={analytics}
-            showOptionsModal={showOptionsModal}
           />
         </Suspense>
       ) : (

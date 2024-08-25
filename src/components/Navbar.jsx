@@ -38,7 +38,7 @@ export const Navbar = ({ isMobile }) => {
           gridTemplateColumns: "1fr auto auto 1fr",
           gridTemplateRows: "65px",
           alignItems: "center",
-          gap: "20px",
+          columnGap: "13px",
         }}
       >
         {/* Give user the option to go to home page */}
@@ -92,7 +92,7 @@ export const Navbar = ({ isMobile }) => {
                   display: "flex",
                   alignItems: "center",
                   textAlign: "center",
-                  fontSize: isMobile ? "9px" : "14px",
+                  fontSize: isMobile ? "10px" : "14px",
                 }}
               >
                 <p className="NavbarText">My Account</p>
