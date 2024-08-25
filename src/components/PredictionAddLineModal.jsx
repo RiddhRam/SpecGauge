@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
+import { logEvent } from "firebase/analytics";
 Modal.setAppElement("#SpecGauge");
 
 export default function PredictionAddLineModal({
