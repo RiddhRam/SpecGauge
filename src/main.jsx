@@ -6,9 +6,8 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("SpecGauge")).render(
   // Strict Mode
   // WARNING: WHEN ENABLING, PRESET LINKS MAY NOT WORK AS INTENDED
-  <StrictMode>
-    <App />
-  </StrictMode>
+
+  <App />
 
   // Production mode
   //<App />

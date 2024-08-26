@@ -127,10 +127,10 @@ export const Footer = ({ isMobile }) => {
 
         {/* Email */}
         <a
-          href="mailto:SpecGauge@gmail.com?subject=Hello&body=I%20wanted%20to%20reach%20out%20because..."
+          href="mailto:SpecGauge@gmail.com"
           style={{
             textDecoration: "none",
-            fontSize: isMobile ? 14 : 20,
+            fontSize: isMobile ? 13 : 20,
             userSelect: "none",
             marginTop: 15,
           }}

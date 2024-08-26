@@ -112,23 +112,6 @@ export default function App() {
               </Suspense>
             }
           ></Route>
-          {/* the consoles comparison page */}
-          <Route
-            path="/comparison/consoles/*"
-            element={
-              <Suspense fallback={<Loading></Loading>}>
-                <Compare
-                  type={"Consoles"}
-                  isMobile={isMobile}
-                  comparisonLink={
-                    window.location.origin + "/comparison/consoles/"
-                  }
-                  description={`Compare Xbox vs Nintendo vs PlayStation vs Steam Deck and more consoles side-by-side. The ultimate gaming console comparison tool`}
-                  defaultTitle={`Compare Multiple Consoles Side-by-Side - Console Comparison Tool`}
-                ></Compare>
-              </Suspense>
-            }
-          ></Route>
           {/* the cpus comparison page */}
           <Route
             path="/comparison/cpus/*"
@@ -186,11 +169,12 @@ export default function App() {
                 <Prediction
                   type={"Vehicles"}
                   isMobile={isMobile}
-                  minimumPrice={7500}
+                  minimumPrice={3000}
                   description={`View future prices of Cars, SUVs, Trucks, Electric (EVs) and more over time and into the future. View new and used vehicle depreciation and value.`}
                   predictionLink={
                     window.location.origin + "/prediction/automobiles/"
                   }
+                  minimumAdjuster={1000}
                 ></Prediction>
               </Suspense>
             }
@@ -203,9 +187,10 @@ export default function App() {
                 <Prediction
                   type={"CPUs"}
                   isMobile={isMobile}
-                  minimumPrice={150}
+                  minimumPrice={100}
                   description={`View future prices of processors over time and into the future. Predict future costs and view past prices.`}
                   predictionLink={window.location.origin + "/prediction/cpus/"}
+                  minimumAdjuster={10}
                 ></Prediction>
               </Suspense>
             }
@@ -218,11 +203,12 @@ export default function App() {
                 <Prediction
                   type={"Graphics Cards"}
                   isMobile={isMobile}
-                  minimumPrice={200}
+                  minimumPrice={100}
                   description={`View future prices of GPUs over time and into the future. Predict future costs and view past prices.`}
                   predictionLink={
                     window.location.origin + "/prediction/graphicsCards/"
                   }
+                  minimumAdjuster={10}
                 ></Prediction>
               </Suspense>
             }
@@ -243,7 +229,7 @@ export default function App() {
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">{"\n"}</p>
 
-<p className="InfoText">We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, gaming console, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence. </p>
+<p className="InfoText">We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence. </p>
 
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">{"\n"}</p>
@@ -252,7 +238,7 @@ export default function App() {
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">{"\n"}</p>
 
-<p className="InfoText" style={{fontWeight: 'bold'}}>• Compare Products Side by Side: </p><p className="InfoText">Check out detailed comparisons of the latest and greatest cars, drones, consoles, GPUs, and CPUs. No more guessing games – see how your top picks stack up against each other in real-time.</p>
+<p className="InfoText" style={{fontWeight: 'bold'}}>• Compare Products Side by Side: </p><p className="InfoText">Check out detailed comparisons of the latest and greatest cars, drones, GPUs, and CPUs. No more guessing games – see how your top picks stack up against each other in real-time.</p>
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText" style={{fontWeight: 'bold'}}>• Predict Future Prices: </p><p className="InfoText">Wondering how much that new tech or car will cost down the road? Our unique prediction feature lets you forecast prices all the way to 2055. Yep, you read that right. Get ahead of the game and plan your purchases like a pro.</p>
@@ -279,7 +265,7 @@ export default function App() {
                 </div>
                   }
                   description={
-                    "Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons. We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, gaming console, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence."
+                    "Welcome to SpecGauge – your ultimate sidekick for tech and car comparisons. We get it. Making the right choice in a world full of options can be overwhelming. Whether you’re picking out your next car, drone, GPU, or CPU, we've got your back. Our mission? To help you make informed decisions with ease and confidence."
                   }
                 ></Information>
               </Suspense>
