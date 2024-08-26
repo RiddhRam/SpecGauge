@@ -58,7 +58,6 @@ export const Navbar = ({ isMobile }) => {
           label="Compare"
           menuItems={[
             { label: "Vehicles", path: "/comparison/automobiles" },
-            { label: "Consoles", path: "/comparison/consoles" },
             { label: "CPUs", path: "/comparison/cpus" },
             { label: "Graphics Cards", path: "/comparison/graphicsCards" },
             { label: "Drones", path: "/comparison/drones" },

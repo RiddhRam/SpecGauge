@@ -207,7 +207,7 @@ export default function Compare({
             for (let categoryItem in Categories) {
               if (
                 pro.Category == Categories[categoryItem].Category &&
-                pro.Value != "--"
+                pro.Value.indexOf("--") == -1
               ) {
                 productPros[bestIndex][categoryItem] += `${referencePros[
                   item
@@ -322,17 +322,6 @@ export default function Compare({
           setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
           setCategories(typeData[4]);
         });
-      } else if (type == "Consoles") {
-        await import("../data/consolesData").then((module) => {
-          const typeData = module.consolesData();
-
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
-          // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
-        });
       } else if (type == "CPUs") {
         await import("../data/cpusData").then((module) => {
           const typeData = module.cpusData();
@@ -401,13 +390,6 @@ export default function Compare({
         // Lazy import the right DirectQueryFunction and use it
         if (type == "Vehicles") {
           await import("../functions/DirectQueryAutomobilesFunction").then(
-            async (module) => {
-              // Directly get the product
-              result = await module.default(processes[processItem]);
-            }
-          );
-        } else if (type == "Consoles") {
-          await import("../functions/DirectQueryConsolesFunction").then(
             async (module) => {
               // Directly get the product
               result = await module.default(processes[processItem]);
@@ -544,7 +526,7 @@ export default function Compare({
       {/* Main Body */}
       <div className="LargeContainer">
         <p style={{ fontSize: 20 }} className="HeaderText">
-          {type} Comparison
+          {type} Side-By-Side Comparison
         </p>
 
         {/* Top buttons */}
@@ -705,28 +687,6 @@ export default function Compare({
           >
             <p>Reset</p>
           </button>
-
-          {/* Compare Size */}
-          {/*
-          {products.length != 0 && (
-            <button
-              onClick={() => {
-                /* Set page to home *
-                console.log("Compare Size");
-              }}
-              className="CompareTopButton"
-              style={
-                isMobile
-                  ? {
-                      fontSize: "13px",
-                    }
-                  : {}
-              }
-            >
-              <p>Compare Size</p>
-            </button>
-          )}
-          */}
         </div>
 
         {/* For each product, show a column */}

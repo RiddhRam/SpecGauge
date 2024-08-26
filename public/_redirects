@@ -3,7 +3,6 @@
 /login /index.html 200
 /account /index.html 200
 /comparison/automobiles/* /index.html 200
-/comparison/consoles/* /index.html 200
 /comparison/cpus/* /index.html 200
 /comparison/graphicsCards/* /index.html 200
 /comparison/drones/* /index.html 200

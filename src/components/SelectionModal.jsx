@@ -145,16 +145,6 @@ export default function SelectionModal({
                                 item
                               );
                             });
-                          } else if (type == "Consoles") {
-                            await import(
-                              "../functions/QueryConsolesFunction"
-                            ).then(async (module) => {
-                              // Directly get the product
-                              result = await module.default(
-                                selectedBrand,
-                                item
-                              );
-                            });
                           } else if (type == "CPUs") {
                             await import("../functions/QueryCPUsFunction").then(
                               async (module) => {
