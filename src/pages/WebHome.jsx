@@ -163,38 +163,93 @@ export default function WebHome({ isMobile }) {
           Compare Today. Predict Tomorrow.
         </h2>
 
-        {/* COMPARE THOUSANDS OF PRODUCTS SIDE BY SIDE */}
-        <h3
-          className="ReversePlainText"
+        {/* Comparison Container */}
+        <div
+          className="ToolContainer"
           style={{
-            fontSize: isMobile ? 15 : 20,
-            backgroundColor: "#39FF14",
-            padding: "10px",
-            textAlign: "center",
-            margin: "0 5px",
+            backgroundColor: "#2E2E2E",
+            width: isMobile ? "60%" : "45%",
+            margin: "0 0 20px 0",
           }}
         >
-          {"COMPARE THOUSANDS OF PRODUCTS"}
-          <br />
-          {"SIDE BY SIDE"}
-        </h3>
+          {/* COMPARE THOUSANDS OF PRODUCTS SIDE BY SIDE */}
+          <h3
+            className="ReversePlainText"
+            style={{
+              fontSize: isMobile ? 15 : 20,
+              backgroundColor: "#39FF14",
+              padding: "10px",
+              textAlign: "center",
+              margin: "0 5px",
+              borderRadius: "5px",
+            }}
+          >
+            {"COMPARE THOUSANDS OF PRODUCTS"}
+            <br />
+            {"SIDE BY SIDE"}
+          </h3>
 
-        {/* Compare Icon goes here */}
-        <img
-          src={CompareIcon}
-          alt="Compare Icon"
-          style={{ margin: "30px 0" }}
-        ></img>
+          {/* Compare Icon goes here */}
+          <img
+            src={CompareIcon}
+            alt="Compare Icon"
+            style={{ margin: "30px 0", justifySelf: "center" }}
+          ></img>
 
-        {/* Start Comparing button */}
-        <button
-          className="NormalButton"
-          onClick={() => {
-            setCompareModalVisible(true);
+          {/* Start Comparing button */}
+          <button
+            className="NormalButton"
+            onClick={() => {
+              setCompareModalVisible(true);
+            }}
+            style={{ borderRadius: "10px" }}
+          >
+            <p>Start Comparing</p>
+          </button>
+        </div>
+
+        {/* Prediction Container */}
+        <div
+          className="ToolContainer"
+          style={{
+            backgroundColor: "#2E2E2E",
+            width: isMobile ? "60%" : "45%",
+            margin: "20px 0 0 0",
           }}
         >
-          <p>Start Comparing</p>
-        </button>
+          {/* PREDICT FUTURE PRICES */}
+          <h3
+            className="ReversePlainText"
+            style={{
+              margin: "40px 5px 0px 5px",
+              fontSize: isMobile ? 15 : 20,
+              backgroundColor: "#A855F7",
+              padding: "10px",
+              textAlign: "center",
+              borderRadius: "5px",
+            }}
+          >
+            PREDICT FUTURE PRICES
+          </h3>
+
+          {/* Predict Icon goes here */}
+          <img
+            src={PredictIcon}
+            alt="Predict Icon"
+            style={{ margin: "30px 0", justifySelf: "center" }}
+          ></img>
+
+          {/* Price Prediction button */}
+          <button
+            className="NormalButton"
+            onClick={() => {
+              setPredictModalVisible(true);
+            }}
+            style={{ borderRadius: "10px" }}
+          >
+            <p>Price Prediction</p>
+          </button>
+        </div>
 
         {/* Trending Comparisons */}
         <>
@@ -359,38 +414,6 @@ export default function WebHome({ isMobile }) {
           )}
         </>
 
-        {/* Prediction */}
-        {/* PREDICT FUTURE PRICES */}
-        <h3
-          className="ReversePlainText"
-          style={{
-            margin: "40px 5px 0px 5px",
-            fontSize: isMobile ? 15 : 20,
-            backgroundColor: "#A855F7",
-            padding: "10px",
-            textAlign: "center",
-          }}
-        >
-          PREDICT FUTURE PRICES
-        </h3>
-
-        {/* Predict Icon goes here */}
-        <img
-          src={PredictIcon}
-          alt="Predict Icon"
-          style={{ margin: "30px 0" }}
-        ></img>
-
-        {/* Price Prediction button */}
-        <button
-          className="NormalButton"
-          onClick={() => {
-            setPredictModalVisible(true);
-          }}
-        >
-          <p>Price Prediction</p>
-        </button>
-
         {/* User request or submit data */}
         {/* SUBMIT OR REQUEST COMPARISON DATA */}
         <h3
@@ -439,7 +462,6 @@ export default function WebHome({ isMobile }) {
       )}
 
       {/* Prediction Category selection modal */}
-
       {predictModalVisible ? (
         <Suspense
           fallback={
@@ -460,7 +482,6 @@ export default function WebHome({ isMobile }) {
       )}
 
       {/* Data Request modal */}
-
       {dataModalVisible ? (
         <Suspense
           fallback={

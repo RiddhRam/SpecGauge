@@ -53,7 +53,7 @@ export default function HomeCategoryModal({
         onClick={() => {
           setModalVisible(false);
         }}
-        style={{ marginBottom: "20px" }}
+        style={{ margin: "20px 0" }}
       >
         Cancel
       </button>

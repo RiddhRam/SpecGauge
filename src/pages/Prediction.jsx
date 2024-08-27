@@ -300,6 +300,7 @@ export default function Prediction({
 
       // Maximum rate increase is 0.09
       if (rate > maxRate) {
+        // if greater than the max rate, then multiply rng by a factor of 0.2 to get a new random rate
         rate = 0.2 * rng;
       }
 
@@ -351,9 +352,11 @@ export default function Prediction({
       }
 
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
-      if (difference + lastPrice > originalPrice * 1.6) {
-        // The price will not increase as quickly
-        difference = originalPrice * 0.1 * rng;
+      if (difference + lastPrice > originalPrice * 1.55) {
+        // The price will hover around here
+        difference = originalPrice * 0.08 * rng * (rng > 0.5 ? 1 : -1);
+        console.log(difference);
+        console.log(i);
       }
 
       // Price shouldn't go too far under 10% of original price
