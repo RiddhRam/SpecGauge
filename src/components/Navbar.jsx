@@ -47,7 +47,8 @@ export const Navbar = ({ isMobile }) => {
             style={{
               display: "flex",
               alignItems: "center",
-              fontSize: isMobile ? "13px" : "14px",
+              fontSize: isMobile ? "12px" : "14px",
+              marginLeft: "35px",
             }}
           >
             <p className="NavbarText">Home</p>
@@ -75,7 +76,6 @@ export const Navbar = ({ isMobile }) => {
         {/* Compare dropdown */}
 
         {/* If not on an account handling page, give user the option to go to an account handling page */}
-
         <div
           style={{
             display: "flex",
@@ -84,17 +84,18 @@ export const Navbar = ({ isMobile }) => {
           }}
         >
           {auth.currentUser ? (
-            /* My Account */
+            /*  Account */
             <Link to="/account" className="NavbarText">
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   textAlign: "center",
-                  fontSize: isMobile ? "10px" : "14px",
+                  fontSize: isMobile ? "12px" : "14px",
+                  marginRight: "35px",
                 }}
               >
-                <p className="NavbarText">My Account</p>
+                <p className="NavbarText">Account</p>
               </div>
             </Link>
           ) : (
@@ -105,7 +106,8 @@ export const Navbar = ({ isMobile }) => {
                   display: "flex",
                   alignItems: "center",
                   textAlign: "center",
-                  fontSize: isMobile ? "13px" : "14px",
+                  fontSize: isMobile ? "12px" : "14px",
+                  marginRight: "35px",
                 }}
               >
                 <p className="NavbarText">Log In</p>

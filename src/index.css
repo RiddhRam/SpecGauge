@@ -166,6 +166,16 @@ a {
   background-color: #030612;
 }
 
+/* Each tool on the home page goes in one of these */
+.ToolContainer {
+  border-radius: 10px;
+  min-width: 310px;
+  padding: 10px;
+  display: grid;
+  justify-content: center;
+  background-color: #2a2a2a;
+}
+
 /* The product names and VS text */
 .TrendingComparisonText {
   color: #fff;
@@ -273,7 +283,6 @@ a {
 .NavbarText {
   text-decoration: none;
   color: #fff;
-  padding: 8px;
 
   &:hover {
     color: #eee;

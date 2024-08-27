@@ -55,10 +55,18 @@ export default function PredictionAddLineModal({
 
   const updatePrice = async () => {
     if (brandValues.find((brandLabel) => brandLabel.label === brand)) {
-      // Initialize with this, but we reset it to the reverse value after rate adjustments are done
-      let rate = brandValues.find(
+      const divisions = brandValues.find(
         (brandLabel) => brandLabel.label === brand
       ).value;
+      // Initialize with this, but we reset it to the reverse value after rate adjustments are done
+      let rate = 0;
+
+      let totalRate = 0;
+      for (let divisionItem in divisions) {
+        totalRate += divisions[divisionItem][1];
+      }
+
+      rate = totalRate / divisions.length;
 
       let xAdjustment = 0;
       let startingPoint = modalProductPrice;
@@ -100,7 +108,7 @@ export default function PredictionAddLineModal({
 
               // Bring rate down if needed
               if (rate > maxRate) {
-                rate = rate = 0.2 * rng;
+                rate = 0.2 * rng;
               }
 
               const time = 2025 - beginningYear;
@@ -108,11 +116,10 @@ export default function PredictionAddLineModal({
               startingPoint = // Formula for reverse price prediction of this rate adjustment type
                 // starting point = original
                 // rate = rate adjustment
-                // 0.008 = max random rate fluctuation
+                // 0.02 = max random rate fluctuation
                 // time = time that the rate was used
 
-                // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * time)
-
+                // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * time)
                 parseInt(startingPoint) /
                 Math.E ** ((rate + rng * 0.02) * time);
             }
@@ -128,9 +135,7 @@ export default function PredictionAddLineModal({
       }
 
       // Continue normally with brand rate and new starting point
-      rate = brandValues.find(
-        (brandLabel) => brandLabel.label === brand
-      ).reverseValue;
+      rate = totalRate / divisions.length;
 
       if (rate < -0.095) {
         xAdjustment = 3.8;
@@ -140,7 +145,7 @@ export default function PredictionAddLineModal({
         // Formula for reverse price prediction
         // modalProductPrice = current price
         // (brandValues.find((brandLabel) => brandLabel.label === brand).value = brand rate
-        // 0.004 = average random rate fluctuation
+        // 0.004 = max random rate fluctuation
         // 2025 - release = vehicle age
 
         // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * vehicle age)
@@ -207,7 +212,7 @@ export default function PredictionAddLineModal({
             {rateAdjustments &&
               rateAdjustments.map((item, index) => (
                 <div
-                  key={item}
+                  key={index}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",

@@ -23,6 +23,8 @@ export const Footer = ({ isMobile }) => {
           columnGap: "60px",
           rowGap: "3px",
           gridAutoFlow: "column",
+          paddingRight: "10px",
+          paddingLeft: "10px",
         }}
       >
         {/* Column 1 */}

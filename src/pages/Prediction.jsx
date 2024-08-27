@@ -231,7 +231,21 @@ export default function Prediction({
       // Iterate through the brandValues array and find the rate for this brand
       for (let item in currentBrandValues) {
         if (productBrand == currentBrandValues[item].label) {
-          rate = currentBrandValues[item].value;
+          const divisions = currentBrandValues[item].value;
+          // Iterate through price divisions
+          for (let divisionItem in divisions) {
+            // Get the current limit
+            const priceDivisionLimit = divisions[divisionItem][0];
+
+            // If the MSRP is greater than or equal to the limit, then use that rate, and check the next division
+            if (price >= priceDivisionLimit) {
+              rate = divisions[divisionItem][1];
+            } else {
+              // If MSRP is too low, then just stop
+              break;
+            }
+          }
+
           break;
         }
       }
@@ -300,6 +314,7 @@ export default function Prediction({
 
       // Maximum rate increase is 0.09
       if (rate > maxRate) {
+        // if greater than the max rate, then multiply rng by a factor of 0.2 to get a new random rate
         rate = 0.2 * rng;
       }
 
@@ -351,9 +366,9 @@ export default function Prediction({
       }
 
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
-      if (difference + lastPrice > originalPrice * 1.6) {
-        // The price will not increase as quickly
-        difference = originalPrice * 0.1 * rng;
+      if (difference + lastPrice > originalPrice * 1.55) {
+        // The price will hover around here
+        difference = originalPrice * 0.08 * rng * (rng > 0.5 ? 1 : -1);
       }
 
       // Price shouldn't go too far under 10% of original price
@@ -671,6 +686,7 @@ export default function Prediction({
           ProductPrice: productPrice,
           ReleaseYear: releaseYear,
           Brand: brand,
+          Added: productPrice + " " + releaseYear + " " + brand,
         });
       }
     }

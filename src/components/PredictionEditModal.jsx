@@ -43,23 +43,23 @@ export default function PredictionEditModal({
                 justifyContent: "center",
               }}
             >
+              {/* Label name */}
+              <input
+                type="text"
+                value={item.label}
+                className="TextInput"
+                placeholder="Name"
+                onChange={(text) => updateName(text.target.value, index)}
+                style={{ margin: "5px 0" }}
+              ></input>
               <div
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
+                  margin: "30px",
                 }}
               >
-                {/* Label name */}
-                <input
-                  type="text"
-                  value={item.label}
-                  className="TextInput"
-                  placeholder="Name"
-                  onChange={(text) => updateName(text.target.value, index)}
-                  style={{ margin: "15px 15px 15px 0" }}
-                ></input>
-
                 {/* Change color */}
                 {colorChangeIndex == index ? (
                   // Color picker
