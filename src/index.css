@@ -173,6 +173,7 @@ a {
   padding: 10px;
   display: grid;
   justify-content: center;
+  background-color: #2a2a2a;
 }
 
 /* The product names and VS text */
@@ -282,7 +283,6 @@ a {
 .NavbarText {
   text-decoration: none;
   color: #fff;
-  padding: 8px;
 
   &:hover {
     color: #eee;

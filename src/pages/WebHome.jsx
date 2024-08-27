@@ -167,7 +167,6 @@ export default function WebHome({ isMobile }) {
         <div
           className="ToolContainer"
           style={{
-            backgroundColor: "#2E2E2E",
             width: isMobile ? "60%" : "45%",
             margin: "0 0 20px 0",
           }}
@@ -212,7 +211,6 @@ export default function WebHome({ isMobile }) {
         <div
           className="ToolContainer"
           style={{
-            backgroundColor: "#2E2E2E",
             width: isMobile ? "60%" : "45%",
             margin: "20px 0 0 0",
           }}

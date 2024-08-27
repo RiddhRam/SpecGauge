@@ -234,13 +234,13 @@ export default function WebUserAccount({ isMobile }) {
   useEffect(() => {
     if (analytics != null) {
       logEvent(analytics, "Screen", {
-        Screen: "My Account",
+        Screen: "Account",
         Platform: isMobile ? "Mobile" : "Computer",
       });
     }
 
     SetTitleAndDescription(
-      "SpecGauge | My Account",
+      "SpecGauge | Account",
       "Your account details and saved comparisons.",
       window.location.href
     );
