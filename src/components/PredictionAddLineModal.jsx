@@ -58,7 +58,6 @@ export default function PredictionAddLineModal({
       const divisions = brandValues.find(
         (brandLabel) => brandLabel.label === brand
       ).value;
-      // Initialize with this, but we reset it to the reverse value after rate adjustments are done
       let rate = 0;
 
       let totalRate = 0;
@@ -66,7 +65,12 @@ export default function PredictionAddLineModal({
         totalRate += divisions[divisionItem][1];
       }
 
-      rate = totalRate / divisions.length;
+      // If more than one division, add this to help drag down the average
+      if (divisions.length != 1) {
+        rate = 0.0325;
+      }
+
+      rate += totalRate / divisions.length;
 
       let xAdjustment = 0;
       let startingPoint = modalProductPrice;
@@ -134,8 +138,12 @@ export default function PredictionAddLineModal({
         }
       }
 
+      if (divisions.length != 1) {
+        rate = 0.0325;
+      }
+
       // Continue normally with brand rate and new starting point
-      rate = totalRate / divisions.length;
+      rate += totalRate / divisions.length;
 
       if (rate < -0.095) {
         xAdjustment = 3.8;
