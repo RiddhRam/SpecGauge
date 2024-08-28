@@ -23,7 +23,6 @@ export const Footer = ({ isMobile }) => {
           columnGap: "60px",
           rowGap: "3px",
           gridAutoFlow: "column",
-          paddingRight: "10px",
           paddingLeft: "10px",
         }}
       >
@@ -132,7 +131,7 @@ export const Footer = ({ isMobile }) => {
           href="mailto:SpecGauge@gmail.com"
           style={{
             textDecoration: "none",
-            fontSize: isMobile ? 13 : 20,
+            fontSize: isMobile ? 11 : 18,
             userSelect: "none",
             marginTop: 15,
           }}
