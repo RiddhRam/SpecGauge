@@ -63,6 +63,7 @@ export const Navbar = ({ isMobile }) => {
             { label: "Graphics Cards", path: "/comparison/graphicsCards" },
             { label: "Drones", path: "/comparison/drones" },
           ]}
+          isMobile={isMobile}
         ></DropdownMenu>
 
         <DropdownMenu
@@ -72,6 +73,7 @@ export const Navbar = ({ isMobile }) => {
             { label: "CPUs", path: "/prediction/cpus" },
             { label: "Graphics Cards", path: "/prediction/graphicsCards" },
           ]}
+          isMobile={isMobile}
         ></DropdownMenu>
         {/* Compare dropdown */}
 

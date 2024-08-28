@@ -55,26 +55,12 @@ export default function PredictionAddLineModal({
 
   const updatePrice = async () => {
     if (brandValues.find((brandLabel) => brandLabel.label === brand)) {
-      const divisions = brandValues.find(
-        (brandLabel) => brandLabel.label === brand
-      ).value;
-      let rate = 0;
-
-      let totalRate = 0;
-      for (let divisionItem in divisions) {
-        totalRate += divisions[divisionItem][1];
-      }
-
-      // If more than one division, add this to help drag down the average
-      if (divisions.length != 1) {
-        rate = 0.0325;
-      }
-
-      rate += totalRate / divisions.length;
-
       let xAdjustment = 0;
       let startingPoint = parseInt(modalProductPrice);
       let startingYear = 2025;
+
+      // Get the best rate for this brand given it's current price and rage
+      let rate = determineBestRate(startingPoint);
 
       // Rate cannot exceed this
       const maxRate = 0.09;
@@ -141,23 +127,19 @@ export default function PredictionAddLineModal({
         }
       }
 
-      rate = 0;
+      rate = determineBestRate(startingPoint);
 
-      if (divisions.length != 1) {
-        rate = 0.0325;
-      }
-
-      // Continue normally with brand rate and new starting point
-      rate += totalRate / divisions.length;
-
+      // xAdjustment helps reduce the MSRP of vehicles with extremely low rates
       if (rate < -0.095) {
         xAdjustment = 3.8;
       }
 
+      // This is going to keep changing through the for loop, and at the end it will be the actual estimatedMSRP, before inflation
       let lastPrice = parseInt(startingPoint);
 
       if (releaseYear <= 2025 && releaseYear >= 2000 && lastPrice > 3000) {
         for (let i = startingYear; i != releaseYear; i--) {
+          // Estimate the price for each year in reverse, and if the difference between 2 years is too high, reduce it
           const estimatedPrice = Math.round(
             // Formula for reverse price prediction
             // modalProductPrice = current price
@@ -172,26 +154,94 @@ export default function PredictionAddLineModal({
 
           let difference = estimatedPrice - lastPrice;
 
+          // Difference * diffCo (difference coefficient) cannot exceed this
           let limit = startingPoint * (rate - 0.28) * -1;
           let diffCo = 0.8;
 
+          // If rate is very high, change the limit and diffCo to these
           if (rate < -0.1) {
             limit = startingPoint * (rate * 3) * -1;
             diffCo = 0.3;
           }
 
+          // if difference decreased the price, make it positive
           if (difference < 0) {
             difference *= -1;
           }
 
+          // If difference is too high, reduce it to 6% of the last price
           if (difference * diffCo > limit) {
             difference = lastPrice * 0.06;
           }
           lastPrice += difference;
         }
       }
-      setEstimatedMSRP(Math.round(lastPrice));
+
+      // This will be the inflation adjusted msrp
+      let adjustedMSRP = Math.round(lastPrice);
+
+      // if estimated msrp is significantly higher than the current price, we'll factor in inflation, if not, skip
+      if (parseInt(modalProductPrice) * 2.5 <= adjustedMSRP) {
+        // from 2024 - 2000
+        const inflationRates = [
+          -0.031, -0.04, -0.074, -0.045, -0.012, -0.018, -0.024, -0.021, -0.012,
+          -0.001, -0.016, -0.014, -0.02, -0.031, -0.016, 0.004, -0.037, -0.028,
+          -0.031, -0.033, -0.026, -0.022, -0.016, -0.027,
+        ];
+
+        // age of the vehicle
+        const time = 2024 - releaseYear;
+
+        for (let i = 0; i != time; i++) {
+          adjustedMSRP -= Math.abs(adjustedMSRP * inflationRates[i]);
+        }
+      }
+
+      setEstimatedMSRP(Math.round(adjustedMSRP));
     }
+  };
+
+  const determineBestRate = (startingPoint) => {
+    // Get all divisions
+    const divisions = brandValues.find(
+      (brandLabel) => brandLabel.label === brand
+    ).value;
+
+    // This will be the rate we use
+    let rate = 0;
+
+    let age = 2025 - parseInt(releaseYear);
+
+    // Iterate through each division
+    for (let divisionItem in divisions) {
+      // [0] = limit
+      // [1] = rate
+      const divisionRate = divisions[divisionItem][1];
+
+      // We have to use xAdjustments here too, only if rate is very high
+      let xAdjustment = 0;
+
+      if (divisionRate < -0.097) {
+        xAdjustment = 3.8;
+      }
+
+      const MSRP = // Formula for reverse price prediction of this rate adjustment type
+        // starting point = original
+        // rate = rate adjustment
+        // 0.01 = average random rate fluctuation
+        // age = time that the rate was used
+
+        // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * (age - xAdjustment))
+        parseInt(startingPoint) /
+        Math.E ** ((divisionRate + 0.01) * (age - xAdjustment));
+
+      // If the MSRP is greater than the limit of this rate, then this is the rate we will use
+      // unless the next rate also exceeds it's MSRP limit, then we use that and so on until the best rate is found
+      if (MSRP >= divisions[divisionItem][0]) {
+        rate = divisionRate;
+      }
+    }
+    return rate;
   };
 
   return (
