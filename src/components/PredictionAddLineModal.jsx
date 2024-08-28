@@ -73,7 +73,8 @@ export default function PredictionAddLineModal({
       rate += totalRate / divisions.length;
 
       let xAdjustment = 0;
-      let startingPoint = modalProductPrice;
+      let startingPoint = parseInt(modalProductPrice);
+      let startingYear = 2025;
 
       // Rate cannot exceed this
       const maxRate = 0.09;
@@ -95,11 +96,12 @@ export default function PredictionAddLineModal({
             continue;
           }
 
+          const beginningYear =
+            parseInt(releaseYear) + rateAdjustments[item][2];
+          const time = 2025 - beginningYear;
           // If third parameter is lower than 2000
           if (rateAdjustments[item][2] < 2000) {
             // Add that many years to vehicle production year
-            const beginningYear =
-              parseInt(releaseYear) + rateAdjustments[item][2];
 
             // if current is higher than the beginning year (third parameter)
             if (2025 >= beginningYear) {
@@ -115,8 +117,6 @@ export default function PredictionAddLineModal({
                 rate = 0.2 * rng;
               }
 
-              const time = 2025 - beginningYear;
-
               startingPoint = // Formula for reverse price prediction of this rate adjustment type
                 // starting point = original
                 // rate = rate adjustment
@@ -126,6 +126,9 @@ export default function PredictionAddLineModal({
                 // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * time)
                 parseInt(startingPoint) /
                 Math.E ** ((rate + rng * 0.02) * time);
+
+              // Set the starting year
+              startingYear = 2025 - time;
             }
             continue;
           }
@@ -138,6 +141,8 @@ export default function PredictionAddLineModal({
         }
       }
 
+      rate = 0;
+
       if (divisions.length != 1) {
         rate = 0.0325;
       }
@@ -149,19 +154,43 @@ export default function PredictionAddLineModal({
         xAdjustment = 3.8;
       }
 
-      let estimatedOriginalPrice = Math.round(
-        // Formula for reverse price prediction
-        // modalProductPrice = current price
-        // (brandValues.find((brandLabel) => brandLabel.label === brand).value = brand rate
-        // 0.004 = max random rate fluctuation
-        // 2025 - release = vehicle age
+      let lastPrice = parseInt(startingPoint);
 
-        // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * vehicle age)
-        parseInt(startingPoint) /
-          Math.E ** ((rate + rng * 0.004) * (2025 - releaseYear - xAdjustment))
-      );
+      if (releaseYear <= 2025 && releaseYear >= 2000 && lastPrice > 3000) {
+        for (let i = startingYear; i != releaseYear; i--) {
+          const estimatedPrice = Math.round(
+            // Formula for reverse price prediction
+            // modalProductPrice = current price
+            // (brandValues.find((brandLabel) => brandLabel.label === brand).value = brand rate
+            // 0.004 = max random rate fluctuation
+            // 2025 - release = vehicle age
 
-      setEstimatedMSRP(estimatedOriginalPrice);
+            // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * vehicle age)
+            parseInt(startingPoint) /
+              Math.E ** ((rate + rng * -0.001) * (2025 - i - xAdjustment))
+          );
+
+          let difference = estimatedPrice - lastPrice;
+
+          let limit = startingPoint * (rate - 0.28) * -1;
+          let diffCo = 0.8;
+
+          if (rate < -0.1) {
+            limit = startingPoint * (rate * 3) * -1;
+            diffCo = 0.3;
+          }
+
+          if (difference < 0) {
+            difference *= -1;
+          }
+
+          if (difference * diffCo > limit) {
+            difference = lastPrice * 0.06;
+          }
+          lastPrice += difference;
+        }
+      }
+      setEstimatedMSRP(Math.round(lastPrice));
     }
   };
 
