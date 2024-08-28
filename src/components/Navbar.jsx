@@ -38,7 +38,7 @@ export const Navbar = ({ isMobile }) => {
           gridTemplateColumns: "1fr auto auto 1fr",
           gridTemplateRows: "65px",
           alignItems: "center",
-          columnGap: "13px",
+          columnGap: "10px",
         }}
       >
         {/* Give user the option to go to home page */}
@@ -47,7 +47,7 @@ export const Navbar = ({ isMobile }) => {
             style={{
               display: "flex",
               alignItems: "center",
-              fontSize: isMobile ? "12px" : "14px",
+              fontSize: isMobile ? "11px" : "14px",
               marginLeft: "35px",
             }}
           >
@@ -91,8 +91,8 @@ export const Navbar = ({ isMobile }) => {
                   display: "flex",
                   alignItems: "center",
                   textAlign: "center",
-                  fontSize: isMobile ? "12px" : "14px",
-                  marginRight: "35px",
+                  fontSize: isMobile ? "11px" : "14px",
+                  marginRight: "30px",
                 }}
               >
                 <p className="NavbarText">Account</p>
@@ -106,8 +106,8 @@ export const Navbar = ({ isMobile }) => {
                   display: "flex",
                   alignItems: "center",
                   textAlign: "center",
-                  fontSize: isMobile ? "12px" : "14px",
-                  marginRight: "35px",
+                  fontSize: isMobile ? "11px" : "14px",
+                  marginRight: "30px",
                 }}
               >
                 <p className="NavbarText">Log In</p>

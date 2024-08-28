@@ -91,6 +91,7 @@ export default function Prediction({
 
   const [lineValueDataset, setLineValueDataset] = useState([]);
   const lineOptions = {
+    aspectRatio: isMobile ? 1.2 : 2,
     responsive: true,
     plugins: {
       legend: {
@@ -107,6 +108,11 @@ export default function Prediction({
         grid: {
           display: false, // Hide y-axis grid lines
         },
+        ticks: {
+          font: {
+            size: 10,
+          },
+        },
       },
       y: {
         title: {
@@ -116,6 +122,11 @@ export default function Prediction({
         },
         grid: {
           display: false, // Hide y-axis grid lines
+        },
+        ticks: {
+          font: {
+            size: 10,
+          },
         },
       },
     },
@@ -482,6 +493,8 @@ export default function Prediction({
     let tempBrandValues = null;
     let tempRateAdjustments = null;
 
+    await createChart();
+
     if (type == "Vehicles") {
       await import("../data/carsPredictData").then((module) => {
         tempBrandValues = module.carsBrandValues;
@@ -591,7 +604,7 @@ export default function Prediction({
 
   const createChart = async () => {
     if (!createdChart && needToCreateChart) {
-      await import("../functions/ChartImport").then((module) => {
+      await import("../functions/ChartImport").then(async (module) => {
         module.ChartJS.register(
           module.CategoryScale,
           module.LinearScale,
