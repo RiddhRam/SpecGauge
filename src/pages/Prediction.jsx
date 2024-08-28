@@ -387,6 +387,11 @@ export default function Prediction({
         difference = minimumAdjuster * -0.1 * rng;
       }
 
+      // Price shouldn't go too far under $5
+      if (difference + lastPrice < 5) {
+        difference = minimumAdjuster * 0.1 * rng;
+      }
+
       difference = Math.round(difference);
       prices.push(lastPrice + difference);
       lastPrice = lastPrice + difference;
