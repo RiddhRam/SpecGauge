@@ -331,7 +331,6 @@ export default function Prediction({
         xAdjustment = 3.8;
       }
 
-      console.log(rate + rng * 0.008);
       // Get the new price
       let newCalculatedPrice =
         price * Math.E ** ((rate + rng * 0.008) * (i - year + xAdjustment));

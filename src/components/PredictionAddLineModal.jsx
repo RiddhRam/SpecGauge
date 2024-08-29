@@ -357,7 +357,7 @@ export default function PredictionAddLineModal({
                         // Update the array
                         setRateAdjustments(newRateAdjustments);
                       }}
-                    ></input>
+                    />
                     <span className="slider"></span>
                   </label>
                 </div>
