@@ -11,7 +11,7 @@ const reliable = -0.06;
 const reputableSports = -0.055;
 const inBetweenCars = -0.045;
 const expensiveSport = -0.0375;
-const superCar = -0.0325;
+const superCar = -0.035;
 // Good
 
 const reliableMotorCycle = -0.075;
@@ -71,11 +71,6 @@ const carsAveragePrices = [
   31539.31261,
   31920.53863,
   32301.38433,
-  32681.85482,
-  33061.94786,
-  32613.79568,
-  32166.10259,
-  31718.85731,
 ];
 
 const carsBrandValues = [
@@ -170,13 +165,16 @@ const carsBrandValues = [
     value: [[0, reliableMotorCycle]],
   },
   { label: "KTM", value: [[0, -0.05]] },
-  { label: "Lamborghini", value: [[0, superCar]] },
+  {
+    label: "Lamborghini",
+    value: [[0, superCar]],
+  },
   { label: "Land Rover", value: [[0, normal]] },
   { label: "Lexus", value: [[0, -0.065]] },
   { label: "Lincoln", value: [[0, normal]] },
   { label: "Lotus", value: [[0, normal]] },
   { label: "Lucid", value: [[0, normal]] },
-  { label: "Maserati", value: [[0, fast + 0.1]] },
+  { label: "Maserati", value: [[0, fast - 0.005]] },
   { label: "Maybach", value: [[0, superCar]] },
   { label: "Mazda", value: [[0, reliable]] },
   { label: "McLaren", value: [[0, superCar]] },
@@ -253,6 +251,7 @@ const carsBrandValues = [
 const carsAdditionalOptions = [
   ["Gasoline/Diesel", true, 2035, 0.005],
   ["Collectible", false, 10, 0.13],
+  ["Discontinued", false, 0, 0.065],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };

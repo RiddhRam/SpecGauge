@@ -20,9 +20,6 @@ const PredictionAddLineModal = lazy(() =>
 const PredictionEditModal = lazy(() =>
   import("../components/PredictionEditModal")
 );
-const PredictionOptionsModal = lazy(() =>
-  import("../components/PredictionOptionsModal")
-);
 const SimpleSuccessModal = lazy(() =>
   import("../components/SimpleSuccessModal")
 );
@@ -31,12 +28,11 @@ const years = [
   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012,
   2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025,
   2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038,
-  2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050, 2051,
-  2052, 2053, 2054, 2055,
+  2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050,
 ];
 
 let startIndex = 24;
-let endIndex = 56;
+let endIndex = 51;
 
 export default function Prediction({
   type,
@@ -91,7 +87,7 @@ export default function Prediction({
 
   const [lineValueDataset, setLineValueDataset] = useState([]);
   const lineOptions = {
-    aspectRatio: isMobile ? 1.2 : 2,
+    aspectRatio: isMobile ? 1.4 : 2,
     responsive: true,
     plugins: {
       legend: {
@@ -213,10 +209,10 @@ export default function Prediction({
 
     let originalPrice = null;
 
-    const maxRate = 0.09;
+    const maxRate = 0.08;
 
     // Start at 2000 for readability, each i value is an x value on the graph (years)
-    for (let i = 2000; i < 2056; i++) {
+    for (let i = 2000; i < 2051; i++) {
       // The rate that the price drops
       let rate = 0;
 
@@ -252,8 +248,8 @@ export default function Prediction({
             if (price >= priceDivisionLimit) {
               rate = divisions[divisionItem][1];
             } else {
-              // If MSRP is too low, then just stop
-              break;
+              // If MSRP is too low, then go to next iteration
+              continue;
             }
           }
 
@@ -289,30 +285,30 @@ export default function Prediction({
           }
 
           // If third parameter is lower than 2000
-          if (currentRateAdjustments[item][2] < 2000) {
+          if (localRateAdjustments[item][2] < 2000) {
             // Add that many years to vehicle production year
-            const beginningYear = year + currentRateAdjustments[item][2];
+            const beginningYear = year + localRateAdjustments[item][2];
 
             // if current is higher than the beginning year (third parameter)
             if (i >= beginningYear) {
               // if it's a huge adjustment, don't even add it, just set it
-              if (currentRateAdjustments[item][3] > 100) {
-                rate = currentRateAdjustments[item][3];
+              if (localRateAdjustments[item][3] > 10) {
+                rate = localRateAdjustments[item][3];
               } else {
-                rate += currentRateAdjustments[item][3];
+                rate += localRateAdjustments[item][3];
               }
 
               if (rate > maxRate) {
-                rate = rate = 0.2 * rng;
+                rate = 0.09 * rng;
               }
             }
             continue;
           }
           // If third parameter is 2000 or higher
           // if current is higher than the beginning year (third parameter)
-          if (i >= currentRateAdjustments[item][2]) {
+          if (i >= localRateAdjustments[item][2]) {
             // Adjust the rate by adding the rate adjustment
-            rate += currentRateAdjustments[item][3];
+            rate += localRateAdjustments[item][3];
           }
         }
       }
@@ -326,7 +322,7 @@ export default function Prediction({
       // Maximum rate increase is 0.09
       if (rate > maxRate) {
         // if greater than the max rate, then multiply rng by a factor of 0.2 to get a new random rate
-        rate = 0.2 * rng;
+        rate = 0.09 * rng;
       }
 
       let xAdjustment = 0;
@@ -335,6 +331,7 @@ export default function Prediction({
         xAdjustment = 3.8;
       }
 
+      console.log(rate + rng * 0.008);
       // Get the new price
       let newCalculatedPrice =
         price * Math.E ** ((rate + rng * 0.008) * (i - year + xAdjustment));
@@ -357,7 +354,7 @@ export default function Prediction({
       // If last price wasn't an increase
       else {
         // If difference is greater than an 68% of the last price
-        if (difference * -1 > lastPrice * 0.68) {
+        if (difference * -1 > lastPrice * 0.7) {
           // Reduce difference to rng
           // Prevents sharp increases
           difference = lastPrice * rng * 0.08 * -1;
@@ -377,7 +374,7 @@ export default function Prediction({
       }
 
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
-      if (difference + lastPrice > originalPrice * 1.55) {
+      if (difference + lastPrice > originalPrice * 1.5) {
         // The price will hover around here
         difference = originalPrice * 0.08 * rng * (rng > 0.5 ? 1 : -1);
       }

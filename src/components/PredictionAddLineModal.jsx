@@ -63,7 +63,7 @@ export default function PredictionAddLineModal({
       let rate = determineBestRate(startingPoint);
 
       // Rate cannot exceed this
-      const maxRate = 0.09;
+      const maxRate = 0.08;
 
       // Get the rng value
       const seed = `${rate}${brand}${releaseYear}`;
@@ -82,17 +82,17 @@ export default function PredictionAddLineModal({
             continue;
           }
 
-          const beginningYear =
-            parseInt(releaseYear) + rateAdjustments[item][2];
-          const time = 2025 - beginningYear;
           // If third parameter is lower than 2000
           if (rateAdjustments[item][2] < 2000) {
             // Add that many years to vehicle production year
+            const beginningYear =
+              parseInt(releaseYear) + rateAdjustments[item][2];
+            const time = 2025 - beginningYear;
 
             // if current is higher than the beginning year (third parameter)
             if (2025 >= beginningYear) {
               // if it's a huge adjustment, don't even add it, just set it
-              if (rateAdjustments[item][3] > 100) {
+              if (rateAdjustments[item][3] > 10) {
                 rate = rateAdjustments[item][3];
               } else {
                 rate += rateAdjustments[item][3];
@@ -100,7 +100,7 @@ export default function PredictionAddLineModal({
 
               // Bring rate down if needed
               if (rate > maxRate) {
-                rate = 0.2 * rng;
+                rate = 0.09 * rng;
               }
 
               startingPoint = // Formula for reverse price prediction of this rate adjustment type
@@ -212,6 +212,8 @@ export default function PredictionAddLineModal({
 
     let age = 2025 - parseInt(releaseYear);
 
+    // For debugging only
+    let price = 0;
     // Iterate through each division
     for (let divisionItem in divisions) {
       // [0] = limit
@@ -239,6 +241,7 @@ export default function PredictionAddLineModal({
       // unless the next rate also exceeds it's MSRP limit, then we use that and so on until the best rate is found
       if (MSRP >= divisions[divisionItem][0]) {
         rate = divisionRate;
+        price = MSRP;
       }
     }
     return rate;
@@ -268,7 +271,7 @@ export default function PredictionAddLineModal({
         onChange={(event) =>
           handleNumberInput(event.target.value, setReleaseYear)
         }
-        style={{ fontSize: 16 }}
+        style={{ fontSize: 16, padding: "8px 5px 8px 20px" }}
       ></input>
 
       {/* Select Brand */}
@@ -277,7 +280,7 @@ export default function PredictionAddLineModal({
         onChange={() => {
           setBrand(event.target.value);
         }}
-        style={{ padding: "20px", margin: "20px" }}
+        style={{ padding: "15px", margin: "15px" }}
       >
         {brandValues &&
           brandValues.map((brandItem) => (
@@ -293,7 +296,7 @@ export default function PredictionAddLineModal({
         <>
           <div
             style={{
-              width: isMobile ? "80%" : "70%",
+              width: isMobile ? "70%" : "60%",
             }}
           >
             {rateAdjustments &&
@@ -307,7 +310,7 @@ export default function PredictionAddLineModal({
                   }}
                 >
                   <p
-                    style={{ fontSize: isMobile ? 16 : 20 }}
+                    style={{ fontSize: isMobile ? 14 : 18 }}
                     className="PlainText"
                   >
                     {item[0]}
@@ -337,12 +340,16 @@ export default function PredictionAddLineModal({
                             // Then add it
                             newRateAdjustments.push(newRateAdjustment);
                             if (analytics != null) {
-                              logEvent(analytics, `Toggle ${item[0]}`, {
-                                // Screen type
-                                Type: type,
-                                // Category type
-                                NewValue: !rateAdjustments[item][1],
-                              });
+                              logEvent(
+                                analytics,
+                                `Toggle ${rateAdjustments[item][0]}`,
+                                {
+                                  // Screen type
+                                  Type: type,
+                                  // Category type
+                                  NewValue: rateAdjustments[item][1],
+                                }
+                              );
                             }
                           }
                         }
@@ -374,7 +381,7 @@ export default function PredictionAddLineModal({
               setShowMoreOptions(true);
             }}
             className="NormalButton"
-            style={{ margin: "10px 0 10px 0" }}
+            style={{ margin: "5px", padding: "10px" }}
           >
             <p>More Options</p>
           </button>
@@ -382,7 +389,7 @@ export default function PredictionAddLineModal({
       )}
 
       {/* Price Field */}
-      <div style={{ position: "relative", margin: "20px 0 0 0" }}>
+      <div style={{ position: "relative", margin: "15px 0 0 0" }}>
         <span
           style={{
             position: "absolute",
@@ -405,7 +412,7 @@ export default function PredictionAddLineModal({
           }
           style={{
             fontSize: 16,
-            paddingLeft: "21px", // Add left padding to make room for the prefix
+            padding: "8px 5px 8px 21px", // Add left padding to make room for the prefix
           }}
         />
       </div>
@@ -464,9 +471,12 @@ export default function PredictionAddLineModal({
 
             const allRateAdjustments = [];
             for (let item in rateAdjustments) {
+              let thisAdjustment = rateAdjustments[item];
               if (rateAdjustments[item][1]) {
-                allRateAdjustments.push(rateAdjustments[item]);
+                thisAdjustment[1] = true;
               }
+
+              allRateAdjustments.push(thisAdjustment);
             }
             let result = null;
 

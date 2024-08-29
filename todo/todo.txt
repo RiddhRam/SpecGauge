@@ -1,5 +1,4 @@
 7.5.0
-Remove reverse values
 Add top, side and back view of vehicle sizes
 Put product selection for compare and predict pages inside a modal with dropdown selectors
 Get database data for comparison screen from Cloudflare by using lazy imports instead of calling from firebase
