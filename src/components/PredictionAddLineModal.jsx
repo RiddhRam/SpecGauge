@@ -91,16 +91,18 @@ export default function PredictionAddLineModal({
 
             // if current is higher than the beginning year (third parameter)
             if (2025 >= beginningYear) {
-              // if it's a huge adjustment, don't even add it, just set it
-              if (rateAdjustments[item][3] > 10) {
-                rate = rateAdjustments[item][3];
-              } else {
-                rate += rateAdjustments[item][3];
+              let thisAdjustment = structuredClone(rateAdjustments[item]);
+
+              // If this adjustment grows as time goes on
+              if (thisAdjustment[4]) {
+                thisAdjustment[3] *= time;
               }
+
+              rate += thisAdjustment[3];
 
               // Bring rate down if needed
               if (rate > maxRate) {
-                rate = 0.09 * rng;
+                rate = 0.02 + 0.07 * rng;
               }
 
               startingPoint = // Formula for reverse price prediction of this rate adjustment type
@@ -110,8 +112,7 @@ export default function PredictionAddLineModal({
                 // time = time that the rate was used
 
                 // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * time)
-                parseInt(startingPoint) /
-                Math.E ** ((rate + rng * 0.02) * time);
+                parseInt(startingPoint) / Math.E ** ((rate + 0.01) * time);
 
               // Set the starting year
               startingYear = 2025 - time;
@@ -137,7 +138,21 @@ export default function PredictionAddLineModal({
       // This is going to keep changing through the for loop, and at the end it will be the actual estimatedMSRP, before inflation
       let lastPrice = parseInt(startingPoint);
 
-      if (releaseYear <= 2025 && releaseYear >= 2000 && lastPrice > 3000) {
+      // Difference * diffCo (difference coefficient) cannot exceed this
+      let limit = startingPoint * (rate - 0.28) * -1;
+      let diffCo = 0.8;
+
+      // If rate is very high, change the limit and diffCo to these
+      if (rate < -0.1) {
+        limit = startingPoint * (rate * 3) * -1;
+        diffCo = 0.3;
+      }
+
+      if (
+        releaseYear <= 2025 &&
+        releaseYear >= 2000 &&
+        lastPrice > minimumPrice
+      ) {
         for (let i = startingYear; i != releaseYear; i--) {
           // Estimate the price for each year in reverse, and if the difference between 2 years is too high, reduce it
           const estimatedPrice = Math.round(
@@ -149,20 +164,10 @@ export default function PredictionAddLineModal({
 
             // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * vehicle age)
             parseInt(startingPoint) /
-              Math.E ** ((rate + rng * -0.001) * (2025 - i - xAdjustment))
+              Math.E ** ((rate + -0.0005) * (2024 - i - xAdjustment))
           );
 
           let difference = estimatedPrice - lastPrice;
-
-          // Difference * diffCo (difference coefficient) cannot exceed this
-          let limit = startingPoint * (rate - 0.28) * -1;
-          let diffCo = 0.8;
-
-          // If rate is very high, change the limit and diffCo to these
-          if (rate < -0.1) {
-            limit = startingPoint * (rate * 3) * -1;
-            diffCo = 0.3;
-          }
 
           // if difference decreased the price, make it positive
           if (difference < 0) {
@@ -181,7 +186,7 @@ export default function PredictionAddLineModal({
       let adjustedMSRP = Math.round(lastPrice);
 
       // if estimated msrp is significantly higher than the current price, we'll factor in inflation, if not, skip
-      if (parseInt(modalProductPrice) * 2.5 <= adjustedMSRP) {
+      if (parseInt(modalProductPrice) * 3 <= adjustedMSRP) {
         // from 2024 - 2000
         const inflationRates = [
           -0.031, -0.04, -0.074, -0.045, -0.012, -0.018, -0.024, -0.021, -0.012,
@@ -470,19 +475,27 @@ export default function PredictionAddLineModal({
             let price = productPrice;
 
             const allRateAdjustments = [];
+
             for (let item in rateAdjustments) {
               let thisAdjustment = rateAdjustments[item];
               if (rateAdjustments[item][1]) {
                 thisAdjustment[1] = true;
               }
 
-              allRateAdjustments.push(thisAdjustment);
+              // Convert to an array
+              let adjustmentArray = [];
+              for (let param in thisAdjustment) {
+                adjustmentArray.push(thisAdjustment[param]);
+              }
+
+              allRateAdjustments.push(adjustmentArray);
             }
             let result = null;
 
             if (priceToUse == "Current Price") {
               price = estimatedMSRP;
             }
+
             result = await modalAddToGraph(
               price,
               releaseYear,

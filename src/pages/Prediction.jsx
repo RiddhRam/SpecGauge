@@ -28,11 +28,11 @@ const years = [
   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012,
   2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025,
   2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038,
-  2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050,
+  2039, 2040, 2041, 2042, 2043, 2044,
 ];
 
 let startIndex = 24;
-let endIndex = 51;
+let endIndex = 45;
 
 export default function Prediction({
   type,
@@ -152,6 +152,7 @@ export default function Prediction({
   const OnZoomChangeTrigger = (value) => {
     // Difference of years
     const difference = yearsCount - value;
+
     // We move the last number if position isn't at the end
     if (position == scrollLimit && difference > 0) {
       startIndex -= difference;
@@ -212,7 +213,7 @@ export default function Prediction({
     const maxRate = 0.08;
 
     // Start at 2000 for readability, each i value is an x value on the graph (years)
-    for (let i = 2000; i < 2051; i++) {
+    for (let i = 2000; i < 2045; i++) {
       // The rate that the price drops
       let rate = 0;
 
@@ -257,6 +258,10 @@ export default function Prediction({
         }
       }
 
+      console.log(
+        `${price}${productBrand}${year}${lastPrice}${localRateAdjustments}`
+      );
+
       // For each year it was released, calculate the price for that year
 
       // Get the rng value
@@ -269,9 +274,11 @@ export default function Prediction({
       // first parameter is name of option
       // second parameter is default value
       // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
-      // fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
+      // fourth parameter is rate change after the third parameter year
+      // fifth parameter is whether or not the rate grows as time goes on, it's multiplied by each year
+
       // If this comparison type has rate adjustments
-      if (currentRateAdjustments) {
+      if (localRateAdjustments.length > 0) {
         // Iterate through rate adjustments
         // Iterate through these to get the settings
         for (let item in localRateAdjustments) {
@@ -291,15 +298,19 @@ export default function Prediction({
 
             // if current is higher than the beginning year (third parameter)
             if (i >= beginningYear) {
-              // if it's a huge adjustment, don't even add it, just set it
-              if (localRateAdjustments[item][3] > 10) {
-                rate = localRateAdjustments[item][3];
-              } else {
-                rate += localRateAdjustments[item][3];
+              // Deep copy
+              let thisAdjustment = structuredClone(localRateAdjustments[item]);
+
+              // If this adjustment grows as time goes on
+              if (thisAdjustment[4]) {
+                thisAdjustment[3] *= 2025 - beginningYear;
               }
 
+              rate += thisAdjustment[3];
+
+              // Brind rate down if needed
               if (rate > maxRate) {
-                rate = 0.09 * rng;
+                rate = 0.02 + 0.07 * rng;
               }
             }
             continue;
@@ -319,10 +330,9 @@ export default function Prediction({
         continue;
       }
 
-      // Maximum rate increase is 0.09
       if (rate > maxRate) {
         // if greater than the max rate, then multiply rng by a factor of 0.2 to get a new random rate
-        rate = 0.09 * rng;
+        rate = 0.02 + 0.07 * rng;
       }
 
       let xAdjustment = 0;
@@ -352,7 +362,7 @@ export default function Prediction({
       // If not the first value
       // If last price wasn't an increase
       else {
-        // If difference is greater than an 68% of the last price
+        // If difference is greater than an 70% of the last price
         if (difference * -1 > lastPrice * 0.7) {
           // Reduce difference to rng
           // Prevents sharp increases
@@ -373,7 +383,7 @@ export default function Prediction({
       }
 
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
-      if (difference + lastPrice > originalPrice * 1.5) {
+      if (difference + lastPrice > originalPrice * 1.75) {
         // The price will hover around here
         difference = originalPrice * 0.08 * rng * (rng > 0.5 ? 1 : -1);
       }
@@ -1073,7 +1083,7 @@ export default function Prediction({
                         onChange={OnZoomChangeTrigger}
                         step={1}
                         min={22}
-                        max={44}
+                        max={41}
                         trackStyle={{ backgroundColor: "#4ca0d7" }}
                         railStyle={{ backgroundColor: "lightblue" }}
                       />
@@ -1224,7 +1234,7 @@ export default function Prediction({
                   Add A {type.slice(0, -1)} To Get Started
                 </h2>
               ) : (
-                <>
+                <div style={{ marginLeft: 10 }}>
                   <Suspense
                     fallback={
                       <div
@@ -1238,7 +1248,9 @@ export default function Prediction({
                   {/* Scroll */}
                   <>
                     <p
-                      style={{ marginRight: 10, userSelect: "none" }}
+                      style={{
+                        userSelect: "none",
+                      }}
                       className="PlainText"
                     >
                       Scroll
@@ -1265,7 +1277,7 @@ export default function Prediction({
                       />
                     </Suspense>
                   </>
-                </>
+                </div>
               )}
             </div>
             {/* Side Controls */}
@@ -1326,7 +1338,7 @@ export default function Prediction({
                       onChange={OnZoomChangeTrigger}
                       step={1}
                       min={22}
-                      max={44}
+                      max={41}
                       trackStyle={{ backgroundColor: "#4ca0d7" }}
                       railStyle={{ backgroundColor: "lightblue" }}
                     />

@@ -75,6 +75,13 @@ const carsAveragePrices = [
 
 const carsBrandValues = [
   {
+    label: "Mercedes-AMG",
+    value: [
+      [0, -0.08],
+      [145000, -0.065],
+    ],
+  },
+  {
     label: "Alfa Romeo",
     value: [[0, reputable + 0.0125]],
   },
@@ -120,7 +127,7 @@ const carsBrandValues = [
     label: "Dodge",
     value: [
       [0, -0.08],
-      [180000, -0.025],
+      [150000, -0.035],
     ],
   },
   {
@@ -170,7 +177,14 @@ const carsBrandValues = [
     value: [[0, superCar]],
   },
   { label: "Land Rover", value: [[0, normal]] },
-  { label: "Lexus", value: [[0, -0.065]] },
+  {
+    label: "Lexus",
+    value: [
+      [0, -0.1],
+      [85000, -0.065],
+      [250000, 0.07],
+    ],
+  },
   { label: "Lincoln", value: [[0, normal]] },
   { label: "Lotus", value: [[0, normal]] },
   { label: "Lucid", value: [[0, normal]] },
@@ -178,8 +192,13 @@ const carsBrandValues = [
   { label: "Maybach", value: [[0, superCar]] },
   { label: "Mazda", value: [[0, reliable]] },
   { label: "McLaren", value: [[0, superCar]] },
-  { label: "Mercedes-AMG", value: [[0, -0.09]] },
-  { label: "Mercedes-Benz", value: [[0, -0.0925]] },
+  {
+    label: "Mercedes-Benz",
+    value: [
+      [0, -0.135],
+      [145000, -0.02],
+    ],
+  },
   { label: "Mercury", value: [[0, normal]] },
   { label: "Mini", value: [[0, normal]] },
   {
@@ -246,12 +265,12 @@ const carsBrandValues = [
 // first parameter is name of option
 // second parameter is default value
 // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
-// fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
-// PUT ANY FIXED RATE CHANGES (anything above 100) AT THE END. FIXED RATE CHANGES ARE DIVIDED BY 10000
+// fourth parameter is rate change after the third parameter year
+// fifth parameter is whether or not the rate grows as time goes on, it's multiplied by each year
+
 const carsAdditionalOptions = [
-  ["Gasoline/Diesel", true, 2035, 0.005],
-  ["Collectible", false, 10, 0.13],
-  ["Discontinued Exotic", false, 0, 0.065],
+  ["Gasoline/Diesel", true, 2035, 0.005, false],
+  ["Collectible", false, 2, 0.075, true],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };
