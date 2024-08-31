@@ -7,6 +7,7 @@ Get database data for comparison screen from Cloudflare by using lazy imports in
 Add trending predictions to home page
 Make edit modal look better
 Improve price prediction algorithm, forward and backward
+Let user report bad predictions
 
 8.0.0
 Add performance calculator for cars and computers

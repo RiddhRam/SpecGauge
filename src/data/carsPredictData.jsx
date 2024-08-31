@@ -75,13 +75,6 @@ const carsAveragePrices = [
 
 const carsBrandValues = [
   {
-    label: "Mercedes-AMG",
-    value: [
-      [0, -0.08],
-      [145000, -0.065],
-    ],
-  },
-  {
     label: "Alfa Romeo",
     value: [[0, reputable + 0.0125]],
   },
@@ -91,7 +84,7 @@ const carsBrandValues = [
     value: [[0, reputableSports - 0.02]],
   },
   { label: "Audi RS-Series", value: [[0, -0.075]] },
-  { label: "Audi", value: [[0, normal - 0.02]] },
+  { label: "Audi", value: [[0, normal]] },
   {
     label: "Bentley",
     value: [[0, somewhatFast]],
@@ -182,7 +175,7 @@ const carsBrandValues = [
     value: [
       [0, -0.1],
       [85000, -0.065],
-      [250000, 0.07],
+      [250000, 0.03675],
     ],
   },
   { label: "Lincoln", value: [[0, normal]] },
@@ -193,10 +186,17 @@ const carsBrandValues = [
   { label: "Mazda", value: [[0, reliable]] },
   { label: "McLaren", value: [[0, superCar]] },
   {
+    label: "Mercedes-AMG",
+    value: [
+      [0, -0.08],
+      [145000, -0.065],
+    ],
+  },
+  {
     label: "Mercedes-Benz",
     value: [
       [0, -0.135],
-      [145000, -0.02],
+      [145000, -0.065],
     ],
   },
   { label: "Mercury", value: [[0, normal]] },
@@ -221,8 +221,8 @@ const carsBrandValues = [
     label: "Porsche",
     value: [
       [0, -0.12],
-      [125000, -0.085],
-      [135000, -0.05],
+      [135000, -0.085],
+      [145000, -0.05],
     ],
   },
   { label: "RAM", value: [[0, normal]] },
@@ -254,7 +254,7 @@ const carsBrandValues = [
   },
   { label: "VinFast", value: [[0, fast]] },
   { label: "Volkswagen", value: [[0, normal]] },
-  { label: "Volvo", value: [[0, reliable]] },
+  { label: "Volvo", value: [[0, reliable - 0.02]] },
   { label: "Xiaomi", value: [[0, fast]] },
   {
     label: "Yamaha",
@@ -270,7 +270,7 @@ const carsBrandValues = [
 
 const carsAdditionalOptions = [
   ["Gasoline/Diesel", true, 2035, 0.005, false],
-  ["Collectible", false, 2, 0.075, true],
+  ["Collectible", false, 2, 0.0725, true],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };

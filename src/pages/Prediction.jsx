@@ -218,12 +218,10 @@ export default function Prediction({
       let rate = 0;
 
       let currentBrandValues = brandValues;
-      let currentRateAdjustments = rateAdjustments;
       if (!brandValues) {
         if (type == "Vehicles") {
           await import("../data/carsPredictData").then((module) => {
             currentBrandValues = module.carsBrandValues;
-            currentRateAdjustments = module.carsAdditionalOptions;
           });
         } else if (type == "CPUs") {
           await import("../data/CPUsPredictData").then((module) => {
@@ -258,10 +256,6 @@ export default function Prediction({
         }
       }
 
-      console.log(
-        `${price}${productBrand}${year}${lastPrice}${localRateAdjustments}`
-      );
-
       // For each year it was released, calculate the price for that year
 
       // Get the rng value
@@ -282,7 +276,6 @@ export default function Prediction({
         // Iterate through rate adjustments
         // Iterate through these to get the settings
         for (let item in localRateAdjustments) {
-          // currentRateAdjustments = rate adjustments for this type
           // localRateAdjustments = rate adjustments for this product
           // rateAdjustments = rate adjustments from the modal
 
@@ -303,14 +296,14 @@ export default function Prediction({
 
               // If this adjustment grows as time goes on
               if (thisAdjustment[4]) {
-                thisAdjustment[3] *= 2025 - beginningYear;
+                thisAdjustment[3] *= i - beginningYear;
               }
 
               rate += thisAdjustment[3];
 
               // Brind rate down if needed
               if (rate > maxRate) {
-                rate = 0.02 + 0.07 * rng;
+                rate = 0.07 + 0.02 * rng;
               }
             }
             continue;
@@ -332,7 +325,7 @@ export default function Prediction({
 
       if (rate > maxRate) {
         // if greater than the max rate, then multiply rng by a factor of 0.2 to get a new random rate
-        rate = 0.02 + 0.07 * rng;
+        rate = 0.07 + 0.02 * rng;
       }
 
       let xAdjustment = 0;
@@ -346,6 +339,8 @@ export default function Prediction({
         price * Math.E ** ((rate + rng * 0.008) * (i - year + xAdjustment));
       // Difference between price of last iteration and this one
       let difference = newCalculatedPrice - lastPrice;
+
+      let before = difference;
 
       // If this is the first value then initialize the original price
       if (i == year) {
@@ -363,7 +358,7 @@ export default function Prediction({
       // If last price wasn't an increase
       else {
         // If difference is greater than an 70% of the last price
-        if (difference * -1 > lastPrice * 0.7) {
+        if (difference * -1 > lastPrice * 0.7 && rate < 0) {
           // Reduce difference to rng
           // Prevents sharp increases
           difference = lastPrice * rng * 0.08 * -1;
@@ -383,7 +378,7 @@ export default function Prediction({
       }
 
       /* If new price is signifcantly larger than original price, maybe because rate was too high, bring it down to within 10% of the original price */
-      if (difference + lastPrice > originalPrice * 1.75) {
+      if (difference + lastPrice > originalPrice * 2.6) {
         // The price will hover around here
         difference = originalPrice * 0.08 * rng * (rng > 0.5 ? 1 : -1);
       }

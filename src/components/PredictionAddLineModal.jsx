@@ -47,7 +47,7 @@ export default function PredictionAddLineModal({
   useEffect(() => {
     // this is a seperate function so it can asynchronously import SeedRandomImport
     updatePrice();
-  }, [brandValues, releaseYear, productPrice, brand, rateAdjustments]);
+  }, [brandValues, modalReleaseYear, productPrice, brand, rateAdjustments]);
 
   useEffect(() => {
     setRateAdjustments(additionalOptions);
@@ -86,7 +86,7 @@ export default function PredictionAddLineModal({
           if (rateAdjustments[item][2] < 2000) {
             // Add that many years to vehicle production year
             const beginningYear =
-              parseInt(releaseYear) + rateAdjustments[item][2];
+              parseInt(modalReleaseYear) + rateAdjustments[item][2];
             const time = 2025 - beginningYear;
 
             // if current is higher than the beginning year (third parameter)
@@ -102,7 +102,7 @@ export default function PredictionAddLineModal({
 
               // Bring rate down if needed
               if (rate > maxRate) {
-                rate = 0.02 + 0.07 * rng;
+                rate = maxRate - rng * 0.005;
               }
 
               startingPoint = // Formula for reverse price prediction of this rate adjustment type
@@ -121,17 +121,18 @@ export default function PredictionAddLineModal({
           }
           // if current year is higher than the beginning year of adjustment (third parameter)
           // Necessary to fix this by 2034 because it affects 1 of the rate adjustments for cars but for now it's irrelevant
-          if (2025 - releaseYear >= rateAdjustments[item][2]) {
+          /*
+          if (2025 - parseInt(modalReleaseYear) >= rateAdjustments[item][2]) {
             // Adjust the rate by adding the rate adjustment
             rate += rateAdjustments[item][3];
-          }
+          }*/
         }
       }
 
       rate = determineBestRate(startingPoint);
 
       // xAdjustment helps reduce the MSRP of vehicles with extremely low rates
-      if (rate < -0.095) {
+      if (rate < -0.14) {
         xAdjustment = 3.8;
       }
 
@@ -149,11 +150,11 @@ export default function PredictionAddLineModal({
       }
 
       if (
-        releaseYear <= 2025 &&
-        releaseYear >= 2000 &&
+        modalReleaseYear <= 2025 &&
+        modalReleaseYear >= 2000 &&
         lastPrice > minimumPrice
       ) {
-        for (let i = startingYear; i != releaseYear; i--) {
+        for (let i = startingYear; i != modalReleaseYear; i--) {
           // Estimate the price for each year in reverse, and if the difference between 2 years is too high, reduce it
           const estimatedPrice = Math.round(
             // Formula for reverse price prediction
@@ -195,7 +196,7 @@ export default function PredictionAddLineModal({
         ];
 
         // age of the vehicle
-        const time = 2024 - releaseYear;
+        const time = 2024 - modalReleaseYear;
 
         for (let i = 0; i != time; i++) {
           adjustedMSRP -= Math.abs(adjustedMSRP * inflationRates[i]);
@@ -215,7 +216,7 @@ export default function PredictionAddLineModal({
     // This will be the rate we use
     let rate = 0;
 
-    let age = 2025 - parseInt(releaseYear);
+    let age = 2025 - parseInt(modalReleaseYear);
 
     // For debugging only
     let price = 0;
@@ -228,7 +229,7 @@ export default function PredictionAddLineModal({
       // We have to use xAdjustments here too, only if rate is very high
       let xAdjustment = 0;
 
-      if (divisionRate < -0.097) {
+      if (divisionRate < -0.14) {
         xAdjustment = 3.8;
       }
 
@@ -424,8 +425,8 @@ export default function PredictionAddLineModal({
 
       {/* Show estimated msrp if Current Price is selected, release year and current price are valid */}
       {parseInt(modalProductPrice) >= minimumPrice &&
-        releaseYear >= 2000 &&
-        releaseYear <= 2025 &&
+        modalReleaseYear >= 2000 &&
+        modalReleaseYear <= 2025 &&
         priceToUse == "Current Price" && (
           <p className="SuccessText" style={{ margin: 0 }}>
             Estimated MSRP: ${estimatedMSRP}
@@ -498,7 +499,7 @@ export default function PredictionAddLineModal({
 
             result = await modalAddToGraph(
               price,
-              releaseYear,
+              modalReleaseYear,
               brandToUse,
               allRateAdjustments
             );
