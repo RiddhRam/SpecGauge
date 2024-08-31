@@ -67,7 +67,8 @@ export default function DeconstructURLFriendlyPredict(
     // If there are productRateAdjustments
     if (productRateAdjustments) {
       for (let item in productRateAdjustments) {
-        productRateAdjustments[item] = rateAdjustments[item];
+        productRateAdjustments[item] =
+          rateAdjustments[productRateAdjustments[item]];
         // Enable the adjustment if not default
         productRateAdjustments[item][1] = true;
       }

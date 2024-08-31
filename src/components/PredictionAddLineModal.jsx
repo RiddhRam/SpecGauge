@@ -47,7 +47,7 @@ export default function PredictionAddLineModal({
   useEffect(() => {
     // this is a seperate function so it can asynchronously import SeedRandomImport
     updatePrice();
-  }, [brandValues, releaseYear, productPrice, brand, rateAdjustments]);
+  }, [brandValues, modalReleaseYear, productPrice, brand, rateAdjustments]);
 
   useEffect(() => {
     setRateAdjustments(additionalOptions);
@@ -55,29 +55,15 @@ export default function PredictionAddLineModal({
 
   const updatePrice = async () => {
     if (brandValues.find((brandLabel) => brandLabel.label === brand)) {
-      const divisions = brandValues.find(
-        (brandLabel) => brandLabel.label === brand
-      ).value;
-      let rate = 0;
-
-      let totalRate = 0;
-      for (let divisionItem in divisions) {
-        totalRate += divisions[divisionItem][1];
-      }
-
-      // If more than one division, add this to help drag down the average
-      if (divisions.length != 1) {
-        rate = 0.0325;
-      }
-
-      rate += totalRate / divisions.length;
-
       let xAdjustment = 0;
       let startingPoint = parseInt(modalProductPrice);
       let startingYear = 2025;
 
+      // Get the best rate for this brand given it's current price and rage
+      let rate = determineBestRate(startingPoint);
+
       // Rate cannot exceed this
-      const maxRate = 0.09;
+      const maxRate = 0.08;
 
       // Get the rng value
       const seed = `${rate}${brand}${releaseYear}`;
@@ -96,25 +82,27 @@ export default function PredictionAddLineModal({
             continue;
           }
 
-          const beginningYear =
-            parseInt(releaseYear) + rateAdjustments[item][2];
-          const time = 2025 - beginningYear;
           // If third parameter is lower than 2000
           if (rateAdjustments[item][2] < 2000) {
             // Add that many years to vehicle production year
+            const beginningYear =
+              parseInt(modalReleaseYear) + rateAdjustments[item][2];
+            const time = 2025 - beginningYear;
 
             // if current is higher than the beginning year (third parameter)
             if (2025 >= beginningYear) {
-              // if it's a huge adjustment, don't even add it, just set it
-              if (rateAdjustments[item][3] > 100) {
-                rate = rateAdjustments[item][3];
-              } else {
-                rate += rateAdjustments[item][3];
+              let thisAdjustment = structuredClone(rateAdjustments[item]);
+
+              // If this adjustment grows as time goes on
+              if (thisAdjustment[4]) {
+                thisAdjustment[3] *= time;
               }
+
+              rate += thisAdjustment[3];
 
               // Bring rate down if needed
               if (rate > maxRate) {
-                rate = 0.2 * rng;
+                rate = maxRate - rng * 0.005;
               }
 
               startingPoint = // Formula for reverse price prediction of this rate adjustment type
@@ -124,8 +112,7 @@ export default function PredictionAddLineModal({
                 // time = time that the rate was used
 
                 // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * time)
-                parseInt(startingPoint) /
-                Math.E ** ((rate + rng * 0.02) * time);
+                parseInt(startingPoint) / Math.E ** ((rate + 0.01) * time);
 
               // Set the starting year
               startingYear = 2025 - time;
@@ -134,30 +121,41 @@ export default function PredictionAddLineModal({
           }
           // if current year is higher than the beginning year of adjustment (third parameter)
           // Necessary to fix this by 2034 because it affects 1 of the rate adjustments for cars but for now it's irrelevant
-          if (2025 - releaseYear >= rateAdjustments[item][2]) {
+          /*
+          if (2025 - parseInt(modalReleaseYear) >= rateAdjustments[item][2]) {
             // Adjust the rate by adding the rate adjustment
             rate += rateAdjustments[item][3];
-          }
+          }*/
         }
       }
 
-      rate = 0;
+      rate = determineBestRate(startingPoint);
 
-      if (divisions.length != 1) {
-        rate = 0.0325;
-      }
-
-      // Continue normally with brand rate and new starting point
-      rate += totalRate / divisions.length;
-
-      if (rate < -0.095) {
+      // xAdjustment helps reduce the MSRP of vehicles with extremely low rates
+      if (rate < -0.14) {
         xAdjustment = 3.8;
       }
 
+      // This is going to keep changing through the for loop, and at the end it will be the actual estimatedMSRP, before inflation
       let lastPrice = parseInt(startingPoint);
 
-      if (releaseYear <= 2025 && releaseYear >= 2000 && lastPrice > 3000) {
-        for (let i = startingYear; i != releaseYear; i--) {
+      // Difference * diffCo (difference coefficient) cannot exceed this
+      let limit = startingPoint * (rate - 0.28) * -1;
+      let diffCo = 0.8;
+
+      // If rate is very high, change the limit and diffCo to these
+      if (rate < -0.1) {
+        limit = startingPoint * (rate * 3) * -1;
+        diffCo = 0.3;
+      }
+
+      if (
+        modalReleaseYear <= 2025 &&
+        modalReleaseYear >= 2000 &&
+        lastPrice > minimumPrice
+      ) {
+        for (let i = startingYear; i != modalReleaseYear; i--) {
+          // Estimate the price for each year in reverse, and if the difference between 2 years is too high, reduce it
           const estimatedPrice = Math.round(
             // Formula for reverse price prediction
             // modalProductPrice = current price
@@ -167,31 +165,92 @@ export default function PredictionAddLineModal({
 
             // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * vehicle age)
             parseInt(startingPoint) /
-              Math.E ** ((rate + rng * -0.001) * (2025 - i - xAdjustment))
+              Math.E ** ((rate + -0.0005) * (2024 - i - xAdjustment))
           );
 
           let difference = estimatedPrice - lastPrice;
 
-          let limit = startingPoint * (rate - 0.28) * -1;
-          let diffCo = 0.8;
-
-          if (rate < -0.1) {
-            limit = startingPoint * (rate * 3) * -1;
-            diffCo = 0.3;
-          }
-
+          // if difference decreased the price, make it positive
           if (difference < 0) {
             difference *= -1;
           }
 
+          // If difference is too high, reduce it to 6% of the last price
           if (difference * diffCo > limit) {
             difference = lastPrice * 0.06;
           }
           lastPrice += difference;
         }
       }
-      setEstimatedMSRP(Math.round(lastPrice));
+
+      // This will be the inflation adjusted msrp
+      let adjustedMSRP = Math.round(lastPrice);
+
+      // if estimated msrp is significantly higher than the current price, we'll factor in inflation, if not, skip
+      if (parseInt(modalProductPrice) * 3 <= adjustedMSRP) {
+        // from 2024 - 2000
+        const inflationRates = [
+          -0.031, -0.04, -0.074, -0.045, -0.012, -0.018, -0.024, -0.021, -0.012,
+          -0.001, -0.016, -0.014, -0.02, -0.031, -0.016, 0.004, -0.037, -0.028,
+          -0.031, -0.033, -0.026, -0.022, -0.016, -0.027,
+        ];
+
+        // age of the vehicle
+        const time = 2024 - modalReleaseYear;
+
+        for (let i = 0; i != time; i++) {
+          adjustedMSRP -= Math.abs(adjustedMSRP * inflationRates[i]);
+        }
+      }
+
+      setEstimatedMSRP(Math.round(adjustedMSRP));
     }
+  };
+
+  const determineBestRate = (startingPoint) => {
+    // Get all divisions
+    const divisions = brandValues.find(
+      (brandLabel) => brandLabel.label === brand
+    ).value;
+
+    // This will be the rate we use
+    let rate = 0;
+
+    let age = 2025 - parseInt(modalReleaseYear);
+
+    // For debugging only
+    let price = 0;
+    // Iterate through each division
+    for (let divisionItem in divisions) {
+      // [0] = limit
+      // [1] = rate
+      const divisionRate = divisions[divisionItem][1];
+
+      // We have to use xAdjustments here too, only if rate is very high
+      let xAdjustment = 0;
+
+      if (divisionRate < -0.14) {
+        xAdjustment = 3.8;
+      }
+
+      const MSRP = // Formula for reverse price prediction of this rate adjustment type
+        // starting point = original
+        // rate = rate adjustment
+        // 0.01 = average random rate fluctuation
+        // age = time that the rate was used
+
+        // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * (age - xAdjustment))
+        parseInt(startingPoint) /
+        Math.E ** ((divisionRate + 0.01) * (age - xAdjustment));
+
+      // If the MSRP is greater than the limit of this rate, then this is the rate we will use
+      // unless the next rate also exceeds it's MSRP limit, then we use that and so on until the best rate is found
+      if (MSRP >= divisions[divisionItem][0]) {
+        rate = divisionRate;
+        price = MSRP;
+      }
+    }
+    return rate;
   };
 
   return (
@@ -218,7 +277,7 @@ export default function PredictionAddLineModal({
         onChange={(event) =>
           handleNumberInput(event.target.value, setReleaseYear)
         }
-        style={{ fontSize: 16 }}
+        style={{ fontSize: 16, padding: "8px 5px 8px 20px" }}
       ></input>
 
       {/* Select Brand */}
@@ -227,7 +286,7 @@ export default function PredictionAddLineModal({
         onChange={() => {
           setBrand(event.target.value);
         }}
-        style={{ padding: "20px", margin: "20px" }}
+        style={{ padding: "15px", margin: "15px" }}
       >
         {brandValues &&
           brandValues.map((brandItem) => (
@@ -243,7 +302,7 @@ export default function PredictionAddLineModal({
         <>
           <div
             style={{
-              width: isMobile ? "80%" : "70%",
+              width: isMobile ? "70%" : "60%",
             }}
           >
             {rateAdjustments &&
@@ -257,7 +316,7 @@ export default function PredictionAddLineModal({
                   }}
                 >
                   <p
-                    style={{ fontSize: isMobile ? 16 : 20 }}
+                    style={{ fontSize: isMobile ? 14 : 18 }}
                     className="PlainText"
                   >
                     {item[0]}
@@ -287,12 +346,16 @@ export default function PredictionAddLineModal({
                             // Then add it
                             newRateAdjustments.push(newRateAdjustment);
                             if (analytics != null) {
-                              logEvent(analytics, `Toggle ${item[0]}`, {
-                                // Screen type
-                                Type: type,
-                                // Category type
-                                NewValue: !rateAdjustments[item][1],
-                              });
+                              logEvent(
+                                analytics,
+                                `Toggle ${rateAdjustments[item][0]}`,
+                                {
+                                  // Screen type
+                                  Type: type,
+                                  // Category type
+                                  NewValue: rateAdjustments[item][1],
+                                }
+                              );
                             }
                           }
                         }
@@ -300,7 +363,7 @@ export default function PredictionAddLineModal({
                         // Update the array
                         setRateAdjustments(newRateAdjustments);
                       }}
-                    ></input>
+                    />
                     <span className="slider"></span>
                   </label>
                 </div>
@@ -324,7 +387,7 @@ export default function PredictionAddLineModal({
               setShowMoreOptions(true);
             }}
             className="NormalButton"
-            style={{ margin: "10px 0 10px 0" }}
+            style={{ margin: "5px", padding: "10px" }}
           >
             <p>More Options</p>
           </button>
@@ -332,7 +395,7 @@ export default function PredictionAddLineModal({
       )}
 
       {/* Price Field */}
-      <div style={{ position: "relative", margin: "20px 0 0 0" }}>
+      <div style={{ position: "relative", margin: "15px 0 0 0" }}>
         <span
           style={{
             position: "absolute",
@@ -355,15 +418,15 @@ export default function PredictionAddLineModal({
           }
           style={{
             fontSize: 16,
-            paddingLeft: "21px", // Add left padding to make room for the prefix
+            padding: "8px 5px 8px 21px", // Add left padding to make room for the prefix
           }}
         />
       </div>
 
       {/* Show estimated msrp if Current Price is selected, release year and current price are valid */}
       {parseInt(modalProductPrice) >= minimumPrice &&
-        releaseYear >= 2000 &&
-        releaseYear <= 2025 &&
+        modalReleaseYear >= 2000 &&
+        modalReleaseYear <= 2025 &&
         priceToUse == "Current Price" && (
           <p className="SuccessText" style={{ margin: 0 }}>
             Estimated MSRP: ${estimatedMSRP}
@@ -413,19 +476,30 @@ export default function PredictionAddLineModal({
             let price = productPrice;
 
             const allRateAdjustments = [];
+
             for (let item in rateAdjustments) {
+              let thisAdjustment = rateAdjustments[item];
               if (rateAdjustments[item][1]) {
-                allRateAdjustments.push(rateAdjustments[item]);
+                thisAdjustment[1] = true;
               }
+
+              // Convert to an array
+              let adjustmentArray = [];
+              for (let param in thisAdjustment) {
+                adjustmentArray.push(thisAdjustment[param]);
+              }
+
+              allRateAdjustments.push(adjustmentArray);
             }
             let result = null;
 
             if (priceToUse == "Current Price") {
               price = estimatedMSRP;
             }
+
             result = await modalAddToGraph(
               price,
-              releaseYear,
+              modalReleaseYear,
               brandToUse,
               allRateAdjustments
             );

@@ -11,7 +11,7 @@ const reliable = -0.06;
 const reputableSports = -0.055;
 const inBetweenCars = -0.045;
 const expensiveSport = -0.0375;
-const superCar = -0.0325;
+const superCar = -0.035;
 // Good
 
 const reliableMotorCycle = -0.075;
@@ -71,26 +71,20 @@ const carsAveragePrices = [
   31539.31261,
   31920.53863,
   32301.38433,
-  32681.85482,
-  33061.94786,
-  32613.79568,
-  32166.10259,
-  31718.85731,
 ];
 
 const carsBrandValues = [
   {
     label: "Alfa Romeo",
-    value: [[0, reputable]],
-    reverseValue: reputable + 0.01,
+    value: [[0, reputable + 0.0125]],
   },
   { label: "Alpine", value: [[0, inBetweenCars]] },
   {
     label: "Aston Martin",
-    value: [[0, reputableSports]],
+    value: [[0, reputableSports - 0.02]],
   },
   { label: "Audi RS-Series", value: [[0, -0.075]] },
-  { label: "Audi", value: [[0, normal - 0.02]] },
+  { label: "Audi", value: [[0, normal]] },
   {
     label: "Bentley",
     value: [[0, somewhatFast]],
@@ -99,7 +93,7 @@ const carsBrandValues = [
     label: "BMW M-Series",
     value: [
       [0, -0.08],
-      [157000, -0.1],
+      [157000, -0.095],
     ],
   },
   {
@@ -113,7 +107,7 @@ const carsBrandValues = [
     value: [[0, normal]],
   },
   { label: "BYD", value: [[0, normal]] },
-  { label: "Cadillac", value: [[0, normal]] },
+  { label: "Cadillac", value: [[0, normal - 0.01]] },
   {
     label: "Chevrolet Corvette",
     value: [[0, reputable]],
@@ -126,7 +120,7 @@ const carsBrandValues = [
     label: "Dodge",
     value: [
       [0, -0.08],
-      [140000, -0.038],
+      [150000, -0.035],
     ],
   },
   {
@@ -147,124 +141,136 @@ const carsBrandValues = [
   {
     label: "Honda Motorcycle",
     value: [[0, superMotorCycle]],
-    reverseValue: superMotorCycle,
   },
-  { label: "Honda", value: [[0, reliable]], reverseValue: reliable - 0.0005 },
-  { label: "Hummer", value: [[0, fast]], reverseValue: fast + 0.01 },
-  { label: "Hyundai", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "INEOS", value: [[0, fast]], reverseValue: fast + 0.01 },
+  { label: "Honda", value: [[0, reliable]] },
+  { label: "Hummer", value: [[0, fast]] },
+  { label: "Hyundai", value: [[0, normal]] },
+  { label: "INEOS", value: [[0, fast]] },
   {
     label: "Infiniti",
     value: [[0, fast]],
-    reverseValue: fast + 0.01,
   },
-  { label: "Isuzu", value: [[0, normal]], reverseValue: normal - 0.015 },
+  { label: "Isuzu", value: [[0, normal]] },
   { label: "Jaguar", value: [[0, fast]] },
-  { label: "Jeep", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Karma", value: [[0, normal]], reverseValue: normal - 0.015 },
+  { label: "Jeep", value: [[0, normal]] },
+  { label: "Karma", value: [[0, normal]] },
   {
     label: "Kawasaki",
     value: [[0, expensiveSportMotorCycle]],
-    reverseValue: expensiveSportMotorCycle,
   },
-  { label: "Kia", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Koenigsegg", value: [[0, superCar]], reverseValue: superCar },
+  { label: "Kia", value: [[0, normal]] },
+  { label: "Koenigsegg", value: [[0, superCar]] },
   {
     label: "KTM Motorcycle",
     value: [[0, reliableMotorCycle]],
-    reverseValue: reliableMotorCycle,
   },
-  { label: "KTM", value: [[0, -0.05]], reverseValue: -0.07 },
-  { label: "Lamborghini", value: [[0, superCar]], reverseValue: superCar },
-  { label: "Land Rover", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Lexus", value: [[0, -0.065]], reverseValue: -0.065 },
-  { label: "Lincoln", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Lotus", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Lucid", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Maserati", value: [[0, fast + 0.1]], reverseValue: fast },
-  { label: "Maybach", value: [[0, superCar]], reverseValue: superCar },
+  { label: "KTM", value: [[0, -0.05]] },
+  {
+    label: "Lamborghini",
+    value: [[0, superCar]],
+  },
+  { label: "Land Rover", value: [[0, normal]] },
+  {
+    label: "Lexus",
+    value: [
+      [0, -0.1],
+      [85000, -0.065],
+      [250000, 0.03675],
+    ],
+  },
+  { label: "Lincoln", value: [[0, normal]] },
+  { label: "Lotus", value: [[0, normal]] },
+  { label: "Lucid", value: [[0, normal]] },
+  { label: "Maserati", value: [[0, fast - 0.005]] },
+  { label: "Maybach", value: [[0, superCar]] },
   { label: "Mazda", value: [[0, reliable]] },
   { label: "McLaren", value: [[0, superCar]] },
-  { label: "Mercedes-AMG", value: [[0, -0.09]] },
-  { label: "Mercedes-Benz", value: [[0, -0.0925]] },
+  {
+    label: "Mercedes-AMG",
+    value: [
+      [0, -0.08],
+      [145000, -0.065],
+    ],
+  },
+  {
+    label: "Mercedes-Benz",
+    value: [
+      [0, -0.135],
+      [145000, -0.065],
+    ],
+  },
   { label: "Mercury", value: [[0, normal]] },
   { label: "Mini", value: [[0, normal]] },
   {
     label: "Mitsubishi",
     value: [[0, reliable]],
-    reverseValue: reliable - 0.005,
   },
   {
     label: "Nissan",
     value: [[0, reputableSports]],
-    reverseValue: reputableSports - 0.015,
   },
-  { label: "Oldsmobile", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Opel", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Pagani", value: [[0, superCar]], reverseValue: superCar },
-  { label: "Panoz", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Peugeot", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Plymouth", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Polestar", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Pontiac", value: [[0, normal]], reverseValue: normal - 0.015 },
+  { label: "Oldsmobile", value: [[0, normal]] },
+  { label: "Opel", value: [[0, normal]] },
+  { label: "Pagani", value: [[0, superCar]] },
+  { label: "Panoz", value: [[0, normal]] },
+  { label: "Peugeot", value: [[0, normal]] },
+  { label: "Plymouth", value: [[0, normal]] },
+  { label: "Polestar", value: [[0, normal]] },
+  { label: "Pontiac", value: [[0, normal]] },
   {
     label: "Porsche",
     value: [
-      [0, -0.125],
-      [125000, -0.08],
-      [135000, -0.045],
+      [0, -0.12],
+      [135000, -0.085],
+      [145000, -0.05],
     ],
-    reverseValue: -0.045,
   },
-  { label: "RAM", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Renault", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Rimac", value: [[0, superCar]], reverseValue: superCar },
-  { label: "Rivian", value: [[0, normal]], reverseValue: normal - 0.015 },
+  { label: "RAM", value: [[0, normal]] },
+  { label: "Renault", value: [[0, normal]] },
+  { label: "Rimac", value: [[0, superCar]] },
+  { label: "Rivian", value: [[0, normal]] },
   {
     label: "Rolls-Royce",
     value: [[0, reputable]],
-    reverseValue: reputable + 0.01,
   },
-  { label: "Saab", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Saturn", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Scion", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Shelby", value: [[0, reputable]], reverseValue: reputable + 0.01 },
-  { label: "Smart", value: [[0, fast]], reverseValue: fast + 0.01 },
-  { label: "Spyker", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Subaru", value: [[0, -0.07]], reverseValue: -0.07 },
+  { label: "Saab", value: [[0, normal]] },
+  { label: "Saturn", value: [[0, normal]] },
+  { label: "Scion", value: [[0, normal]] },
+  { label: "Shelby", value: [[0, reputable]] },
+  { label: "Smart", value: [[0, fast]] },
+  { label: "Spyker", value: [[0, normal]] },
+  { label: "Subaru", value: [[0, -0.07]] },
   {
     label: "Suzuki Motorcycle",
     value: [[0, reputableMotorCycle]],
-    reverseValue: reputableMotorCycle,
   },
-  { label: "Suzuki", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Tata", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Tesla", value: [[0, reputable]], reverseValue: reputable + 0.01 },
-  { label: "Toyota", value: [[0, reliable]], reverseValue: reliable - 0.005 },
+  { label: "Suzuki", value: [[0, normal]] },
+  { label: "Tata", value: [[0, normal]] },
+  { label: "Tesla", value: [[0, reputable]] },
+  { label: "Toyota", value: [[0, reliable]] },
   {
     label: "Triumph",
     value: [[0, expensiveSportMotorCycle]],
-    reverseValue: expensiveSportMotorCycle,
   },
-  { label: "VinFast", value: [[0, fast]], reverseValue: fast + 0.01 },
-  { label: "Volkswagen", value: [[0, normal]], reverseValue: normal - 0.015 },
-  { label: "Volvo", value: [[0, reliable]], reverseValue: reliable - 0.005 },
-  { label: "Xiaomi", value: [[0, fast]], reverseValue: fast + 0.01 },
+  { label: "VinFast", value: [[0, fast]] },
+  { label: "Volkswagen", value: [[0, normal]] },
+  { label: "Volvo", value: [[0, reliable - 0.02]] },
+  { label: "Xiaomi", value: [[0, fast]] },
   {
     label: "Yamaha",
     value: [[0, expensiveSportMotorCycle]],
-    reverseValue: expensiveSportMotorCycle,
   },
 ];
 
 // first parameter is name of option
 // second parameter is default value
 // third parameter is starting year, value lower than 2000 means to add that many years to vehicle production year
-// fourth parameter is rate change after the third parameter year, 100 means the opposite of vehicle's original rate of change
-// PUT ANY FIXED RATE CHANGES (anything above 100) AT THE END. FIXED RATE CHANGES ARE DIVIDED BY 10000
+// fourth parameter is rate change after the third parameter year
+// fifth parameter is whether or not the rate grows as time goes on, it's multiplied by each year
+
 const carsAdditionalOptions = [
-  ["Gasoline/Diesel", true, 2035, 0.005],
-  ["Collectible", false, 10, 0.13],
+  ["Gasoline/Diesel", true, 2035, 0.005, false],
+  ["Collectible", false, 2, 0.0725, true],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };

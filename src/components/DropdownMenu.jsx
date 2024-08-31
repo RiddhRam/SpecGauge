@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
 
-export const DropdownMenu = ({ label, menuItems }) => {
+export const DropdownMenu = ({ label, menuItems, isMobile }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -14,7 +14,12 @@ export const DropdownMenu = ({ label, menuItems }) => {
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <button className="dropdown-toggle">{label}</button>
+      <button
+        className="dropdown-toggle"
+        style={isMobile ? {} : { fontSize: "18px", padding: "10px" }}
+      >
+        {label}
+      </button>
       {isOpen && (
         <ul className="dropdown-menu">
           {menuItems.map((item, index) => (

@@ -64,6 +64,7 @@ export default function BuildURLFriendlyPredict(
         if (localAdjustments[process][item][1] == false) {
           continue
         }
+
         // Use just the index to compress the link
         url += "%2A" + item
       }

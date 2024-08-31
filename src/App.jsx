@@ -241,7 +241,7 @@ export default function App() {
 <p className="InfoText" style={{fontWeight: 'bold'}}>• Compare Products Side by Side: </p><p className="InfoText">Check out detailed comparisons of the latest and greatest cars, drones, GPUs, and CPUs. No more guessing games – see how your top picks stack up against each other in real-time.</p>
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">{"\n"}</p>
-<p className="InfoText" style={{fontWeight: 'bold'}}>• Predict Future Prices: </p><p className="InfoText">Wondering how much that new tech or car will cost down the road? Our unique prediction feature lets you forecast prices all the way to 2055. Yep, you read that right. Get ahead of the game and plan your purchases like a pro.</p>
+<p className="InfoText" style={{fontWeight: 'bold'}}>• Predict Future Prices: </p><p className="InfoText">Wondering how much that new tech or car will cost down the road? Our unique prediction feature lets you forecast prices all the way to 2044. Yep, you read that right. Get ahead of the game and plan your purchases like a pro.</p>
 
 <p className="InfoText">{"\n"}</p>
 <p className="InfoText">{"\n"}</p>

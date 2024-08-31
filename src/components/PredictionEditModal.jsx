@@ -37,8 +37,8 @@ export default function PredictionEditModal({
                 borderStyle: "solid",
                 borderWidth: 3,
                 borderColor: item.borderColor,
-                padding: "15px 7px",
-                margin: "5px 0",
+                padding: "15px 5px",
+                margin: "5px 6px",
                 flexDirection: "column",
                 justifyContent: "center",
               }}
