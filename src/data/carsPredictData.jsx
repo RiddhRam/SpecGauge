@@ -7,10 +7,10 @@ const normal = -0.0975;
 // Adjustment 1
 // Good
 const reputable = -0.075;
-const reliable = -0.06;
+const reliable = -0.07;
 const reputableSports = -0.055;
 const inBetweenCars = -0.045;
-const expensiveSport = -0.0375;
+const expensiveSport = -0.04;
 const superCar = -0.035;
 // Good
 
@@ -84,7 +84,7 @@ const carsBrandValues = [
     value: [[0, reputableSports - 0.02]],
   },
   { label: "Audi RS-Series", value: [[0, -0.075]] },
-  { label: "Audi", value: [[0, normal]] },
+  { label: "Audi", value: [[0, somewhatFast - 0.01]] },
   {
     label: "Bentley",
     value: [[0, somewhatFast]],
@@ -100,7 +100,7 @@ const carsBrandValues = [
     label: "BMW Motorcycle",
     value: [[0, expensiveSportMotorCycle]],
   },
-  { label: "BMW", value: [[0, -0.095]] },
+  { label: "BMW", value: [[0, normal - 0.02]] },
   { label: "Bugatti", value: [[0, superCar]] },
   {
     label: "Buick",
@@ -110,7 +110,7 @@ const carsBrandValues = [
   { label: "Cadillac", value: [[0, normal - 0.01]] },
   {
     label: "Chevrolet Corvette",
-    value: [[0, reputable]],
+    value: [[0, reputableSports]],
   },
   { label: "Chevrolet", value: [[0, normal]] },
   { label: "Chrysler", value: [[0, normal]] },
@@ -127,7 +127,7 @@ const carsBrandValues = [
     label: "Ducati",
     value: [[0, reliableMotorCycle]],
   },
-  { label: "Ferrari", value: [[0, superCar]] },
+  { label: "Ferrari", value: [[0, superCar - 0.01]] },
   { label: "Fiat", value: [[0, fast - 0.005]] },
   { label: "Fisker", value: [[0, fast]] },
   { label: "Ford", value: [[0, reputable]] },
@@ -184,7 +184,13 @@ const carsBrandValues = [
   { label: "Maserati", value: [[0, fast - 0.005]] },
   { label: "Maybach", value: [[0, superCar]] },
   { label: "Mazda", value: [[0, reliable]] },
-  { label: "McLaren", value: [[0, superCar]] },
+  {
+    label: "McLaren",
+    value: [
+      [0, reputableSports - 0.01],
+      [900000, superCar],
+    ],
+  },
   {
     label: "Mercedes-AMG",
     value: [
@@ -221,7 +227,7 @@ const carsBrandValues = [
     label: "Porsche",
     value: [
       [0, -0.12],
-      [135000, -0.085],
+      [130000, -0.085],
       [145000, -0.05],
     ],
   },
@@ -247,14 +253,20 @@ const carsBrandValues = [
   { label: "Suzuki", value: [[0, normal]] },
   { label: "Tata", value: [[0, normal]] },
   { label: "Tesla", value: [[0, reputable]] },
-  { label: "Toyota", value: [[0, reliable]] },
+  {
+    label: "Toyota",
+    value: [
+      [0, reliable + 0.01],
+      [65000, inBetweenCars],
+    ],
+  },
   {
     label: "Triumph",
     value: [[0, expensiveSportMotorCycle]],
   },
   { label: "VinFast", value: [[0, fast]] },
   { label: "Volkswagen", value: [[0, normal]] },
-  { label: "Volvo", value: [[0, reliable - 0.02]] },
+  { label: "Volvo", value: [[0, reliable - 0.01]] },
   { label: "Xiaomi", value: [[0, fast]] },
   {
     label: "Yamaha",

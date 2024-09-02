@@ -234,18 +234,20 @@ export default function Prediction({
         }
       }
 
+      let brandDivisions = [];
+
       // Iterate through the brandValues array and find the rate for this brand
       for (let item in currentBrandValues) {
         if (productBrand == currentBrandValues[item].label) {
-          const divisions = currentBrandValues[item].value;
+          brandDivisions = currentBrandValues[item].value;
           // Iterate through price divisions
-          for (let divisionItem in divisions) {
+          for (let divisionItem in brandDivisions) {
             // Get the current limit
-            const priceDivisionLimit = divisions[divisionItem][0];
+            const priceDivisionLimit = brandDivisions[divisionItem][0];
 
             // If the MSRP is greater than or equal to the limit, then use that rate, and check the next division
             if (price >= priceDivisionLimit) {
-              rate = divisions[divisionItem][1];
+              rate = brandDivisions[divisionItem][1];
             } else {
               // If MSRP is too low, then go to next iteration
               continue;
@@ -303,7 +305,7 @@ export default function Prediction({
 
               // Brind rate down if needed
               if (rate > maxRate) {
-                rate = 0.07 + 0.02 * rng;
+                rate = 0.06 + 0.02 * rng;
               }
             }
             continue;
@@ -325,7 +327,7 @@ export default function Prediction({
 
       if (rate > maxRate) {
         // if greater than the max rate, then multiply rng by a factor of 0.2 to get a new random rate
-        rate = 0.07 + 0.02 * rng;
+        rate = 0.06 + 0.02 * rng;
       }
 
       let xAdjustment = 0;
@@ -339,8 +341,6 @@ export default function Prediction({
         price * Math.E ** ((rate + rng * 0.008) * (i - year + xAdjustment));
       // Difference between price of last iteration and this one
       let difference = newCalculatedPrice - lastPrice;
-
-      let before = difference;
 
       // If this is the first value then initialize the original price
       if (i == year) {
@@ -383,8 +383,15 @@ export default function Prediction({
         difference = originalPrice * 0.08 * rng * (rng > 0.5 ? 1 : -1);
       }
 
-      // Price shouldn't go too far under 10% of original price
-      if (difference + lastPrice < 0.1 * originalPrice) {
+      let highestRate = 0;
+      for (let division in brandDivisions) {
+        if (brandDivisions[division][1] > highestRate) {
+          highestRate = brandDivisions[division][1];
+        }
+      }
+
+      // Price shouldn't go too far under 20% + rate of original price
+      if (difference + lastPrice < (0.2 + highestRate) * originalPrice) {
         difference = minimumAdjuster * -0.1 * rng;
       }
 
@@ -407,23 +414,23 @@ export default function Prediction({
       matchFound = colourRequest.matchFound;
       newBorderColor = colourRequest.newBorderColor;
 
-      // If no match
-      if (!matchFound) {
-        const newLine = {
-          label: `$${price} ${year} ${productBrand}`,
-          data: prices,
-          borderColor: newBorderColor,
-          process: [priceString, yearString, productBrand],
-          adjustments: localRateAdjustments,
-        };
-        setOriginalPoints((prevPoints) => [...prevPoints, prices]);
-        setLineValueDataset((prevLines) => [...prevLines, newLine]);
-        setUpdateGraph(true);
-
-        break;
+      // If match, go to next iteration
+      if (matchFound) {
+        continue;
       }
 
-      // If there are matches, then repeat the loop until no match
+      const newLine = {
+        label: `$${price} ${year} ${productBrand}`,
+        data: prices,
+        borderColor: newBorderColor,
+        process: [priceString, yearString, productBrand],
+        adjustments: localRateAdjustments,
+      };
+      setOriginalPoints((prevPoints) => [...prevPoints, prices]);
+      setLineValueDataset((prevLines) => [...prevLines, newLine]);
+      setUpdateGraph(true);
+
+      break;
     }
 
     return 0;
@@ -643,9 +650,11 @@ export default function Prediction({
     }
     // Add the first row
     exportData.push(firstJSON);
+
     // Iterate through all years on the visible graph
     for (let i = startIndex; i < endIndex; i++) {
       let newJSON = {};
+
       // Year of the current row
       newJSON["Year"] = 2000 + i;
       // Iterate through prices of the current index for each item
@@ -669,6 +678,7 @@ export default function Prediction({
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
+    // This doesn't change the name for some reason
     link.setAttribute("download", "table_data.csv");
     link.style.visibility = "hidden";
     document.body.appendChild(link);
@@ -772,9 +782,9 @@ export default function Prediction({
       setScrollLimit(24);
       setPosition(24);
       setYearsCount(22);
-      setDisplayYears(years.slice(24, 56));
+      setDisplayYears(years.slice(24, 45));
       startIndex = 24;
-      endIndex = 56;
+      endIndex = 45;
       setLineValueDataset([]);
       setUpdateGraph(true);
     }

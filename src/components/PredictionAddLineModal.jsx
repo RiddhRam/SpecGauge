@@ -87,7 +87,7 @@ export default function PredictionAddLineModal({
             // Add that many years to vehicle production year
             const beginningYear =
               parseInt(modalReleaseYear) + rateAdjustments[item][2];
-            const time = 2025 - beginningYear;
+            let time = 2025 - beginningYear;
 
             // if current is higher than the beginning year (third parameter)
             if (2025 >= beginningYear) {
@@ -100,9 +100,17 @@ export default function PredictionAddLineModal({
 
               rate += thisAdjustment[3];
 
+              let possibleMaxPrice = false;
+
               // Bring rate down if needed
+              // This also means price was growing rapdily and may be at the max
               if (rate > maxRate) {
                 rate = maxRate - rng * 0.005;
+                possibleMaxPrice = true;
+              }
+
+              if (possibleMaxPrice && time > 14) {
+                time -= 9;
               }
 
               startingPoint = // Formula for reverse price prediction of this rate adjustment type
@@ -187,7 +195,10 @@ export default function PredictionAddLineModal({
       let adjustedMSRP = Math.round(lastPrice);
 
       // if estimated msrp is significantly higher than the current price, we'll factor in inflation, if not, skip
-      if (parseInt(modalProductPrice) * 3 <= adjustedMSRP) {
+      if (
+        parseInt(modalProductPrice) * 3.5 <= adjustedMSRP &&
+        2025 - modalReleaseYear > 14
+      ) {
         // from 2024 - 2000
         const inflationRates = [
           -0.031, -0.04, -0.074, -0.045, -0.012, -0.018, -0.024, -0.021, -0.012,
@@ -428,9 +439,15 @@ export default function PredictionAddLineModal({
         modalReleaseYear >= 2000 &&
         modalReleaseYear <= 2025 &&
         priceToUse == "Current Price" && (
-          <p className="SuccessText" style={{ margin: 0 }}>
-            Estimated MSRP: ${estimatedMSRP}
-          </p>
+          <>
+            <p className="SuccessText" style={{ margin: 0 }}>
+              Estimated MSRP: ${estimatedMSRP}
+            </p>
+            <p className="SimpleText" style={{ fontSize: isMobile ? 11 : 15 }}>
+              If estimated MSRP is wrong, please manually enter <br></br>the
+              correct MSRP for best results
+            </p>
+          </>
         )}
 
       {/* Select price type */}
