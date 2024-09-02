@@ -110,7 +110,10 @@ const carsBrandValues = [
   { label: "Cadillac", value: [[0, normal - 0.01]] },
   {
     label: "Chevrolet Corvette",
-    value: [[0, reputableSports]],
+    value: [
+      [0, reputableSports - 0.01],
+      [1000000, superCar],
+    ],
   },
   { label: "Chevrolet", value: [[0, normal]] },
   { label: "Chrysler", value: [[0, normal]] },

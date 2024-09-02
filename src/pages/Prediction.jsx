@@ -390,8 +390,8 @@ export default function Prediction({
         }
       }
 
-      // Price shouldn't go too far under 20% + rate of original price
-      if (difference + lastPrice < (0.2 + highestRate) * originalPrice) {
+      // Price shouldn't go too far under 25% + rate of original price
+      if (difference + lastPrice < (0.25 + highestRate) * originalPrice) {
         difference = minimumAdjuster * -0.1 * rng;
       }
 
