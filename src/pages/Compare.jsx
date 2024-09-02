@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
-const SelectionModal = lazy(() => import("../components/SelectionModal"));
+const CompareSelectionModal = lazy(() =>
+  import("../components/CompareSelectionModal")
+);
 const WebAccountHandlerModal = lazy(() =>
   import("../components/WebAccountHandlerModal")
 );
@@ -687,6 +689,15 @@ export default function Compare({
           >
             <p>Reset</p>
           </button>
+
+          <button
+            className="NormalButton"
+            onClick={() => {
+              console.log(Brands);
+            }}
+          >
+            Log
+          </button>
         </div>
 
         {/* For each product, show a column */}
@@ -937,7 +948,7 @@ export default function Compare({
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
           }
         >
-          <SelectionModal
+          <CompareSelectionModal
             type={type}
             setProductModalVisible={setProductModalVisible}
             brands={Brands}
@@ -949,7 +960,7 @@ export default function Compare({
             setProducts={setProducts}
             setSaveComparisonProcesses={setSaveComparisonProcesses}
             productModalVisible={productModalVisible}
-          ></SelectionModal>
+          />
         </Suspense>
       ) : (
         <></>

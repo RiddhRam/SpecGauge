@@ -16,7 +16,7 @@ export const DropdownMenu = ({ label, menuItems, isMobile }) => {
     >
       <button
         className="dropdown-toggle"
-        style={isMobile ? {} : { fontSize: "18px", padding: "10px" }}
+        style={{ fontSize: "18px", padding: "10px" }}
       >
         {label}
       </button>
