@@ -95,10 +95,12 @@ export default function PredictionAddLineModal({
 
               // If this adjustment grows as time goes on
               if (thisAdjustment[4]) {
-                thisAdjustment[3] *= time;
+                // multiply by a factor of time
+                rate += thisAdjustment[3] * time;
+              } else {
+                // or else add it normally
+                rate += thisAdjustment[3];
               }
-
-              rate += thisAdjustment[3];
 
               let possibleMaxPrice = false;
 
@@ -109,18 +111,37 @@ export default function PredictionAddLineModal({
                 possibleMaxPrice = true;
               }
 
-              if (possibleMaxPrice && time > 14) {
-                time -= 9;
+              // If price may have been at it's maximum value, set it to 14 since that's likely when it reached it
+              if (possibleMaxPrice && time > 12) {
+                time = 12;
               }
 
-              startingPoint = // Formula for reverse price prediction of this rate adjustment type
-                // starting point = original
-                // rate = rate adjustment
-                // 0.02 = max random rate fluctuation
-                // time = time that the rate was used
+              for (let i = time; i != 1; i--) {
+                rate = determineBestRate(startingPoint);
+                // Same thing as above
+                if (thisAdjustment[4]) {
+                  rate += thisAdjustment[3] * i;
+                } else {
+                  rate += thisAdjustment[3];
+                }
 
-                // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * time)
-                parseInt(startingPoint) / Math.E ** ((rate + 0.01) * time);
+                startingPoint = // Formula for reverse price prediction of this rate adjustment type
+                  // starting point = original
+                  // rate = rate adjustment
+                  // 0.002 = max random rate fluctuation
+                  // time = time that the rate was used
+
+                  // MSRP = (current price) / e^((brand rate + average random rate fluctuation) * time)
+                  startingPoint / Math.E ** (rate + 0.004);
+
+                console.table({
+                  rate: rate,
+                  newPoint: startingPoint,
+                  time: i,
+                  adjustment: thisAdjustment[3],
+                  denom: Math.E ** (rate + 0.004),
+                });
+              }
 
               // Set the starting year
               startingYear = 2025 - time;
@@ -229,8 +250,6 @@ export default function PredictionAddLineModal({
 
     let age = 2025 - parseInt(modalReleaseYear);
 
-    // For debugging only
-    let price = 0;
     // Iterate through each division
     for (let divisionItem in divisions) {
       // [0] = limit
@@ -258,7 +277,6 @@ export default function PredictionAddLineModal({
       // unless the next rate also exceeds it's MSRP limit, then we use that and so on until the best rate is found
       if (MSRP >= divisions[divisionItem][0]) {
         rate = divisionRate;
-        price = MSRP;
       }
     }
     return rate;

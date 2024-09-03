@@ -65,12 +65,6 @@ const carsAveragePrices = [
   29243.96935,
   29627.4796,
   30010.60948,
-  30393.35726,
-  30775.72255,
-  31157.70719,
-  31539.31261,
-  31920.53863,
-  32301.38433,
 ];
 
 const carsBrandValues = [
@@ -285,7 +279,7 @@ const carsBrandValues = [
 
 const carsAdditionalOptions = [
   ["Gasoline/Diesel", true, 2035, 0.005, false],
-  ["Collectible", false, 2, 0.0725, true],
+  ["Collectible", false, 2, 0.07, true],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };
