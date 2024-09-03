@@ -1,6 +1,5 @@
 export const dronesData = () => {
   // This determines how many steps the user has to go through when adding a product
-  const droneProcess = ["a brand", "a drone"];
   const droneQueryProcess = ["Brand", "Name"];
   const compressedDroneRequestSteps =
     "eJyNldFr2zAQxv8V4ecwJDm2w97SOl29LcXUpoOVPlwTjYk5UlCUsG7sf5+cwRq5xndvNvz47rtPutPj4+/kyoHZJu+T5dGrLpkld7BT4Xd1sqyqkj+zSWINP9m8xag7MJbV3fGAgZ+1V2QQY6qKlUfoCFjtLIFaGa/c3ukDWrnvl+iO5XOO5hfY+/YTa5TTKkTzNLs4tvJj9Qqv4aQ3bKkdk5FmBNXfwXi7Y/M3fcda2miUOdeTFChl19ooXOqrtTvEVDpd79x+g1UKFCWi5fYEZqO2mNykoyhx9iDfcUJaHRwOekOoGwYGvDbHqdjObB8ebjJlzQq11yJHJCkiKDAhsTyBB3ZTP1CanpqGZg/uB9JN30s0dLe2e2GNt+FC/ydvm0Ly2PE4JjgnUAUniRUkMSF5ScGKjEKlNDHOP9AaoKiFbAmULEjUnJRZTgkjzXCtG7EQX2jxU6LIBMm+IMUvckGgckKX55Kki5GTDiklTQktC9KBy/6KRWNeg3PWXywdA990eDkisVFokrhSz3Y/2ElDZg27Z/tvv8WWrFemfxde6/VLe7BtxykEKRccIVqZYYRYYFVyrErpVPhwb57UETJDHafZIMD7l18Xp96qrrMDojGw96DNxRtRZ4M1O8YMh2SMGa7rESa7Dn6e/gIVVHME";
@@ -30,7 +29,6 @@ export const dronesData = () => {
   ];
 
   return [
-    droneProcess,
     droneQueryProcess,
     compressedDroneRequestSteps,
     compressedDroneDefaultArray,

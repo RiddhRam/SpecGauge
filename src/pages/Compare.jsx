@@ -29,7 +29,6 @@ export default function Compare({
   defaultTitle,
 }) {
   // Initialized in useEffect
-  const [Process, setProcess] = useState(null);
   const [QueryProcess, setQueryProcess] = useState([]);
   const [Categories, setCategories] = useState(null);
   const [Brands, setBrands] = useState(null);
@@ -317,45 +316,41 @@ export default function Compare({
 
           const typeData = typeDataFunc();
 
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
+          setQueryProcess(typeData[0]);
           // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
+          setBrands(JSON.parse(PakoInflate(typeData[1])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[2])));
+          setCategories(typeData[3]);
         });
       } else if (type == "CPUs") {
         await import("../data/cpusData").then((module) => {
           const typeData = module.cpusData();
 
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
+          setQueryProcess(typeData[0]);
           // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
+          setBrands(JSON.parse(PakoInflate(typeData[1])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[2])));
+          setCategories(typeData[3]);
         });
       } else if (type == "Graphics Cards") {
         await import("../data/graphicsCardsData").then((module) => {
           const typeData = module.graphicsCardsData();
 
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
+          setQueryProcess(typeData[0]);
           // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
+          setBrands(JSON.parse(PakoInflate(typeData[1])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[2])));
+          setCategories(typeData[3]);
         });
       } else {
         await import("../data/dronesData").then((module) => {
           const typeData = module.dronesData();
 
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
+          setQueryProcess(typeData[0]);
           // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
+          setBrands(JSON.parse(PakoInflate(typeData[1])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[2])));
+          setCategories(typeData[3]);
         });
       }
     });
@@ -689,15 +684,6 @@ export default function Compare({
           >
             <p>Reset</p>
           </button>
-
-          <button
-            className="NormalButton"
-            onClick={() => {
-              console.log(Brands);
-            }}
-          >
-            Log
-          </button>
         </div>
 
         {/* For each product, show a column */}
@@ -953,7 +939,6 @@ export default function Compare({
             setProductModalVisible={setProductModalVisible}
             brands={Brands}
             queryProcess={QueryProcess}
-            process={Process}
             defaultArray={DefaultArray}
             categories={Categories}
             setPros={setPros}

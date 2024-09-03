@@ -11,7 +11,6 @@ export default function CompareSelectionModal({
   setProductModalVisible,
   brands,
   queryProcess,
-  process,
   defaultArray,
   categories,
   setPros,
@@ -27,7 +26,9 @@ export default function CompareSelectionModal({
   const [selectionOptions, setSelectionOptions] = useState([]);
   // The array of brand names, only used when resetting the modal
   const [brandNames, setBrandNames] = useState([]);
-  const [tempSaveProcesses, setTempSaveProcesses] = useState([]);
+  const [tempSaveProcesses, setTempSaveProcesses] = useState(() =>
+    new Array(queryProcess.length).fill("")
+  );
 
   // For the search input
   const [searchString, setSearchString] = useState("");
@@ -42,21 +43,62 @@ export default function CompareSelectionModal({
     setBrandNames(tempBrandNames);
   }, []);
 
-  const checkNoResults = (text) => {
-    let matchFound = false;
-    for (let item in selectionOptions) {
-      if (selectionOptions[item].toUpperCase().includes(text.toUpperCase())) {
-        matchFound = true;
-        break;
+  const searchRequestSteps = (searchTerm) => {
+    const flattenedBrands = brands.flat();
+    const matchingProducts = [];
+    for (let productIndex in flattenedBrands) {
+      const productItem = flattenedBrands[productIndex];
+      let lowerCaseName = "";
+      let normalName = "";
+      for (let processIndex in productItem) {
+        const processItem = productItem[processIndex].toLowerCase();
+        lowerCase += processItem + " ";
+        normalName += productItem[processIndex] + " ";
+      }
+
+      if (lowerCase.includes(searchTerm)) {
+        matchingProducts.push(normalName);
+      }
+    }
+    setSearchString(searchTerm);
+
+    return matchingProducts;
+  };
+
+  {
+    /* CLAUDE DID THIS ENTIRELY */
+  }
+  const checkKeysMatch = (processIndex, brand) => {
+    for (let i = 0; i < processIndex; i++) {
+      if (brand[queryProcess[i]] !== tempSaveProcesses[i]) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  {
+    /* CLAUDE DID THIS ENTIRELY*/
+  }
+  const alphanumericSort = (a, b) => {
+    const regex = /(\d+)|(\D+)/g;
+    const aElements = a.match(regex);
+    const bElements = b.match(regex);
+
+    for (let i = 0; i < Math.min(aElements.length, bElements.length); i++) {
+      if (aElements[i] !== bElements[i]) {
+        const aNum = parseInt(aElements[i], 10);
+        const bNum = parseInt(bElements[i], 10);
+
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          return aNum - bNum;
+        } else {
+          return aElements[i].localeCompare(bElements[i]);
+        }
       }
     }
 
-    if (matchFound) {
-      setNoResultsFound(false);
-    } else {
-      setNoResultsFound(true);
-    }
-    setSearchString(text);
+    return aElements.length - bElements.length;
   };
 
   return (
@@ -66,22 +108,21 @@ export default function CompareSelectionModal({
       className={"ModalContainer"}
       overlayClassName={"ModalOverlay"}
     >
-      {process && (
+      {queryProcess && (
         <>
           {/* Brands */}
-          <p className="HeaderText">Select {process[step]}</p>
+          <p className="HeaderText">Select a {type.slice(0, -1)}</p>
           <input
             type="text"
             value={searchString}
             className="TextInput"
             placeholder="TYPE TO SEARCH"
-            onChange={(text) => checkNoResults(text.target.value)}
+            onChange={(text) => searchRequestSteps(text.target.value)}
             style={{ margin: "15px 0" }}
           ></input>
 
-          <p className="SimpleText" style={{ fontSize: "13px" }}>
-            OR<br></br>
-            <br></br>SELECT
+          <p className="SimpleText" style={{ fontSize: "14px" }}>
+            OR SELECT
           </p>
           {brands == null ? (
             <div
@@ -90,19 +131,67 @@ export default function CompareSelectionModal({
             ></div>
           ) : (
             <div className="ModalButtonSection">
-              {queryProcess.map((processItem, index) => (
+              {queryProcess.map((processItem, processIndex) => (
                 <select
-                  key={index}
+                  key={processIndex}
                   className="SelectABrandOptions"
                   onChange={(event) => {
-                    // setBrand(event.target.value);
+                    const newValue = event.target.value;
+
+                    // Update save processes
+                    const tempSaveProcessCopy = tempSaveProcesses.slice();
+                    tempSaveProcessCopy[processIndex] = newValue;
+
+                    // Change any values after this point to "" since they need to be re selected
+                    for (let item in tempSaveProcessCopy) {
+                      if (item > processIndex) {
+                        tempSaveProcessCopy[item] = "";
+                      }
+                    }
+
+                    setTempSaveProcesses(tempSaveProcessCopy);
+
+                    // If empty value, then it needs to be reselected
+                    if (newValue == "") {
+                      setStep(processIndex);
+                      return;
+                    }
+                    // Or else go to next step
+                    setStep(processIndex + 1);
                   }}
                   style={{
                     padding: "15px",
                     margin: "15px",
                     textAlign: "center",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "200px",
                   }}
-                ></select>
+                >
+                  <option value={""}>{processItem}</option>
+                  {/* CLAUDE DID THIS MOSTLY */}
+                  {step >= processIndex && (
+                    <>
+                      {Array.from(
+                        new Set(
+                          brands
+                            .flat()
+                            .filter((brand) =>
+                              checkKeysMatch(processIndex, brand)
+                            )
+                            .map((brand) => brand[processItem])
+                        )
+                      )
+                        .sort(alphanumericSort)
+                        .map((uniqueValue, index) => (
+                          <option key={index} value={uniqueValue}>
+                            {uniqueValue}
+                          </option>
+                        ))}
+                    </>
+                  )}
+                </select>
               ))}
               {noResultsFound && <p className="SimpleText">No Results Found</p>}
             </div>
