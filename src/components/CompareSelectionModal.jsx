@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import GetProsAndSpecs from "../functions/GetProsAndSpecs";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebaseConfig";
@@ -22,48 +22,81 @@ export default function CompareSelectionModal({
   const [step, setStep] = useState(0);
   // All the specs that were retrieved from cloudflare, these are requested after the last step
   const [requestedSpecs, setRequestedSpecs] = useState([]);
-  // The current options to display
-  const [selectionOptions, setSelectionOptions] = useState([]);
-  // The array of brand names, only used when resetting the modal
-  const [brandNames, setBrandNames] = useState([]);
+  // The values selected by the user using the <select> elemnt instead of the search bar
   const [tempSaveProcesses, setTempSaveProcesses] = useState(() =>
     new Array(queryProcess.length).fill("")
   );
 
   // For the search input
   const [searchString, setSearchString] = useState("");
-  const [noResultsFound, setNoResultsFound] = useState(false);
+  const [matchingProducts, setMatchingProducts] = useState([]);
+  const [searching, setSearching] = useState(false);
+
+  const searchBar = useRef(null);
 
   useEffect(() => {
-    const tempBrandNames = [];
-    for (let item in brands) {
-      tempBrandNames.push(brands[item][0].Brand);
+    if (searchString == "") {
+      setSearchString("");
+      setSearching(false);
+      setMatchingProducts([]);
+      return;
     }
-    setSelectionOptions(tempBrandNames);
-    setBrandNames(tempBrandNames);
-  }, []);
+    setSearching(true);
 
-  const searchRequestSteps = (searchTerm) => {
     const flattenedBrands = brands.flat();
-    const matchingProducts = [];
-    for (let productIndex in flattenedBrands) {
+    const tempMatchingProducts = [];
+
+    // Loop through all products
+    productLoop: for (let productIndex in flattenedBrands) {
       const productItem = flattenedBrands[productIndex];
       let lowerCaseName = "";
       let normalName = "";
+
       for (let processIndex in productItem) {
         const processItem = productItem[processIndex].toLowerCase();
-        lowerCase += processItem + " ";
+        lowerCaseName += processItem + " ";
         normalName += productItem[processIndex] + " ";
       }
 
-      if (lowerCase.includes(searchTerm)) {
-        matchingProducts.push(normalName);
+      const searchTerms = searchString.split(" ");
+
+      for (let searchTermIndex in searchTerms) {
+        // prettier-ignore
+        if (!lowerCaseName.includes(searchTerms[searchTermIndex].toLowerCase())) {
+          continue productLoop;
+          // I want to go to next loop of the outer for loop
+        }
+      }
+
+      tempMatchingProducts.push([normalName, productItem]);
+    }
+    setSearchString(searchString);
+
+    const displayResults = tempMatchingProducts.slice(0, 7);
+    if (analytics != null) {
+      if (displayResults.length == 0) {
+        logEvent("No Results Found", {
+          Type: type,
+          Tool: "Comparison",
+          Search: searchString,
+        });
       }
     }
-    setSearchString(searchTerm);
 
-    return matchingProducts;
-  };
+    setMatchingProducts(displayResults);
+  }, [searchString]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchBar.current && !searchBar.current.contains(event.target)) {
+        setSearching(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [searchBar]);
 
   {
     /* CLAUDE DID THIS ENTIRELY */
@@ -101,6 +134,51 @@ export default function CompareSelectionModal({
     return aElements.length - bElements.length;
   };
 
+  const addNewProduct = async (productToAdd) => {
+    console.log(productToAdd);
+
+    let result = null;
+
+    // Lazy import the right DirectQueryFunction and use it
+    if (type == "Vehicles") {
+      await import("../functions/DirectQueryAutomobilesFunction").then(
+        async (module) => {
+          // Directly get the product
+          result = await module.default(productToAdd);
+        }
+      );
+    } else if (type == "CPUs") {
+      await import("../functions/DirectQueryCPUsFunction").then(
+        async (module) => {
+          // Directly get the product
+          result = await module.default(productToAdd);
+        }
+      );
+    } else if (type == "Graphics Cards") {
+      await import("../functions/DirectQueryGraphicsCardsFunction").then(
+        async (module) => {
+          // Directly get the product
+          result = await module.default(productToAdd);
+        }
+      );
+    } else {
+      await import("../functions/DirectQueryDronesFunction").then(
+        async (module) => {
+          // Directly get the product
+          result = await module.default(productToAdd);
+        }
+      );
+    }
+
+    // Reset the modal
+    setStep(0);
+    setTempSaveProcesses([]);
+    setSearchString("");
+    setMatchingProducts([]);
+    setSearching(false);
+    setProductModalVisible(false);
+  };
+
   return (
     <Modal
       isOpen={productModalVisible}
@@ -112,14 +190,68 @@ export default function CompareSelectionModal({
         <>
           {/* Brands */}
           <p className="HeaderText">Select a {type.slice(0, -1)}</p>
-          <input
-            type="text"
-            value={searchString}
-            className="TextInput"
-            placeholder="TYPE TO SEARCH"
-            onChange={(text) => searchRequestSteps(text.target.value)}
-            style={{ margin: "15px 0" }}
-          ></input>
+          <div style={{ position: "relative" }} ref={searchBar}>
+            <input
+              type="text"
+              value={searchString}
+              className="TextInput"
+              placeholder="TYPE TO SEARCH"
+              onChange={(text) => setSearchString(text.target.value)}
+              style={{ margin: "15px 0" }}
+            ></input>
+
+            {/* search results */}
+            {searching ? (
+              <div className="SearchResultBox">
+                {/* At least 1 result */}
+                {matchingProducts.length > 0 &&
+                  matchingProducts.map((product, index) => (
+                    <div
+                      key={index}
+                      className="SearchResult"
+                      onClick={() => {
+                        addNewProduct(product[1]);
+                        if (analytics != null) {
+                          if (displayResults.length == 0) {
+                            logEvent("Search Bar Click", {
+                              Type: type,
+                              Tool: "Comparison",
+                              Clicked: product[0],
+                            });
+                          }
+                        }
+                      }}
+                    >
+                      {product[0]}
+                    </div>
+                  ))}
+                {matchingProducts.length == 7 && (
+                  <div
+                    style={{
+                      padding: "10px",
+                      textAlign: "left",
+                      zIndex: 10000,
+                    }}
+                  >
+                    Showing Top 7 Results
+                  </div>
+                )}
+                {matchingProducts.length == 0 && (
+                  <div
+                    style={{
+                      padding: "10px",
+                      textAlign: "left",
+                      zIndex: 10000,
+                    }}
+                  >
+                    No Results Found
+                  </div>
+                )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
 
           <p className="SimpleText" style={{ fontSize: "14px" }}>
             OR SELECT
@@ -148,12 +280,11 @@ export default function CompareSelectionModal({
                         tempSaveProcessCopy[item] = "";
                       }
                     }
-
                     setTempSaveProcesses(tempSaveProcessCopy);
 
                     // If empty value, then it needs to be reselected
                     if (newValue == "") {
-                      setStep(processIndex);
+                      setStep(tempSaveProcessCopy.indexOf(""));
                       return;
                     }
                     // Or else go to next step
@@ -185,32 +316,69 @@ export default function CompareSelectionModal({
                       )
                         .sort(alphanumericSort)
                         .map((uniqueValue, index) => (
-                          <option key={index} value={uniqueValue}>
+                          <option key={index + uniqueValue} value={uniqueValue}>
                             {uniqueValue}
                           </option>
                         ))}
                     </>
                   )}
+                  {processIndex != 0 &&
+                    tempSaveProcesses[processIndex - 1] == "" && (
+                      <option value={""}>
+                        Please select a {queryProcess[processIndex - 1]}
+                      </option>
+                    )}
                 </select>
               ))}
-              {noResultsFound && <p className="SimpleText">No Results Found</p>}
             </div>
           )}
-          {/* Cancel Button */}
-          <button
-            onClick={() => {
-              // Reset the modal
-              setProductModalVisible(false);
-              setSelectionOptions(brandNames);
-              setRequestedSpecs([]);
-              setTempSaveProcesses([]);
-              setStep(0);
-              setSearchString("");
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                tempSaveProcesses[tempSaveProcesses.length - 1] != ""
+                  ? `repeat(2, 1fr)`
+                  : `1fr`,
+              gridTemplateRows: `47px`,
+              columnGap: "15px",
+              margin: "15px 0",
             }}
-            className="DangerButtonNoBackground"
           >
-            <p>Cancel</p>
-          </button>
+            {/* Cancel Button */}
+            <button
+              onClick={() => {
+                // Reset the modal
+                setStep(0);
+                setTempSaveProcesses([]);
+                setSearchString("");
+                setMatchingProducts([]);
+                setSearching(false);
+                setProductModalVisible(false);
+              }}
+              className="DangerButton"
+            >
+              <p>Cancel</p>
+            </button>
+
+            {tempSaveProcesses[tempSaveProcesses.length - 1] != "" && (
+              <button
+                onClick={async () => {
+                  const productToAdd = {};
+
+                  for (let queryProcessIndex in queryProcess) {
+                    const queryProcessItem = queryProcess[queryProcessIndex];
+                    productToAdd[queryProcessItem] =
+                      tempSaveProcesses[queryProcessIndex];
+                  }
+
+                  addNewProduct(productToAdd);
+                }}
+                className="NormalButton"
+              >
+                <p>Add</p>
+              </button>
+            )}
+          </div>
         </>
       )}
     </Modal>

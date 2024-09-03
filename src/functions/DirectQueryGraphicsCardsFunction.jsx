@@ -7,9 +7,9 @@ export default async function DirectQueryGraphicsCardsFunction(product) {
   const colRef = collection(db, "Graphics Cards");
   const q = query(
     colRef,
-    where("Brand", "==", product[0]),
-    where("Generation", "==", product[1]),
-    where("Card", "==", product[2])
+    where("Brand", "==", product["Brand"]),
+    where("Generation", "==", product["Generation"]),
+    where("Card", "==", product["Card"])
   );
 
   const snapshot = await getDocs(q);

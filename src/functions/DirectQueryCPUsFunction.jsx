@@ -7,9 +7,9 @@ export default async function DirectQueryCPUsFunction(product) {
   const colRef = collection(db, "CPUs");
   const q = query(
     colRef,
-    where("Brand", "==", product[0]),
-    where("Generation", "==", product[1]),
-    where("CPU", "==", product[2])
+    where("Brand", "==", product["Brand"]),
+    where("Generation", "==", product["Generation"]),
+    where("CPU", "==", product["CPU"])
   );
 
   const snapshot = await getDocs(q);
