@@ -1,8 +1,6 @@
 import PakoInflate from "./PakoInflate";
 
-export default function DeconstructURLFriendlyCompare(url, brands) {
-  const processes = [];
-
+export default function DeconstructURLFriendlyCompare(url, queryProcess) {
   let tempURL = url;
 
   const shortIndex = tempURL.indexOf("short/");
@@ -25,20 +23,22 @@ export default function DeconstructURLFriendlyCompare(url, brands) {
   // Split major string up into seperate strings, 1 for each product
   const products = tempURL.split("%7Cvs%7C");
 
-  // Iterate through each products string
-  for (let product in products) {
-    // Split product string up into seperate strings, 1 for each process step
-    const productProcess = products[product].split("%3B");
+  const processes = [];
 
-    if (shortIndex != -1) {
-      // This goes first before the other value changes, or else it won't work since it won't be an index number
-      productProcess[1] =
-        brands[productProcess[0]].RequestStep[productProcess[1]];
-      productProcess[0] = brands[productProcess[0]].Brand;
+  // Iterate through each products string
+  for (let productIndex in products) {
+    // Split product string up into seperate strings, 1 for each process step
+    const productProcess = products[productIndex].split("%3B");
+
+    const jsonProcess = {};
+
+    for (let queryProcessIndex in queryProcess) {
+      jsonProcess[queryProcess[queryProcessIndex]] =
+        productProcess[queryProcessIndex];
     }
 
-    // Push the array to the major array
-    processes.push(productProcess);
+    // Push the JSON to the major array
+    processes.push(jsonProcess);
   }
 
   return processes;

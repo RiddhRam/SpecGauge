@@ -1,6 +1,3 @@
-7.5.0
-Add Search bar to add items to comparison screen
-
 7.6.0
 Add trending predictions to home page
 Make edit modal look better

@@ -1,6 +1,6 @@
 import pako from "pako";
 
-export default function BuildURLFriendlyCompare(processes, brands) {
+export default function BuildURLFriendlyCompare(processes) {
   let url = "";
 
   // Iterate to each process
@@ -12,33 +12,7 @@ export default function BuildURLFriendlyCompare(processes, brands) {
     for (let processItem in processes[process]) {
       // Add the item to the url, this is for this products process
       // The %3B represents a ; (semicolon) in URL encoding
-      // If it's the brand index
-      if (processItem == 0) {
-        // Iterate through all brands to find a match
-        for (let brandItem in brands) {
-          // Once a match is found, save the brandIndex
-          if (processes[process][processItem] == brands[brandItem].Brand) {
-            brandIndex = brandItem
-            break;
-          }
-        }
-        url += brandIndex + "%3B";
-      } 
-      // If its the second step index
-      else if (processItem == 1) {
-        // Iterate through all second steps options for that brand to find a match
-        for (let secondStepItem in brands[brandIndex].RequestStep) {
-          // Once a match is found, add the secondStepItem
-          if (processes[process][processItem] == brands[brandIndex].RequestStep[secondStepItem]) {
-            url += secondStepItem + "%3B";
-            break;
-          }
-        }
-      }
-      else {
-        url += processes[process][processItem] + "%3B";
-      }
-      
+      url += processes[process][processItem] + "%3B";
     }
     // Remove the last ; from the string, since the products process is over.
     url = url.slice(0, -3)

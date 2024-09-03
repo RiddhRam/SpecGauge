@@ -375,13 +375,11 @@ export default function Compare({
     await import("../functions/DeconstructURLFriendlyCompare").then(
       (module) => {
         // Deconstruct the string into a process array
-        processes = module.default(presetURL, Brands);
+        processes = module.default(presetURL, QueryProcess);
       }
     );
 
-    if (processes[0].length == QueryProcess.length) {
-      setSaveComparisonProcesses(processes);
-
+    if (Object.keys(processes[0]).length == QueryProcess.length) {
       for (let processItem in processes) {
         let result = null;
         // Lazy import the right DirectQueryFunction and use it
@@ -414,6 +412,17 @@ export default function Compare({
             }
           );
         }
+
+        const properProcess = [];
+
+        for (let item in QueryProcess) {
+          properProcess.push(processes[processItem][QueryProcess[item]]);
+        }
+
+        setSaveComparisonProcesses((prevProcesses) => [
+          ...prevProcesses,
+          properProcess,
+        ]);
 
         let parameterArray = [];
 
@@ -487,7 +496,7 @@ export default function Compare({
     const comparison = {
       email: auth.currentUser.email,
       type: type,
-      name: comparisonName,
+      name: comparisonName.replace("/", "%20"),
       processes: arrayToSave,
     };
 
