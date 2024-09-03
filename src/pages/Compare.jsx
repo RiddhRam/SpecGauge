@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import SetTitleAndDescription from "../functions/SetTitleAndDescription";
-const SelectionModal = lazy(() => import("../components/SelectionModal"));
+const CompareSelectionModal = lazy(() =>
+  import("../components/CompareSelectionModal")
+);
 const WebAccountHandlerModal = lazy(() =>
   import("../components/WebAccountHandlerModal")
 );
@@ -27,7 +29,6 @@ export default function Compare({
   defaultTitle,
 }) {
   // Initialized in useEffect
-  const [Process, setProcess] = useState(null);
   const [QueryProcess, setQueryProcess] = useState([]);
   const [Categories, setCategories] = useState(null);
   const [Brands, setBrands] = useState(null);
@@ -315,45 +316,41 @@ export default function Compare({
 
           const typeData = typeDataFunc();
 
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
+          setQueryProcess(typeData[0]);
           // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
+          setBrands(JSON.parse(PakoInflate(typeData[1])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[2])));
+          setCategories(typeData[3]);
         });
       } else if (type == "CPUs") {
         await import("../data/cpusData").then((module) => {
           const typeData = module.cpusData();
 
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
+          setQueryProcess(typeData[0]);
           // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
+          setBrands(JSON.parse(PakoInflate(typeData[1])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[2])));
+          setCategories(typeData[3]);
         });
       } else if (type == "Graphics Cards") {
         await import("../data/graphicsCardsData").then((module) => {
           const typeData = module.graphicsCardsData();
 
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
+          setQueryProcess(typeData[0]);
           // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
+          setBrands(JSON.parse(PakoInflate(typeData[1])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[2])));
+          setCategories(typeData[3]);
         });
       } else {
         await import("../data/dronesData").then((module) => {
           const typeData = module.dronesData();
 
-          setProcess(typeData[0]);
-          setQueryProcess(typeData[1]);
+          setQueryProcess(typeData[0]);
           // Decompressed (inflated) String Values into JSON values
-          setBrands(JSON.parse(PakoInflate(typeData[2])));
-          setDefaultArray(JSON.parse(PakoInflate(typeData[3])));
-          setCategories(typeData[4]);
+          setBrands(JSON.parse(PakoInflate(typeData[1])));
+          setDefaultArray(JSON.parse(PakoInflate(typeData[2])));
+          setCategories(typeData[3]);
         });
       }
     });
@@ -378,13 +375,11 @@ export default function Compare({
     await import("../functions/DeconstructURLFriendlyCompare").then(
       (module) => {
         // Deconstruct the string into a process array
-        processes = module.default(presetURL, Brands);
+        processes = module.default(presetURL, QueryProcess);
       }
     );
 
-    if (processes[0].length == QueryProcess.length) {
-      setSaveComparisonProcesses(processes);
-
+    if (Object.keys(processes[0]).length == QueryProcess.length) {
       for (let processItem in processes) {
         let result = null;
         // Lazy import the right DirectQueryFunction and use it
@@ -417,6 +412,17 @@ export default function Compare({
             }
           );
         }
+
+        const properProcess = [];
+
+        for (let item in QueryProcess) {
+          properProcess.push(processes[processItem][QueryProcess[item]]);
+        }
+
+        setSaveComparisonProcesses((prevProcesses) => [
+          ...prevProcesses,
+          properProcess,
+        ]);
 
         let parameterArray = [];
 
@@ -490,7 +496,7 @@ export default function Compare({
     const comparison = {
       email: auth.currentUser.email,
       type: type,
-      name: comparisonName,
+      name: comparisonName.replace("/", "%20"),
       processes: arrayToSave,
     };
 
@@ -937,19 +943,18 @@ export default function Compare({
             <div className="ActivityIndicator" style={{ margin: "50px" }}></div>
           }
         >
-          <SelectionModal
+          <CompareSelectionModal
             type={type}
             setProductModalVisible={setProductModalVisible}
             brands={Brands}
             queryProcess={QueryProcess}
-            process={Process}
             defaultArray={DefaultArray}
             categories={Categories}
             setPros={setPros}
             setProducts={setProducts}
             setSaveComparisonProcesses={setSaveComparisonProcesses}
             productModalVisible={productModalVisible}
-          ></SelectionModal>
+          />
         </Suspense>
       ) : (
         <></>

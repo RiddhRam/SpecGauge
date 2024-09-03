@@ -83,7 +83,7 @@ const carsBrandValues = [
     label: "Aston Martin",
     value: [[0, reputableSports - 0.02]],
   },
-  { label: "Audi RS-Series", value: [[0, -0.075]] },
+  { label: "Audi RS-Series", value: [[0, reputable - 0.01]] },
   { label: "Audi", value: [[0, somewhatFast - 0.01]] },
   {
     label: "Bentley",

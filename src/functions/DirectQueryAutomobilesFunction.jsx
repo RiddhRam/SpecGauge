@@ -7,10 +7,10 @@ export default async function DirectQueryAutomobilesFunction(product) {
   const colRef = collection(db, "Automobiles");
   const q = await query(
     colRef,
-    where("Brand", "==", product[0]),
-    where("Model", "==", product[1]),
-    where("Year", "==", product[2]),
-    where("Trim", "==", product[3])
+    where("Brand", "==", product["Brand"]),
+    where("Model", "==", product["Model"]),
+    where("Year", "==", product["Year"]),
+    where("Trim", "==", product["Trim"])
   );
 
   const snapshot = await getDocs(q);

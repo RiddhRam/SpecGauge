@@ -60,9 +60,9 @@ a {
 .ModalButtonSection {
   display: flex;
   flex-direction: column;
-  height: 250px;
+  max-height: 300px;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: visible;
 }
 
 /* The background blur of the modal */
@@ -684,6 +684,30 @@ a {
 
   &:active {
     background-color: #856a2a;
+  }
+}
+
+.SearchResultBox {
+  position: fixed;
+  color: black;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.SearchResult {
+  padding: 10px;
+  cursor: pointer;
+  text-align: left;
+  z-index: 10000;
+
+  &:hover {
+    background-color: #a4a4a3;
+  }
+
+  &:active {
+    background-color: #959593;
   }
 }
 

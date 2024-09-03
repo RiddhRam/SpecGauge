@@ -1,13 +1,13 @@
-7.5.0
-Add top, side and back view of vehicle sizes
-Put product selection for compare and predict pages inside a modal with dropdown selectors
-Get database data for comparison screen from Cloudflare by using lazy imports instead of calling from firebase
-
 7.6.0
 Add trending predictions to home page
 Make edit modal look better
-Improve price prediction algorithm, forward and backward
+
+7.7.0
 Let user report bad predictions
+Improve price prediction algorithm, forward and backward
+
+7.8.0
+Add top, side and back view of vehicle sizes
 
 8.0.0
 Add performance calculator for cars and computers

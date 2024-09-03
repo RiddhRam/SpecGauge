@@ -38,7 +38,7 @@ export const Navbar = ({ isMobile }) => {
           gridTemplateColumns: "1fr auto auto 1fr",
           gridTemplateRows: "65px",
           alignItems: "center",
-          columnGap: "10px",
+          columnGap: "8px",
         }}
       >
         {/* Give user the option to go to home page */}
