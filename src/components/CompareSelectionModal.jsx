@@ -135,8 +135,6 @@ export default function CompareSelectionModal({
   };
 
   const addNewProduct = async (productToAdd) => {
-    console.log(productToAdd);
-
     let result = null;
 
     // Lazy import the right DirectQueryFunction and use it
@@ -169,6 +167,43 @@ export default function CompareSelectionModal({
         }
       );
     }
+
+    const properProcess = [];
+
+    for (let item in queryProcess) {
+      properProcess.push(productToAdd[queryProcess[item]]);
+    }
+
+    setSaveComparisonProcesses((prevProcesses) => [
+      ...prevProcesses,
+      properProcess,
+    ]);
+
+    let parameterArray = [];
+
+    // Deep Copy defaultArray into parameterArray then we will pass it into GetProsAndSpecs
+    for (let i = 0; i < defaultArray.length; i++) {
+      const defaultArrayItem = defaultArray[i];
+
+      let newJSON = {};
+      newJSON["Value"] = defaultArrayItem.Value;
+      newJSON["Display"] = defaultArrayItem.Display;
+      newJSON["Category"] = defaultArrayItem.Category;
+      newJSON["Matching"] = defaultArrayItem.Matching;
+      newJSON["Mandatory"] = defaultArrayItem.Mandatory;
+      newJSON["Type"] = defaultArrayItem.Type;
+      newJSON["Preference"] = defaultArrayItem.Preference;
+      newJSON["Important"] = defaultArrayItem.Important;
+      newJSON["HigherNumber"] = defaultArrayItem.HigherNumber;
+      parameterArray.push(newJSON);
+    }
+
+    // prettier-ignore
+    const prosAndSpecs = GetProsAndSpecs(parameterArray, result, categories);
+
+    // prettier-ignore
+    setPros((prevPros) => [...prevPros, prosAndSpecs[0]]);
+    setProducts((prevProducts) => [...prevProducts, prosAndSpecs[1]]);
 
     // Reset the modal
     setStep(0);
