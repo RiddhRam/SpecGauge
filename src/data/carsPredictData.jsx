@@ -279,7 +279,7 @@ const carsBrandValues = [
 
 const carsAdditionalOptions = [
   ["Gasoline/Diesel", true, 2035, 0.005, false],
-  ["Collectible", false, 2, 0.07, true],
+  ["Collectible", false, 2, 0.007, true],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };

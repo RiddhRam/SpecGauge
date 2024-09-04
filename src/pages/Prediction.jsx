@@ -298,12 +298,13 @@ export default function Prediction({
 
               // If this adjustment grows as time goes on
               if (thisAdjustment[4]) {
+                // multiply by a factor of time
                 thisAdjustment[3] *= i - beginningYear;
               }
 
               rate += thisAdjustment[3];
 
-              // Brind rate down if needed
+              // Bring rate down if needed
               if (rate > maxRate) {
                 rate = 0.06 + 0.02 * rng;
               }
@@ -350,29 +351,32 @@ export default function Prediction({
       }
 
       // If rate is depreciating, but value grew higher, then reduce the difference to 5% and make it negative
+      // if rate is decreasing but difference went up
       if (rate < 0 && difference > 0) {
         difference *= -0.05;
-      }
-
-      // If not the first value
-      // If last price wasn't an increase
-      else {
-        // If difference is greater than an 70% of the last price
+      } else {
+        // If difference is greater than an 70% of the last price and rate is negative
+        // if difference is decreasing by a lot
         if (difference * -1 > lastPrice * 0.7 && rate < 0) {
-          // Reduce difference to rng
+          // Reduce difference to rng * 8% of last price
           // Prevents sharp increases
+          // reduce it by a lot
           difference = lastPrice * rng * 0.08 * -1;
-        } // If new price is a decrease from last price
+        }
+        // if difference is decreasing
         else if (difference < 0) {
-          // If the absolute value of the decrease is more than 68% of the last price
+          // If the decrease is more than 68% of the last price
+          // If it decreased by a crazy amount, this is pretty similar to the above
           if (difference * -1 > lastPrice * 0.68) {
-            // Cut the difference in half
+            // Cut the difference to a quarter
             // Prevents sharp drops
             difference = difference * 0.25;
           }
         }
       }
 
+      // WTFFFFFF MAYBE ITS THIS
+      // if rate is positive, the difference is lastPrice * the rate
       if (rate > 0) {
         difference = lastPrice * rate;
       }
@@ -383,6 +387,7 @@ export default function Prediction({
         difference = originalPrice * 0.08 * rng * (rng > 0.5 ? 1 : -1);
       }
 
+      // this is only used in the if statement below this for loop
       let highestRate = 0;
       for (let division in brandDivisions) {
         if (brandDivisions[division][1] > highestRate) {
