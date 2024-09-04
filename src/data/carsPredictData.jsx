@@ -125,7 +125,7 @@ const carsBrandValues = [
     value: [[0, reliableMotorCycle]],
   },
   { label: "Ferrari", value: [[0, superCar - 0.01]] },
-  { label: "Fiat", value: [[0, fast - 0.005]] },
+  { label: "Fiat", value: [[0, fast - 0.01]] },
   { label: "Fisker", value: [[0, fast]] },
   { label: "Ford", value: [[0, reputable]] },
   { label: "Genesis", value: [[0, normal]] },

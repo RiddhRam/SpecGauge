@@ -74,7 +74,13 @@ export default function PredictionAddLineModal({
         // This is going to keep changing through the for loop, and at the end it will be the actual estimatedMSRP, before inflation
         let lastPrice = startingPoint;
 
-        if (startingYear > 2024 || startingYear < 2000 || isNaN(startingYear)) {
+        if (
+          startingYear > 2024 ||
+          startingYear < 2000 ||
+          isNaN(startingYear) ||
+          startingPoint < minimumPrice ||
+          isNaN(startingPoint)
+        ) {
           break;
         }
 
@@ -140,7 +146,7 @@ export default function PredictionAddLineModal({
           let xAdjustment = 0;
 
           // xAdjustment helps reduce the MSRP of vehicles with extremely low rates
-          if (rate < -0.14) {
+          if (rate < -0.13) {
             xAdjustment = 3.8;
           }
 
@@ -169,24 +175,34 @@ export default function PredictionAddLineModal({
           
           */
 
+          // After prediction adjustments
+          // Not working properly for collectibles, also for values with high depreciation (lower than -0.07)
+          // Also don't know about brand divisions
+
           // if rate is decreasing but value went down
           if (rate < 0 && difference < 0) {
-            difference *= -0.05;
+            difference *= -0.135 - rate / 3;
+            console.log(-0.135 + rate / 3);
           } else {
-            if (Math.abs(difference) < estimatedPrice * 0.6 && rate < 0) {
+            if (difference > estimatedPrice * 0.3 && rate < 0) {
               // change differnce to be
               // Prevents sharp increases
               difference = estimatedPrice * 0.04 * -1;
+              console.log("2: " + i);
             } // If new price is a decrease from last price
             else if (difference > 0) {
+              console.log("3: " + i);
               // If the absolute value of the decrease is more than 68% of the last price
-              if (Math.abs(difference) < estimatedPrice * 0.68) {
+              if (difference > estimatedPrice * 0.68) {
+                console.log("4: " + i);
                 // Cut the difference to a quarter
                 // Prevents sharp drops
-                difference = difference * 0.12;
+                difference = difference * 0.25;
               }
             }
           }
+
+          console.table({ difference: difference, limit: estimatedPrice });
 
           if (rate > 0) {
             difference = estimatedPrice * rate;
