@@ -175,22 +175,17 @@ export default function PredictionAddLineModal({
 
           // After prediction adjustments
           // Not working properly for high depreciating collectibles like Fisker brand value
-          // Also don't know about brand divisions
 
           // if value was decreasing
           if (rate < 0 && difference < 0) {
             difference *= -0.135 - rate / 3;
-            //console.log("1: " + i);
           } else {
             if (difference > estimatedPrice * 0.3 && rate < 0) {
               // Prevents sharp increases
               difference = estimatedPrice * 0.04 * -1;
-              //console.log("2: " + i);
             }
             // If the value of the decrease is more than 68% of the last price, similar to above
             else if (difference > estimatedPrice * 0.68) {
-              //console.log("3: " + i);
-
               // Cut the difference to a quarter
               // Prevents sharp drops
               difference = difference * 0.25;
@@ -200,21 +195,20 @@ export default function PredictionAddLineModal({
           // if value was increasing
           if (rate > 0) {
             difference = estimatedPrice * (-0.07 + rate) * -1;
-            //console.log(difference + ": " + i);
           }
-
-          console.log(rate);
 
           lastPrice += difference;
         }
 
-        bestPrice = lastPrice;
-
-        // if estimated msrp is significantly higher than the current price, we'll factor in inflation, if not, skip
+        // If the estimated msrp is above this divisions minimum MSRP, then it's the new best price
+        if (lastPrice > divisions[division][0]) {
+          bestPrice = lastPrice;
+        }
       }
       // This will be the inflation adjusted msrp
       let adjustedMSRP = bestPrice;
 
+      // if estimated msrp is significantly higher than the current price, we'll factor in inflation, if not, skip
       /*
         if (
           parseInt(modalProductPrice) * 3.5 <= adjustedMSRP &&
