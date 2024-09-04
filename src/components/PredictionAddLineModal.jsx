@@ -166,47 +166,44 @@ export default function PredictionAddLineModal({
           let difference = lastPrice - estimatedPrice;
 
           /* NOTE:
-          
           THINK OF IT AS 1 LINE. USE PENCIL AND PAPER TO VISUALIZE, 
           lastPrice = second chronologoical price, estimatedPrice = first
           
           The above difference is same as let difference = newCalculatedPrice - lastPrice;
           from addToGraph in Prediction.jsx
-          
           */
 
           // After prediction adjustments
-          // Not working properly for collectibles, also for values with high depreciation (lower than -0.07)
+          // Not working properly for high depreciating collectibles like Fisker brand value
           // Also don't know about brand divisions
 
-          // if rate is decreasing but value went down
+          // if value was decreasing
           if (rate < 0 && difference < 0) {
             difference *= -0.135 - rate / 3;
-            console.log(-0.135 + rate / 3);
+            //console.log("1: " + i);
           } else {
             if (difference > estimatedPrice * 0.3 && rate < 0) {
-              // change differnce to be
               // Prevents sharp increases
               difference = estimatedPrice * 0.04 * -1;
-              console.log("2: " + i);
-            } // If new price is a decrease from last price
-            else if (difference > 0) {
-              console.log("3: " + i);
-              // If the absolute value of the decrease is more than 68% of the last price
-              if (difference > estimatedPrice * 0.68) {
-                console.log("4: " + i);
-                // Cut the difference to a quarter
-                // Prevents sharp drops
-                difference = difference * 0.25;
-              }
+              //console.log("2: " + i);
+            }
+            // If the value of the decrease is more than 68% of the last price, similar to above
+            else if (difference > estimatedPrice * 0.68) {
+              //console.log("3: " + i);
+
+              // Cut the difference to a quarter
+              // Prevents sharp drops
+              difference = difference * 0.25;
             }
           }
 
-          console.table({ difference: difference, limit: estimatedPrice });
-
+          // if value was increasing
           if (rate > 0) {
-            difference = estimatedPrice * rate;
+            difference = estimatedPrice * (-0.07 + rate) * -1;
+            //console.log(difference + ": " + i);
           }
+
+          console.log(rate);
 
           lastPrice += difference;
         }

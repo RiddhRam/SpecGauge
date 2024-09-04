@@ -111,7 +111,7 @@ const carsBrandValues = [
   },
   { label: "Chevrolet", value: [[0, normal]] },
   { label: "Chrysler", value: [[0, normal]] },
-  { label: "Citroen", value: [[0, fast]] },
+  { label: "Citroen", value: [[0, fast + 0.01]] },
   { label: "Daewoo", value: [[0, normal]] },
   {
     label: "Dodge",
