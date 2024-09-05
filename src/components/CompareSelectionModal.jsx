@@ -75,7 +75,7 @@ export default function CompareSelectionModal({
     const displayResults = tempMatchingProducts.slice(0, 7);
     if (analytics != null) {
       if (displayResults.length == 0) {
-        logEvent("No Results Found", {
+        logEvent(analytics, "No Results Found", {
           Type: type,
           Tool: "Comparison",
           Search: searchString,
@@ -247,13 +247,11 @@ export default function CompareSelectionModal({
                       onClick={() => {
                         addNewProduct(product[1]);
                         if (analytics != null) {
-                          if (displayResults.length == 0) {
-                            logEvent("Search Bar Click", {
-                              Type: type,
-                              Tool: "Comparison",
-                              Clicked: product[0],
-                            });
-                          }
+                          logEvent(analytics, "Search Bar Click", {
+                            Type: type,
+                            Tool: "Comparison",
+                            Clicked: product[0],
+                          });
                         }
                       }}
                     >
