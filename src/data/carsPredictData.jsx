@@ -65,12 +65,6 @@ const carsAveragePrices = [
   29243.96935,
   29627.4796,
   30010.60948,
-  30393.35726,
-  30775.72255,
-  31157.70719,
-  31539.31261,
-  31920.53863,
-  32301.38433,
 ];
 
 const carsBrandValues = [
@@ -117,7 +111,7 @@ const carsBrandValues = [
   },
   { label: "Chevrolet", value: [[0, normal]] },
   { label: "Chrysler", value: [[0, normal]] },
-  { label: "Citroen", value: [[0, fast]] },
+  { label: "Citroen", value: [[0, fast + 0.01]] },
   { label: "Daewoo", value: [[0, normal]] },
   {
     label: "Dodge",
@@ -131,7 +125,7 @@ const carsBrandValues = [
     value: [[0, reliableMotorCycle]],
   },
   { label: "Ferrari", value: [[0, superCar - 0.01]] },
-  { label: "Fiat", value: [[0, fast - 0.005]] },
+  { label: "Fiat", value: [[0, fast - 0.01]] },
   { label: "Fisker", value: [[0, fast]] },
   { label: "Ford", value: [[0, reputable]] },
   { label: "Genesis", value: [[0, normal]] },
@@ -285,7 +279,7 @@ const carsBrandValues = [
 
 const carsAdditionalOptions = [
   ["Gasoline/Diesel", true, 2035, 0.005, false],
-  ["Collectible", false, 2, 0.0725, true],
+  ["Collectible", false, 2, 0.007, true],
 ];
 
 export { carsAveragePrices, carsBrandValues, carsAdditionalOptions };

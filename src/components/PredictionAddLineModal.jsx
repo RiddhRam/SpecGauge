@@ -54,214 +54,182 @@ export default function PredictionAddLineModal({
   }, [type]);
 
   const updatePrice = async () => {
-    if (brandValues.find((brandLabel) => brandLabel.label === brand)) {
-      let xAdjustment = 0;
-      let startingPoint = parseInt(modalProductPrice);
-      let startingYear = 2025;
+    const brandData = brandValues.find(
+      (brandLabel) => brandLabel.label === brand
+    );
+    if (brandData) {
+      const divisions = brandData.value;
 
-      // Get the best rate for this brand given it's current price and rage
-      let rate = determineBestRate(startingPoint);
+      let bestPrice = parseInt(modalProductPrice);
+      for (let division in divisions) {
+        let startingPoint = parseInt(modalProductPrice);
+        let startingYear = parseInt(modalReleaseYear);
 
-      // Rate cannot exceed this
-      const maxRate = 0.08;
+        // Get the best rate for this brand given it's current price and rage
+        let rate = divisions[division][1];
 
-      // Get the rng value
-      const seed = `${rate}${brand}${releaseYear}`;
-      let rng = null;
-      await import("../functions/SeedrandomImport").then((module) => {
-        rng = module.default(seed);
-      });
+        // Rate cannot exceed this
+        const maxRate = 0.08;
 
-      // Adjust starting point if rate adjustments were used
-      if (rateAdjustments) {
-        // Iterate through rate adjustments
-        // Iterate through these to get the settings
-        for (let item in rateAdjustments) {
-          // If this rate adjustment was enabled, keep going, else continue to next iteration
-          if (rateAdjustments[item][1] == false) {
-            continue;
-          }
+        // This is going to keep changing through the for loop, and at the end it will be the actual estimatedMSRP, before inflation
+        let lastPrice = startingPoint;
 
-          // If third parameter is lower than 2000
-          if (rateAdjustments[item][2] < 2000) {
-            // Add that many years to vehicle production year
-            const beginningYear =
-              parseInt(modalReleaseYear) + rateAdjustments[item][2];
-            let time = 2025 - beginningYear;
+        if (
+          startingYear > 2024 ||
+          startingYear < 2000 ||
+          isNaN(startingYear) ||
+          startingPoint < minimumPrice ||
+          isNaN(startingPoint)
+        ) {
+          break;
+        }
 
-            // if current is higher than the beginning year (third parameter)
-            if (2025 >= beginningYear) {
-              let thisAdjustment = structuredClone(rateAdjustments[item]);
-
-              // If this adjustment grows as time goes on
-              if (thisAdjustment[4]) {
-                thisAdjustment[3] *= time;
+        secondLoop: for (let i = 2024; i > startingYear; i--) {
+          // Adjust starting point if rate adjustments were used
+          if (rateAdjustments) {
+            // Iterate through rate adjustments
+            // Iterate through these to get the settings
+            for (let item in rateAdjustments) {
+              // If this rate adjustment was enabled, keep going, else continue to next iteration
+              if (rateAdjustments[item][1] == false) {
+                continue;
               }
 
-              rate += thisAdjustment[3];
+              // If third parameter is lower than 2000
+              if (rateAdjustments[item][2] < 2000) {
+                // Add that many years to vehicle production year
+                const beginningYear = startingYear + rateAdjustments[item][2];
 
-              let possibleMaxPrice = false;
+                // if current is higher than the beginning year (third parameter)
+                if (i >= beginningYear) {
+                  let thisAdjustment = structuredClone(rateAdjustments[item]);
 
-              // Bring rate down if needed
-              // This also means price was growing rapdily and may be at the max
-              if (rate > maxRate) {
-                rate = maxRate - rng * 0.005;
-                possibleMaxPrice = true;
+                  // If this adjustment grows as time goes on
+                  if (thisAdjustment[4]) {
+                    // multiply by a factor of time
+                    thisAdjustment[3] *= i - startingYear;
+                  }
+
+                  rate += thisAdjustment[3];
+
+                  let possibleMaxPrice = false;
+
+                  // Bring rate down if needed
+                  // This also means price was growing rapdily and may be at the max
+                  if (rate > maxRate) {
+                    rate = maxRate - 0.01;
+                    possibleMaxPrice = true;
+                  }
+
+                  // Skip this iteration till we reach 12 years of age because price may be at max
+                  if (possibleMaxPrice && i - startingYear > 12) {
+                    continue secondLoop;
+                  }
+                }
+                continue;
               }
-
-              if (possibleMaxPrice && time > 14) {
-                time -= 9;
-              }
-
-              startingPoint = // Formula for reverse price prediction of this rate adjustment type
-                // starting point = original
-                // rate = rate adjustment
-                // 0.02 = max random rate fluctuation
-                // time = time that the rate was used
-
-                // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * time)
-                parseInt(startingPoint) / Math.E ** ((rate + 0.01) * time);
-
-              // Set the starting year
-              startingYear = 2025 - time;
-            }
-            continue;
-          }
-          // if current year is higher than the beginning year of adjustment (third parameter)
-          // Necessary to fix this by 2034 because it affects 1 of the rate adjustments for cars but for now it's irrelevant
-          /*
+              // if current year is higher than the beginning year of adjustment (third parameter)
+              // Necessary to fix this by 2034 because it affects 1 of the rate adjustments for cars but for now it's irrelevant
+              /*
           if (2025 - parseInt(modalReleaseYear) >= rateAdjustments[item][2]) {
             // Adjust the rate by adding the rate adjustment
             rate += rateAdjustments[item][3];
           }*/
-        }
-      }
+            }
+          }
 
-      rate = determineBestRate(startingPoint);
+          // Make sure rate isn't too high still
+          if (rate > maxRate) {
+            rate = maxRate - 0.01;
+          }
 
-      // xAdjustment helps reduce the MSRP of vehicles with extremely low rates
-      if (rate < -0.14) {
-        xAdjustment = 3.8;
-      }
+          let xAdjustment = 0;
 
-      // This is going to keep changing through the for loop, and at the end it will be the actual estimatedMSRP, before inflation
-      let lastPrice = parseInt(startingPoint);
+          // xAdjustment helps reduce the MSRP of vehicles with extremely low rates
+          if (rate < -0.13) {
+            xAdjustment = 3.8;
+          }
 
-      // Difference * diffCo (difference coefficient) cannot exceed this
-      let limit = startingPoint * (rate - 0.28) * -1;
-      let diffCo = 0.8;
-
-      // If rate is very high, change the limit and diffCo to these
-      if (rate < -0.1) {
-        limit = startingPoint * (rate * 3) * -1;
-        diffCo = 0.3;
-      }
-
-      if (
-        modalReleaseYear <= 2025 &&
-        modalReleaseYear >= 2000 &&
-        lastPrice > minimumPrice
-      ) {
-        for (let i = startingYear; i != modalReleaseYear; i--) {
           // Estimate the price for each year in reverse, and if the difference between 2 years is too high, reduce it
           const estimatedPrice = Math.round(
             // Formula for reverse price prediction
             // modalProductPrice = current price
             // (brandValues.find((brandLabel) => brandLabel.label === brand).value = brand rate
             // 0.004 = max random rate fluctuation
-            // 2025 - release = vehicle age
+            //  = vehicle age
 
             // MSRP = (current price) / e^((brand rate - average random rate fluctuation) * vehicle age)
-            parseInt(startingPoint) /
-              Math.E ** ((rate + -0.0005) * (2024 - i - xAdjustment))
+            lastPrice /
+              Math.E ** ((rate + 0.004) * (i - startingYear - xAdjustment))
           );
 
-          let difference = estimatedPrice - lastPrice;
+          let difference = lastPrice - estimatedPrice;
 
-          // if difference decreased the price, make it positive
-          if (difference < 0) {
-            difference *= -1;
+          /* NOTE:
+          THINK OF IT AS 1 LINE. USE PENCIL AND PAPER TO VISUALIZE, 
+          lastPrice = second chronologoical price, estimatedPrice = first
+          
+          The above difference is same as let difference = newCalculatedPrice - lastPrice;
+          from addToGraph in Prediction.jsx
+          */
+
+          // After prediction adjustments
+          // Not working properly for high depreciating collectibles like Fisker brand value
+
+          // if value was decreasing
+          if (rate < 0 && difference < 0) {
+            difference *= -0.135 - rate / 3;
+          } else {
+            if (difference > estimatedPrice * 0.3 && rate < 0) {
+              // Prevents sharp increases
+              difference = estimatedPrice * 0.04 * -1;
+            }
+            // If the value of the decrease is more than 68% of the last price, similar to above
+            else if (difference > estimatedPrice * 0.68) {
+              // Cut the difference to a quarter
+              // Prevents sharp drops
+              difference = difference * 0.25;
+            }
           }
 
-          // If difference is too high, reduce it to 6% of the last price
-          if (difference * diffCo > limit) {
-            difference = lastPrice * 0.06;
+          // if value was increasing
+          if (rate > 0) {
+            difference = estimatedPrice * (-0.07 + rate) * -1;
           }
+
           lastPrice += difference;
         }
-      }
 
-      // This will be the inflation adjusted msrp
-      let adjustedMSRP = Math.round(lastPrice);
-
-      // if estimated msrp is significantly higher than the current price, we'll factor in inflation, if not, skip
-      if (
-        parseInt(modalProductPrice) * 3.5 <= adjustedMSRP &&
-        2025 - modalReleaseYear > 14
-      ) {
-        // from 2024 - 2000
-        const inflationRates = [
-          -0.031, -0.04, -0.074, -0.045, -0.012, -0.018, -0.024, -0.021, -0.012,
-          -0.001, -0.016, -0.014, -0.02, -0.031, -0.016, 0.004, -0.037, -0.028,
-          -0.031, -0.033, -0.026, -0.022, -0.016, -0.027,
-        ];
-
-        // age of the vehicle
-        const time = 2024 - modalReleaseYear;
-
-        for (let i = 0; i != time; i++) {
-          adjustedMSRP -= Math.abs(adjustedMSRP * inflationRates[i]);
+        // If the estimated msrp is above this divisions minimum MSRP, then it's the new best price
+        if (lastPrice > divisions[division][0]) {
+          bestPrice = lastPrice;
         }
       }
+      // This will be the inflation adjusted msrp
+      let adjustedMSRP = bestPrice;
 
+      // if estimated msrp is significantly higher than the current price, we'll factor in inflation, if not, skip
+      /*
+        if (
+          parseInt(modalProductPrice) * 3.5 <= adjustedMSRP &&
+          2025 - modalReleaseYear > 14
+        ) {
+          // from 2024 - 2000
+          const inflationRates = [
+            -0.031, -0.04, -0.074, -0.045, -0.012, -0.018, -0.024, -0.021,
+            -0.012, -0.001, -0.016, -0.014, -0.02, -0.031, -0.016, 0.004,
+            -0.037, -0.028, -0.031, -0.033, -0.026, -0.022, -0.016, -0.027,
+          ];
+
+          // age of the vehicle
+          const time = 2024 - modalReleaseYear;
+
+          for (let i = 0; i != time; i++) {
+            adjustedMSRP -= Math.abs(adjustedMSRP * inflationRates[i]);
+          }
+        }*/
       setEstimatedMSRP(Math.round(adjustedMSRP));
     }
-  };
-
-  const determineBestRate = (startingPoint) => {
-    // Get all divisions
-    const divisions = brandValues.find(
-      (brandLabel) => brandLabel.label === brand
-    ).value;
-
-    // This will be the rate we use
-    let rate = 0;
-
-    let age = 2025 - parseInt(modalReleaseYear);
-
-    // For debugging only
-    let price = 0;
-    // Iterate through each division
-    for (let divisionItem in divisions) {
-      // [0] = limit
-      // [1] = rate
-      const divisionRate = divisions[divisionItem][1];
-
-      // We have to use xAdjustments here too, only if rate is very high
-      let xAdjustment = 0;
-
-      if (divisionRate < -0.14) {
-        xAdjustment = 3.8;
-      }
-
-      const MSRP = // Formula for reverse price prediction of this rate adjustment type
-        // starting point = original
-        // rate = rate adjustment
-        // 0.01 = average random rate fluctuation
-        // age = time that the rate was used
-
-        // MSRP = (current price) / e^((brand rate - max random rate fluctuation) * (age - xAdjustment))
-        parseInt(startingPoint) /
-        Math.E ** ((divisionRate + 0.01) * (age - xAdjustment));
-
-      // If the MSRP is greater than the limit of this rate, then this is the rate we will use
-      // unless the next rate also exceeds it's MSRP limit, then we use that and so on until the best rate is found
-      if (MSRP >= divisions[divisionItem][0]) {
-        rate = divisionRate;
-        price = MSRP;
-      }
-    }
-    return rate;
   };
 
   return (
