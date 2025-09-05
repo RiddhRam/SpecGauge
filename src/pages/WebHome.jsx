@@ -422,9 +422,10 @@ export default function WebHome({ isMobile }) {
             backgroundColor: "#F8FF00",
             padding: "10px",
             textAlign: "center",
+            borderRadius: "5px",
           }}
         >
-          SUBMIT OR REQUEST COMPARISON DATA
+          CONTRIBUTE
         </h3>
 
         <button
