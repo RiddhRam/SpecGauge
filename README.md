@@ -2,6 +2,8 @@ SpecGauge was a web app used to compare product specifications, and forecast the
 
 Known as @SpecGauge on Instagram. https://www.instagram.com/specgauge/
 
+To view the backend code: https://github.com/RiddhRam/SpecGauge-Firebase
+
 To view my web-scraper to build the database of specs: https://github.com/RiddhRam/Web-Scraping
 
 To view my hyperoptimized short form video automator that made this project go viral on social media: https://github.com/RiddhRam/Short-Form-Video-Automator
