@@ -2,7 +2,7 @@
 
 **SpecGauge** was a product comparison and price-forecasting web app that helped users compare cars, phones, electronics, and other products side-by-side using scraped specification data and projected future pricing.
 
-The project also grew into a content-driven product experiment through **@SpecGauge on Instagram**, reaching **25,000+ followers** through short-form videos generated with a custom video automation pipeline.
+The project also grew into a content-driven product experiment through **@SpecGauge on Instagram**, reaching **20,000+ followers** through short-form videos generated with a custom video automation pipeline.
 
 ## Links
 
@@ -39,7 +39,7 @@ The project also grew into a content-driven product experiment through **@SpecGa
 - Created a custom web scraper to build a structured product specification database.
 - Developed a price forecasting system to visualize projected product value over time.
 - Built a short-form video automation tool that generated comparison and price prediction videos for social media.
-- Grew the SpecGauge Instagram page to **25,000+ followers** using automated short-form product content.
+- Grew the SpecGauge Instagram page to **20,000+ followers** using automated short-form product content.
 - Designed the project as both a software platform and growth experiment, combining web development, data collection, forecasting, and social media distribution.
 
 ## Repository Notes
